@@ -3597,28 +3597,21 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     // Component-list rows: ArtboardComponentList(559) items(427) with a
     // ViewModel id -> embedded artboard (prop 583) renders at its own
     // layout transform — same composed pass as emitOps rows mode.
-    var dbgAcl: usize = 0; var dbgOwn: usize = 0; var dbgItem: usize = 0; var dbgVmid: usize = 0; var dbgAb: usize = 0;
     for (r.objects, 0..) |lo, li| {
         if (lo.type_key != 559) continue;
-        dbgAcl += 1;
         if (owningArtboard(r, li) != abIdx) continue;
-        dbgOwn += 1;
         for (r.objects) |it| {
             if (it.type_key != 427) continue;
-            dbgItem += 1;
             const vmid = propU(it.props, 549, -1);
             if (vmid < 0) continue;
-            dbgVmid += 1;
             for (r.objects, 0..) |ao, ai2| {
                 if (ao.type_key != 1) continue;
                 if (propU(ao.props, 583, -1) == vmid) {
-                    dbgAb += 1;
                     collectArtboardOps(r, ai2, frame, alloc, &out);
                 }
             }
         }
     }
-    std.debug.print("rowsdbg ab={d} acl={d} own={d} item={d} vmid={d} ab={d}\n", .{ abIdx, dbgAcl, dbgOwn, dbgItem, dbgVmid, dbgAb });
     return out.items;
 }
 ~pub tor ops { r: *Riv<loaded>, ab: i64, frame: i64 }
