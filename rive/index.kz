@@ -2598,6 +2598,24 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
     }
 }
 
+// Dump embedded FileAssetContents bytes (font payloads) to /tmp.
+fn dumpFont(r: *Riv) void {
+    for (r.objects) |o| {
+        if (o.type_key != 0 and o.type_name == null) {}
+        for (o.props) |p| {
+            if (p.key == 212) {
+                if (p.value == .bytes) {
+                    const b = p.value.bytes;
+                    const f = std.fs.cwd().createFile("/tmp/rive_font.bin", .{}) catch return;
+                    f.writeAll(b) catch {};
+                    f.close();
+                    std.debug.print("fontdump: {d} bytes -> /tmp/rive_font.bin\n", .{b.len});
+                }
+            }
+        }
+    }
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
@@ -2657,7 +2675,15 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
 }
 
 ~pub tor keyed { r: *Riv<loaded> }
+~pub tor fontdump { r: *Riv<loaded> }
+
 
 ~proc keyed|zig {
+
     dumpKeyed(r);
+}
+
+~proc fontdump|zig {
+
+    dumpFont(r);
 }
