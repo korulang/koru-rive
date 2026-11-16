@@ -2904,9 +2904,13 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
                 const ni = if (curIdx + 1 >= cend) cstart else curIdx + 1;
                 const np = gp[@as(usize, @intCast(ni))];
                 if (ni == m0) {
-                    const ex = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
-                    const ey = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + asc;
-                    emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(gp[@as(usize, @intCast(m0))].x), @floatFromInt(gp[@as(usize, @intCast(m0))].y), ex, ey);
+                    const mpt = gp[@as(usize, @intCast(m0))];
+                    const alreadyThere = !pendingOff and curFx == @as(f32, @floatFromInt(mpt.x)) and curFy == @as(f32, @floatFromInt(mpt.y));
+                    if (!alreadyThere) {
+                        const ex = pen + @as(f32, @floatFromInt(mpt.x)) * scale;
+                        const ey = -@as(f32, @floatFromInt(mpt.y)) * scale + asc;
+                        emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(mpt.x), @floatFromInt(mpt.y), ex, ey);
+                    }
                     verbs.append(alloc, 5) catch {};
                     break;
                 }
