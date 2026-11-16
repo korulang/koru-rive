@@ -191,3 +191,9 @@ committed producer-side (`ff18735`).
   failure candidate is the FONT: textDrawPath needs type-106 font
   objects with SFNT bytes (prop 212); clfp may reference a non-embedded
   font asset -> font="" -> zero glyphs. Verify font presence next.
+
+- Font verdict: clfp HAS embedded font — obj1 FontAsset "Inter",
+  obj2 FileAssetContents carries full SFNT (glyf/hmtx/cmap/GPOS
+  tables visible). textDrawPath looks for type_key==106 with prop
+  212 bytes; FileAssetContents may carry a different type_key ->
+  font lookup misses -> zero glyphs. Verify type_key next.
