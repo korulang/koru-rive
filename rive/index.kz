@@ -4297,19 +4297,6 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
     }
-    for (r.objects, 0..) |o, i| {
-        if (o.type_key != 1 or i != abIdx) continue;
-        for (r.objects, 0..) |*c, pi| {
-            if (c.type_key != 20 or c.parent_obj != @as(i64, @intCast(i))) continue;
-            var color: u32 = 0xFF313131;
-            for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
-            }
-            var bv = [_]u8{ 0, 1, 1, 1, 1, 5 };
-            var bp = [_]f64{ 0, 0, @floatCast(aw0), 0, @floatCast(aw0), @floatCast(ah0), 0, @floatCast(ah0) };
-            out.append(alloc, .{ .style = 1, .color = color, .thick = 0, .join = -1, .cap = -1, .eo = 0, .a = 1, .b = 0, .c = 0, .d = 1, .e = 0, .g = 0, .nv = 6, .verbs = bv[0..], .pts = bp[0..] }) catch {};
-        }
-    }
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;
@@ -4425,27 +4412,6 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var cpm = op0(6); cpm.a = 1; cpm.d = 1; out.append(alloc, cpm) catch {};
         var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
         out.append(alloc, op0(7)) catch {};
-    }
-    for (r.objects, 0..) |o, i| {
-        if (o.type_key != 1 or i != abIdx) continue;
-        for (r.objects, 0..) |*c, pi| {
-            if (c.type_key != 20 or c.parent_obj != @as(i64, @intCast(i))) continue;
-            var color: u32 = 0xFF313131;
-            for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
-            }
-            out.append(alloc, op0(0)) catch {};
-            var o1 = op0(1); o1.x1 = 0; o1.y1 = 0; out.append(alloc, o1) catch {};
-            var o2 = op0(2); o2.x1 = @floatCast(aw0); o2.y1 = 0; out.append(alloc, o2) catch {};
-            var o3 = op0(2); o3.x1 = @floatCast(aw0); o3.y1 = @floatCast(ah0); out.append(alloc, o3) catch {};
-            // 4th corner — without it the backdrop fills as a right triangle
-            // along y=x, leaving half the artboard uncovered (the 45-deg split).
-            var o3b = op0(2); o3b.x1 = 0; o3b.y1 = @floatCast(ah0); out.append(alloc, o3b) catch {};
-            const o4 = op0(5); out.append(alloc, o4) catch {};
-            var pm = op0(6); pm.a = 1; pm.d = 1; out.append(alloc, pm) catch {};
-            var dr = op0(8); dr.style = 1; dr.color = color; dr.join = -1; dr.cap = -1; out.append(alloc, dr) catch {};
-            out.append(alloc, op0(7)) catch {};
-        }
     }
     // Layout-box backgrounds: a Fill parented to a LayoutComponent (409)
     // paints that box. rive renders these; without them a data-bound list is
