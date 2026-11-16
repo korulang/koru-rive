@@ -4605,3 +4605,71 @@ fn strokeVerbs(verbs: []const u8, pts: []const V2, thick: f32, join: i64, cap: i
         }
     }
 }
+
+// ---- meshops: OpRec stream -> tessellated triangle events -------------------
+// Uniform consume path: emits per-draw MeshDrawHdr + MeshTri events the
+// driver maps to canvas mesh.* verbs — identical signatures both arms.
+// Fills via tessellate (eo/nonzero), strokes via strokeVerbs+earClip.
+// Clips are NOT expressible as soup — named gap, not silently dropped:
+// clip ops produce no events (consumer sees fewer draws, same as a
+// backend without clip.push.path).
+
+const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, ntris: usize };
+
+~pub tor meshops { r: *Riv<loaded>, ab: i64, frame: i64 }
+! mdraw MeshDrawHdr
+! mtri Tri
+! mdone usize
+| mend usize
+
+~proc meshops|zig {
+    const alloc = std.heap.page_allocator;
+    const recs = $mod.collectOps(r, @intCast(ab), frame, alloc);
+    var verbs = std.ArrayList(u8).empty;
+    var pts = std.ArrayList($mod.V2).empty;
+    defer verbs.deinit(alloc); defer pts.deinit(alloc);
+    for (recs) |rec| {
+        switch (rec.kind) {
+            1, 2, 3, 4, 5 => {
+                const np: usize = if (rec.kind == 1 or rec.kind == 2) 1 else if (rec.kind == 3) 2 else if (rec.kind == 4) 3 else 0;
+                const base: u8 = if (rec.kind == 1) 0 else if (rec.kind == 2) 1 else if (rec.kind == 3) 2 else if (rec.kind == 4) 4 else 5;
+                verbs.append(alloc, base) catch {};
+                for (0..np) |k| {
+                    const xs = if (k == 0) rec.x1 else if (k == 1) rec.x2 else rec.x3;
+                    const ys = if (k == 0) rec.y1 else if (k == 1) rec.y2 else rec.y3;
+                    pts.append(alloc, .{ .x = @floatCast(xs), .y = @floatCast(ys) }) catch {};
+                }
+            },
+            8 => {
+                if (verbs.items.len > 0) {
+                    var tris: []$mod.Tri = &.{};
+                    if (rec.style == 0) {
+                        const rings = $mod.strokeVerbs(verbs.items, pts.items, @floatCast(rec.thick), rec.join, rec.cap, rec.eo, alloc);
+                        var acc = std.ArrayList($mod.Tri).empty;
+                        for (rings) |ring| {
+                            const ct = $mod.earClip(ring, alloc);
+                            for (ct) |t| acc.append(alloc, t) catch {};
+                            alloc.free(ct); alloc.free(ring);
+                        }
+                        alloc.free(rings);
+                        tris = acc.toOwnedSlice(alloc) catch &.{};
+                    } else {
+                        tris = $mod.tessellate(verbs.items, pts.items, rec.eo, 0.25, alloc);
+                    }
+                    if (tris.len > 0) {
+                        const hdr: $mod.MeshDrawHdr = .{ .style = rec.style, .color = rec.color, .thick = rec.thick, .join = rec.join, .cap = rec.cap, .eo = rec.eo, .ntris = tris.len };
+                        mdraw(hdr);
+                        for (tris) |t| {
+                            mtri(t);
+                        }
+                        mdone(tris.len);
+                        alloc.free(tris);
+                    }
+                }
+                verbs.clearRetainingCapacity(); pts.clearRetainingCapacity();
+            },
+            else => {},
+        }
+    }
+    return .{ .mend = 0 };
+}

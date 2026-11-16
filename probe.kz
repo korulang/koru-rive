@@ -35,3 +35,26 @@
 | c _ when o.kind == 8 and o.style == 0 -> libs/canvas:draw.path(f, p: hcell[0].h, fr: 0, fg: 0, fb: 0, fa: 0, sr: (@as(f64, @floatFromInt((o.color >> 16) & 0xFF)) / 255.0), sg: (@as(f64, @floatFromInt((o.color >> 8) & 0xFF)) / 255.0), sb: (@as(f64, @floatFromInt((o.color >> 0) & 0xFF)) / 255.0), sa: (@as(f64, @floatFromInt((o.color >> 24) & 0xFF)) / 255.0), sw: o.thick, o.join, o.cap, evenodd: o.eo)
 | c _ when o.kind == 8 -> libs/canvas:draw.path(f, p: hcell[0].h, fr: (@as(f64, @floatFromInt((o.color >> 16) & 0xFF)) / 255.0), fg: (@as(f64, @floatFromInt((o.color >> 8) & 0xFF)) / 255.0), fb: (@as(f64, @floatFromInt((o.color >> 0) & 0xFF)) / 255.0), fa: (@as(f64, @floatFromInt((o.color >> 24) & 0xFF)) / 255.0), sr: 0, sg: 0, sb: 0, sa: 0, sw: o.thick, o.join, o.cap, evenodd: o.eo)
 | c _ -> libs/canvas:draw.path(f, p: hcell[0].h, fr: 0, fg: 0, fb: 0, fa: 0, sr: 0, sg: 0, sb: 0, sa: 0, sw: 0, o.join, o.cap, evenodd: o.eo)
+
+// ---- mesh consume: tessellated Tri soup -> canvas mesh.* verbs -------------
+// Uniform surface both arms. Grid cells carry the current mesh handle +
+// draw color across the mdraw/mtri/mdone event stream (same pattern as
+// the path handle above — bodies can't hold vars).
+
+~std/grid:new(mhcell, size: 1) { h: 0[i64] }
+~std/grid:new(mccell, size: 1) { r: 0.0[f64], g: 0.0[f64], b: 0.0[f64], a: 1.0[f64] }
+
+~pub tor mesh-draw { d: kr/rive:MeshDrawHdr, f: *libs/canvas:Frame<frame> }
+~mesh-draw =
+    |> if (mhcell[0].h == 0)
+        | then |> libs/canvas:mesh.open() : h |> std/grid:stored { mhcell[0].h: h }
+        | else |> libs/canvas:mesh.reset(h: mhcell[0].h)
+    |> std/grid:stored { mccell[0].r: (@as(f64, @floatFromInt((d.color >> 16) & 0xFF)) / 255.0), mccell[0].g: (@as(f64, @floatFromInt((d.color >> 8) & 0xFF)) / 255.0), mccell[0].b: (@as(f64, @floatFromInt(d.color & 0xFF)) / 255.0), mccell[0].a: (@as(f64, @floatFromInt((d.color >> 24) & 0xFF)) / 255.0) }
+
+~pub tor mesh-tri { t: kr/rive:Tri }
+~mesh-tri =
+    |> libs/canvas:mesh.tri(h: mhcell[0].h, x1: @floatCast(t.x1), y1: @floatCast(t.y1), x2: @floatCast(t.x2), y2: @floatCast(t.y2), x3: @floatCast(t.x3), y3: @floatCast(t.y3))
+
+~pub tor mesh-end { f: *libs/canvas:Frame<frame> }
+~mesh-end =
+    |> libs/canvas:draw.mesh(f, h: mhcell[0].h, r: mccell[0].r, g: mccell[0].g, b: mccell[0].b, a: mccell[0].a)
