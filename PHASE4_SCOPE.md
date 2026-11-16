@@ -515,3 +515,8 @@ committed producer-side (`ff18735`).
   compiler gap (removing code shouldn't break an unrelated
   proc's name resolution); belongs in /Users/larsde/src/koru.
   Arm stays until compiler fix or alternative gate shape.
+
+- oracle-metric re-measure: dcpo/iba/lwti/deam/hff/cin re-run
+  under channel-aware coverage — NO verdict flips; refs genuinely
+  ink-free (limitation classifications stand). Metric fix helps
+  future colored-ink fixtures, not absent content.
