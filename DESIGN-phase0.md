@@ -336,3 +336,14 @@ path is bind/holder-heavy). mix/actualMix scaling unread.
 NEXT: grep 'fps' across src/animation + artboard advance path;
 KeyFrame.frame is in FRAMES, toFrame->seconds() implies conversion
 at keyed-property build time (fps from animation or artboard).
+
+## TIME BASE FOUND (linear_animation_instance.cpp:317-362)
+
+m_time += deltaSeconds; frames = m_time * fps; fps =
+animation.fps(). advanceAndApply(dt=1/30) -> frame f maps to
+anim-frame f*fps/30. fps default still unconfirmed (m_fps not in
+generated base — check linear_animation.hpp or core default).
+loop=1 wraps at duration (60 frames default). If fps=60:
+golden f15 -> anim frame 30 — my RIVE_FRAME=30 test SHOULD have
+matched; divergence therefore likely fps!=60, loop/work-area
+clamping, or mix scaling — verify fps value next.
