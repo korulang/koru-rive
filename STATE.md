@@ -131,10 +131,13 @@ x[0..199] y[0..289]; ours draws 9,761 px confined to a single 200×50 box. The
 box size is now *correct* (validating "sizing units 3 = fill parent"), but all 24
 wrong-count rows land at the origin. **Not verified, visibly different.**
 
-**4. Gallery at GUI level.** The card *component path* is verified at 320×320.
-A fresh Omni gallery screenshot was **not** taken this session; the old
-`/tmp/gallery_pick_rive*` images were diagnosed from the outlier and predate the
-fixes.
+**4. Gallery at GUI level.** SUPERSEDED 2026-11-16: the component now lives on
+`omni/rough/gallery_live.k` (real `libs/canvas` window, `fr: world.frame`) —
+`/tmp/lantern_live.bmp` snap verified: card region 160,000 nonzero px, 0
+fallback pixels, ~1,200 frames stable. The old `canvas/tests/gallery.k`
+surface is retired. Tier-1 at frame 0: transforms/styles/colors/V-coords
+match the clfp golden (draw order of the two strokes swapped — cosmetic,
+non-overlapping).
 
 **5. Other fixtures.** Only the four rows in §3 have been compared. The ~200
 other `.riv` assets in `rive-cpp/tests/unit_tests/assets` are untested.
@@ -198,7 +201,8 @@ Documented rather than hidden:
 3. **Layout solver** for `LayoutComponent`: positions, flex stacking, clipping.
    This unblocks multi-row lists and generalises the round-6 row sizing beyond
    the base-pose case.
-4. **Re-check the gallery at GUI level** once (1) and (2) are in.
+4. ~~**Re-check the gallery at GUI level**~~ DONE 2026-11-16 — gallery_live.k
+   live-verified (see §6.4).
 5. **Widen fixture coverage** — run the band check across the other
    component-list fixtures as a batch.
 
@@ -220,5 +224,9 @@ Documented rather than hidden:
 | `oracle/FINDINGS.md` | chronological evidence log, rounds 1–9 |
 | `render_*.k` | our-side probes (magenta clear, snapped BMP) |
 
-No git commits were made this session; all of the above is uncommitted
-working-tree state.
+Working tree: `rive/index.kz` carries the §4 fixes (uncommitted at time of
+writing). Sibling repos: `oshun@0d973eb` (probe stroke-channel routing —
+the live-garble root cause), `oshun@97cab7e` (path-handle leak),
+`koru-rive@f372fd8` (animated color/opacity + diagnostics). The gallery
+component lives in `omni/rough/` (`rive_card.kz`, `gallery_live.k`,
+`lantern_card.kz` — `libs/metal` renamed `libs/canvas`).
