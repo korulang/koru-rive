@@ -1860,6 +1860,56 @@ fn dumpDrawOps(r: *Riv) void {
             }
         }
     }
+    // Artboard-level paints: background Fill/Stroke parented to the
+    // Artboard itself (obj[189]->Artboard in follow_path_shapes).
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 1) continue; // Artboard
+        const aw = propF(o.props, 7, 0);
+        const ah = propF(o.props, 8, 0);
+        for (r.objects, 0..) |*c, pi| {
+            if (c.parent_obj != @as(i64, @intCast(i))) continue;
+            if (c.type_key != 20 and c.type_key != 24) continue;
+            var color: u32 = 0;
+            for (r.objects) |*g| {
+                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColor(g.props, 37);
+            }
+            const isStroke = c.type_key == 24;
+            const style: i64 = if (isStroke) 0 else 1;
+            const thick = if (isStroke) propF(c.props, 47, 0) else 0;
+            const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
+            const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
+            const blend = propU(c.props, 747, 3);
+            const fillRule = if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
+            // background rect: golden shows move(0,0) line(w,0) line(w,h)
+            // line(0,h) close — artboard bounds, no corner radius.
+            var verbs = std.ArrayList(u8).empty;
+            var pts = std.ArrayList(V2).empty;
+            defer verbs.deinit(alloc); defer pts.deinit(alloc);
+            verbs.append(alloc, 0) catch {};
+            pts.append(alloc, .{ .x = 0, .y = 0 }) catch {};
+            for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah }, .{ .x = 0, .y = ah } }) |p| {
+                verbs.append(alloc, 1) catch {};
+                pts.append(alloc, p) catch {};
+            }
+            verbs.append(alloc, 1) catch {}; // dangling close-line verb (golden shape)
+            verbs.append(alloc, 5) catch {};
+            std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n", .{});
+            std.debug.print("drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pts.items.len });
+            var vp: usize = 0;
+            for (verbs.items) |v| {
+                const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+                var s = std.ArrayList(u8).empty;
+                defer s.deinit(alloc);
+                s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+                var k: usize = 0;
+                while (k < np and vp < pts.items.len) : (k += 1) {
+                    s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+                    vp += 1;
+                }
+                std.debug.print("{s}\n", .{s.items});
+            }
+        }
+    }
 }
 
 // ---- Koru surface ---------------------------------------------------------
