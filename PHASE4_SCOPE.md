@@ -667,3 +667,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   reach koru-native frontend). VERDICT: bounded-shim question
   is moot for core; real gap = koru-native raster surface
   (CmdView/kwin path, oshun/koruos ui_probe idiom) — path (b).
+
+- koru-native raster surface MILESTONE-0 census: oshun/canvas/
+  index.koru-native.kz EXISTS (1062 lines, freestanding software
+  raster into koruos/surface backing, u32 0x00RRGGBB src-over).
+  HAS: window.*/frames/input.*/draw.rect/roundrect/panel/
+  clip.push(.round)/pop/draw.mesh/mesh.*/text.*/release.frame.
+  MISSING for koru-rive replay: path.open/move/line/cubic/quad/
+  close/reset (7 verbs), draw.path, draw.clip.push.path,
+  draw.image, image.decode.data/width/height, transform.push/pop
+  (verify). mesh.* already consumes kr/rive Tri soup — the
+  tessellator path is LIVE on koru-native. Next: implement path
+  verbs (flatten->scanline fill) + draw.path -> first pixel gate.
