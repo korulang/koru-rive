@@ -3112,13 +3112,13 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
     return @as(f32, @floatFromInt(be16(b, go)));
 }
 
-fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
-    const alloc = std.heap.page_allocator;
+fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), textColor: *u32, textFillRule: *i64) bool {
+    _ = frame;
     var runIdx: usize = 0; var have = false;
     for (r.objects, 0..) |c, ci| {
         if (c.type_key == 135 and c.parent_obj == @as(i64, @intCast(textIdx))) { runIdx = ci; have = true; break; }
     }
-    if (!have) return;
+    if (!have) return false;
     const run = &r.objects[runIdx];
     var text: []const u8 = "";
     var styleId: i64 = -1;
@@ -3136,17 +3136,17 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         }
     }
     // style paint: Fill child -> SolidColor.colorValue + fillRule
-    var textColor: u32 = 0xFF313131; var textFillRule: i64 = 2;
+    textColor.* = 0xFF313131; textFillRule.* = 2;
     if (haveStyle) {
         for (r.objects, 0..) |fc, fi| {
             if (fc.type_key == 20 and fc.parent_obj == @as(i64, @intCast(styleIdx))) {
                 for (fc.props) |p| {
-                    if (p.key == 40) textFillRule = switch (p.value) { .uint => |u| @intCast(u), else => 0 };
+                    if (p.key == 40) textFillRule.* = switch (p.value) { .uint => |u| @intCast(u), else => 0 };
                 }
                 for (r.objects, 0..) |sc, si| {
                     if (sc.type_key == 18 and sc.parent_obj == @as(i64, @intCast(fi))) {
                         for (sc.props) |p| {
-                            if (p.key == 37) textColor = switch (p.value) { .color => |u| u, else => textColor };
+                            if (p.key == 37) textColor.* = switch (p.value) { .color => |u| u, else => textColor.* };
                         }
                     }
                     _ = si;
@@ -3161,17 +3161,15 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         }
         if (font.len > 0) break;
     }
-    const hd = sfntFind(font, tag4("head")) orelse return;
+    const hd = sfntFind(font, tag4("head")) orelse return false;
     const upem = @as(f32, @floatFromInt(be16(font, @as(usize, @intCast(hd.off)) + 18)));
-    if (font.len < 12 or fontSize == 0 or upem == 0) return;
+    if (font.len < 12 or fontSize == 0 or upem == 0) return false;
     const scale: f64 = @as(f64, fontSize) / @as(f64, upem);
-    const hh2 = sfntFind(font, tag4("hhea")) orelse return;
+    const hh2 = sfntFind(font, tag4("hhea")) orelse return false;
     const asc: f64 = @as(f64, @floatFromInt(beS16(font, @as(usize, @intCast(hh2.off)) + 4))) * scale;
     _ = frame;
     var pen: f64 = 0;
-    var verbs = std.ArrayList(u8).empty;
-    var pts = std.ArrayList(V2).empty;
-    defer verbs.deinit(alloc); defer pts.deinit(alloc);
+
     for (text) |ch| {
         if (ch < 0x20) continue;
         const gid = cmapGlyph(font, ch);
@@ -3179,8 +3177,6 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         const gp = glyfGlyph(font, gid, &ends, alloc);
         var on_cnt: usize = 0;
         for (gp) |q| { if (q.on) on_cnt += 1; }
-        const vb = verbs.items.len;
-        std.debug.print("glyph {c} gid={d} pts={d} on={d} ends={d} vb={d} e0={d} e1={d}\n", .{ch, gid, gp.len, on_cnt, ends.items.len, vb, if(ends.items.len>0) ends.items[0] else 9999, if(ends.items.len>1) ends.items[1] else 9999});
         if (gp.len == 0) { pen += @as(f64, hmtxAdvance(font, gid)) * scale; continue; }
         // contour-split + TTF implied-midpoint + quad->cubic elevation
         var cstart: usize = 0;
@@ -3214,7 +3210,7 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
                     if (!alreadyThere) {
                         const ex = pen + @as(f64, @floatFromInt(mpt.x)) * scale;
                         const ey = -@as(f64, @floatFromInt(mpt.y)) * scale + asc;
-                        emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(mpt.x), @floatFromInt(mpt.y), ex, ey);
+                        emitQuadCubic(alloc, verbs, pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(mpt.x), @floatFromInt(mpt.y), ex, ey);
                     }
                     verbs.append(alloc, 5) catch {};
                     break;
@@ -3226,14 +3222,14 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
                         // with np as new pending control
                         const mx = (offFx + @as(f64, @floatFromInt(np.x))) / 2;
                         const my = (offFy + @as(f64, @floatFromInt(np.y))) / 2;
-                        emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, true, offFx, offFy, mx, my, pen + mx * scale, -my * scale + asc);
+                        emitQuadCubic(alloc, verbs, pts, pen, scale, asc, curFx, curFy, true, offFx, offFy, mx, my, pen + mx * scale, -my * scale + asc);
                         curFx = mx; curFy = my;
                         offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); // np stays pending
                     } else { offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); pendingOff = true; }
                 } else {
                     const ex = pen + @as(f64, @floatFromInt(np.x)) * scale;
                     const ey = -@as(f64, @floatFromInt(np.y)) * scale + asc;
-                    emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(np.x), @floatFromInt(np.y), ex, ey);
+                    emitQuadCubic(alloc, verbs, pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(np.x), @floatFromInt(np.y), ex, ey);
                     pendingOff = false;
                     curFx = @floatFromInt(np.x); curFy = @floatFromInt(np.y);
                 }
@@ -3241,10 +3237,32 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
             }
             cstart = cend;
         }
-        std.debug.print("  -> verbs +{d}\n", .{verbs.items.len - vb});
         pen += @as(f64, hmtxAdvance(font, gid)) * scale;
     }
-    std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
+    var vp: usize = 0;
+    for (verbs.items) |v| {
+        const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+        var s = std.ArrayList(u8).empty;
+        defer s.deinit(alloc);
+        s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+        var k: usize = 0;
+        while (k < np and vp < pts.items.len) : (k += 1) {
+            s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+            vp += 1;
+        }
+        std.debug.print("  {s}\n", .{s.items});
+    }
+    return true;
+}
+fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
+    const alloc = std.heap.page_allocator;
+    var verbs = std.ArrayList(u8).empty;
+    var pts = std.ArrayList(V2).empty;
+    defer verbs.deinit(alloc); defer pts.deinit(alloc);
+    var textColor: u32 = 0xFF313131;
+    var textFillRule: i64 = 2;
+    if (!textDrawPath(r, textIdx, frame, alloc, &verbs, &pts, &textColor, &textFillRule)) return;
+std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
     var vp: usize = 0;
     for (verbs.items) |v| {
         const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
@@ -3522,6 +3540,33 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             var dr = op0(8); dr.style = style; dr.color = color; dr.thick = thick; dr.join = join; dr.cap = cap; dr.eo = if (fr == 2) 1 else 0; out.append(alloc, dr) catch {};
             out.append(alloc, op0(7)) catch {};
         }
+    }
+    // Text objects: glyph outlines via textDrawPath (same gather as emitOps).
+    for (r.objects, 0..) |to, ti| {
+        if (to.type_key != 134) continue;
+        if (owningArtboard(r, ti) != abIdx) continue;
+        var tverbs = std.ArrayList(u8).empty;
+        var tpts = std.ArrayList(V2).empty;
+        defer tverbs.deinit(alloc); defer tpts.deinit(alloc);
+        var tcolor: u32 = 0xFF313131;
+        var tfr: i64 = 2;
+        if (!textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr)) continue;
+        const w = effectiveWorld(r, ti, frame);
+        out.append(alloc, op0(0)) catch {};
+        var vp: usize = 0;
+        for (tverbs.items) |v| {
+            const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+            if (vp + np > tpts.items.len) break;
+            var o = op0(if (v == 0) 1 else if (v == 1) 2 else if (v == 2 or v == 3) 3 else if (v == 4) 4 else 5);
+            if (v == 0 or v == 1) { o.x1 = tpts.items[vp].x; o.y1 = tpts.items[vp].y; }
+            if (v == 2 or v == 3) { o.x1 = tpts.items[vp].x; o.y1 = tpts.items[vp].y; o.x2 = tpts.items[vp + 1].x; o.y2 = tpts.items[vp + 1].y; }
+            if (v == 4) { o.x1 = tpts.items[vp].x; o.y1 = tpts.items[vp].y; o.x2 = tpts.items[vp + 1].x; o.y2 = tpts.items[vp + 1].y; o.x3 = tpts.items[vp + 2].x; o.y3 = tpts.items[vp + 2].y; }
+            out.append(alloc, o) catch {};
+            vp += np;
+        }
+        var pm = op0(6); pm.a = w[0]; pm.b = w[1]; pm.c = w[2]; pm.d = w[3]; pm.e = w[4]; pm.g = w[5]; out.append(alloc, pm) catch {};
+        var dr = op0(8); dr.style = 1; dr.color = tcolor; dr.join = -1; dr.cap = -1; dr.eo = if (tfr == 2) 1 else 0; out.append(alloc, dr) catch {};
+        out.append(alloc, op0(7)) catch {};
     }
     return out.items;
 }
