@@ -2357,11 +2357,32 @@ fn owningArtboard(r: *const Riv, idx: usize) usize {
 }
 
 fn dumpDrawOps(r: *Riv, frame: i64) void {
+    if (std.posix.getenv("DUMP_SECTIONS") != null) {
+        var ai: usize = 0;
+        for (r.objects, 0..) |o, oi| {
+            if (o.type_key != 1) continue;
+            std.debug.print("--- static t=0 ---\n", .{});
+            emitOps(r, 0, oi, true);
+            std.debug.print("--- sm{d} ---\n", .{ai});
+            var f: i64 = 0;
+            while (f < 30) : (f += 1) {
+                std.debug.print("--- frame {d} t={d:.4} ---\n", .{ f, @as(f32, @floatFromInt(f)) / 30 });
+                emitOps(r, f * 2, oi, true);
+            }
+            ai += 1;
+        }
+        return;
+    }
+    emitOps(r, frame, 0, false);
+}
+
+fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect
     // emitted once per artboard before its drawables, golden clipPath op.
-    for (r.objects) |o| {
+    for (r.objects, 0..) |o, oi| {
         if (o.type_key != 1) continue;
+        if (scoped and oi != abIdx) continue;
         // LayoutComponent.clip (key 196, f4) — default true
         // (artboard.cpp:127); explicit false suppresses clipPath op.
         const clip = if (propByKey(o.props, 196)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => true } else true;
@@ -2397,6 +2418,7 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
     }
     for (r.objects, 0..) |o, i| {
         if (o.type_key != 3) continue; // Shape only
+        if (scoped and owningArtboard(r, i) != abIdx) continue;
         // gather path objects (vertex children or Rectangle) + paint children
         var pathVs = std.ArrayList(PV).empty;
         var verbs = std.ArrayList(u8).empty;
@@ -2451,6 +2473,7 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
     // Artboard itself (obj[189]->Artboard in follow_path_shapes).
     for (r.objects, 0..) |o, i| {
         if (o.type_key != 1) continue; // Artboard
+        if (scoped and i != abIdx) continue;
         const aw = propF(o.props, 7, 0);
         const ah = propF(o.props, 8, 0);
         for (r.objects, 0..) |*c, pi| {
