@@ -4,7 +4,7 @@ import kr/probe
 import kr/rive
 import std/io
 std/io:print.ln("render_row: start")
-|> libs/canvas:offscreen.open(width: 200, height: 200, scale: 1.0)
+|> libs/canvas:offscreen.open(width: 500, height: 500, scale: 1.0)
 | surf s
     |> libs/canvas:offscreen.clear.color(s, r: 1.0, g: 0.0, b: 1.0)
     |> libs/canvas:offscreen.frame(s)

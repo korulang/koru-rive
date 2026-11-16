@@ -83,3 +83,31 @@ tessellated Tri soup) identically on both backends; realization choice
 is a compile-time variant, not a runtime branch. Stroke/fill/clip
 semantics must match canvas-verb behavior bit-for-bit where the Tier-2
 gate measures.
+
+## Tier-2 pixel gate — first measured results (2026-11-16)
+
+Oracle: `oracle/pixel_oracle.py` vs `oracle/images/ref_*_c_t*.png`
+(render_browser.mjs headless-Chrome references, Rive 2.37.0 canvas
+backend). Ours: path-verb replay (`probe:step` → draw.path) — the
+Metal/CG realization, NOT the mesh path (mesh consume blocked on the
+koruc emit defect, t4b).
+
+| pair | verdict | ink-mass | coverage-gap |
+|------|---------|----------|--------------|
+| clfp t1 | PASS | 0.99 | 0.98% |
+| clfp t5 | PASS | 0.98 | 0.89% |
+| clfp t10 | PASS | 0.99 | 0.91% |
+| hello_world t1 | PASS | 1.01 | 0.07% |
+| dsm t1 | FAIL — artboard mismatch | — | — |
+
+dsm: ref ink=(0,0,249,99) @500²; our ab:9 Main is a vacuous container
+(0 drawPaths golden-side — known); Row content lives at ab:20. The
+ref was rendered against the browser's default artboard — needs the
+correct ab mapping before a verdict, not a renderer defect claim.
+
+Mesh consume status: ops→tessellate/strokeVerbs→Tri events→mesh.*
+verbs→GPU pixels works end-to-end (bg fill exact, stroke geometry
+emitted) but pixel-correctness is BLOCKED on koruc emit defect —
+`mtri(tv)` inside ~proc silently emitted loop var `t` (consumer
+binding-name collision; t4b owns the fix). CTM bake + clip events
+committed producer-side (`ff18735`).
