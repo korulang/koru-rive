@@ -1715,9 +1715,9 @@ fn buildPath(verts: []const PV, closed: bool, verbs: *std.ArrayList(u8), pts: *s
 
 const CIRCLE_C = 0.552284749831;
 
-fn synthParametric(o: *const RivObj, pvs: *std.ArrayList(PV), alloc: std.mem.Allocator) bool {
-    const w = propF(o.props, 20, 0);
-    const h = propF(o.props, 21, 0);
+fn synthParametric(r: *const Riv, o: *const RivObj, pvs: *std.ArrayList(PV), alloc: std.mem.Allocator, frame: i64) bool {
+    const w = if (frame >= 0 and hasKeyframed(r, o.slot, 20)) @as(f32, keyframedValue(r, o.slot, 20, frame)) else propF(o.props, 20, 0);
+    const h = if (frame >= 0 and hasKeyframed(r, o.slot, 21)) @as(f32, keyframedValue(r, o.slot, 21, frame)) else propF(o.props, 21, 0);
     const oxx = -propF(o.props, 123, 0.5) * w;
     const oyy = -propF(o.props, 124, 0.5) * h;
     const Z: V2 = .{ .x = 0, .y = 0 };
@@ -1792,7 +1792,7 @@ fn dumpPathOps(r: *Riv) void {
         if (kids.items.len > 0) {
             closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, else => false } else false;
             for (kids.items) |kv| pvs.append(alloc, fileVert(kv)) catch {};
-        } else if (synthParametric(&o, &pvs, alloc)) {
+        } else if (synthParametric(r, &o, &pvs, alloc, 0)) {
             closed = true;
         } else {
             continue;
@@ -1892,6 +1892,24 @@ fn dumpKeyed(r: *Riv) void {
 // KeyFrameDouble linear interpolation for one (objectId, propertyKey)
 // pair. Keyframes sorted by frame; clamp outside range. interpType 1
 // = linear (others TODO: hold/cubic via interpolatorId 69).
+fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
+    var inGroup = false;
+    for (r.objects) |o| {
+        if (propByKey(o.props, 51)) |v| {
+            const s: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            inGroup = (s == objSlot);
+            continue;
+        }
+        if (inGroup) {
+            if (propByKey(o.props, 53)) |v| {
+                const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+                if (k == @as(i64, propKey)) return true;
+            }
+        }
+    }
+    return false;
+}
+
 fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     var kf = std.ArrayList(struct { f: i64, v: f32 }).empty;
     defer kf.deinit(std.heap.page_allocator);
@@ -2232,7 +2250,7 @@ fn pathStreamsFor(r: *const Riv, idx: usize, alloc: std.mem.Allocator) ?struct {
             if (c.parent_obj != @as(i64, @intCast(idx))) continue;
             if (isVertexType(c.type_key)) {
                 pvs.append(alloc, fileVert(c)) catch {};
-            } else if (synthParametric(c, &pvs, alloc)) {
+            } else if (synthParametric(r, c, &pvs, alloc, 0)) {
                 closed = true;
             } else if (c.type_key == 16) { // PointsPath container — verts are ITS children
                 for (r.objects) |*v| {
@@ -2250,7 +2268,7 @@ fn pathStreamsFor(r: *const Riv, idx: usize, alloc: std.mem.Allocator) ?struct {
             }
         }
         closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => false } else false;
-    } else if (synthParametric(o, &pvs, alloc)) {
+    } else if (synthParametric(r, o, &pvs, alloc, 0)) {
         closed = true;
     } else {
         return null;
@@ -2454,7 +2472,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(c)) catch {};
-            } else if (synthParametric(c, &pathVs, alloc)) {
+            } else if (synthParametric(r, c, &pathVs, alloc, if (scaffold) frame else -1)) {
                 closed = true;
             }
         }
