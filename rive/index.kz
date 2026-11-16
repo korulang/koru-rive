@@ -3459,9 +3459,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
 // kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw 9=clippush 10=clippop
 const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64 };
 fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0, .e = 0, .g = 0 }; }
-fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
-    var out = std.ArrayList(OpRec).empty;
-    errdefer out.deinit(alloc);
+fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
@@ -3588,9 +3586,41 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         out.append(alloc, op0(7)) catch {};
     }
     if (clipOn) out.append(alloc, op0(10)) catch {};
-    return out.items;
+    return;
 }
 
+
+fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
+    var out = std.ArrayList(OpRec).empty;
+    errdefer out.deinit(alloc);
+    collectArtboardOps(r, abIdx, frame, alloc, &out);
+    // Component-list rows: ArtboardComponentList(559) items(427) with a
+    // ViewModel id -> embedded artboard (prop 583) renders at its own
+    // layout transform — same composed pass as emitOps rows mode.
+    var dbgAcl: usize = 0; var dbgOwn: usize = 0; var dbgItem: usize = 0; var dbgVmid: usize = 0; var dbgAb: usize = 0;
+    for (r.objects, 0..) |lo, li| {
+        if (lo.type_key != 559) continue;
+        dbgAcl += 1;
+        if (owningArtboard(r, li) != abIdx) continue;
+        dbgOwn += 1;
+        for (r.objects) |it| {
+            if (it.type_key != 427) continue;
+            dbgItem += 1;
+            const vmid = propU(it.props, 549, -1);
+            if (vmid < 0) continue;
+            dbgVmid += 1;
+            for (r.objects, 0..) |ao, ai2| {
+                if (ao.type_key != 1) continue;
+                if (propU(ao.props, 583, -1) == vmid) {
+                    dbgAb += 1;
+                    collectArtboardOps(r, ai2, frame, alloc, &out);
+                }
+            }
+        }
+    }
+    std.debug.print("rowsdbg ab={d} acl={d} own={d} item={d} vmid={d} ab={d}\n", .{ abIdx, dbgAcl, dbgOwn, dbgItem, dbgVmid, dbgAb });
+    return out.items;
+}
 ~pub tor ops { r: *Riv<loaded>, ab: i64, frame: i64 }
 ! op OpRec
 | done usize
