@@ -382,3 +382,17 @@ inputs firing. NEXT: instrument distance(t) per frame + check
 whether golden frame ops show DISCONTINUITIES (state jumps) vs
 smooth motion — discontinuity => transition, smooth-but-offset =>
 mix/time.
+
+## Frame-motion discriminator: SMOOTH LOOP, no transitions
+
+Golden frame transforms trace a continuous closed loop (408,298 ->
+... -> 396,298 over 30 advances) — the constrained shape rides the
+CLOSED PointsPath once per loop (distance 0->1 = full perimeter,
+loop=1 wraps at frame 60 = advance 30). No discontinuities => no
+SM transitions; motion is pure LinearAnimation. Divergence is
+therefore INSIDE my eval at distance>0: static (distance=0) matched
+29/30 because path-start is exact; at distance=0.5 my 16-chord
+cubicLen approximation accumulates length error vs Skia's Wang's-
+formula segment lengths -> arc-fraction maps to wrong position.
+NEXT: port wangs_formula cubic length (include/rive/math/
+wangs_formula.hpp) into cubicLen — the only remaining math gap.
