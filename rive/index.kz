@@ -1662,6 +1662,43 @@ const PV = struct {
     radius: f32,
 };
 
+fn frameColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64, dflt: u32) u32 {
+    var kf = std.ArrayList(struct { f: i64, v: u32 }).empty;
+    defer kf.deinit(std.heap.page_allocator);
+    var curSlot: i64 = -1;
+    var curKey: i64 = -1;
+    for (r.objects) |o| {
+        if (propByKey(o.props, 51)) |v| { curSlot = switch (v) { .uint => |u| @intCast(u), else => -1 }; curKey = -1; continue; }
+        if (propByKey(o.props, 53)) |v| { curKey = switch (v) { .uint => |u| @intCast(u), else => -1 }; continue; }
+        if (curSlot != objSlot or curKey != @as(i64, propKey)) continue;
+        if (propByKey(o.props, 88)) |v| {
+            const c: u32 = switch (v) { .color => |x| x, else => dflt };
+            kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = c }) catch {};
+        }
+    }
+    if (kf.items.len == 0) return dflt;
+    for (kf.items, 0..) |*a, i| {
+        var j = i;
+        while (j > 0 and kf.items[j - 1].f > a.f) : (j -= 1) { const t = kf.items[j - 1]; kf.items[j - 1] = kf.items[j]; kf.items[j] = t; }
+    }
+    if (frame <= kf.items[0].f) return kf.items[0].v;
+    if (frame >= kf.items[kf.items.len - 1].f) return kf.items[kf.items.len - 1].v;
+    var lo: usize = 0; var hi: usize = kf.items.len - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) / 2; if (kf.items[mid].f <= frame) lo = mid else hi = mid; }
+    const c0 = kf.items[lo].v; const c1 = kf.items[hi].v;
+    const span = @as(f32, @floatFromInt(kf.items[hi].f - kf.items[lo].f));
+    if (span <= 0) return c1;
+    const u = @as(f32, @floatFromInt(frame - kf.items[lo].f)) / span;
+    var outc: u32 = 0;
+    var sh: u5 = 0;
+    while (sh < 32) : (sh += 8) {
+        const a0 = @as(f32, @floatFromInt((c0 >> @intCast(sh)) & 0xFF));
+        const a1 = @as(f32, @floatFromInt((c1 >> @intCast(sh)) & 0xFF));
+        const av = @as(u32, @intFromFloat(a0 + (a1 - a0) * u + 0.5));
+        outc |= (av & 0xFF) << @intCast(sh);
+    }
+    return outc;
+}
 fn propFAnim(r: *const Riv, v: *const RivObj, key: u16, dflt: f32, frame: i64) f32 {
     if (frame >= 0 and hasKeyframed(r, v.slot, key)) return @as(f32, keyframedValue(r, v.slot, key, frame));
     return propF(v.props, key, dflt);
@@ -2641,7 +2678,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             // color: SolidColor child of this paint (index pi)
             var color: u32 = 0;
             for (r.objects) |*g| {
-                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = if (propByKey(g.props, 37)) |_| propColor(g.props, 37) else 0xFF747474; // SolidColorBase default m_ColorValue
+                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = if (frame >= 0 and hasKeyframed(r, g.slot, 37)) frameColor(r, g.slot, 37, frame, propColor(g.props, 37)) else if (propByKey(g.props, 37)) |_| propColor(g.props, 37) else 0xFF747474; // SolidColorBase default m_ColorValue
             }
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
