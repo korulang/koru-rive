@@ -3482,9 +3482,16 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
     // Artboard default clip (prop 196, default true): bounds rect wraps
     // all artboard content — clipPath op in golden, clip.push/pop in canvas.
     var clipOn = true;
+    var layoutClip = false;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) {
             if (propByKey(o.props, 196)) |v| clipOn = switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => true };
+        }
+    }
+    for (r.objects, 0..) |*lc, lci| {
+        if (lc.type_key == 409 and lc.parent_obj == @as(i64, @intCast(abIdx))) {
+            if (propByKey(lc.props, 196)) |v| { clipOn = switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => clipOn }; layoutClip = true; }
+            _ = lci;
         }
     }
     if (clipOn) {
@@ -3492,7 +3499,9 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var c0 = op0(1); c0.x1 = 0; c0.y1 = 0; out.append(alloc, c0) catch {};
         var c1 = op0(2); c1.x1 = @floatCast(aw0); c1.y1 = 0; out.append(alloc, c1) catch {};
         var c2 = op0(2); c2.x1 = @floatCast(aw0); c2.y1 = @floatCast(ah0); out.append(alloc, c2) catch {};
-        var c3 = op0(2); c3.x1 = 0; c3.y1 = @floatCast(ah0); out.append(alloc, c3) catch {};
+        if (layoutClip) {
+            var c3 = op0(2); c3.x1 = 0; c3.y1 = @floatCast(ah0); out.append(alloc, c3) catch {};
+        }
         out.append(alloc, op0(5)) catch {};
         var cpm = op0(6); cpm.a = 1; cpm.d = 1; out.append(alloc, cpm) catch {};
         var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
