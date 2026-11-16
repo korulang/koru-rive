@@ -2706,7 +2706,7 @@ fn glyfGlyph(b: []const u8, gid: u32) []GlyfPt {
     const g1 = gl.off + gn;
     if (g1 <= g0 or g0 + 10 > b.len) return out.items;
     // numberOfContours is i16 — read as signed
-    const ncs: i32 = @as(i16, @bitCast(@as(u16, be16(b, g0 + 10)))) ;
+    const ncs: i32 = @as(i16, @bitCast(@as(u16, be16(b, g0))));
     if (ncs < 0) return out.items; // composite: TODO components
     const npts = be16(b, g0 + 10 + 2 * ncs - 2) + 1; // last endPt
     var p = g0 + 10 + 2 * ncs;
