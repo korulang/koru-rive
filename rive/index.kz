@@ -1976,89 +1976,100 @@ fn cubicLen(p0: V2, p1: V2, p2: V2, p3: V2) f32 {
 
 const PMRes = struct { pos: V2, tan: V2, total: f32 };
 
+// Segment-table port of rive-cpp ContourMeasure (contour_measure.cpp):
+// each cubic flattens to n=Wang's-formula chords (cumDist = chord sums,
+// tol=0.5 -> invTolerance=2.0); getPosTan lerps t across sub-segments
+// then evaluates the cubic analytically.
+const PSeg = struct { dist: f32, pt: u32, t: f32, kind: u8 }; // kind 0=line 1=cubic
+
+fn wangCubicN(p0: V2, p1: V2, p2: V2, p3: V2) u32 {
+    const v0x = p0.x - 2 * p1.x + p2.x;
+    const v0y = p0.y - 2 * p1.y + p2.y;
+    const v1x = p1.x - 2 * p2.x + p3.x;
+    const v1y = p1.y - 2 * p2.y + p3.y;
+    const m = @max(v0x * v0x + v0y * v0y, v1x * v1x + v1y * v1y) * 2.25;
+    const n = @ceil(@ceil(@sqrt(@sqrt(m))));
+    return @intFromFloat(@min(n, 100));
+}
+
 fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
-    // total length first pass
-    var total: f32 = 0;
-    var p: usize = 0;
-    var prev = V2{ .x = 0, .y = 0 };
-    var started = false;
+    const alloc = std.heap.page_allocator;
+    var segs = std.ArrayList(PSeg).empty;
+    defer segs.deinit(alloc);
+    var dist: f32 = 0;
+    var p: usize = 0;      // next unconsumed point index
+    var p0 = V2{ .x = 0, .y = 0 }; // contour start (move point)
     for (verbs) |v| {
         switch (v) {
-            0, 1 => { // move/line — 1 pt
-                if (p + 1 < pts.len) {
-                    const q = pts[p]; p += 1;
-                    if (v == 1 and started) total += v2len(v2sub2(q, prev));
-                    prev = q; started = true;
+            0 => { // move — consumes 1 pt, sets contour start
+                if (p < pts.len) { p0 = pts[p]; p += 1; }
+            },
+            1 => { // line — dest pt at p, start at p-1
+                if (p + 1 <= pts.len and p > 0) {
+                    const a = pts[p - 1]; const b = pts[p];
+                    const d = v2len(v2sub2(b, a));
+                    if (d > 0) {
+                        dist += d;
+                        segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = 1, .kind = 0 }) catch {};
+                    }
+                    p += 1;
                 }
             },
-            2 => { p += 2; }, // quad — unsupported in our streams
-            4 => { // cubic — 3 pts
-                if (p + 5 < pts.len + 1 and p + 2 < pts.len) {
-                    const c1 = pts[p]; const c2 = pts[p + 1]; const e = pts[p + 2];
-                    const base = if (started) prev else c1;
-                    total += cubicLen(base, c1, c2, e);
-                    prev = e; p += 3; started = true;
+            4 => { // cubic — c1,c2,end at p..p+2, start at p-1
+                if (p >= 1 and p + 2 < pts.len) {
+                    const a = pts[p - 1]; const c1 = pts[p]; const c2 = pts[p + 1]; const e = pts[p + 2];
+                    const n = wangCubicN(a, c1, c2, e);
+                    if (n > 0) { // contour_measure: n==0 emits NO segments
+                        const dt: f32 = 1 / @as(f32, @floatFromInt(n));
+                        var prev = a;
+                        var tt: f32 = dt;
+                        var i: u32 = 1;
+                        while (i < n) : (i += 1) {
+                            const np = cubicAt(a, c1, c2, e, tt);
+                            dist += v2len(v2sub2(np, prev));
+                            segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = tt, .kind = 1 }) catch {};
+                            prev = np; tt += dt;
+                        }
+                        dist += v2len(v2sub2(e, prev));
+                        segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = 1, .kind = 1 }) catch {};
+                    }
+                    p += 3;
                 }
             },
             else => {},
         }
     }
-    if (total < 1e-9) return .{ .pos = prev, .tan = .{ .x = 1, .y = 0 }, .total = total };
-    // second pass: walk to frac*total
+    const total = dist;
+    if (segs.items.len == 0 or total < 1e-9) {
+        return .{ .pos = p0, .tan = .{ .x = 1, .y = 0 }, .total = total };
+    }
     const target = @max(0, @min(1, frac)) * total;
-    var acc: f32 = 0;
-    p = 0; prev = V2{ .x = 0, .y = 0 }; started = false;
-    for (verbs) |v| {
-        switch (v) {
-            0, 1 => {
-                if (p + 1 < pts.len) {
-                    const q = pts[p]; p += 1;
-                    if (v == 1 and started) {
-                        const seg = v2len(v2sub2(q, prev));
-                        if (acc + seg >= target) {
-                            const t = if (seg > 1e-9) (target - acc) / seg else 0;
-                            const pos = v2add(prev, v2scale(v2sub2(q, prev), t));
-                            const d = v2sub2(q, prev); const l = v2len(d);
-                            return .{ .pos = pos, .tan = if (l > 1e-9) .{ .x = d.x / l, .y = d.y / l } else .{ .x = 1, .y = 0 }, .total = total };
-                        }
-                        acc += seg;
-                    }
-                    prev = q; started = true;
-                }
-            },
-            4 => {
-                if (p + 2 < pts.len) {
-                    const c1 = pts[p]; const c2 = pts[p + 1]; const e = pts[p + 2];
-                    const base = if (started) prev else c1;
-                    const seg = cubicLen(base, c1, c2, e);
-                    if (acc + seg >= target) {
-                        // bisect t on length
-                        var lo: f32 = 0; var hi: f32 = 1;
-                        var tt: f32 = 0.5;
-                        var k: usize = 0;
-                        while (k < 24) : (k += 1) {
-                            tt = (lo + hi) / 2;
-                            // de Casteljau split at tt — first-half controls
-                            const u = 1 - tt;
-                            const q0 = v2add(v2scale(base, u), v2scale(c1, tt));
-                            const q1 = v2add(v2scale(c1, u), v2scale(c2, tt));
-                            const q2 = v2add(v2scale(c2, u), v2scale(e, tt));
-                            const r0 = v2add(v2scale(q0, u), v2scale(q1, tt));
-                            const r1 = v2add(v2scale(q1, u), v2scale(q2, tt));
-                            const s = v2add(v2scale(r0, u), v2scale(r1, tt));
-                            const l = cubicLen(base, q0, r0, s);
-                            if (l < target - acc) lo = tt else hi = tt;
-                        }
-                        const pos = cubicAt(base, c1, c2, e, tt);
-                        return .{ .pos = pos, .tan = cubicTan(base, c1, c2, e, tt), .total = total };
-                    }
-                    acc += seg; prev = e; p += 3; started = true;
-                }
-            },
-            else => {},
-        }
+    // findSegment: first seg.dist >= target, skip leading zero-dist
+    var idx: usize = 0;
+    while (idx < segs.items.len and segs.items[idx].dist < target) idx += 1;
+    if (idx >= segs.items.len) idx = segs.items.len - 1;
+    while (idx + 1 < segs.items.len and segs.items[idx].dist == 0) idx += 1;
+    const seg = segs.items[idx];
+    const prevD: f32 = if (idx > 0) segs.items[idx - 1].dist else 0;
+    const relD = if (seg.dist > prevD) (target - prevD) / (seg.dist - prevD) else 0;
+    if (seg.kind == 0) { // line
+        const a = pts[@as(usize, @intCast(seg.pt))]; const b = pts[@as(usize, @intCast(seg.pt)) + 1];
+        const pos = v2add(a, v2scale(v2sub2(b, a), relD));
+        const d = v2sub2(b, a); const l = v2len(d);
+        return .{ .pos = pos, .tan = if (l > 1e-9) .{ .x = d.x / l, .y = d.y / l } else .{ .x = 1, .y = 0 }, .total = total };
     }
-    return .{ .pos = prev, .tan = .{ .x = 1, .y = 0 }, .total = total };
+    // cubic: recover t by lerping prevT->seg.t across relD
+    var prevT: f32 = 0;
+    if (idx > 0 and segs.items[idx - 1].pt == seg.pt) prevT = segs.items[idx - 1].t;
+    const t = prevT + (seg.t - prevT) * relD;
+    const a = pts[@as(usize, @intCast(seg.pt))];
+    const c1 = pts[@as(usize, @intCast(seg.pt)) + 1];
+    const c2 = pts[@as(usize, @intCast(seg.pt)) + 2];
+    const e = pts[@as(usize, @intCast(seg.pt)) + 3];
+    const pos = cubicAt(a, c1, c2, e, t);
+    const tan = cubicTan(a, c1, c2, e, t);
+    const l = v2len(tan);
+    return .{ .pos = pos, .tan = if (l > 1e-9) .{ .x = tan.x / l, .y = tan.y / l } else .{ .x = 1, .y = 0 }, .total = total };
 }
 
 // ---- constraint eval: FollowPathConstraint --------------------------------
@@ -2137,7 +2148,7 @@ fn pathStreamsFor(r: *const Riv, idx: usize, alloc: std.mem.Allocator) ?struct {
                         pvs.append(alloc, fileVert(v)) catch {};
                     }
                 }
-                closed = propU(c.props, 32, 0) != 0;
+                closed = if (propByKey(c.props, 32)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => false } else false;
             }
         }
     } else if (o.type_key == 16) { // PointsPath — vertex children, isClosed prop 32
@@ -2146,7 +2157,7 @@ fn pathStreamsFor(r: *const Riv, idx: usize, alloc: std.mem.Allocator) ?struct {
                 pvs.append(alloc, fileVert(c)) catch {};
             }
         }
-        closed = propU(o.props, 32, 0) != 0;
+        closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => false } else false;
     } else if (synthParametric(o, &pvs, alloc)) {
         closed = true;
     } else {
