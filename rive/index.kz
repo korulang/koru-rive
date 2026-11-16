@@ -1932,6 +1932,124 @@ fn keyframedValue(r: *Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     return kf.items[kf.items.len - 1].v;
 }
 
+
+// ---- PathMeasure-lite: pos+tan at fraction of arc length -------------
+// Segments kept analytic (no flatten): line exact; cubic pos/tan via
+// de Casteljau, length via 16-chord approximation (TODO: Wang's formula
+// for exactness — golden transforms will falsify if insufficient).
+
+fn v2add(a: V2, b: V2) V2 { return .{ .x = a.x + b.x, .y = a.y + b.y }; }
+fn v2sub2(a: V2, b: V2) V2 { return .{ .x = a.x - b.x, .y = a.y - b.y }; }
+fn v2scale(a: V2, s: f32) V2 { return .{ .x = a.x * s, .y = a.y * s }; }
+fn v2len(a: V2) f32 { return @sqrt(a.x * a.x + a.y * a.y); }
+
+fn cubicAt(p0: V2, p1: V2, p2: V2, p3: V2, t: f32) V2 {
+    const u = 1 - t;
+    const a = u * u * u; const b = 3 * u * u * t; const c = 3 * u * t * t; const d = t * t * t;
+    return .{ .x = a * p0.x + b * p1.x + c * p2.x + d * p3.x,
+              .y = a * p0.y + b * p1.y + c * p2.y + d * p3.y };
+}
+fn cubicTan(p0: V2, p1: V2, p2: V2, p3: V2, t: f32) V2 {
+    const u = 1 - t;
+    const a = 3 * u * u; const b = 6 * u * t; const c = 3 * t * t;
+    const dx = a * (p1.x - p0.x) + b * (p2.x - p1.x) + c * (p3.x - p2.x);
+    const dy = a * (p1.y - p0.y) + b * (p2.y - p1.y) + c * (p3.y - p2.y);
+    const l = @sqrt(dx * dx + dy * dy);
+    if (l < 1e-9) return .{ .x = 1, .y = 0 };
+    return .{ .x = dx / l, .y = dy / l };
+}
+fn cubicLen(p0: V2, p1: V2, p2: V2, p3: V2) f32 {
+    var acc: f32 = 0;
+    var prev = p0;
+    const N: usize = 16;
+    var i: usize = 1;
+    while (i <= N) : (i += 1) {
+        const cur = cubicAt(p0, p1, p2, p3, @as(f32, @floatFromInt(i)) / N);
+        acc += v2len(v2sub2(cur, prev));
+        prev = cur;
+    }
+    return acc;
+}
+
+const PMRes = struct { pos: V2, tan: V2, total: f32 };
+
+fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
+    // total length first pass
+    var total: f32 = 0;
+    var p: usize = 0;
+    var prev = V2{ .x = 0, .y = 0 };
+    var started = false;
+    for (verbs) |v| {
+        switch (v) {
+            0, 1 => { // move/line — 1 pt
+                if (p + 1 < pts.len) {
+                    const q = pts[p]; p += 1;
+                    if (v == 1 and started) total += v2len(v2sub2(q, prev));
+                    prev = q; started = true;
+                }
+            },
+            2 => { p += 2; }, // quad — unsupported in our streams
+            4 => { // cubic — 3 pts
+                if (p + 5 < pts.len + 1 and p + 2 < pts.len) {
+                    const c1 = pts[p]; const c2 = pts[p + 1]; const e = pts[p + 2];
+                    const base = if (started) prev else c1;
+                    total += cubicLen(base, c1, c2, e);
+                    prev = e; p += 3; started = true;
+                }
+            },
+            else => {},
+        }
+    }
+    if (total < 1e-9) return .{ .pos = prev, .tan = .{ .x = 1, .y = 0 }, .total = total };
+    // second pass: walk to frac*total
+    const target = @max(0, @min(1, frac)) * total;
+    var acc: f32 = 0;
+    p = 0; prev = V2{ .x = 0, .y = 0 }; started = false;
+    for (verbs) |v| {
+        switch (v) {
+            0, 1 => {
+                if (p + 1 < pts.len) {
+                    const q = pts[p]; p += 1;
+                    if (v == 1 and started) {
+                        const seg = v2len(v2sub2(q, prev));
+                        if (acc + seg >= target) {
+                            const t = if (seg > 1e-9) (target - acc) / seg else 0;
+                            const pos = v2add(prev, v2scale(v2sub2(q, prev), t));
+                            const d = v2sub2(q, prev); const l = v2len(d);
+                            return .{ .pos = pos, .tan = if (l > 1e-9) .{ .x = d.x / l, .y = d.y / l } else .{ .x = 1, .y = 0 }, .total = total };
+                        }
+                        acc += seg;
+                    }
+                    prev = q; started = true;
+                }
+            },
+            4 => {
+                if (p + 2 < pts.len) {
+                    const c1 = pts[p]; const c2 = pts[p + 1]; const e = pts[p + 2];
+                    const base = if (started) prev else c1;
+                    const seg = cubicLen(base, c1, c2, e);
+                    if (acc + seg >= target) {
+                        // bisect t on length
+                        var lo: f32 = 0; var hi: f32 = 1;
+                        var tt: f32 = 0.5;
+                        var k: usize = 0;
+                        while (k < 24) : (k += 1) {
+                            tt = (lo + hi) / 2;
+                            const l = cubicLen(base, c1, c2, cubicAt(base, c1, c2, e, tt));
+                            if (l < target - acc) lo = tt else hi = tt;
+                        }
+                        const pos = cubicAt(base, c1, c2, e, tt);
+                        return .{ .pos = pos, .tan = cubicTan(base, c1, c2, e, tt), .total = total };
+                    }
+                    acc += seg; prev = e; p += 3; started = true;
+                }
+            },
+            else => {},
+        }
+    }
+    return .{ .pos = prev, .tan = .{ .x = 1, .y = 0 }, .total = total };
+}
+
 fn dumpDrawOps(r: *Riv) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect
