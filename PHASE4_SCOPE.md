@@ -333,3 +333,12 @@ committed producer-side (`ff18735`).
   clip_tests still floods red -> failure is inside clip.push.path
   realization or clip-path coordinate space, not missing verb.
   Next diagnostic: clip path bounds vs expected ink region.
+
+- clip_tests op-order finding: probe bridge correct (kind9 ->
+  clip.push.path consumes accumulated hcell path, copies geometry).
+  Suspect = op ORDER: clip path verbs emit, then k=6 transform push,
+  then k=9 clip push — clip.push.path rasterizes at PUSH time under
+  whatever CTM is current; if the clip path was authored in the
+  post-transform space but pushed before/after the wrong transform,
+  the mask lands wrong -> effective no-clip -> red flood. Next:
+  verify clip path coords vs the k=6 transform ordering in collectOps.
