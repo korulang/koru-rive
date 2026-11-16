@@ -475,3 +475,14 @@ committed producer-side (`ff18735`).
   853 nonbg / 0 edge px — no seam bleed exists in current output.
   Seam-gap diagnosis RETRACTED as unverified; mesh AA confirmed
   pixel no-op on this fixture; no coverage residual stands.
+
+- in_band_asset: FAIL same signature — ours (49,49,49) bg field,
+  ref blank (ink=None). PATTERN across lwti/hff/deam/iba: our
+  runtime emits an ff313131 bg fill the browser doesn't draw.
+  Either (a) systematic defect — hidden/invisible bg shape
+  reaching paint loops via a path isVisible(41) doesn't cover
+  (artboard-level bg?), or (b) browser genuinely shows nothing.
+  ONE check decides: does the .riv's bg shape carry isVisible=0
+  or is it artboard-background (different prop)? If (a) it's a
+  real renderer defect affecting EVERY bg-fill fixture — higher
+  value than more gates.
