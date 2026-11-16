@@ -269,3 +269,10 @@ committed producer-side (`ff18735`).
   ViewModelInstanceListItem is the remaining gap — all rows would show
   the same string until list replication lands); style TL=10 radius
   now rounds its layout box. cl1 was already FAIL-scope (list binding).
+
+- Per-item VM resolution (t42 cont.): listRowItems resolves 559 -> pk800
+  bind -> path -> instance -> 441 list -> contiguous 427s (was: all 427s
+  per list). g_rowVmid/g_rowInstOrd scope each row's emission;
+  boundRunText picks Nth instance of bind's vmId on match. cl1 rows now
+  ONE/TWO/THREE/THREE/THREE/THREE/TWO/ONE (verified rowbind print).
+  clfp Item gate unaffected (no 427s); dsm ops identical.
