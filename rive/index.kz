@@ -2358,25 +2358,39 @@ fn owningArtboard(r: *const Riv, idx: usize) usize {
 
 fn dumpDrawOps(r: *Riv, frame: i64) void {
     if (std.posix.getenv("DUMP_SECTIONS") != null) {
-        var ai: usize = 0;
+        // golden layout: per artboard -> static + default SM x 30 frames;
+        // artboards with ArtboardComponentList get a second composed
+        // pass with instantiated rows. Static marker only on the first
+        // artboard's renders (golden emits later statics bare).
+        var first_ab: usize = 0;
+        var seen = false;
         for (r.objects, 0..) |o, oi| {
             if (o.type_key != 1) continue;
-            std.debug.print("--- static t=0 ---\n", .{});
-            emitOps(r, 0, oi, true);
-            std.debug.print("--- sm{d} ---\n", .{propU(o.props, 236, @intCast(ai))});
-            var f: i64 = 0;
-            while (f < 30) : (f += 1) {
-                std.debug.print("--- frame {d} t={d:.4} ---\n", .{ f, @as(f32, @floatFromInt(f)) / 30 });
-                emitOps(r, f * 2, oi, true);
+            if (!seen) { first_ab = oi; seen = true; }
+            var has_list = false;
+            for (r.objects, 0..) |c, ci| {
+                if (c.type_key == 559 and owningArtboard(r, ci) == oi) has_list = true;
             }
-            ai += 1;
+            const npass: usize = if (has_list) 2 else 1;
+            var pass: usize = 0;
+            while (pass < npass) : (pass += 1) {
+                const rows = pass == 1;
+                if (oi == first_ab) std.debug.print("--- static t=0 ---\n", .{});
+                emitOps(r, 0, oi, true, rows);
+                std.debug.print("--- sm{d} ---\n", .{propU(o.props, 236, @intCast(pass))});
+                var f: i64 = 0;
+                while (f < 30) : (f += 1) {
+                    std.debug.print("--- frame {d} t={d:.4} ---\n", .{ f, @as(f32, @floatFromInt(f + 1)) / 30 });
+                    emitOps(r, f * 2, oi, true, rows);
+                }
+            }
         }
         return;
     }
-    emitOps(r, frame, 0, false);
+    emitOps(r, frame, 0, false, false);
 }
 
-fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool) void {
+fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect
     // emitted once per artboard before its drawables, golden clipPath op.
@@ -2521,6 +2535,25 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool) void {
                 std.debug.print("{s}\n", .{s.items});
             }
         }
+    // Composed pass: ArtboardComponentList rows render inside the
+    // instantiator's section at layout transform (acl.cpp:2047).
+    if (rows) {
+        for (r.objects, 0..) |lo, li| {
+            if (lo.type_key != 559) continue;
+            if (owningArtboard(r, li) != abIdx) continue;
+            for (r.objects) |it| {
+                if (it.type_key != 427) continue;
+                const vmid = propU(it.props, 549, -1);
+                if (vmid < 0) continue;
+                for (r.objects, 0..) |ao, ai2| {
+                    if (ao.type_key != 1) continue;
+                    if (propU(ao.props, 583, -1) == vmid) {
+                        emitOps(r, frame, ai2, true, false);
+                    }
+                }
+            }
+        }
+    }
     }
 }
 
