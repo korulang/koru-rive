@@ -2539,11 +2539,8 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
         // layout-managed artboards re-base content into origin-centered
         // space: bg paint gets a -origin counter-transform (Item golden)
         var hasLayout = false;
-        for (r.objects) |lo| {
-            if (lo.type_key == 88 and owningArtboard(r, @intCast(r.objects.len - 1)) >= 0) {}
-        }
         for (r.objects, 0..) |lo, li| {
-            if (lo.type_key == 88 and owningArtboard(r, li) == i) { hasLayout = true; break; }
+            if (lo.type_key == 409 and owningArtboard(r, li) == i) { hasLayout = true; break; }
         }
         const ox = propF(o.props, 11, 0) * aw;
         const oy = propF(o.props, 12, 0) * ah;
