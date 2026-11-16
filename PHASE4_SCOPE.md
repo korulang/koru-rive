@@ -641,3 +641,9 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   gap 0.80%. SM listeners still unexercised (autoplay animation,
   no clicks in refs) — named residual. Regression: cl1/clv/clfpItem
   PASS, dsm ops identical.
+
+- SM listeners SCOPED OUT (t42 ruling): browser refs are tick-driven,
+  render_browser.mjs has no click/input injection -> listener->boolean
+  (pk=634) paths have no pixel oracle. Not built; named gap until an
+  input-injection oracle exists. cl2's animation is autoplay so t10
+  gate is unaffected.
