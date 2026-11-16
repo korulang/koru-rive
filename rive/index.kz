@@ -2590,6 +2590,80 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
     }
 }
 
+// Intrinsic artboard size: union of content bounds when the artboard's
+// LayoutComponentStyle.intrinsicallySizedValue (key 606) is true.
+// Currently covers Text objects (glyph advance sum + font metrics);
+// shape bounds union is the remaining piece.
+const ArtboardSize = struct { w: f32, h: f32 };
+fn artboardContentBounds(r: *const Riv, abIdx: usize) ArtboardSize {
+    var maxX: f32 = 0;
+    var maxY: f32 = 0;
+    var font: []const u8 = "";
+    for (r.objects) |fc| {
+        if (fc.type_key == 106) {
+            for (fc.props) |p| { if (p.key == 212 and p.value == .bytes) { font = p.value.bytes; break; } }
+        }
+        if (font.len > 0) break;
+    }
+    const hd = sfntFind(font, tag4("head"));
+    const upem: f32 = if (hd) |h| @floatFromInt(be16(font, @as(usize, @intCast(h.off)) + 18)) else 0;
+    const hh = sfntFind(font, tag4("hhea"));
+    const ascU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 4)) else 0;
+    const descU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 6)) else 0;
+    for (r.objects, 0..) |t, ti| {
+        if (t.type_key != 77) continue;
+        if (owningArtboard(r, ti) != abIdx) continue;
+        // TextValueRun child -> text + styleId
+        var text: []const u8 = ""; var styleId: i64 = -1;
+        for (r.objects) |run| {
+            if (run.type_key == 135 and run.parent_obj == @as(i64, @intCast(ti))) {
+                for (run.props) |p| {
+                    if (p.key == 268 and p.value == .bytes) text = p.value.bytes;
+                    if (p.key == 272) styleId = switch (p.value) { .uint => |u| @intCast(u), else => -1 };
+                }
+            }
+        }
+        var fontSize: f32 = 0;
+        for (r.objects) |st| {
+            if (st.type_key == 137 and st.slot == styleId) {
+                for (st.props) |p| { if (p.key == 274) fontSize = switch (p.value) { .dbl => |x| x, else => 0 }; }
+            }
+        }
+        if (font.len == 0 or upem == 0 or fontSize == 0) continue;
+        const scale = fontSize / upem;
+        var w: f32 = 0;
+        for (text) |ch| {
+            if (ch < 0x20) continue;
+            w += hmtxAdvance(font, cmapGlyph(font, ch)) * scale;
+        }
+        const hgt = (ascU - descU) * scale;
+        // text world offset (LayoutComponent chain) shifts bounds
+        const m = effectiveWorld(r, ti, -1);
+        const x0 = m[4] + @min(0, w);
+        const y0 = m[5];
+        if (x0 + w > maxX) maxX = x0 + w;
+        if (y0 + hgt > maxY) maxY = y0 + hgt;
+    }
+    return .{ .w = maxX, .h = maxY };
+}
+fn artboardIntrinsicSize(r: *const Riv, abIdx: usize, aw: f32, ah: f32) ArtboardSize {
+    // styleId (494) -> LayoutComponentStyle -> intrinsicallySizedValue (606)
+    var intrinsic = false;
+    for (r.objects, 0..) |ao, ai| {
+        if (ao.type_key == 1 and ai == abIdx) {
+            const sid = propU(ao.props, 494, -1);
+            for (r.objects) |ls| {
+                if (ls.type_key == 420 and ls.slot == sid) {
+                    intrinsic = if (propByKey(ls.props, 606)) |v| switch (v) { .boolean => |b| b, else => false } else false;
+                }
+            }
+        }
+    }
+    if (!intrinsic) return ArtboardSize{ .w = aw, .h = ah };
+    const b = artboardContentBounds(r, abIdx);
+    if (b.w <= 0 or b.h <= 0) return ArtboardSize{ .w = aw, .h = ah };
+    return ArtboardSize{ .w = b.w, .h = b.h };
+}
 fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold: bool) void {
     const alloc = std.heap.page_allocator;
     if (scoped and scaffold) {
@@ -2600,8 +2674,9 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         var ox: f32 = 0; var oy: f32 = 0;
         for (r.objects, 0..) |ao, aoi| {
             if (ao.type_key == 1 and aoi == abIdx) {
-                ox = propF(ao.props, 11, 0) * propF(ao.props, 7, 0);
-                oy = propF(ao.props, 12, 0) * propF(ao.props, 8, 0);
+                const es = artboardIntrinsicSize(r, abIdx, propF(ao.props, 7, 0), propF(ao.props, 8, 0));
+                ox = propF(ao.props, 11, 0) * es.w;
+                oy = propF(ao.props, 12, 0) * es.h;
             }
         }
         std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 {d:.4} {d:.4}\n", .{ ox, oy });
