@@ -3317,15 +3317,14 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             const items = listRowItems(r, li, alloc);
             defer alloc.free(items);
             var rowIdx: usize = 0;
-            for (items) |ii| {
-                const it = &r.objects[ii];
-                const vmid = propU(it.props, 549, -1);
-                if (vmid < 0) continue;
-                g_rowVmid = vmid;
-                g_rowInstOrd = propU(it.props, 550, -1);
+            for (items) |row| {
+                if (row.vmId < 0) continue;
+                g_rowVmid = row.vmId;
+                g_rowInstOrd = row.instOrd;
+                g_rowIdx = @intCast(rowIdx);
                 for (r.objects, 0..) |ao, ai2| {
                     if (ao.type_key != 1) continue;
-                    if (propU(ao.props, 583, -1) == vmid) {
+                    if (propU(ao.props, 583, -1) == row.vmId) {
                         const slot = listRowSlot(r, li, ai2, rowIdx);
                         std.debug.print("save\n", .{});
                         std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ slot[0], slot[1], slot[2], slot[3], slot[4], slot[5] });
@@ -3336,6 +3335,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
                 rowIdx += 1;
                 g_rowVmid = -1;
                 g_rowInstOrd = -1;
+                g_rowIdx = -1;
             }
         }
     }
@@ -3560,6 +3560,7 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
 
 var g_rowVmid: i64 = -1;
 var g_rowInstOrd: i64 = -1;
+var g_rowIdx: i64 = -1;
 
 fn isVmInstanceValueType(key: u64) bool {
     return switch (key) {
@@ -3680,7 +3681,11 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                     const vo = &r.objects[j];
                     if (!isVmInstanceValueType(vo.type_key)) break;
                     if (propU(vo.props, 554, -1) == @as(i64, @intCast(propId))) {
-                        const scalar = vmScalarOf(vo) orelse return null;
+                        var scalar = vmScalarOf(vo) orelse return null;
+                        // SymbolListIndex (566) is positional: in row scope
+                        // it yields the row index, not the stored value —
+                        // cl2 labels render to_string(rowIdx).
+                        if (vo.type_key == 566 and g_rowIdx >= 0) scalar = .{ .symbol = @intCast(g_rowIdx) };
                         const res = vmScalarToString(r, conv, scalar, alloc) orelse return null;
                         if (g_rowInstOrd >= 0) std.debug.print("rowbind ord={d} vmid={d} -> '{s}'\n", .{ g_rowInstOrd, g_rowVmid, res });
                         return res;
@@ -3696,23 +3701,31 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
     return null;
 }
 
+const ListRow = struct { vmId: i64, instOrd: i64 };
+
 // Resolve an ArtboardComponentList(559)'s row items: its pk=800
 // DataBindContext -> absolute source path -> ViewModelInstance ->
 // ViewModelInstanceList(441) value -> the contiguous 427 items that
-// follow it. Returns object indices; empty when any hop fails.
-fn listRowItems(r: *const Riv, loIdx: usize, alloc: std.mem.Allocator) []usize {
+// follow it. When the 441 chain is absent but the bind carries a
+// DataConverterNumberToList (568), the bound number N synthesizes N
+// rows (converter semantics: fresh default instance of the
+// converter's viewModelId per item — data_converter_number_to_list.cpp).
+fn listRowItems(r: *const Riv, loIdx: usize, alloc: std.mem.Allocator) []ListRow {
     var lastBindable: i64 = -1;
     var pathBytes: ?[]const u8 = null;
+    var convIdx: i64 = -1;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 446 or o.type_key == 447) {
             if (lastBindable == @as(i64, @intCast(loIdx)) and o.type_key == 447) {
                 var pk: u64 = 0;
                 var pb: ?[]const u8 = null;
+                var cv: i64 = -1;
                 for (o.props) |p| {
                     if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
                     if (p.key == 588) { if (p.value == .bytes) pb = p.value.bytes; }
+                    if (p.key == 660) cv = if (p.value == .uint) @intCast(p.value.uint) else -1;
                 }
-                if (pk == 800) pathBytes = pb;
+                if (pk == 800) { pathBytes = pb; convIdx = cv; }
             }
             continue;
         }
@@ -3742,22 +3755,47 @@ fn listRowItems(r: *const Riv, loIdx: usize, alloc: std.mem.Allocator) []usize {
     var j = instIdx + 1;
     var listIdx: usize = 0;
     var haveList = false;
+    var numVal: f64 = 0;
+    var haveNum = false;
     while (j < r.objects.len) : (j += 1) {
         const vo = &r.objects[j];
         if (!isVmInstanceValueType(vo.type_key)) break;
         if (propU(vo.props, 554, -1) == @as(i64, @intCast(propId))) {
             if (vo.type_key == 441) { listIdx = j; haveList = true; }
+            if (vo.type_key == 442) { numVal = propF(vo.props, 575, 0); haveNum = true; }
             break;
         }
     }
-    if (!haveList) return &.{};
-    var items = std.ArrayList(usize).empty;
-    j = listIdx + 1;
-    while (j < r.objects.len) : (j += 1) {
-        if (r.objects[j].type_key != 427) break;
-        items.append(alloc, j) catch break;
+    if (haveList) {
+        var rows = std.ArrayList(ListRow).empty;
+        j = listIdx + 1;
+        while (j < r.objects.len) : (j += 1) {
+            if (r.objects[j].type_key != 427) break;
+            rows.append(alloc, .{
+                .vmId = @intCast(propU(r.objects[j].props, 549, -1)),
+                .instOrd = @intCast(propU(r.objects[j].props, 550, -1)),
+            }) catch break;
+        }
+        return rows.items;
     }
-    return items.items;
+    // Synthetic path: NumberToList converter turns the bound number
+    // into N rows on the converter's viewModelId (cl2: ItemCount=12 ->
+    // 12 ItemVM rows). Each row binds the VM's default instance ->
+    // ordinal 0; the row index itself rides g_rowIdx for SymbolListIndex.
+    if (haveNum and convIdx >= 0) {
+        const conv = dataConverterAt(r, convIdx) orelse return &.{};
+        if (conv.type_key != 568) return &.{};
+        const rowVm = @as(i64, @intCast(propU(conv.props, 816, -1)));
+        if (rowVm < 0) return &.{};
+        const count = std.math.clamp(@as(i64, @intFromFloat(@floor(numVal))), 0, 1 << 20);
+        var rows = std.ArrayList(ListRow).empty;
+        var i: i64 = 0;
+        while (i < count) : (i += 1) {
+            rows.append(alloc, .{ .vmId = rowVm, .instOrd = 0 }) catch break;
+        }
+        return rows.items;
+    }
+    return &.{};
 }
 
 // Slot transform for list row `rowIdx`: the 559's world transform
@@ -3770,21 +3808,48 @@ fn listRowSlot(r: *const Riv, loIdx: usize, itemArtIdx: usize, rowIdx: usize) Ma
     var dir: i64 = 0;
     var gapH: f32 = 0;
     var gapV: f32 = 0;
+    var wrap: i64 = 0;
     if (p >= 0) {
         for (r.objects) |st| {
             if (st.type_key == 420 and st.parent_obj == p) {
-                dir = propU(st.props, 598, 0);
+                dir = propU(st.props, 598, 2); // default Row (Yoga enum, generated base m_FlexDirectionValue=2)
                 gapH = propF(st.props, 498, 0);
                 gapV = propF(st.props, 499, 0);
+                wrap = propU(st.props, 604, 0);
                 break;
             }
         }
     }
     const ia = &r.objects[itemArtIdx];
     const es = artboardIntrinsicSize(r, itemArtIdx, propF(ia.props, 7, 0), propF(ia.props, 8, 0));
-    const pitch = if (dir == 2 or dir == 3) es.w + gapH else es.h + gapV;
-    const off: f32 = @as(f32, @floatFromInt(rowIdx)) * pitch;
-    const local: Mat2 = if (dir == 2 or dir == 3) .{ 1, 0, 0, 1, off, 0 } else .{ 1, 0, 0, 1, 0, off };
+    const horiz = dir == 2 or dir == 3;
+    const pitch = if (horiz) es.w + gapH else es.h + gapV;
+    var local: Mat2 = undefined;
+    if (wrap != 0) {
+        // flexWrap: items flow along the main axis and wrap to the next
+        // line when the content box fills — cl2 grid 4x3 in a 480px box
+        // (item 100 + gap 10 -> perRow = floor(480/110) = 4).
+        const avail = layoutAvailOf(r, @intCast(p));
+        const itemMain = if (horiz) es.w else es.h;
+        const mainGap = if (horiz) gapH else gapV;
+        const crossGap = if (horiz) gapV else gapH;
+        const availMain = if (horiz) avail.w else avail.h;
+        const perRow = if (itemMain + mainGap > 0 and availMain > 0)
+            @max(1, @as(usize, @intFromFloat(@floor((availMain + mainGap) / (itemMain + mainGap)))))
+        else 1;
+        const line = rowIdx / perRow;
+        const col = rowIdx % perRow;
+        const fx: f32 = @floatFromInt(col);
+        const fy: f32 = @floatFromInt(line);
+        if (horiz) {
+            local = .{ 1, 0, 0, 1, fx * (itemMain + gapH), fy * (es.h + crossGap) };
+        } else {
+            local = .{ 1, 0, 0, 1, fy * (es.w + crossGap), fx * (itemMain + gapV) };
+        }
+    } else {
+        const off: f32 = @as(f32, @floatFromInt(rowIdx)) * pitch;
+        local = if (horiz) .{ 1, 0, 0, 1, off, 0 } else .{ 1, 0, 0, 1, 0, off };
+    }
     return matMul(effectiveWorldRaw(r, loIdx), local);
 }
 
@@ -4422,6 +4487,62 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
         out.append(alloc, op0(7)) catch {};
     }
+    // Artboard-level paints: Fill/Stroke parented directly to the
+    // Artboard paints the backdrop rect (cl2 Main obj22 -> 0xff313131;
+    // without this the canvas clear shows through as magenta). 409-
+    // parented fills stay with the layout-box pass below; shape/137
+    // parents have their own paths.
+    for (r.objects, 0..) |*c, pi| {
+        if (c.type_key != 20 and c.type_key != 24) continue;
+        if (c.parent_obj != @as(i64, @intCast(abIdx))) continue;
+        if (propByKey(c.props, 41)) |v| switch (v) {
+            .boolean => |b| if (!b) continue,
+            .dbl => |x| if (x == 0) continue,
+            else => {},
+        };
+        var color: u32 = 0;
+        for (r.objects) |*g| {
+            if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColor(g.props, 37);
+        }
+        if (((color >> 24) & 0xFF) == 0) continue;
+        var rtl: f32 = 0; var rtr: f32 = 0; var rbr: f32 = 0; var rbl: f32 = 0;
+        for (r.objects, 0..) |st, sti| {
+            if (propByKey(st.props, 640) == null) continue;
+            if (owningArtboard(r, sti) != abIdx) continue;
+            rtl = propF(st.props, 640, 0);
+            rtr = propF(st.props, 641, rtl); rbl = propF(st.props, 642, rtl); rbr = propF(st.props, 643, rtl);
+            break;
+        }
+        const rmax = @min(aw0, ah0) * 0.5;
+        const ctl = @min(rtl, rmax); const ctr = @min(rtr, rmax);
+        const cbr = @min(rbr, rmax); const cbl = @min(rbl, rmax);
+        const k: f32 = 0.5522847498;
+        out.append(alloc, op0(0)) catch {};
+        if (ctl + ctr + cbr + cbl > 0) {
+            var m0 = op0(1); m0.x1 = @floatCast(ctl); m0.y1 = 0; out.append(alloc, m0) catch {};
+            var t1 = op0(2); t1.x1 = @floatCast(aw0 - ctr); t1.y1 = 0; out.append(alloc, t1) catch {};
+            if (ctr > 0) { var c1 = op0(4); c1.x1 = @floatCast(aw0 - ctr + ctr * k); c1.y1 = 0; c1.x2 = @floatCast(aw0); c1.y2 = @floatCast(ctr * (1 - k)); c1.x3 = @floatCast(aw0); c1.y3 = @floatCast(ctr); out.append(alloc, c1) catch {}; }
+            else { var l1 = op0(2); l1.x1 = @floatCast(aw0); l1.y1 = 0; out.append(alloc, l1) catch {}; }
+            var t2 = op0(2); t2.x1 = @floatCast(aw0); t2.y1 = @floatCast(ah0 - cbr); out.append(alloc, t2) catch {};
+            if (cbr > 0) { var c2 = op0(4); c2.x1 = @floatCast(aw0); c2.y1 = @floatCast(ah0 - cbr + cbr * k); c2.x2 = @floatCast(aw0 - cbr + cbr * k); c2.y2 = @floatCast(ah0); c2.x3 = @floatCast(aw0 - cbr); c2.y3 = @floatCast(ah0); out.append(alloc, c2) catch {}; }
+            else { var l2 = op0(2); l2.x1 = @floatCast(aw0); l2.y1 = @floatCast(ah0); out.append(alloc, l2) catch {}; }
+            var t3 = op0(2); t3.x1 = @floatCast(cbl); t3.y1 = @floatCast(ah0); out.append(alloc, t3) catch {};
+            if (cbl > 0) { var c3 = op0(4); c3.x1 = @floatCast(cbl - cbl * k); c3.y1 = @floatCast(ah0); c3.x2 = 0; c3.y2 = @floatCast(ah0 - cbl + cbl * k); c3.x3 = 0; c3.y3 = @floatCast(ah0 - cbl); out.append(alloc, c3) catch {}; }
+            else { var l3 = op0(2); l3.x1 = 0; l3.y1 = @floatCast(ah0); out.append(alloc, l3) catch {}; }
+            var t4 = op0(2); t4.x1 = 0; t4.y1 = @floatCast(ctl); out.append(alloc, t4) catch {};
+            if (ctl > 0) { var c4 = op0(4); c4.x1 = 0; c4.y1 = @floatCast(ctl - ctl * k); c4.x2 = @floatCast(ctl - ctl * k); c4.y2 = 0; c4.x3 = @floatCast(ctl); c4.y3 = 0; out.append(alloc, c4) catch {}; }
+            else { var l4 = op0(2); l4.x1 = 0; l4.y1 = 0; out.append(alloc, l4) catch {}; }
+        } else {
+            var b0 = op0(1); b0.x1 = 0; b0.y1 = 0; out.append(alloc, b0) catch {};
+            var b1 = op0(2); b1.x1 = @floatCast(aw0); b1.y1 = 0; out.append(alloc, b1) catch {};
+            var b2 = op0(2); b2.x1 = @floatCast(aw0); b2.y1 = @floatCast(ah0); out.append(alloc, b2) catch {};
+            var b3 = op0(2); b3.x1 = 0; b3.y1 = @floatCast(ah0); out.append(alloc, b3) catch {};
+        }
+        out.append(alloc, op0(5)) catch {};
+        var bpm = op0(6); bpm.a = 1; bpm.d = 1; out.append(alloc, bpm) catch {};
+        var bdr = op0(8); bdr.style = if (c.type_key == 24) @as(i64, 0) else @as(i64, 1); bdr.color = color; bdr.join = -1; bdr.cap = -1; out.append(alloc, bdr) catch {};
+        out.append(alloc, op0(7)) catch {};
+    }
     // Layout-box backgrounds: a Fill parented to a LayoutComponent (409)
     // paints that box. rive renders these; without them a data-bound list is
     // invisible. component_list_1's green #18b900 is obj[57] Fill under
@@ -4771,15 +4892,14 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             out.append(alloc, op0(7)) catch {};
         }
         var rowIdx: usize = 0;
-        for (items) |ii| {
-            const it = &r.objects[ii];
-            const vmid = propU(it.props, 549, -1);
-            if (vmid < 0) continue;
-            g_rowVmid = vmid;
-            g_rowInstOrd = propU(it.props, 550, -1);
+        for (items) |row| {
+            if (row.vmId < 0) continue;
+            g_rowVmid = row.vmId;
+            g_rowInstOrd = row.instOrd;
+            g_rowIdx = @intCast(rowIdx);
             for (r.objects, 0..) |ao, ai2| {
                 if (ao.type_key != 1) continue;
-                if (propU(ao.props, 583, -1) == vmid) {
+                if (propU(ao.props, 583, -1) == row.vmId) {
                     // Rows render at their BASE pose: a component list lays its
                     // items out but does not advance each item artboard's own
                     // LinearAnimation. Measured on
@@ -4797,6 +4917,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             rowIdx += 1;
             g_rowVmid = -1;
             g_rowInstOrd = -1;
+            g_rowIdx = -1;
         }
         if (clipLc >= 0) out.append(alloc, op0(10)) catch {};
     }

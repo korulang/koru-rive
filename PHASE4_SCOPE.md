@@ -617,3 +617,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   Item artboard obj31 viewModelId=0 matches -> rows resolve. Per-row
   instance = fresh default ItemVM instance each (identical values;
   'List Index' component likely supplies row index separately).
+
+- cl2 GATE PASS: NumberToList synthetic path in listRowItems (568
+  converter k816 viewModelId -> N rows instOrd=0), ListRow struct
+  {vmId,instOrd} replaces []usize(427 idx) in both row loops, g_rowIdx
+  feeds SymbolListIndex(566)->row index for to_string labels, flexWrap
+  (604) 2D grid slots with perRow=floor(availMain/(item+gap)) —
+  dir default corrected to 2=Row (Yoga enum, generated base default).
+  NEW PASS: artboard-level Fill/Stroke->backdrop rect in collectArtboardOps
+  (was emitOps-only; cl2 Main obj22 0xff313131 was magenta canvas clear).
+  cl2: 12 rows 4x3 grid, ink-bbox exact (8,8,437,327), mass 1.00, gap
+  0.17%. SM listeners+keyframes not needed at t1 (entry-state colors
+  match) — named residual for animated frames. Regression: cl1/clv/
+  clfpItem all PASS unchanged.
