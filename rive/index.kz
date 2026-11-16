@@ -2392,12 +2392,29 @@ fn hasConstraintChild(r: *const Riv, idx: usize) bool {
 
 // effective world: constraint-adjusted when the object or an ancestor
 // node carries a FollowPathConstraint.
+// correction-free world for bounds computation (avoids
+// effectiveWorld -> artboardIntrinsicSize -> bounds recursion)
+fn effectiveWorldRaw(r: *const Riv, idx: usize) Mat2 {
+    const o = &r.objects[idx];
+    var acc = if (isNodeType(o.type_key)) localMatA(r, o, -1) else matIdent();
+    var p = o.parent_obj;
+    var depth: usize = 0;
+    while (p >= 0 and depth < 32) : (depth += 1) {
+        const po = &r.objects[@intCast(p)];
+        if (isNodeType(po.type_key) and po.type_key != 1) {
+            acc = matMul(localMatA(r, po, -1), acc);
+        }
+        p = po.parent_obj;
+    }
+    return acc;
+}
 fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
     if (hasConstraintChild(r, idx)) return constrainedWorld(r, idx, frame);
     const o = &r.objects[idx];
     var acc = if (isNodeType(o.type_key)) localMatA(r, o, frame) else matIdent();
     var p = o.parent_obj;
     var depth: usize = 0;
+    var rootAb: i64 = -1;
     while (p >= 0 and depth < 32) : (depth += 1) {
         const po = &r.objects[@intCast(p)];
         if (isNodeType(po.type_key)) {
@@ -2407,9 +2424,34 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
             // Artboard (type_key 1) is the coordinate root for its
             // content — its own Node.x/y applies only in the
             // PARENT's instantiation space, not internally.
-            if (po.type_key != 1) acc = matMul(localMatA(r, po, frame), acc);
+            if (po.type_key == 1) rootAb = p else acc = matMul(localMatA(r, po, frame), acc);
         }
         p = po.parent_obj;
+    }
+    // layout-managed artboard: children live in pad-inset space —
+    // golden composes translate(pad - origin*intrinsicSize) at the
+    // artboard boundary (Item text: 8-25.7051, 8-20.0996)
+    if (rootAb >= 0) {
+        const ra = &r.objects[@intCast(rootAb)];
+        var hasLayout = false;
+        for (r.objects, 0..) |lo, li| {
+            if (lo.type_key == 409 and owningArtboard(r, li) == @as(usize, @intCast(rootAb))) { hasLayout = true; break; }
+        }
+        if (hasLayout) {
+            const es = artboardIntrinsicSize(r, @intCast(rootAb), propF(ra.props, 7, 0), propF(ra.props, 8, 0));
+            const ox = propF(ra.props, 11, 0) * es.w;
+            const oy = propF(ra.props, 12, 0) * es.h;
+            if (ox != 0 or oy != 0) {
+                // pad from layout styles parenting this artboard's LayoutComponents
+                var padL: f32 = 0; var padT: f32 = 0;
+                for (r.objects) |ls| {
+                    if (ls.type_key != 420) continue;
+                    padL = @max(padL, propF(ls.props, 512, 0));
+                    padT = @max(padT, propF(ls.props, 514, 0));
+                }
+                acc = matMul(.{ 1, 0, 0, 1, padL - ox, padT - oy }, acc);
+            }
+        }
     }
     return acc;
 }
@@ -2663,7 +2705,7 @@ fn artboardContentBounds(r: *const Riv, abIdx: usize) ArtboardSize {
         }
         // OS/2 usWinAscent+usWinDescent approximates Rive's line box
         const hgt = (ascU - descU + gapU) * scale;
-        const m = effectiveWorld(r, ti, -1);
+        const m = effectiveWorldRaw(r, ti);
         const x0 = m[4] + @min(0, w);
         const y0 = m[5];
         if (x0 + w > maxX) maxX = x0 + w;
