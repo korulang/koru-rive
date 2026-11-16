@@ -412,3 +412,13 @@ committed producer-side (`ff18735`).
   side instrumentation (dump mask atlas coverage or clipCov
   samples) — op-level debugging exhausted. Named: clip mask
   rasterization defect candidate in index.macos.kz.
+
+- lwti classification: ops(ab:7) = frame clip + ONE fill
+  ff313131 over the 500x500 rect = artboard bg fill. Browser ref
+  is blank white (nonEmptyPx=250000 opaque, ink=None) because it
+  failed to import type-544 content — the fixture's real
+  text+image surface is undecoded on BOTH sides. Our bg-fill
+  emission vs browser's blank = divergent handling of the same
+  undecoded type-544 surface. Classification: oracle-limitation /
+  undecoded-type territory, NOT a renderer defect. Type 544 =
+  next decode target if this fixture matters.
