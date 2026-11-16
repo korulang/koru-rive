@@ -503,3 +503,14 @@ Main's SM produces no direct draws AND the dump records per-SM
 sections, while row content appears under whichever section
 advances the list. The 300,0 offset = instantiation layout pos,
 distinct from Row's own-section identity transform.
+
+## Row-in-parent emission — implementation note for next leg
+
+emitOps scoped mode needs: when artboard has ArtboardComponentList
+child, resolve ViewModelInstanceListItem(s) -> viewModelId ->
+artboard with matching viewModelId (obj20, vmId=0) -> emit that
+artboard's shape subtree INSIDE parent's section with layout
+transform (list's LayoutComponent worldTransform; fixture: row
+artboard Node.x=300). Row's OWN section still emits standalone
+(defaultSM=1). LayoutComponentStyle flex pass deferred — fixture
+has single row at fixed offset.
