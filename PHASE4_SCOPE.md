@@ -114,11 +114,15 @@ committed producer-side (`ff18735`).
 
 ### Gate extension attempts (same session)
 
-- `clipping_and_draw_order [child]` ab:84 @786² — ours renders the
-  semi-transparent orange fill correctly (visible in BMP), but the ref
-  PNG is alpha-bearing (transparent bg + 50% fill) — pixel_oracle's
-  opaque-backdrop envelope doesn't fit; needs alpha compositing before
-  a verdict. Named: oracle-envelope gap, not renderer defect.
+- `clipping_and_draw_order [child]` ab:84 @786² — **PASS** after two
+  real fixes: (1) pixel_oracle gained `--comp` alpha compositing +
+  two-sided ink coverage; (2) the "parent-context gap" was actually
+  viewport FIT — browser uses Fit.Contain+Center (render_browser.mjs
+  Layout), our driver drew 1:1 top-left. Child ab is 176×176 in a 786
+  canvas → scale 4.4659. With transform.push(4.4659) wrapper:
+  ink-bbox EXACT, mass 1.00, coverage-gap 0.21%. Child artboards
+  render standalone correctly — no component-list expansion needed
+  for single-artboard refs; dsm/clfp-Item sections likely same fix.
 - `databind_external_artboard_main [Main]` ab:15 @500² — vacuous for
   pixels: solid backdrop only, zero ink both sides (ink-mass 0/0);
   backdrop delta 9 vs tol 8 was a wrong --bg guess (fixture bg is
