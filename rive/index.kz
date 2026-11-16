@@ -1158,7 +1158,7 @@ const PropValue = union(enum) {
 };
 
 const Prop = struct { key: u16, name: [:0]const u8, field: i8, value: PropValue };
-const RivObj = struct { type_key: u64, type_name: ?[:0]const u8, parent: i64, parent_obj: i64, style_obj: i64, props: []Prop };
+const RivObj = struct { type_key: u64, type_name: ?[:0]const u8, parent: i64, parent_obj: i64, style_obj: i64, slot: i64, props: []Prop };
 const Riv = struct { bytes: []u8, objects: []RivObj };
 
 fn readValue(b: []const u8, pos: *usize, field: i8) ?PropValue {
@@ -1264,7 +1264,7 @@ fn decodeImpl(path: []const u8) ?*Riv {
             }
             props.append(std.heap.page_allocator, .{ .key = pkey, .name = nm, .field = field, .value = value }) catch { ok = false; break :decode; };
         }
-        objects.append(std.heap.page_allocator, .{ .type_key = typeKey, .type_name = tn, .parent = parent, .parent_obj = -1, .style_obj = style_id, .props = props.items }) catch { ok = false; break; };
+        objects.append(std.heap.page_allocator, .{ .type_key = typeKey, .type_name = tn, .parent = parent, .parent_obj = -1, .style_obj = style_id, .slot = -1, .props = props.items }) catch { ok = false; break; };
         obj_i += 1;
     }
     // ---- component-slot resolution (post-pass: forward refs exist —
@@ -1300,6 +1300,9 @@ fn decodeImpl(path: []const u8) ?*Riv {
                     slot_of[i] = @intCast(slot_maps.items[li].items.len - 1);
                 }
             }
+        }
+        for (objects.items, 0..) |*o, i| {
+            o.slot = slot_of[i];
         }
         // resolve parentId/styleId → object index via owning artboard's map
         for (objects.items, 0..) |*o, i| {
@@ -1362,7 +1365,7 @@ fn dumpRiv(r: *Riv) void {
             const sn = r.objects[@intCast(o.style_obj)].type_name orelse "?";
             link.appendSlice(std.heap.page_allocator, std.fmt.allocPrint(std.heap.page_allocator, " style->{d}:{s}", .{ o.style_obj, sn }) catch "") catch {};
         }
-        std.debug.print("obj[{d}] {s} parentId={d}%{s} props={d}\n", .{ i, tname, o.parent, link.items, o.props.len });
+        std.debug.print("obj[{d}] {s} slot={d} parentId={d}%{s} props={d}\n", .{ i, tname, o.slot, o.parent, link.items, o.props.len });
         for (o.props) |p| {
             const vs = fmtValue(std.heap.page_allocator, p.value);
             std.debug.print("    {s} (key {d}, f{d}) = {s}\n", .{ p.name, p.key, p.field, vs });
@@ -1441,6 +1444,7 @@ fn isNodeType(key: u64) bool {
     return lo < node_type_keys.len and node_type_keys[lo] == key;
 }
 
+const DRAW_FRAME: i64 = 0;
 const Mat2 = [6]f32; // [a,b,c,d,tx,ty] — Rive/Skia convention
 
 fn propF(props: []const Prop, key: u16, default: f32) f32 {
@@ -1889,7 +1893,7 @@ fn dumpKeyed(r: *Riv) void {
 // KeyFrameDouble linear interpolation for one (objectId, propertyKey)
 // pair. Keyframes sorted by frame; clamp outside range. interpType 1
 // = linear (others TODO: hold/cubic via interpolatorId 69).
-fn keyframedValue(r: *Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
+fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     var kf = std.ArrayList(struct { f: i64, v: f32 }).empty;
     defer kf.deinit(std.heap.page_allocator);
     var inGroup = false;
@@ -1905,8 +1909,10 @@ fn keyframedValue(r: *Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
             continue;
         }
         if (!inGroup) continue;
-        if (propByKey(o.props, 70)) |v| {
-            const val = switch (v) { .dbl => |x| x, else => 0 };
+        // KeyFrameDouble.value (70) absent → runtime default 0.0; the
+        // keyframe still exists (frame/interp props mark it).
+        if (propByKey(o.props, 67) != null or propByKey(o.props, 68) != null or propByKey(o.props, 70) != null) {
+            const val = if (propByKey(o.props, 70)) |v| switch (v) { .dbl => |x| x, else => 0 } else 0;
             kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = val }) catch {};
         }
     }
@@ -1938,9 +1944,7 @@ fn keyframedValue(r: *Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
 // de Casteljau, length via 16-chord approximation (TODO: Wang's formula
 // for exactness — golden transforms will falsify if insufficient).
 
-fn v2add(a: V2, b: V2) V2 { return .{ .x = a.x + b.x, .y = a.y + b.y }; }
 fn v2sub2(a: V2, b: V2) V2 { return .{ .x = a.x - b.x, .y = a.y - b.y }; }
-fn v2scale(a: V2, s: f32) V2 { return .{ .x = a.x * s, .y = a.y * s }; }
 fn v2len(a: V2) f32 { return @sqrt(a.x * a.x + a.y * a.y); }
 
 fn cubicAt(p0: V2, p1: V2, p2: V2, p3: V2, t: f32) V2 {
@@ -2035,7 +2039,15 @@ fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
                         var k: usize = 0;
                         while (k < 24) : (k += 1) {
                             tt = (lo + hi) / 2;
-                            const l = cubicLen(base, c1, c2, cubicAt(base, c1, c2, e, tt));
+                            // de Casteljau split at tt — first-half controls
+                            const u = 1 - tt;
+                            const q0 = v2add(v2scale(base, u), v2scale(c1, tt));
+                            const q1 = v2add(v2scale(c1, u), v2scale(c2, tt));
+                            const q2 = v2add(v2scale(c2, u), v2scale(e, tt));
+                            const r0 = v2add(v2scale(q0, u), v2scale(q1, tt));
+                            const r1 = v2add(v2scale(q1, u), v2scale(q2, tt));
+                            const s = v2add(v2scale(r0, u), v2scale(r1, tt));
+                            const l = cubicLen(base, q0, r0, s);
                             if (l < target - acc) lo = tt else hi = tt;
                         }
                         const pos = cubicAt(base, c1, c2, e, tt);
@@ -2048,6 +2060,176 @@ fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
         }
     }
     return .{ .pos = prev, .tan = .{ .x = 1, .y = 0 }, .total = total };
+}
+
+// ---- constraint eval: FollowPathConstraint --------------------------------
+
+fn matApply(m: Mat2, p: V2) V2 {
+    return .{ .x = m[0] * p.x + m[2] * p.y + m[4], .y = m[1] * p.x + m[3] * p.y + m[5] };
+}
+fn matIdent() Mat2 { return .{ 1, 0, 0, 1, 0, 0 }; }
+fn matInverse(m: Mat2) ?Mat2 {
+    const det = m[0] * m[3] - m[1] * m[2];
+    if (@abs(det) < 1e-12) return null;
+    const id = 1 / det;
+    return .{ m[3] * id, -m[1] * id, -m[2] * id, m[0] * id,
+              (m[2] * m[5] - m[3] * m[4]) * id,
+              (m[1] * m[4] - m[0] * m[5]) * id };
+}
+fn trsCompose(rot: f32, sx: f32, sy: f32, x: f32, y: f32) Mat2 {
+    const c = @cos(rot); const s = @sin(rot);
+    return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
+}
+fn decompRot(m: Mat2) f32 { return std.math.atan2(m[1], m[0]); }
+fn wrapPi(a: f32) f32 {
+    const pi: f32 = std.math.pi;
+    var r = a;
+    while (r > pi) r -= 2 * pi;
+    while (r < -pi) r += 2 * pi;
+    return r;
+}
+
+fn decompSX(m: Mat2) f32 { return @sqrt(m[0] * m[0] + m[1] * m[1]); }
+fn decompSY(m: Mat2) f32 { return @sqrt(m[2] * m[2] + m[3] * m[3]); }
+
+// world transform of an object's PARENT (getParentWorld)
+fn parentWorld(r: *const Riv, idx: usize) Mat2 {
+    const o = &r.objects[idx];
+    if (o.parent_obj < 0) return matIdent();
+    return shapeWorld(r, @intCast(o.parent_obj));
+}
+
+// find object holding `slot` within the artboard containing constraintIdx
+fn findBySlot(r: *const Riv, constraintIdx: usize, slot: i64) ?usize {
+    var artStart: usize = 0;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 1) artStart = i;
+        if (i >= constraintIdx) break;
+    }
+    var i = artStart;
+    while (i < r.objects.len) : (i += 1) {
+        const o = &r.objects[i];
+        if (o.type_key == 1 and i != artStart) break;
+        if (o.slot == slot) return i;
+    }
+    return null;
+}
+
+// verbs+pts for a Shape or Path target
+fn pathStreamsFor(r: *const Riv, idx: usize, alloc: std.mem.Allocator) ?struct { verbs: []u8, pts: []V2 } {
+    const o = &r.objects[idx];
+    var pvs = std.ArrayList(PV).empty;
+    defer pvs.deinit(alloc);
+    var verbs = std.ArrayList(u8).empty;
+    var pts = std.ArrayList(V2).empty;
+    errdefer { verbs.deinit(alloc); pts.deinit(alloc); }
+    var closed = false;
+    if (o.type_key == 3) { // Shape — path is a child
+        for (r.objects) |*c| {
+            if (c.parent_obj != @as(i64, @intCast(idx))) continue;
+            if (isVertexType(c.type_key)) {
+                pvs.append(alloc, fileVert(c)) catch {};
+            } else if (synthParametric(c, &pvs, alloc)) {
+                closed = true;
+            }
+        }
+    } else if (o.type_key == 16) { // PointsPath — vertex children, isClosed prop 32
+        for (r.objects) |*c| {
+            if (c.parent_obj == @as(i64, @intCast(idx)) and isVertexType(c.type_key)) {
+                pvs.append(alloc, fileVert(c)) catch {};
+            }
+        }
+        closed = propU(o.props, 32, 0) != 0;
+    } else if (synthParametric(o, &pvs, alloc)) {
+        closed = true;
+    } else {
+        return null;
+    }
+    if (pvs.items.len < 2) return null;
+    buildPath(pvs.items, closed, &verbs, &pts, alloc);
+    return .{ .verbs = verbs.items, .pts = pts.items };
+}
+
+// FollowPathConstraint eval per follow_path_constraint.cpp.
+// Constraint-adjusted world matrix for nodeIdx at `frame`.
+
+fn hasConstraintChild(r: *const Riv, idx: usize) bool {
+    for (r.objects) |*c| {
+        if (c.type_key == 165 and c.parent_obj == @as(i64, @intCast(idx))) return true;
+    }
+    return false;
+}
+
+// effective world: constraint-adjusted when the object or an ancestor
+// node carries a FollowPathConstraint.
+fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
+    if (hasConstraintChild(r, idx)) return constrainedWorld(r, idx, frame);
+    const o = &r.objects[idx];
+    var acc = if (isNodeType(o.type_key)) localMat(o) else matIdent();
+    var p = o.parent_obj;
+    var depth: usize = 0;
+    while (p >= 0 and depth < 32) : (depth += 1) {
+        const po = &r.objects[@intCast(p)];
+        if (isNodeType(po.type_key)) {
+            if (hasConstraintChild(r, @intCast(p))) {
+                return matMul(constrainedWorld(r, @intCast(p), frame), acc);
+            }
+            acc = matMul(localMat(po), acc);
+        }
+        p = po.parent_obj;
+    }
+    return acc;
+}
+
+fn constrainedWorld(r: *const Riv, nodeIdx: usize, frame: i64) Mat2 {
+    const alloc = std.heap.page_allocator;
+    var world = shapeWorld(r, nodeIdx);
+    for (r.objects) |*c| {
+        if (c.type_key != 165) continue; // FollowPathConstraint
+        if (c.parent_obj != @as(i64, @intCast(nodeIdx))) continue;
+        const tgtSlot = propU(c.props, 173, -1);
+        if (tgtSlot < 0) continue;
+        const tgtIdx = findBySlot(r, nodeIdx, tgtSlot) orelse continue;
+        const tgtWorld = shapeWorld(r, tgtIdx);
+        const strength = propF(c.props, 172, 1.0);
+        const orient = if (propByKey(c.props, 364)) |v| switch (v) { .boolean => |b| b, else => true } else true;
+        const distance = keyframedValue(r, c.slot, 363, frame);
+        const streams = pathStreamsFor(r, tgtIdx, alloc) orelse continue;
+        var wpts = std.ArrayList(V2).empty;
+        defer wpts.deinit(alloc);
+        for (streams.pts) |p| wpts.append(alloc, matApply(tgtWorld, p)) catch {};
+        const pm = pathMeasureAt(streams.verbs, wpts.items, distance);
+        var tB = tgtWorld;
+        if (orient) {
+            const tangentRot = std.math.atan2(pm.tan.y, pm.tan.x);
+            const angleB = wrapPi(decompRot(tgtWorld));
+            var diff = tangentRot - angleB;
+            const pi: f32 = std.math.pi;
+            while (diff > pi) diff -= 2 * pi;
+            while (diff < -pi) diff += 2 * pi;
+            tB = trsCompose(angleB + diff * strength, 1, 1, 0, 0);
+        }
+        tB[4] = pm.pos.x;
+        tB[5] = pm.pos.y;
+        const tgtParentWorld = parentWorld(r, tgtIdx);
+        const compParentWorld = parentWorld(r, nodeIdx);
+        if (matInverse(tgtParentWorld)) |inv| tB = matMul(inv, tB);
+        tB = matMul(compParentWorld, tB);
+        const t = strength;
+        const ti = 1 - t;
+        var rotB = decompRot(tB);
+        if (!orient) {
+            var rotA = wrapPi(decompRot(world));
+            const pi: f32 = std.math.pi;
+            while (rotA > pi) rotA -= 2 * pi;
+            while (rotA < -pi) rotA += 2 * pi;
+            rotB = rotA;
+        }
+        const newX = world[4] * ti + tB[4] * t;
+        const newY = world[5] * ti + tB[5] * t;
+        world = trsCompose(rotB, decompSX(world), decompSY(world), newX, newY);
+    }
+    return world;
 }
 
 fn dumpDrawOps(r: *Riv) void {
@@ -2103,7 +2285,7 @@ fn dumpDrawOps(r: *Riv) void {
         // PointsPath children carry isClosed on the PATH object, not shape —
         // for mixed shapes use last seen; single-path shapes dominate fixtures.
         if (pathVs.items.len >= 2) buildPath(pathVs.items, closed, &verbs, &pts, alloc);
-        const w = shapeWorld(r, i);
+        const w = effectiveWorld(r, i, DRAW_FRAME);
         for (r.objects, 0..) |*c, pi| {
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
             if (c.type_key != 20 and c.type_key != 24) continue; // Fill / Stroke only
