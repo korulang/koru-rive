@@ -2363,7 +2363,7 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
             if (o.type_key != 1) continue;
             std.debug.print("--- static t=0 ---\n", .{});
             emitOps(r, 0, oi, true);
-            std.debug.print("--- sm{d} ---\n", .{ai});
+            std.debug.print("--- sm{d} ---\n", .{propU(o.props, 236, @intCast(ai))});
             var f: i64 = 0;
             while (f < 30) : (f += 1) {
                 std.debug.print("--- frame {d} t={d:.4} ---\n", .{ f, @as(f32, @floatFromInt(f)) / 30 });
