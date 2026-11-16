@@ -313,3 +313,18 @@ committed producer-side (`ff18735`).
   other than center(4) fall to top-left; nested-409 intrinsic content
   uses declared size (cycle guard); non-position local transforms on
   layout children ignored.
+
+- clv (component_list_clipped_viewport) GATE PASS @HEAD: absolute
+  positioning (positionType=2, edges 516-519 active via units 621-624,
+  absent value=0, opposing edges stretch) in layoutOffsetOf+layoutSizeOf;
+  409-with-artboard-parent seed rule extended; Fill box pass now uses
+  effectiveWorldRaw translation (was raw Node.x/y). Viewport clips at
+  (100,100,200,200), Overlay bottom bar, 4 green rows pitch 60 —
+  ours==ref exactly (34000 green px, gap 0.00%). RECURSION FIX:
+  effectiveWorldRaw layout hooks reach artboardIntrinsicSize->bounds->
+  world = cycle -> SIGSEGV on clfp Item; artboardContentBounds now uses
+  effectiveWorldNoLayout (transform-only). render_browser.mjs gained
+  RIVE_VM_INST=N (instanceByIndex) — clv needed inst 0 (only instance)
+  AND tick>=1 (list populates after first advance; tick=0 ref was EMPTY
+  — second false-ref caught by green-px count). cl2 recon: needs
+  flexWrap grid + NumberToList converter + SM listeners — new arc.

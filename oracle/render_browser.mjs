@@ -41,6 +41,7 @@ const FIXTURE = process.env.RIVE_FIXTURE || '/Users/larsde/src/koru-rive/rive-cp
 const AB = abArg || 'Main';
 const SM = smArg === undefined ? 'State Machine 1' : smArg;
 const VMNAME = process.env.RIVE_VM || '';
+const VMINST = process.env.RIVE_VM_INST || '';
 const SMPROP = SM ? `stateMachines: ${JSON.stringify(SM)},` : '';
 const ABPROP = AB ? `artboard: ${JSON.stringify(AB)},` : '';
 const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:transparent">
@@ -89,7 +90,11 @@ const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:trans
               try { vm = r.viewModelByIndex ? r.viewModelByIndex(i) : null; } catch (e) { break; }
             }
             let inst = null;
-            if (vm) {
+            const instIdx = parseInt(${JSON.stringify(VMINST)} || '-1', 10);
+            if (vm && instIdx >= 0) {
+              try { inst = vm.instanceByIndex ? vm.instanceByIndex(instIdx) : null; } catch (e) {}
+            }
+            if (vm && !inst) {
               try { inst = vm.instanceByName ? vm.instanceByName('Default') : null; } catch (e) {}
               if (!inst) { try { inst = vm.defaultInstance ? vm.defaultInstance() : null; } catch (e) {} }
               if (!inst) { try { inst = vm.instance ? vm.instance() : null; } catch (e) {} }

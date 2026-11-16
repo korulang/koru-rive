@@ -2489,9 +2489,13 @@ fn effectiveWorldRaw(r: *const Riv, idx: usize) Mat2 {
     const o = &r.objects[idx];
     var acc = if (isNodeType(o.type_key)) localMatA(r, o, -1) else matIdent();
     // Layout-managed child: position comes from the parent's layout
-    // (alignment/units/intrinsic), not Node.x/y.
-    if (o.parent_obj >= 0 and r.objects[@intCast(o.parent_obj)].type_key == 409) {
-        acc = matMul(layoutOffsetOf(r, idx), acc);
+    // (alignment/units/intrinsic/absolute), not Node.x/y. A 409 whose
+    // parent is the artboard is itself layout-positioned too.
+    if (o.parent_obj >= 0) {
+        const pt = r.objects[@intCast(o.parent_obj)].type_key;
+        if (pt == 409 or (o.type_key == 409 and pt == 1)) {
+            acc = matMul(layoutOffsetOf(r, idx), acc);
+        }
     }
     var p = o.parent_obj;
     var depth: usize = 0;
@@ -2508,12 +2512,33 @@ fn effectiveWorldRaw(r: *const Riv, idx: usize) Mat2 {
     }
     return acc;
 }
+// Transform-only world for bounds measurement — effectiveWorldRaw's
+// layout offsets reach artboardIntrinsicSize -> artboardContentBounds
+// -> here, so bounds must NOT re-enter layout resolution or the pair
+// recurses until the stack blows (clfp Item SIGSEGV).
+fn effectiveWorldNoLayout(r: *const Riv, idx: usize) Mat2 {
+    const o = &r.objects[idx];
+    var acc = if (isNodeType(o.type_key)) localMatA(r, o, -1) else matIdent();
+    var p = o.parent_obj;
+    var depth: usize = 0;
+    while (p >= 0 and depth < 32) : (depth += 1) {
+        const po = &r.objects[@intCast(p)];
+        if (isNodeType(po.type_key) and po.type_key != 1) {
+            acc = matMul(localMatA(r, po, -1), acc);
+        }
+        p = po.parent_obj;
+    }
+    return acc;
+}
 fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
     if (hasConstraintChild(r, idx)) return constrainedWorld(r, idx, frame);
     const o = &r.objects[idx];
     var acc = if (isNodeType(o.type_key)) localMatA(r, o, frame) else matIdent();
-    if (o.parent_obj >= 0 and r.objects[@intCast(o.parent_obj)].type_key == 409) {
-        acc = matMul(layoutOffsetOf(r, idx), acc);
+    if (o.parent_obj >= 0) {
+        const pt = r.objects[@intCast(o.parent_obj)].type_key;
+        if (pt == 409 or (o.type_key == 409 and pt == 1)) {
+            acc = matMul(layoutOffsetOf(r, idx), acc);
+        }
     }
     var p = o.parent_obj;
     var depth: usize = 0;
@@ -2851,7 +2876,7 @@ fn artboardContentBounds(r: *const Riv, abIdx: usize) ArtboardSize {
         }
         // OS/2 usWinAscent+usWinDescent approximates Rive's line box
         const hgt = (ascU - descU + gapU) * scale;
-        const m = effectiveWorldRaw(r, ti);
+        const m = effectiveWorldNoLayout(r, ti);
         const x0 = m[4] + @min(0, w);
         const y0 = m[5];
         if (x0 + w > maxX) maxX = x0 + w;
@@ -2922,17 +2947,19 @@ fn measureTextSize(r: *const Riv, ti: usize) struct { w: f32, h: f32 } {
     const ascU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 4)) else 0;
     const descU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 6)) else 0;
     const gapU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 8)) else 0;
-    var text: []const u8 = ""; var styleId: i64 = -1; var runIdx: usize = 0;
+    var text: []const u8 = ""; var styleId: i64 = -1; var runIdx: usize = 0; var haveRun = false;
     for (r.objects, 0..) |run, ri| {
         if (run.type_key == 135 and run.parent_obj == @as(i64, @intCast(ti))) {
-            runIdx = ri;
+            runIdx = ri; haveRun = true;
             for (run.props) |p| {
                 if (p.key == 268 and p.value == .bytes) text = p.value.bytes;
                 if (p.key == 272) styleId = switch (p.value) { .uint => |u| @intCast(u), else => -1 };
             }
         }
     }
-    if (boundRunText(r, runIdx, std.heap.page_allocator)) |bt| text = bt;
+    if (haveRun) {
+        if (boundRunText(r, runIdx, std.heap.page_allocator)) |bt| text = bt;
+    }
     var fontSize: f32 = 0;
     for (r.objects, 0..) |st, sti| {
         _ = sti;
@@ -3000,6 +3027,23 @@ fn layoutSizeOf(r: *const Riv, idx: usize) struct { w: f32, h: f32 } {
         if (cs.w > 0) dw = cs.w;
         if (cs.h > 0) dh = cs.h;
     }
+    // absolute stretch: positionType==2 with opposing edges set sizes
+    // the box to parent-full minus both offsets (clv Overlay 400x40).
+    if (layoutStyleOf(r, idx)) |si| {
+        const st = &r.objects[si];
+        if (propU(st.props, 597, 0) == 2) {
+            const p = node.parent_obj;
+            if (p >= 0 and (r.objects[@intCast(p)].type_key == 409 or r.objects[@intCast(p)].type_key == 1)) {
+                const pf = layoutSizeOf(r, @intCast(p));
+                const hasL = propByKey(st.props, 621) != null or propByKey(st.props, 516) != null;
+                const hasR = propByKey(st.props, 622) != null or propByKey(st.props, 517) != null;
+                const hasT = propByKey(st.props, 623) != null or propByKey(st.props, 518) != null;
+                const hasB = propByKey(st.props, 624) != null or propByKey(st.props, 519) != null;
+                if (hasL and hasR and pf.w > 0) dw = @max(0, pf.w - propF(st.props, 516, 0) - propF(st.props, 517, 0));
+                if (hasT and hasB and pf.h > 0) dh = @max(0, pf.h - propF(st.props, 518, 0) - propF(st.props, 519, 0));
+            }
+        }
+    }
     return .{ .w = dw, .h = dh };
 }
 
@@ -3024,17 +3068,47 @@ fn layoutAvailOf(r: *const Riv, parentIdx: usize) struct { w: f32, h: f32 } {
 }
 
 // Node's rect origin within its layout parent (alignment applied;
-// 632==4 centers both axes — cl1 Button->Label). Other alignments fall
-// to top-left, named gap.
+// 632==4 centers both axes — cl1 Button->Label). positionType==2 is
+// absolute: edges 516-519 (active when their units 621-624 or the value
+// itself is present, absent value = 0) offset from the parent's box —
+// clv Viewport at (100,100), Overlay stretched full-width at bottom.
+// Other alignments fall to top-left, named gap.
 fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
     const node = &r.objects[idx];
     const p = node.parent_obj;
     if (p < 0) return matIdent();
     const po = &r.objects[@intCast(p)];
     if (po.type_key != 409 and po.type_key != 1) return matIdent();
+    const sz = layoutSizeOf(r, idx);
+    if (layoutStyleOf(r, idx)) |si| {
+        const st = &r.objects[si];
+        if (propU(st.props, 597, 0) == 2) {
+            const pf = layoutSizeOf(r, @intCast(p));
+            const hasL = propByKey(st.props, 621) != null or propByKey(st.props, 516) != null;
+            const hasR = propByKey(st.props, 622) != null or propByKey(st.props, 517) != null;
+            const hasT = propByKey(st.props, 623) != null or propByKey(st.props, 518) != null;
+            const hasB = propByKey(st.props, 624) != null or propByKey(st.props, 519) != null;
+            var ax: f32 = 0;
+            var ay: f32 = 0;
+            if (hasL and hasR) {
+                ax = propF(st.props, 516, 0);
+            } else if (hasL) {
+                ax = propF(st.props, 516, 0);
+            } else if (hasR) {
+                ax = pf.w - propF(st.props, 517, 0) - sz.w;
+            }
+            if (hasT and hasB) {
+                ay = propF(st.props, 518, 0);
+            } else if (hasT) {
+                ay = propF(st.props, 518, 0);
+            } else if (hasB) {
+                ay = pf.h - propF(st.props, 519, 0) - sz.h;
+            }
+            return .{ 1, 0, 0, 1, ax, ay };
+        }
+    }
     const avail = layoutAvailOf(r, @intCast(p));
     if (avail.w <= 0 and avail.h <= 0) return matIdent();
-    const sz = layoutSizeOf(r, idx);
     var palign: i64 = 0;
     if (layoutStyleOf(r, @intCast(p))) |psi| palign = propU(r.objects[psi].props, 632, 0);
     var ax: f32 = 0;
@@ -4378,8 +4452,12 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             break;
         }
         if (lw > 0 and lh > 0) {
-            const lx = propF(lc.props, 13, 0);
-            const ly = propF(lc.props, 14, 0);
+            // Layout-managed boxes take their position from the layout
+            // solve (absolute/fill/align), not Node.x/y — clv Overlay
+            // sits at y=360 via positionBottom, Viewport clips at (100,100).
+            const lwm = effectiveWorldRaw(r, lci);
+            const lx = lwm[4];
+            const ly = lwm[5];
             for (r.objects, 0..) |c, pi| {
                 if (c.type_key != 20) continue;
                 if (c.parent_obj != @as(i64, @intCast(lci))) continue;
