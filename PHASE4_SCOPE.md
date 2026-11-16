@@ -529,3 +529,16 @@ committed producer-side (`ff18735`).
   requirement = formula eval + VM binding (t4f lane). lwti
   classification CONFIRMED oracle-limitation, out-of-scope for
   renderer work.
+
+- image decode recon VERDICT: cin's image IS embedded —
+  FileAssetContents obj2 carries 245B PNG (89504e47 magic,
+  IHDR 15x15); ImageAsset 'customLibraryImageAsset' assetId=123;
+  Image type-100 assetId=0 -> resolves to the embedded bytes.
+  Canvas side: draw.image/imagetint exist but take texture
+  handles from image.load(PATH) only — NO bytes-load verb.
+  Minimal decode spec: (a) canvas verb image.load.data(bytes)
+  via CGImageSourceCreateWithData (one new verb, CG does PNG),
+  (b) emit-side: FileAssetContents.bytes -> temp/handle ->
+  draw.image at Image node's world rect. Bounded but real
+  canvas+emit work — candidate next feature if image fixtures
+  matter (cin + iba + lwti-class all gated on it).
