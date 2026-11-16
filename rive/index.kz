@@ -2379,29 +2379,32 @@ fn owningArtboard(r: *const Riv, idx: usize) usize {
 
 fn dumpDrawOps(r: *Riv, frame: i64) void {
     if (std.posix.getenv("DUMP_SECTIONS") != null) {
-        // golden layout: per artboard -> static + default SM x 30 frames;
-        // artboards with ArtboardComponentList get a second composed
-        // pass with instantiated rows. Static marker only on the first
-        // artboard's renders (golden emits later statics bare).
-        var first_ab: usize = 0;
-        var seen = false;
-        for (r.objects, 0..) |o, oi| {
-            if (o.type_key != 1) continue;
-            if (!seen) { first_ab = oi; seen = true; }
-            var has_list = false;
-            for (r.objects, 0..) |c, ci| {
-                if (c.type_key == 559 and owningArtboard(r, ci) == oi) has_list = true;
+        // golden layout (dump.cpp): per artboard -> static + per owned
+        // SM x 30 frames; label = SM index within the artboard. SMs are
+        // flat (parentId=-1); membership = stream-order cluster between
+        // this artboard and the next.
+        var ai: usize = 0;
+        while (ai < r.objects.len) : (ai += 1) {
+            if (r.objects[ai].type_key != 1) continue;
+            var ni: usize = r.objects.len;
+            var sj: usize = ai + 1;
+            while (sj < r.objects.len) : (sj += 1) {
+                if (r.objects[sj].type_key == 1) { ni = sj; break; }
             }
-            const npass: usize = 1;
-            var pass: usize = 0;
-            while (pass < npass) : (pass += 1) {
-                if (oi == first_ab) std.debug.print("--- static t=0 ---\n", .{});
-                emitOps(r, 0, oi, true, true, true);
-                std.debug.print("--- sm{d} ---\n", .{propU(o.props, 236, @intCast(pass))});
+            var smCount: usize = 0;
+            sj = ai + 1;
+            while (sj < ni) : (sj += 1) {
+                if (r.objects[sj].type_key == 53) smCount += 1;
+            }
+            std.debug.print("--- static t=0 ---\n", .{});
+            emitOps(r, 0, ai, true, true, true);
+            var si: usize = 0;
+            while (si < smCount) : (si += 1) {
+                std.debug.print("--- sm{d} ---\n", .{si});
                 var f: i64 = 0;
                 while (f < 30) : (f += 1) {
                     std.debug.print("--- frame {d} t={d:.4} ---\n", .{ f, @as(f32, @floatFromInt(f + 1)) / 30 });
-                    emitOps(r, f * 2, oi, true, true, true);
+                    emitOps(r, f * 2, ai, true, true, true);
                 }
             }
         }
