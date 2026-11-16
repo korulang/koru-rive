@@ -1762,6 +1762,13 @@ fn synthParametric(o: *const RivObj, pvs: *std.ArrayList(PV), alloc: std.mem.All
             }
             return true;
         },
+        8 => { // Triangle — triangle.cpp update(), 3 corner vertices
+            const ox = oxx; const oy = oyy;
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w / 2, .y = oy }, .in_p = Z, .out_p = Z, .radius = 0 }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy + h }, .in_p = Z, .out_p = Z, .radius = 0 }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy + h }, .in_p = Z, .out_p = Z, .radius = 0 }) catch {};
+            return true;
+        },
         else => return false,
     }
 }
