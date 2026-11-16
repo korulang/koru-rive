@@ -1809,18 +1809,54 @@ fn buildPath(verts: []const PV, closed: bool, verbs: *std.ArrayList(u8), pts: *s
             verbs.append(alloc, 1) catch {}; pts.append(alloc, start) catch {};
         }
         verbs.append(alloc, 5) catch {};
-        // cubic close: endpoint==start is implicit in Skia RawPath —
-        // golden tail cubic prints 2 pts not 3 (clfp PointsPath/ellipse).
-        if (verbs.items.len >= 2 and verbs.items[verbs.items.len - 2] == 4) {
-            _ = pts.pop();
-        }
-    } else if (verbs.items.len > 0 and (verbs.items[verbs.items.len - 1] == 4 or verbs.items[verbs.items.len - 1] == 2)) {
-        // Skia RawPath omits the final segment's endpoint on open
-        // contours — golden prints 2 pts for the tail cubic, not 3.
-        _ = pts.pop();
     }
+    // The contour's terminal point is REAL geometry and stays in the buffer.
+    // rive-cpp only omits it when PRINTING (Skia RawPath convention); that
+    // suppression now lives in printPathGolden(). Popping it here made the
+    // artboard rect a triangle (the 45-degree backdrop split) and left every
+    // closed ring 90 degrees short, because the ops encoder bails out of the
+    // whole verb loop when a segment has too few points.
 }
 
+
+// The golden text convention (Skia RawPath): the final segment of a contour
+// prints WITHOUT its endpoint, because the contour terminates there. That is
+// a property of the TEXT ONLY. Geometry must keep the point. These two
+// helpers are the single place the rule is allowed to apply.
+fn isTailSegment(verbs: []const u8, vi: usize) bool {
+    if (vi >= verbs.len) return false;
+    if (verbs[vi] == 5) return false; // close draws nothing
+    if (vi + 1 == verbs.len) return true; // last segment of an open contour
+    return verbs[vi + 1] == 5; // segment immediately before a close
+}
+
+fn pathPrintedPoints(verbs: []const u8, n_points: usize) usize {
+    var suppressed: usize = 0;
+    for (verbs, 0..) |v, vi| {
+        const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+        if (np > 0 and isTailSegment(verbs, vi)) suppressed += 1;
+    }
+    return n_points - @min(n_points, suppressed);
+}
+
+fn printPathGolden(verbs: []const u8, pts: []const V2, alloc: std.mem.Allocator, indent: []const u8) void {
+    var vp: usize = 0;
+    for (verbs, 0..) |v, vi| {
+        const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+        const tail = np > 0 and isTailSegment(verbs, vi);
+        const lim: usize = if (tail) np - 1 else np;
+        var s = std.ArrayList(u8).empty;
+        defer s.deinit(alloc);
+        s.appendSlice(alloc, std.fmt.allocPrint(alloc, "{s}V {d}", .{ indent, v }) catch "") catch {};
+        var k: usize = 0;
+        while (k < lim and vp < pts.len) : (k += 1) {
+            s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts[vp].x, pts[vp].y }) catch "") catch {};
+            vp += 1;
+        }
+        if (tail) vp += 1; // consume the suppressed endpoint
+        std.debug.print("{s}\n", .{s.items});
+    }
+}
 
 const CIRCLE_C = 0.552284749831;
 
@@ -2708,7 +2744,8 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
                 pts.append(alloc, .{ .x = @floatCast(rbl - rbl * k), .y = @floatCast(h) }) catch {};
                 pts.append(alloc, .{ .x = 0, .y = @floatCast(h - rbl + rbl * k) }) catch {};
                 pts.append(alloc, .{ .x = 0, .y = @floatCast(h - rbl) }) catch {};
-                verbs.append(alloc, 1) catch {}; // dangling close-line verb
+                // Closing edge back up the left side to the contour start (0,rtl).
+                verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = 0, .y = @floatCast(rtl) }) catch {};
                 verbs.append(alloc, 5) catch {};
             } else {
                 verbs.append(alloc, 0) catch {};
@@ -2717,7 +2754,9 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
                     verbs.append(alloc, 1) catch {};
                     pts.append(alloc, p) catch {};
                 }
-                verbs.append(alloc, 1) catch {}; // dangling close-line verb (golden shape)
+                // 4th corner (0,h) is real geometry — the golden text prints it
+                // bare ("V 1") but the path must still carry the point.
+                verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = 0, .y = ah }) catch {};
                 verbs.append(alloc, 5) catch {};
             }
             std.debug.print("save\n", .{});
@@ -2726,20 +2765,8 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
             } else {
                 std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n", .{});
             }
-            std.debug.print("drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pts.items.len });
-            var vp: usize = 0;
-            for (verbs.items) |v| {
-                const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-                var s = std.ArrayList(u8).empty;
-                defer s.deinit(alloc);
-                s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
-                var k: usize = 0;
-                while (k < np and vp < pts.items.len) : (k += 1) {
-                    s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
-                    vp += 1;
-                }
-                std.debug.print("{s}\n", .{s.items});
-            }
+            std.debug.print("drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pathPrintedPoints(verbs.items, pts.items.len) });
+            printPathGolden(verbs.items, pts.items, alloc, "");
             std.debug.print("restore\n", .{});
         }
     }
@@ -2962,30 +2989,11 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             const fillRule = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 2) else propU(c.props, 40, 0);
             std.debug.print("save\n", .{});
             std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
-            // Golden close-line encoding: trailing "V 1 <start> V 5"
-            // prints as bare "V 1" + "V 5" with pts-1 (Skia close() is
-            // implicit — the explicit return-to-start point is not
-            // counted). Detected structurally, not by coordinate eq.
-            const nv = verbs.items.len;
-            const bareClose = nv >= 3 and verbs.items[nv - 1] == 5 and verbs.items[nv - 2] == 1;
-            const npts = pts.items.len - @as(usize, if (bareClose) 1 else 0);
+            // Golden text drops each contour's terminal coordinate, so the
+            // header count must reflect what is actually printed.
             std.debug.print("  [shape obj{d}]\n", .{i});
-            std.debug.print("  drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, npts });
-            var vp: usize = 0;
-            for (verbs.items, 0..) |v, vi| {
-                const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-                const isBareClose = bareClose and vi == nv - 2;
-                var s = std.ArrayList(u8).empty;
-                defer s.deinit(alloc);
-                s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
-                var k: usize = 0;
-                while (k < np and vp < pts.items.len and !(isBareClose and k == 0)) : (k += 1) {
-                    s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
-                    vp += 1;
-                }
-                if (isBareClose) vp += 1; // consume the implicit start point
-                std.debug.print("  {s}\n", .{s.items});
-            }
+            std.debug.print("  drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pathPrintedPoints(verbs.items, pts.items.len) });
+            printPathGolden(verbs.items, pts.items, alloc, "  ");
             std.debug.print("restore\n", .{});
         }
     }
@@ -3644,9 +3652,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var c0 = op0(1); c0.x1 = 0; c0.y1 = 0; out.append(alloc, c0) catch {};
         var c1 = op0(2); c1.x1 = @floatCast(aw0); c1.y1 = 0; out.append(alloc, c1) catch {};
         var c2 = op0(2); c2.x1 = @floatCast(aw0); c2.y1 = @floatCast(ah0); out.append(alloc, c2) catch {};
-        if (layoutClip) {
-            var c3 = op0(2); c3.x1 = 0; c3.y1 = @floatCast(ah0); out.append(alloc, c3) catch {};
-        }
+        // 4th corner is required for ANY artboard clip: a 3-corner clip is a
+        // triangle and clips away half the artboard. (The text dump keeps the
+        // golden "5/3 packing" separately; this is the replayed geometry.)
+        var c3 = op0(2); c3.x1 = 0; c3.y1 = @floatCast(ah0); out.append(alloc, c3) catch {};
         out.append(alloc, op0(5)) catch {};
         var cpm = op0(6); cpm.a = 1; cpm.d = 1; out.append(alloc, cpm) catch {};
         var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
@@ -3664,10 +3673,65 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var o1 = op0(1); o1.x1 = 0; o1.y1 = 0; out.append(alloc, o1) catch {};
             var o2 = op0(2); o2.x1 = @floatCast(aw0); o2.y1 = 0; out.append(alloc, o2) catch {};
             var o3 = op0(2); o3.x1 = @floatCast(aw0); o3.y1 = @floatCast(ah0); out.append(alloc, o3) catch {};
+            // 4th corner — without it the backdrop fills as a right triangle
+            // along y=x, leaving half the artboard uncovered (the 45-deg split).
+            var o3b = op0(2); o3b.x1 = 0; o3b.y1 = @floatCast(ah0); out.append(alloc, o3b) catch {};
             const o4 = op0(5); out.append(alloc, o4) catch {};
             var pm = op0(6); pm.a = 1; pm.d = 1; out.append(alloc, pm) catch {};
             var dr = op0(8); dr.style = 1; dr.color = color; dr.join = -1; dr.cap = -1; out.append(alloc, dr) catch {};
             out.append(alloc, op0(7)) catch {};
+        }
+    }
+    // Layout-box backgrounds: a Fill parented to a LayoutComponent (409)
+    // paints that box. rive renders these; without them a data-bound list is
+    // invisible. component_list_1's green #18b900 is obj[57] Fill under
+    // obj[45] LayoutComponent, not under a Shape, so no Shape pass sees it.
+    for (r.objects, 0..) |lc, lci| {
+        if (lc.type_key != 409) continue;
+        if (owningArtboard(r, lci) != abIdx) continue;
+        var lw = propF(lc.props, 7, 0);
+        var lh = propF(lc.props, 8, 0);
+        // LayoutSizingStyle width/height units on the component's style (a 420
+        // child). 3 = fill the parent box, which is how a row background ends
+        // up 200x50 instead of its base 178x55.
+        for (r.objects) |st| {
+            if (st.type_key != 420) continue;
+            if (st.parent_obj != @as(i64, @intCast(lci))) continue;
+            const wu = propU(st.props, 607, 0);
+            const hu = propU(st.props, 608, 0);
+            if (wu == 3 or hu == 3) {
+                const p = lc.parent_obj;
+                if (p >= 0 and @as(usize, @intCast(p)) < r.objects.len) {
+                    const po = &r.objects[@intCast(p)];
+                    const pw = propF(po.props, 7, 0);
+                    const ph = propF(po.props, 8, 0);
+                    if (wu == 3 and pw > 0) lw = pw;
+                    if (hu == 3 and ph > 0) lh = ph;
+                }
+            }
+            break;
+        }
+        if (lw > 0 and lh > 0) {
+            const lx = propF(lc.props, 13, 0);
+            const ly = propF(lc.props, 14, 0);
+            for (r.objects, 0..) |c, pi| {
+                if (c.type_key != 20) continue;
+                if (c.parent_obj != @as(i64, @intCast(lci))) continue;
+                var lcolor: u32 = 0;
+                for (r.objects) |g| {
+                    if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) lcolor = propColor(g.props, 37);
+                }
+                if (((lcolor >> 24) & 0xFF) == 0) continue;
+                out.append(alloc, op0(0)) catch {};
+                var b0 = op0(1); b0.x1 = 0; b0.y1 = 0; out.append(alloc, b0) catch {};
+                var b1 = op0(2); b1.x1 = @floatCast(lw); b1.y1 = 0; out.append(alloc, b1) catch {};
+                var b2 = op0(2); b2.x1 = @floatCast(lw); b2.y1 = @floatCast(lh); out.append(alloc, b2) catch {};
+                var b3 = op0(2); b3.x1 = 0; b3.y1 = @floatCast(lh); out.append(alloc, b3) catch {};
+                out.append(alloc, op0(5)) catch {};
+                var bpm = op0(6); bpm.a = 1; bpm.b = 0; bpm.c = 0; bpm.d = 1; bpm.e = @floatCast(lx); bpm.g = @floatCast(ly); out.append(alloc, bpm) catch {};
+                var bdr = op0(8); bdr.style = 1; bdr.color = lcolor; bdr.join = -1; bdr.cap = -1; out.append(alloc, bdr) catch {};
+                out.append(alloc, op0(7)) catch {};
+            }
         }
     }
     for (r.objects, 0..) |so, si| {
@@ -3730,7 +3794,13 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var vp: usize = 0;
             for (verbs.items) |v| {
                 const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-                if (vp + np > pts.items.len) break;
+                if (vp + np > pts.items.len) {
+                    // Silent truncation here is what hid the missing
+                    // contours: the whole rest of the path (including close)
+                    // vanished with no signal.
+                    std.debug.print("collectArtboardOps: PATH TRUNCATED verb={d} vp={d} np={d} pts={d}\n", .{ v, vp, np, pts.items.len });
+                    break;
+                }
                 var o = op0(if (v == 0) 1 else if (v == 1) 2 else if (v == 2 or v == 3) 3 else if (v == 4) 4 else 5);
                 if (v == 0 or v == 1) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; }
                 if (v == 2 or v == 3) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; o.x2 = pts.items[vp + 1].x; o.y2 = pts.items[vp + 1].y; }
@@ -3792,7 +3862,14 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             for (r.objects, 0..) |ao, ai2| {
                 if (ao.type_key != 1) continue;
                 if (propU(ao.props, 583, -1) == vmid) {
-                    collectArtboardOps(r, ai2, frame, alloc, &out);
+                    // Rows render at their BASE pose: a component list lays its
+                    // items out but does not advance each item artboard's own
+                    // LinearAnimation. Measured on
+                    // component_list_default_state_machine (Row rect: base
+                    // width 100, keyframed to 150): Rive draws 100x40 in the
+                    // list, while passing the host frame through drew 150x40.
+                    // Static (-1) reproduces the observed 100x40 exactly.
+                    collectArtboardOps(r, ai2, -1, alloc, &out);
                 }
             }
         }

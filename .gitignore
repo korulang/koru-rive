@@ -2,3 +2,15 @@ rive-cpp/
 tools/
 out/
 oracle/dump
+.zig-global/
+a.out
+oracle/__pycache__/
+oracle/node_modules
+backend.zig
+backend_output_emitted.zig
+build.zig
+build_backend.zig
+build_output.zig
+output_emitted.zig
+compiler_env.json
+program.ast.json
