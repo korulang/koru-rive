@@ -313,3 +313,17 @@ committed producer-side (`ff18735`).
   other than center(4) fall to top-left; nested-409 intrinsic content
   uses declared size (cycle guard); non-position local transforms on
   layout children ignored.
+
+- koru-native real-target link: DEFERRED to koru-os build pipeline —
+  koru-os is a bare-metal PID-1 userspace (MPMC rings + io_uring);
+  _koruos_* symbols live in its runtime, not a macOS-linkable lib.
+  Emit-clean under --build=koru-native is the achievable compile
+  check on this host (measured: fillTri @as fix, native_mesh_smoke.k).
+
+- clip_tests diagnosis: ops(ab:42) emits ~10 drawPaths ALL
+  color=ff880000 (the red field) — hidden paths drawn as fills.
+  Browser renders only the visible-path ink region. Our opacity-0
+  cull (prop18) doesn't catch whatever flag marks these hidden —
+  likely a separate hidden/isVisible drawable flag or the paths
+  are clip sources mis-emitted as draws. Named: hidden-content
+  culling gap.
