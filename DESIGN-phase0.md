@@ -358,3 +358,14 @@ blend scaling (AnimationState mix / NestedLinear mix) or the
 keyframe->seconds conversion inside keyed_property (frame->seconds
 may use a different fps than playback). NEXT: read keyed_property
 frame->seconds + AnimationState mix defaults.
+
+## frame->seconds + mix — still open at context limit
+
+KeyedProperty applies in seconds; conversion likely lives on
+KeyFrame (frame->seconds via fps at instance build). Mix defaults
+unread. The bug is therefore probably NOT in keyframedValue's math
+but in WHICH time value reaches it — e.g. SM applies animation at
+mix<1 or a nested time remap. NEXT SESSION: instrument — print
+distance(t) my eval produces at frames 0/15/30/45/60 vs the
+positions golden frames imply; if monotonic-but-wrong, it's mix;
+if wrong-shape, it's time base.
