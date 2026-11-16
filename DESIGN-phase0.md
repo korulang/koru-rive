@@ -369,3 +369,16 @@ mix<1 or a nested time remap. NEXT SESSION: instrument — print
 distance(t) my eval produces at frames 0/15/30/45/60 vs the
 positions golden frames imply; if monotonic-but-wrong, it's mix;
 if wrong-shape, it's time base.
+
+## frame->seconds CONFIRMED equivalent (keyframe.cpp:10)
+
+m_seconds = frame / fps (fps=60) — identical math to keyframedValue's
+frame-space lerp. ALL math suspects eliminated: selection, interp
+type, time mapping, frame->seconds. Divergence must be in WHAT the
+SM actually applies per advance: state transitions mid-run (the SM
+has StateTransition/AnyState — states may change which animation
+or pose is active across the 30 frames), mix<1 blends, or trigger
+inputs firing. NEXT: instrument distance(t) per frame + check
+whether golden frame ops show DISCONTINUITIES (state jumps) vs
+smooth motion — discontinuity => transition, smooth-but-offset =>
+mix/time.
