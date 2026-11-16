@@ -4036,3 +4036,349 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     }
     return .{ .done = n };
 }
+
+// ---- tessellation: OpRec path -> flattened polygon -> triangle soup ----
+// Backend-agnostic pure geometry (phase-4). Consumes the same verbs/pts
+// the ops stream carries; emits Tri records a GPU backend draws directly.
+// Fill rule honored by contour classification + hole bridging, not by
+// leaving coverage to a stencil pass.
+
+const Tri = struct { x1: f32, y1: f32, x2: f32, y2: f32, x3: f32, y3: f32 };
+
+fn v2dist2(a: V2, b: V2) f32 { const dx = a.x - b.x; const dy = a.y - b.y; return dx * dx + dy * dy; }
+fn v2mid(a: V2, b: V2) V2 { return .{ .x = (a.x + b.x) * 0.5, .y = (a.y + b.y) * 0.5 }; }
+fn v2lerp(a: V2, b: V2, t: f32) V2 { return .{ .x = a.x + (b.x - a.x) * t, .y = a.y + (b.y - a.y) * t }; }
+
+// de Casteljau cubic flatten: append points to `out` (excluding p0, which
+// the caller already emitted). Flatness = max distance of controls from
+// the chord, subdivided to `tol`.
+fn flatCubic(p0: V2, p1: V2, p2: V2, p3: V2, tol: f32, depth: u32, out: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
+    if (depth > 16) { out.append(alloc, p3) catch {}; return; }
+    // flatness: distance of p1,p2 from chord p0-p3
+    const dx = p3.x - p0.x; const dy = p3.y - p0.y;
+    const len2 = dx * dx + dy * dy;
+    var d1: f32 = 0; var d2: f32 = 0;
+    if (len2 > 0.0001) {
+        d1 = @abs(dy * p1.x - dx * p1.y + p3.x * p0.y - p3.y * p0.x) / @sqrt(len2);
+        d2 = @abs(dy * p2.x - dx * p2.y + p3.x * p0.y - p3.y * p0.x) / @sqrt(len2);
+    } else {
+        d1 = @sqrt(v2dist2(p0, p1)); d2 = @sqrt(v2dist2(p0, p2));
+    }
+    if (@max(d1, d2) <= tol) { out.append(alloc, p3) catch {}; return; }
+    const p01 = v2mid(p0, p1); const p12 = v2mid(p1, p2); const p23 = v2mid(p2, p3);
+    const p012 = v2mid(p01, p12); const p123 = v2mid(p12, p23);
+    const pm = v2mid(p012, p123);
+    flatCubic(p0, p01, p012, pm, tol, depth + 1, out, alloc);
+    flatCubic(pm, p123, p23, p3, tol, depth + 1, out, alloc);
+}
+
+fn flatQuad(p0: V2, p1: V2, p2: V2, tol: f32, depth: u32, out: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
+    if (depth > 16) { out.append(alloc, p2) catch {}; return; }
+    const dx = p2.x - p0.x; const dy = p2.y - p0.y;
+    const len2 = dx * dx + dy * dy;
+    var d1: f32 = 0;
+    if (len2 > 0.0001) {
+        d1 = @abs(dy * p1.x - dx * p1.y + p2.x * p0.y - p2.y * p0.x) / @sqrt(len2);
+    } else {
+        d1 = @sqrt(v2dist2(p0, p1));
+    }
+    if (d1 <= tol) { out.append(alloc, p2) catch {}; return; }
+    const p01 = v2mid(p0, p1); const p12 = v2mid(p1, p2); const pm = v2mid(p01, p12);
+    flatQuad(p0, p01, pm, tol, depth + 1, out, alloc);
+    flatQuad(pm, p12, p2, tol, depth + 1, out, alloc);
+}
+
+// verbs/pts (path-stream convention: 0 move 1 line 2/3 quad 4 cubic 5 close)
+// -> list of flattened contours (each a closed-or-open point ring).
+fn flattenPath(verbs: []const u8, pts: []const V2, tol: f32, alloc: std.mem.Allocator) [][]V2 {
+    var contours = std.ArrayList([]V2).empty;
+    var cur = std.ArrayList(V2).empty;
+    var vp: usize = 0;
+    var curStart: V2 = .{ .x = 0, .y = 0 };
+    var prev: V2 = .{ .x = 0, .y = 0 };
+    var started = false;
+    const npFor = struct {
+        fn f(v: u8) usize { return if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0; }
+    }.f;
+    for (verbs) |v| {
+        const np = npFor(v);
+        if (vp + np > pts.len) break;
+        switch (v) {
+            0 => {
+                if (started and cur.items.len > 2) contours.append(alloc, cur.toOwnedSlice(alloc) catch &.{} ) catch {};
+                cur = std.ArrayList(V2).empty;
+                curStart = pts[vp]; prev = pts[vp];
+                cur.append(alloc, pts[vp]) catch {};
+                started = true; vp += 1;
+            },
+            1 => {
+                if (!started) { cur.append(alloc, pts[vp]) catch {}; curStart = pts[vp]; started = true; }
+                prev = pts[vp]; cur.append(alloc, pts[vp]) catch {}; vp += 1;
+            },
+            2, 3 => {
+                if (!started) { cur.append(alloc, pts[vp]) catch {}; curStart = pts[vp]; started = true; }
+                flatQuad(prev, pts[vp], pts[vp + 1], tol, 0, &cur, alloc);
+                prev = pts[vp + 1]; vp += 2;
+            },
+            4 => {
+                if (!started) { cur.append(alloc, pts[vp]) catch {}; curStart = pts[vp]; started = true; }
+                flatCubic(prev, pts[vp], pts[vp + 1], pts[vp + 2], tol, 0, &cur, alloc);
+                prev = pts[vp + 2]; vp += 3;
+            },
+            5 => {
+                if (started and cur.items.len > 2 and v2dist2(cur.items[cur.items.len - 1], curStart) > 0.01) {
+                    cur.append(alloc, curStart) catch {};
+                }
+                if (started and cur.items.len > 2) contours.append(alloc, cur.toOwnedSlice(alloc) catch &.{}) catch {};
+                cur = std.ArrayList(V2).empty; started = false; vp += 0;
+            },
+            else => { vp += np; },
+        }
+    }
+    if (started and cur.items.len > 2) contours.append(alloc, cur.toOwnedSlice(alloc) catch &.{}) catch {};
+    return contours.toOwnedSlice(alloc) catch &.{};
+}
+
+fn signedArea2(c: []const V2) f32 {
+    var a: f32 = 0;
+    for (c, 0..) |p, i| {
+        const q = c[(i + 1) % c.len];
+        a += p.x * q.y - q.x * p.y;
+    }
+    return a * 0.5;
+}
+
+fn pointInPoly(p: V2, c: []const V2) bool {
+    var inside = false;
+    var j: usize = c.len - 1;
+    for (c, 0..) |pi, i| {
+        const a = pi; const b = c[j];
+        if ((a.y > p.y) != (b.y > p.y)) {
+            const xint = (b.x - a.x) * (p.y - a.y) / (b.y - a.y) + a.x;
+            if (p.x < xint) inside = !inside;
+        }
+        j = i;
+    }
+    return inside;
+}
+
+// winding number of point p wrt contour c (nonzero fill rule)
+fn windingNum(p: V2, c: []const V2) i32 {
+    var w: i32 = 0;
+    var j: usize = c.len - 1;
+    for (c, 0..) |pi, i| {
+        const a = pi; const b = c[j];
+        if (a.y <= p.y) {
+            if (b.y > p.y and (b.x - a.x) * (p.y - a.y) - (p.x - a.x) * (b.y - a.y) > 0) w += 1;
+        } else {
+            if (b.y <= p.y and (b.x - a.x) * (p.y - a.y) - (p.x - a.x) * (b.y - a.y) < 0) w -= 1;
+        }
+        j = i;
+    }
+    return w;
+}
+
+// ear clipping: polygon (simple, may be self-touching) -> triangle indices.
+// Returns list of Tri referencing contour points.
+fn earClip(c: []const V2, alloc: std.mem.Allocator) []Tri {
+    var tris = std.ArrayList(Tri).empty;
+    defer tris.deinit(alloc);
+    const n = c.len;
+    if (n < 3) return tris.items;
+    var idx = std.ArrayList(usize).empty;
+    defer idx.deinit(alloc);
+    // ensure CCW for ear test simplicity: reverse if signed area < 0
+    var work = std.ArrayList(V2).empty;
+    defer work.deinit(alloc);
+    // dedupe consecutive + closing-duplicate points (flattened contours
+    // can carry a zero-length edge that stalls ear clipping)
+    var tmp = std.ArrayList(V2).empty;
+    defer tmp.deinit(alloc);
+    for (c) |p| {
+        if (tmp.items.len > 0 and v2dist2(tmp.items[tmp.items.len - 1], p) < 0.0001) continue;
+        tmp.append(alloc, p) catch {};
+    }
+    if (tmp.items.len > 1 and v2dist2(tmp.items[0], tmp.items[tmp.items.len - 1]) < 0.0001) {
+        _ = tmp.items.len - 1;
+        tmp.shrinkRetainingCapacity(tmp.items.len - 1);
+    }
+    if (signedArea2(tmp.items) < 0) {
+        var i: usize = tmp.items.len;
+        while (i > 0) { i -= 1; work.append(alloc, tmp.items[i]) catch {}; }
+    } else {
+        for (tmp.items) |p| work.append(alloc, p) catch {};
+    }
+    for (work.items, 0..) |_, i| idx.append(alloc, i) catch {};
+    const wn = work.items.len;
+    var guard: usize = 0;
+    while (idx.items.len > 3 and guard < wn * wn * 4) : (guard += 1) {
+        var clipped = false;
+        for (idx.items, 0..) |_, ii| {
+            const m = idx.items.len;
+            const ia = idx.items[(ii + m - 1) % m];
+            const ib = idx.items[ii];
+            const ic = idx.items[(ii + 1) % m];
+            const a = work.items[ia]; const b = work.items[ib]; const d = work.items[ic];
+            // convex?
+            const cross = (b.x - a.x) * (d.y - b.y) - (b.y - a.y) * (d.x - b.x);
+            if (cross <= 0.000001) continue;
+            // no other point inside triangle
+            var empty = true;
+            for (idx.items) |ok| {
+                if (ok == ia or ok == ib or ok == ic) continue;
+                const p = work.items[ok];
+                const d1 = (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);
+                const d2 = (d.x - b.x) * (p.y - b.y) - (d.y - b.y) * (p.x - b.x);
+                const d3 = (a.x - d.x) * (p.y - d.y) - (a.y - d.y) * (p.x - d.x);
+                if (d1 >= 0 and d2 >= 0 and d3 >= 0) { empty = false; break; }
+            }
+            if (!empty) continue;
+            tris.append(alloc, .{ .x1 = a.x, .y1 = a.y, .x2 = b.x, .y2 = b.y, .x3 = d.x, .y3 = d.y }) catch {};
+            _ = idx.orderedRemove(ii);
+            clipped = true;
+            break;
+        }
+        if (!clipped) break; // degenerate remainder — bail rather than loop
+    }
+    if (idx.items.len == 3) {
+        const a = work.items[idx.items[0]]; const b = work.items[idx.items[1]]; const d = work.items[idx.items[2]];
+        tris.append(alloc, .{ .x1 = a.x, .y1 = a.y, .x2 = b.x, .y2 = b.y, .x3 = d.x, .y3 = d.y }) catch {};
+    }
+    return tris.toOwnedSlice(alloc) catch &.{};
+}
+
+// Bridge a hole contour into its parent outer contour: splice the hole
+// (reversed) into the outer ring at the closest visible vertex. Returns
+// merged ring, or null if bridging fails (caller falls back to treating
+// contours independently — named gap for pathological cases).
+fn bridgeHole(outer: []const V2, hole: []const V2, alloc: std.mem.Allocator) ?[]V2 {
+    // find hole vertex with max x (rightmost)
+    var hi: usize = 0;
+    for (hole, 0..) |p, i| { if (p.x > hole[hi].x) hi = i; }
+    const hp = hole[hi];
+    // find outer edge crossing the horizontal ray right of hp
+    var bestT: f32 = 1e30; var bestI: usize = 0;
+    for (outer, 0..) |a, i| {
+        const b = outer[(i + 1) % outer.len];
+        if ((a.y > hp.y) == (b.y > hp.y)) continue;
+        const t = (hp.y - a.y) / (b.y - a.y);
+        const xint = a.x + (b.x - a.x) * t;
+        if (xint > hp.x and xint - hp.x < bestT) { bestT = xint - hp.x; bestI = i; }
+    }
+    if (bestT > 1e29) return null;
+    // merged: outer[0..=bestI] + hole reversed from hi + outer[bestI+1..]
+    var merged = std.ArrayList(V2).empty;
+    defer merged.deinit(alloc);
+    for (outer[0 .. bestI + 1]) |p| merged.append(alloc, p) catch {};
+    // hole vertices in reverse winding starting at hi
+    var k: usize = 0;
+    while (k < hole.len) : (k += 1) {
+        const idx = (hi + hole.len - k) % hole.len;
+        merged.append(alloc, hole[idx]) catch {};
+    }
+    for (outer[bestI + 1 ..]) |p| merged.append(alloc, p) catch {};
+    return merged.toOwnedSlice(alloc) catch null;
+}
+
+// contours + fill rule -> triangle soup.
+// eo=1 even-odd, eo=0 nonzero winding. Holes bridged into parents.
+fn tessellate(verbs: []const u8, pts: []const V2, eo: i64, tol: f32, alloc: std.mem.Allocator) []Tri {
+    const contours = flattenPath(verbs, pts, tol, alloc);
+    defer { for (contours) |c| alloc.free(c); }
+    var tris = std.ArrayList(Tri).empty;
+    defer tris.deinit(alloc);
+    if (contours.len == 0) return tris.toOwnedSlice(alloc) catch &.{};
+    if (contours.len == 1) return earClip(contours[0], alloc);
+    // classify: compute depth of each contour inside others
+    var depth = std.ArrayList(i32).empty;
+    defer depth.deinit(alloc);
+    var wind = std.ArrayList(i32).empty;
+    defer wind.deinit(alloc);
+    for (contours, 0..) |c, i| {
+        // sample midpoint of first edge for containment tests
+        const p = c[0];
+        var d: i32 = 0; var w: i32 = 0;
+        for (contours, 0..) |o, j| {
+            if (j == i) continue;
+            // skip degenerate
+            if (o.len < 3) continue;
+            if (eo == 1) {
+                if (pointInPoly(p, o)) d += 1;
+            } else {
+                w += windingNum(p, o);
+            }
+        }
+        depth.append(alloc, d) catch {}; wind.append(alloc, w) catch {};
+    }
+    // group: outers (depth 0 / wind 0) own holes (depth>0 odd / wind!=0)
+    // simple v1: bridge every non-outer contour into the outer that
+    // contains it (first match), then ear-clip each merged ring.
+    var used = std.ArrayList(bool).empty;
+    defer used.deinit(alloc);
+    for (contours) |_| used.append(alloc, false) catch {};
+    for (contours, 0..) |c, i| {
+        if (used.items[i]) continue;
+        const isOuter = if (eo == 1) @rem(depth.items[i], @as(i32, 2)) == 0 else wind.items[i] == 0;
+        if (!isOuter) continue;
+        var ring = c;
+        var ringOwned: ?[]V2 = null;
+        defer if (ringOwned) |r| alloc.free(r);
+        // absorb holes contained in this outer
+        for (contours, 0..) |h, j| {
+            if (j == i or used.items[j]) continue;
+            const hOuter = if (eo == 1) @rem(depth.items[j], @as(i32, 2)) == 1 else wind.items[j] != 0;
+            if (!hOuter) continue;
+            // is h inside ring? test hole's first point against ORIGINAL outer c
+            if (!pointInPoly(h[0], c)) continue;
+            if (bridgeHole(ring, h, alloc)) |merged| {
+                if (ringOwned) |r| alloc.free(r);
+                ringOwned = merged; ring = merged; used.items[j] = true;
+            }
+        }
+        const ct = earClip(ring, alloc);
+        for (ct) |t| tris.append(alloc, t) catch {};
+        used.items[i] = true;
+    }
+    // leftover contours (unbridgeable / nested weirdness): emit independently
+    for (contours, 0..) |c, i| {
+        if (used.items[i]) continue;
+        const ct = earClip(c, alloc);
+        for (ct) |t| tris.append(alloc, t) catch {};
+    }
+    return tris.toOwnedSlice(alloc) catch &.{};
+}
+
+~pub tor tessdump { r: *Riv<loaded>, ab: i64, frame: i64 }
+~proc tessdump|zig {
+    const alloc = std.heap.page_allocator;
+    const recs = $mod.collectOps(r, @intCast(ab), frame, alloc);
+    var verbs = std.ArrayList(u8).empty;
+    var pts = std.ArrayList(V2).empty;
+    defer verbs.deinit(alloc); defer pts.deinit(alloc);
+    for (recs) |rec| {
+        switch (rec.kind) {
+            1, 2, 3, 4, 5 => {
+                const np: usize = if (rec.kind == 1 or rec.kind == 2) 1 else if (rec.kind == 3) 2 else if (rec.kind == 4) 3 else 0;
+                const base: u8 = if (rec.kind == 1) 0 else if (rec.kind == 2) 1 else if (rec.kind == 3) 2 else if (rec.kind == 4) 4 else 5;
+                verbs.append(alloc, @intCast(base)) catch {};
+                for (0..np) |k| {
+                    const xs = if (k == 0) rec.x1 else if (k == 1) rec.x2 else rec.x3;
+                    const ys = if (k == 0) rec.y1 else if (k == 1) rec.y2 else rec.y3;
+                    pts.append(alloc, .{ .x = @floatCast(xs), .y = @floatCast(ys) }) catch {};
+                }
+            },
+            8 => {
+                if (rec.style == 1 and verbs.items.len > 0) {
+                    const tris = tessellate(verbs.items, pts.items, rec.eo, 0.25, alloc);
+                    std.debug.print("DRAW style={d} eo={d} tris={d}\n", .{ rec.style, rec.eo, tris.len });
+                    for (tris) |t| {
+                        std.debug.print("TRI {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ t.x1, t.y1, t.x2, t.y2, t.x3, t.y3 });
+                    }
+                }
+                verbs.clearRetainingCapacity(); pts.clearRetainingCapacity();
+            },
+            9, 10 => { verbs.clearRetainingCapacity(); pts.clearRetainingCapacity(); },
+            else => {},
+        }
+    }
+}
