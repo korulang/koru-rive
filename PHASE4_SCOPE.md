@@ -157,9 +157,9 @@ committed producer-side (`ff18735`).
   ops() has NO sm parameter — selection is implicit via cluster;
   eval gap = entering AnimationStates/transitions/inputs at frame.
 
-- clfp Item frame:0 == bind-pose result (identical FAIL) — Item's
-  keyframed content doesn't move under frame eval; the divergence is
-  the green field itself: ours modal (18,161,0) opaque over ~142k px,
-  ref nonEmptyPx=60892 with ink concentrated (0,107,282,327).
-  Signature = coverage/alpha of the row bg, not position or SM state.
-  Likely the row bg is semi-transparent or SM-gated in browser.
+- clfp Item frame:0 == bind-pose result (identical FAIL). Pixel diff
+  narrows it precisely: green row-bg renders IDENTICALLY (18,161,0
+  sampled both sides); the 88.8k diff px live in y107-392 = the row
+  CONTENT region — component-instance children our ops stream doesn't
+  expand for this artboard. Gap = component-content expansion inside
+  Item, not bg alpha, not SM eval, not fit.
