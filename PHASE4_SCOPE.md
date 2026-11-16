@@ -577,3 +577,12 @@ committed producer-side (`ff18735`).
   near-vacuous, NOT a decode failure. lwti ops=0 (type-544
   class, nothing to emit). Image pipeline re-gates: cin=live
   spec-correct, iba=vacuous-1px, lwti=out-of-scope.
+
+- emitOps audit: LIVE but debug-only — callers are dumpDrawOps
+  + list-row dump (drawops_clfp.k/drawops_dump.k/inspect3.k).
+  Render path = collectOps->collectArtboardOps exclusively.
+  emitOps is PRE-FIX semantics: no pathSpaceMat/xformPV (path-
+  child compose gap from 1abec30 never ported), own fill loop
+  at 3262. Verdict: superseded for render; debug dumps diverge
+  from render on offset path children — name it, don't fix
+  (debug-only, fixing doubles maintenance for zero gate value).
