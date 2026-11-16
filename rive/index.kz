@@ -3662,8 +3662,7 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
 ~proc smdump|zig {
     for (r.objects, 0..) |o, i| {
         const tn = o.type_name orelse "?";
-        const isVm = std.mem.indexOf(u8, tn, "ViewModelInstance") != null;
-        if (!isVm) continue;
+        if (o.type_key != 427 and o.type_key != 559 and o.type_key != 19 and o.type_key != 23) continue;
         var nm: []const u8 = "?";
         for (o.props) |p| {
             if (p.key == 4) switch (p.value) { .bytes => |b| nm = b, else => {} };
