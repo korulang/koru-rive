@@ -16,6 +16,8 @@ std/io:print.ln("meshrender: start")
                     ! mdraw d |> kr/probe:mesh-draw(d, f)
                     ! mtri t |> kr/probe:mesh-tri(t)
                     ! mdone n |> kr/probe:mesh-end(f)
+                    ! mclip mc |> kr/probe:mesh-clip(c: mc, f)
+                    ! mclippop mp |> kr/probe:mesh-clippop(f)
                     | mend _ |> kr/rive:free(r)
             | failed e |> std/io:print.ln("open failed")
         | done _
