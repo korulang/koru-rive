@@ -2546,10 +2546,17 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         var pts = std.ArrayList(V2).empty;
         defer pathVs.deinit(alloc); defer verbs.deinit(alloc); defer pts.deinit(alloc);
         var closed = false;
-        for (r.objects) |*c| {
+        for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(c)) catch {};
+            } else if (c.type_key == 16) {
+                // PointsPath: vertices are children of the path object
+                for (r.objects) |*gv| {
+                    if (gv.parent_obj == @as(i64, @intCast(ci)) and isVertexType(gv.type_key)) {
+                        pathVs.append(alloc, fileVert(gv)) catch {};
+                    }
+                }
             } else if (synthParametric(r, c, &pathVs, alloc, if (scaffold) frame else -1)) {
                 closed = true;
             }
