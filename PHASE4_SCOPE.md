@@ -60,7 +60,7 @@ means polygon fill on the GPU backends, Tier-2-verified.
 4. **Backend consume** — koru-native GPU path draws the triangle soup;
    Tier-2 verify vs canvas reference on stream-equal fixtures.
 
-*i915 excluded per Lars ruling 2026-11-16 — revisit only if he re-opens it.*
+*i915 excluded from current work per Lars ruling 2026-11-16; named future forcing-function target for the GPU pipeline — revisit when Metal-side coverage lands.*
 
 ## What this is NOT
 
