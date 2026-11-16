@@ -2769,16 +2769,31 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
     for (r.objects, 0..) |o, oi| {
         if (o.type_key != 1) continue;
         if (scoped and oi != abIdx) continue;
-        // LayoutComponent.clip (key 196, f4) — default true
-        // (artboard.cpp:127); explicit false suppresses clipPath op.
-        const clip = if (propByKey(o.props, 196)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => true } else true;
+        // LayoutComponent.clip (key 196, f4) — lives on LayoutComponent
+        // (409) children of the artboard (cl_1 obj[26]); artboard's own
+        // prop 196 also honored. Default true (artboard.cpp:127).
+        var clip = if (propByKey(o.props, 196)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => true } else true;
+        var layoutClip = false;
+        for (r.objects, 0..) |*lc, lci| {
+            if (lc.type_key == 409 and lc.parent_obj == @as(i64, @intCast(oi))) {
+                if (propByKey(lc.props, 196)) |v| {
+                    clip = switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => clip };
+                    layoutClip = true;
+                }
+                _ = lci;
+            }
+        }
         const aw = propF(o.props, 7, 0);
         const ah = propF(o.props, 8, 0);
         var verbs = std.ArrayList(u8).empty;
         var pts = std.ArrayList(V2).empty;
         defer verbs.deinit(alloc); defer pts.deinit(alloc);
         verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = 0, .y = 0 }) catch {};
-        for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah } }) |p| {
+        // layout-managed clip packs the full 4-corner rect + dangling
+        // close-line (golden cl_1: verbs=6 pts=4); plain artboards keep
+        // the 3-point 5/3 packing (965ba91).
+        const corners: []const V2 = if (layoutClip) &[_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah }, .{ .x = 0, .y = ah } } else &[_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah } };
+        for (corners) |p| {
             verbs.append(alloc, 1) catch {}; pts.append(alloc, p) catch {};
         }
         verbs.append(alloc, 1) catch {}; verbs.append(alloc, 5) catch {};
