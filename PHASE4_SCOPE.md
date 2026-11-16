@@ -328,3 +328,49 @@ committed producer-side (`ff18735`).
   AND tick>=1 (list populates after first advance; tick=0 ref was EMPTY
   — second false-ref caught by green-px count). cl2 recon: needs
   flexWrap grid + NumberToList converter + SM listeners — new arc.
+
+- koru-native real-target link: DEFERRED to koru-os build pipeline —
+  koru-os is a bare-metal PID-1 userspace (MPMC rings + io_uring);
+  _koruos_* symbols live in its runtime, not a macOS-linkable lib.
+  Emit-clean under --build=koru-native is the achievable compile
+  check on this host (measured: fillTri @as fix, native_mesh_smoke.k).
+
+- clip_tests diagnosis: ops(ab:42) emits ~10 drawPaths ALL
+  color=ff880000 (the red field) — hidden paths drawn as fills.
+  Browser renders only the visible-path ink region. Our opacity-0
+  cull (prop18) doesn't catch whatever flag marks these hidden —
+  likely a separate hidden/isVisible drawable flag or the paths
+  are clip sources mis-emitted as draws. Named: hidden-content
+  culling gap.
+
+- clip_tests refined: draw.clip.push.path EXISTS on macOS arm and
+  probe.kz already maps kind-9 ops to it — path clips ARE wired.
+  clip_tests still floods red -> failure is inside clip.push.path
+  realization or clip-path coordinate space, not missing verb.
+  Next diagnostic: clip path bounds vs expected ink region.
+
+- clip_tests op-order finding: probe bridge correct (kind9 ->
+  clip.push.path consumes accumulated hcell path, copies geometry).
+  Suspect = op ORDER: clip path verbs emit, then k=6 transform push,
+  then k=9 clip push — clip.push.path rasterizes at PUSH time under
+  whatever CTM is current; if the clip path was authored in the
+  post-transform space but pushed before/after the wrong transform,
+  the mask lands wrong -> effective no-clip -> red flood. Next:
+  verify clip path coords vs the k=6 transform ordering in collectOps.
+
+- clip_tests ROOT CAUSE: Shape47 "Rectangle-clipped" has ClippingShape
+  child (type42, sourceId=1 -> Shape43 "Ellipse-clipper" slot1).
+  Clipper's own Fill51 isVisible=false (now culled by 969669c).
+  Real clip = clipper's ELLIPSE geometry (~171x171 = ref ink bbox).
+  Our ops emit a generic 500x500 clip instead — ClippingShape objects
+  are never resolved to sourceId geometry. Bounded fix: shape with
+  ClippingShape child -> emit kind-9 clip from SOURCE shape's path,
+  wrap draws, pop.
+
+- clip emission debug: clip path verbs emit correctly (ellipse
+  cubics, radius 85.8 = 171.5/2 exact) under source world transform.
+  Suspect: clipper's TWO ellipse children carry Node.x offsets
+  (+150.1 / -89.1) forming left+right halves — clip path gather may
+  miss child-node transforms -> mask shifted ~-150px left -> ink=0.
+  Main draw path handles this somehow (passes elsewhere) — diff the
+  transform composition for clip-source vs draw-source gathers.
