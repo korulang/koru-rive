@@ -214,3 +214,11 @@ committed producer-side (`ff18735`).
   obj83 prop586=268 binds that property id -> VM instance value.
   Split verdict: VM DECODE complete; BINDING RESOLUTION (prop586
   -> instance -> property -> value) is the missing eval step.
+
+- VM value probe: instance property values DO decode —
+  ViewModelInstanceNumber prop575=dbl (6, 10) + prop554=index.
+  ItemVM's only prop is SymbolListIndex ("List Index") — the row
+  text/icon resolves through a SYMBOL LIST, not a string prop.
+  prop586=268 binding -> instance -> SymbolListIndex value ->
+  list entry lookup. Numbers present; symbol-list contents are
+  the next decode target.
