@@ -222,3 +222,10 @@ committed producer-side (`ff18735`).
   prop586=268 binding -> instance -> SymbolListIndex value ->
   list entry lookup. Numbers present; symbol-list contents are
   the next decode target.
+
+- DataBindContext decoded: prop586=DataBind.propertyKey (268 =
+  TextValueRun.text!), prop588=sourcePathIds bytes, prop660=
+  converterId. obj83: propertyKey=268, sourcePathIds={2,0},
+  converterId=2. Binding = propertyKey 268 on the text object <-
+  sourcePathIds path -> VM instance property. {2,0} segment
+  semantics next (index into instance prop list? nested path?).
