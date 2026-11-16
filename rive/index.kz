@@ -1768,6 +1768,88 @@ fn dumpPathOps(r: *Riv) void {
     }
 }
 
+
+fn shapeWorld(r: *const Riv, idx: usize) Mat2 {
+    const o = &r.objects[idx];
+    var world = localMat(o);
+    var p = o.parent_obj;
+    var depth: usize = 0;
+    while (p >= 0 and depth < 32) : (depth += 1) {
+        const po = &r.objects[@intCast(p)];
+        if (isNodeType(po.type_key)) world = matMul(localMat(po), world);
+        p = po.parent_obj;
+    }
+    return world;
+}
+
+fn propU(props: []const Prop, key: u16, default: i64) i64 {
+    if (propByKey(props, key)) |v| return switch (v) { .uint => |u| @intCast(u), else => default };
+    return default;
+}
+
+fn propColor(props: []const Prop, key: u16) u32 {
+    if (propByKey(props, key)) |v| return switch (v) { .color => |c| c, else => 0 };
+    return 0;
+}
+
+// Emit one drawPath op per ShapePaint child of each Shape, with the
+// shape's composed path geometry — golden drawPath format.
+fn dumpDrawOps(r: *Riv) void {
+    const alloc = std.heap.page_allocator;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 3) continue; // Shape only
+        // gather path objects (vertex children or Rectangle) + paint children
+        var pathVs = std.ArrayList(PV).empty;
+        var verbs = std.ArrayList(u8).empty;
+        var pts = std.ArrayList(V2).empty;
+        defer pathVs.deinit(alloc); defer verbs.deinit(alloc); defer pts.deinit(alloc);
+        var closed = false;
+        for (r.objects) |*c| {
+            if (c.parent_obj != @as(i64, @intCast(i))) continue;
+            if (isVertexType(c.type_key)) {
+                pathVs.append(alloc, fileVert(c)) catch {};
+            } else if (c.type_key == 7) {
+                // Rectangle synth (same as dumpPathOps)
+                const w = propF(c.props, 20, 0); const h = propF(c.props, 21, 0);
+                const ox = -propF(c.props, 123, 0.5) * w; const oy = -propF(c.props, 124, 0.5) * h;
+                const rtl = propF(c.props, 31, 0);
+                const link = if (propByKey(c.props, 164)) |v| switch (v) { .boolean => |b| b, else => true } else true;
+                const rtr = if (link) rtl else propF(c.props, 161, 0);
+                const rbr = if (link) rtl else propF(c.props, 163, 0);
+                const rbl = if (link) rtl else propF(c.props, 162, 0);
+                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rtl }) catch {};
+                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rtr }) catch {};
+                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rbr }) catch {};
+                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rbl }) catch {};
+                closed = true;
+            }
+        }
+        // PointsPath children carry isClosed on the PATH object, not shape —
+        // for mixed shapes use last seen; single-path shapes dominate fixtures.
+        if (pathVs.items.len >= 2) buildPath(pathVs.items, closed, &verbs, &pts, alloc);
+        const w = shapeWorld(r, i);
+        for (r.objects, 0..) |*c, pi| {
+            if (c.parent_obj != @as(i64, @intCast(i))) continue;
+            if (c.type_key != 20 and c.type_key != 24) continue; // Fill / Stroke only
+            // color: SolidColor child of this paint (index pi)
+            var color: u32 = 0;
+            for (r.objects) |*g| {
+                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColor(g.props, 37);
+            }
+            const isStroke = c.type_key == 24;
+            const style: i64 = if (isStroke) 0 else 1;
+            const thick = if (isStroke) propF(c.props, 47, 0) else 0;
+            const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
+            const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
+            const blend = propU(c.props, 747, 3);
+            const fillRule = if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
+            const tname = c.type_name orelse "?";
+            std.debug.print("transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
+            std.debug.print("drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d} [{s}]\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pts.items.len, tname });
+        }
+    }
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
@@ -1814,4 +1896,10 @@ fn dumpPathOps(r: *Riv) void {
 
 ~proc pathops|zig {
     dumpPathOps(r);
+}
+
+~pub tor drawops { r: *Riv<loaded> }
+
+~proc drawops|zig {
+    dumpDrawOps(r);
 }
