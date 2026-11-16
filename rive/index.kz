@@ -2703,8 +2703,7 @@ fn locaOff(b: []const u8, gid: u32, shortFmt: bool) u32 {
 // or quad control). Returns points in font units (y up).
 const GlyfPt = struct { x: i32, y: i32, on: bool };
 
-fn glyfGlyph(b: []const u8, gid: u32) []GlyfPt {
-    const alloc = std.heap.page_allocator;
+fn glyfGlyph(b: []const u8, gid: u32, ends: *std.ArrayList(u32), alloc: std.mem.Allocator) []GlyfPt {
     var out = std.ArrayList(GlyfPt).empty;
     const hd = sfntFind(b, tag4("head")) orelse return out.items;
     const shortFmt = be16(b, hd.off + 50) == 0;
@@ -2717,6 +2716,10 @@ fn glyfGlyph(b: []const u8, gid: u32) []GlyfPt {
     // numberOfContours is i16 — read as signed
     const ncs: i32 = @as(i16, @bitCast(@as(u16, @intCast(be16(b, g0)))));
     if (ncs < 0) return out.items; // composite: TODO components
+    var ei: usize = 0;
+    while (ei < @as(usize, @intCast(ncs))) : (ei += 1) {
+        ends.append(alloc, be16(b, g0 + 10 + 2 * ei)) catch {};
+    }
     const npts = be16(b, g0 + 10 + 2 * @as(usize, @intCast(ncs)) - 2) + 1; // last endPt
     var p: usize = g0 + 10 + 2 * @as(usize, @intCast(ncs));
     const instrLen: usize = be16(b, p); p += 2 + instrLen;
@@ -2814,15 +2817,61 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
     for (text) |ch| {
         if (ch < 0x20) continue;
         const gid = cmapGlyph(font, ch);
-        const gp = glyfGlyph(font, gid);
+        var ends = std.ArrayList(u32).empty; defer ends.deinit(alloc);
+        const gp = glyfGlyph(font, gid, &ends, alloc);
         if (gp.len == 0) { pen += hmtxAdvance(font, gid) * scale; continue; }
-        var started = false;
-        for (gp) |pt| {
-            const gx = pen + @as(f32, @floatFromInt(pt.x)) * scale;
-            const gy = -@as(f32, @floatFromInt(pt.y)) * scale;
-            if (!started) { verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = gx, .y = gy }) catch {}; started = true; continue; }
-            verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = gx, .y = gy }) catch {};
+        // contour-split + TTF implied-midpoint + quad->cubic elevation
+        var cstart: usize = 0;
+        for (ends.items) |e| {
+            const cend: usize = @as(usize, @intCast(e)) + 1;
+            const cn = cend - cstart;
+            if (cn == 0) continue;
+            // rotate to first on-curve point
+            var firstOn: usize = cstart;
+            var scanned: usize = 0;
+            while (scanned < cn and !gp[@as(usize, @intCast(firstOn))].on) : (scanned += 1) firstOn = (firstOn + 1) % cend;
+            if (scanned == cn) { cstart = cend; continue; } // all off: degenerate
+            const m0 = firstOn;
+            const sx = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
+            const sy = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale;
+            verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = sx, .y = sy }) catch {};
+            var cur = m0;
+            var guard: usize = 0;
+            var pendingOff = false;
+            var offPt = GlyfPt{ .x = 0, .y = 0, .on = false };
+            while (guard < cn * 2 + 4) : (guard += 1) {
+                const ni = (cur + 1) % cend;
+                const np = gp[@as(usize, @intCast(ni))];
+                if (ni == m0) break;
+                if (!np.on) {
+                    if (pendingOff) {
+                        // implied on-curve midpoint between offPt and np
+                        const mx = (@as(f32, @floatFromInt(offPt.x)) + @as(f32, @floatFromInt(np.x))) / 2;
+                        const my = -(@as(f32, @floatFromInt(offPt.y)) + @as(f32, @floatFromInt(np.y))) / 2;
+                        const ex = pen + mx * scale; const ey = my * scale;
+                        // quad->cubic ctrl pts TODO (emitting endpoint only)
+                        verbs.append(alloc, 4) catch {};
+                        pts.append(alloc, .{ .x = 0, .y = 0 }) catch {}; pts.append(alloc, .{ .x = 0, .y = 0 }) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+                        cur = ni; pendingOff = false;
+                    } else { offPt = np; pendingOff = true; }
+                } else {
+                    if (pendingOff) {
+                        const ex = pen + @as(f32, @floatFromInt(np.x)) * scale;
+                        const ey = -@as(f32, @floatFromInt(np.y)) * scale;
+                        verbs.append(alloc, 4) catch {}; pts.append(alloc, .{ .x = 0, .y = 0 }) catch {}; pts.append(alloc, .{ .x = 0, .y = 0 }) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+                        pendingOff = false;
+                    } else {
+                        const ex = pen + @as(f32, @floatFromInt(np.x)) * scale;
+                        const ey = -@as(f32, @floatFromInt(np.y)) * scale;
+                        verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+                    }
+                    cur = ni;
+                }
+                if (cur == m0) break;
+            }
+            cstart = cend;
         }
+        verbs.append(alloc, 5) catch {};
         pen += hmtxAdvance(font, gid) * scale;
     }
     verbs.append(alloc, 5) catch {};
