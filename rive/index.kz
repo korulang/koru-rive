@@ -2349,6 +2349,9 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
     // emitted once per artboard before its drawables, golden clipPath op.
     for (r.objects) |o| {
         if (o.type_key != 1) continue;
+        // LayoutComponent.clip (key 196, f4) — default true
+        // (artboard.cpp:127); explicit false suppresses clipPath op.
+        const clip = if (propByKey(o.props, 196)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => true } else true;
         const aw = propF(o.props, 7, 0);
         const ah = propF(o.props, 8, 0);
         var verbs = std.ArrayList(u8).empty;
@@ -2361,19 +2364,21 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
         verbs.append(alloc, 1) catch {}; verbs.append(alloc, 5) catch {};
         std.debug.print("save\n", .{});
         std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n", .{});
-        std.debug.print("clipPath verbs={d} pts={d}\n", .{ verbs.items.len, pts.items.len });
-        var vp: usize = 0;
-        for (verbs.items) |v| {
-            const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-            var s = std.ArrayList(u8).empty;
-            defer s.deinit(alloc);
-            s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
-            var k: usize = 0;
-            while (k < np and vp < pts.items.len) : (k += 1) {
-                s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
-                vp += 1;
+        if (clip) {
+            std.debug.print("clipPath verbs={d} pts={d}\n", .{ verbs.items.len, pts.items.len });
+            var vp: usize = 0;
+            for (verbs.items) |v| {
+                const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+                var s = std.ArrayList(u8).empty;
+                defer s.deinit(alloc);
+                s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+                var k: usize = 0;
+                while (k < np and vp < pts.items.len) : (k += 1) {
+                    s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+                    vp += 1;
+                }
+                std.debug.print("{s}\n", .{s.items});
             }
-            std.debug.print("{s}\n", .{s.items});
         }
         std.debug.print("restore\n", .{});
     }
