@@ -327,3 +327,12 @@ in SECONDS (toFrame->seconds()); KeyFrame.frame -> seconds via
 animation fps at instance setup; advanceAndApply dt accumulates
 seconds; mix/blend weights may scale actualMix. NEXT: read
 linear_animation_instance.cpp time->frame mapping + fps source.
+
+## LinearAnimationInstance time base — partial
+
+Instance carries m_time (seconds, accumulated by advance). fps
+source + frame<->seconds conversion still unread (file's apply
+path is bind/holder-heavy). mix/actualMix scaling unread.
+NEXT: grep 'fps' across src/animation + artboard advance path;
+KeyFrame.frame is in FRAMES, toFrame->seconds() implies conversion
+at keyed-property build time (fps from animation or artboard).
