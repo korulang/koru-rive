@@ -2886,64 +2886,52 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
             // rotate to first on-curve point
             var firstOn: usize = cstart;
             var scanned: usize = 0;
-            while (scanned < cn and !gp[@as(usize, @intCast(firstOn))].on) : (scanned += 1) firstOn = (firstOn + 1) % cend;
+            while (scanned < cn and !gp[@as(usize, @intCast(firstOn))].on) : (scanned += 1) firstOn = if (firstOn + 1 >= cend) cstart else firstOn + 1;
             if (scanned == cn) { cstart = cend; continue; } // all off: degenerate
             const m0 = firstOn;
             const sx = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
             const sy = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + asc;
             verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = sx, .y = sy }) catch {};
-            var cur = m0;
+            var curIdx = m0;
+            // coordinate-based walk: cur = current on-curve point (font
+            // units); off-curve runs imply on-curve midpoints (TTF spec)
+            var curFx: f32 = @floatFromInt(gp[@as(usize, @intCast(m0))].x);
+            var curFy: f32 = @floatFromInt(gp[@as(usize, @intCast(m0))].y);
             var guard: usize = 0;
             var pendingOff = false;
-            var offPt = GlyfPt{ .x = 0, .y = 0, .on = false };
-            while (guard < cn * 2 + 4) : (guard += 1) {
-                const ni = (cur + 1) % cend;
+            var offFx: f32 = 0; var offFy: f32 = 0;
+            while (guard < cn * 3 + 8) : (guard += 1) {
+                const ni = if (curIdx + 1 >= cend) cstart else curIdx + 1;
                 const np = gp[@as(usize, @intCast(ni))];
-                if (ni == m0) break;
+                if (ni == m0) {
+                    const ex = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
+                    const ey = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + asc;
+                    emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(gp[@as(usize, @intCast(m0))].x), @floatFromInt(gp[@as(usize, @intCast(m0))].y), ex, ey);
+                    verbs.append(alloc, 5) catch {};
+                    break;
+                }
                 if (!np.on) {
                     if (pendingOff) {
-                        // implied on-curve midpoint between offPt and np
-                        const mx = (@as(f32, @floatFromInt(offPt.x)) + @as(f32, @floatFromInt(np.x))) / 2;
-                        const my = -(@as(f32, @floatFromInt(offPt.y)) + @as(f32, @floatFromInt(np.y))) / 2;
-                        const ex = pen + mx * scale; const ey = my * scale + asc;
-                        const p0x = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(cur))].x)) * scale;
-                        const p0y = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(cur))].y)) * scale + asc;
-                        const qx = pen + @as(f32, @floatFromInt(offPt.x)) * scale;
-                        const qy = -@as(f32, @floatFromInt(offPt.y)) * scale + asc;
-                        const c1x = p0x + (qx - p0x) * (2.0 / 3.0);
-                        const c1y = p0y + (qy - p0y) * (2.0 / 3.0);
-                        const c2x = ex + (qx - ex) * (2.0 / 3.0);
-                        const c2y = ey + (qy - ey) * (2.0 / 3.0);
-                        verbs.append(alloc, 4) catch {};
-                        pts.append(alloc, .{ .x = c1x, .y = c1y }) catch {}; pts.append(alloc, .{ .x = c2x, .y = c2y }) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
-                        cur = ni; pendingOff = false;
-                    } else { offPt = np; pendingOff = true; }
+                        // implied on-curve mid between offPt and np:
+                        // emit cubic cur->offPt->mid, then mid becomes cur
+                        // with np as new pending control
+                        const mx = (offFx + @as(f32, @floatFromInt(np.x))) / 2;
+                        const my = (offFy + @as(f32, @floatFromInt(np.y))) / 2;
+                        emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, true, offFx, offFy, mx, my, pen + mx * scale, -my * scale + asc);
+                        curFx = mx; curFy = my;
+                        offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); // np stays pending
+                    } else { offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); pendingOff = true; }
                 } else {
-                    if (pendingOff) {
-                        const ex = pen + @as(f32, @floatFromInt(np.x)) * scale;
-                        const ey = -@as(f32, @floatFromInt(np.y)) * scale + asc;
-                        const p0x = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(cur))].x)) * scale;
-                        const p0y = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(cur))].y)) * scale + asc;
-                        const qx = pen + @as(f32, @floatFromInt(offPt.x)) * scale;
-                        const qy = -@as(f32, @floatFromInt(offPt.y)) * scale + asc;
-                        const c1x = p0x + (qx - p0x) * (2.0 / 3.0);
-                        const c1y = p0y + (qy - p0y) * (2.0 / 3.0);
-                        const c2x = ex + (qx - ex) * (2.0 / 3.0);
-                        const c2y = ey + (qy - ey) * (2.0 / 3.0);
-                        verbs.append(alloc, 4) catch {};
-                        pts.append(alloc, .{ .x = c1x, .y = c1y }) catch {}; pts.append(alloc, .{ .x = c2x, .y = c2y }) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
-                        pendingOff = false;
-                    } else {
-                        const ex = pen + @as(f32, @floatFromInt(np.x)) * scale;
-                        const ey = -@as(f32, @floatFromInt(np.y)) * scale + asc;
-                        verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
-                    }
-                    cur = ni;
+                    const ex = pen + @as(f32, @floatFromInt(np.x)) * scale;
+                    const ey = -@as(f32, @floatFromInt(np.y)) * scale + asc;
+                    emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(np.x), @floatFromInt(np.y), ex, ey);
+                    pendingOff = false;
+                    curFx = @floatFromInt(np.x); curFy = @floatFromInt(np.y);
                 }
+                curIdx = ni;
             }
             cstart = cend;
         }
-        verbs.append(alloc, 5) catch {};
         std.debug.print("  -> verbs +{d}\n", .{verbs.items.len - vb});
         pen += hmtxAdvance(font, gid) * scale;
     }
@@ -2962,6 +2950,25 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         }
         std.debug.print("  {s}\n", .{s.items});
     }
+}
+
+
+// emit one glyph segment: line if no pending control, else elevated
+// cubic for quad (cur on-curve, offPt control, end on-curve).
+fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), pen: f32, scale: f32, asc: f32, curFx: f32, curFy: f32, hasOff: bool, offFx: f32, offFy: f32, endFx: f32, endFy: f32, ex: f32, ey: f32) void {
+    if (!hasOff) {
+        verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+        return;
+    }
+    const p0x = pen + curFx * scale;
+    const p0y = -curFy * scale + asc;
+    const qx = pen + offFx * scale;
+    const qy = -offFy * scale + asc;
+    verbs.append(alloc, 4) catch {};
+    pts.append(alloc, .{ .x = p0x + (qx - p0x) * (2.0 / 3.0), .y = p0y + (qy - p0y) * (2.0 / 3.0) }) catch {};
+    pts.append(alloc, .{ .x = ex + (qx - ex) * (2.0 / 3.0), .y = ey + (qy - ey) * (2.0 / 3.0) }) catch {};
+    pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+    _ = endFx; _ = endFy;
 }
 
 // ---- Koru surface ---------------------------------------------------------
