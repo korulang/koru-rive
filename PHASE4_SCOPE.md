@@ -468,3 +468,10 @@ committed producer-side (`ff18735`).
   tris don't share bit-identical diagonal endpoints -> hairline
   wedge at tips lets clear bleed. Cosmetic (10px/250k) but real;
   fix = snap shared-edge verts or weld duplicates in meshops.
+
+- CORRECTION on 892b052: the 10px seam-bleed diagnosis was measured
+  on a STALE /tmp/ours_mesh_t1.bmp (older driver state). Clean
+  A/B (pre-AA 3f1c7c2 vs current, fresh renders both): identical
+  853 nonbg / 0 edge px — no seam bleed exists in current output.
+  Seam-gap diagnosis RETRACTED as unverified; mesh AA confirmed
+  pixel no-op on this fixture; no coverage residual stands.
