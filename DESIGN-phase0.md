@@ -315,3 +315,15 @@ Consumer not yet located (property decl only so far) — likely read
 in keyed_property/linear_animation_instance apply path or selects
 hold-vs-interpolated segments. NEXT: grep interpolationType() call
 sites in src/animation/, then port easing if cubic.
+
+## interpolationType RESOLVED (keyed_property.cpp:192)
+
+interpType==0 -> HOLD (apply fromFrame value verbatim);
+!=0 -> applyInterpolation (lerp via interpolator; interpolatorId
+absent -> default linear). Fixture keyframes are type 1 =
+interpolated — my linear lerp shape is CORRECT. Divergence is NOT
+interp type. Remaining: `seconds` time base — KeyedProperty works
+in SECONDS (toFrame->seconds()); KeyFrame.frame -> seconds via
+animation fps at instance setup; advanceAndApply dt accumulates
+seconds; mix/blend weights may scale actualMix. NEXT: read
+linear_animation_instance.cpp time->frame mapping + fps source.
