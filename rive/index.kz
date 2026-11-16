@@ -2014,9 +2014,41 @@ fn evalCubicPosTan(p0: V2, p1: V2, p2: V2, p3: V2, t: f32) struct { pos: V2, tan
             return .{ .pos = pts[3], .tan = if (l > 1e-9) .{ .x = v.x / l, .y = v.y / l } else .{ .x = 1, .y = 0 } };
         }
     }
-    const pos = cubicAt(p0, p1, p2, p3, t);
-    const tan = cubicTan(p0, p1, p2, p3, t);
+    const pos = cubicPowerAt(p0, p1, p2, p3, t);
+    const tan = cubicPowerTan(p0, p1, p2, p3, t);
     return .{ .pos = pos, .tan = tan };
+}
+
+
+// EvalCubic power-basis port (bezier_utils.hpp:30-90).
+// coeffs: C=p1-p0, B=(p2-p1)-C, A=(p3-p0)-3*(p2-p1); eval=At^3+3Bt^2+3Ct+p0
+fn cubicPowerAt(p0: V2, p1: V2, p2: V2, p3: V2, t: f32) V2 {
+    const c = v2sub2(p1, p0);
+    const dd = v2sub2(p2, p1);
+    const e = v2sub2(p3, p0);
+    const b = v2sub2(dd, c);
+    const a = v2sub2(e, v2scale(dd, 3));
+    // ((A*t + 3B)*t + 3C)*t + p0
+    const bx = v2scale(b, 3); const cx = v2scale(c, 3);
+    const tx = v2scale(a, t); const tx2 = v2add(tx, bx);
+    const tx3 = v2scale(tx2, t); const tx4 = v2add(tx3, cx);
+    const tx5 = v2scale(tx4, t);
+    return v2add(tx5, p0);
+}
+
+fn cubicPowerTan(p0: V2, p1: V2, p2: V2, p3: V2, t: f32) V2 {
+    // deriv = (3A*t + 6B)*t + 3C  [eval_cubic: a=3A,b=2*(3B),c=3C]
+    const c = v2sub2(p1, p0);
+    const dd = v2sub2(p2, p1);
+    const e = v2sub2(p3, p0);
+    const b = v2sub2(dd, c);
+    const a = v2sub2(e, v2scale(dd, 3));
+    const a3 = v2scale(a, 3); const b6 = v2scale(b, 6); const c3 = v2scale(c, 3);
+    const dx = a3.x * t + b6.x; const dy = a3.y * t + b6.y;
+    const vx = dx * t + c3.x; const vy = dy * t + c3.y;
+    const l = @sqrt(vx * vx + vy * vy);
+    if (l < 1e-9) return .{ .x = 1, .y = 0 };
+    return .{ .x = vx / l, .y = vy / l };
 }
 
 fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
@@ -2052,7 +2084,7 @@ fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
                         var tt: f32 = dt;
                         var i: u32 = 1;
                         while (i < n) : (i += 1) {
-                            const np = cubicAt(a, c1, c2, e, tt);
+                            const np = cubicPowerAt(a, c1, c2, e, tt);
                             dist += v2len(v2sub2(np, prev));
                             segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = tt, .kind = 1 }) catch {};
                             prev = np; tt += dt;

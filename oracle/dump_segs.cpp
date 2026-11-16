@@ -19,17 +19,12 @@ int main() {
   // world transform (Shape122): sx=.8042 sy=.6655 tx=403.9445 ty=293.0111
   RawPath path;
   path.rewind();
-  Vec2D prev;
-  int i = 0;
-  // move
-  path.injectMoveTo({lp[0]*0.8042f+403.9445f, lp[1]*0.6655f+293.0111f});
-  i = 2; prev = {lp[0]*0.8042f+403.9445f, lp[1]*0.6655f+293.0111f};
+  auto W = [](float x, float y) { return Vec2D{x * 0.8042f + 403.9445f, y * 0.6655f + 293.0111f}; };
+  path.move(W(lp[0], lp[1]));
+  int i = 2;
   for (int c = 0; c < 6; c++) {
-    Vec2D c1{lp[i]*0.8042f+403.9445f, lp[i+1]*0.6655f+293.0111f};
-    Vec2D c2{lp[i+2]*0.8042f+403.9445f, lp[i+3]*0.6655f+293.0111f};
-    Vec2D e {lp[i+4]*0.8042f+403.9445f, lp[i+5]*0.6655f+293.0111f};
-    path.injectCubicTo(c1,c2,e); i += 6;
-    prev = e;
+    path.cubic(W(lp[i], lp[i+1]), W(lp[i+2], lp[i+3]), W(lp[i+4], lp[i+5]));
+    i += 6;
   }
   path.close();
   ContourMeasureIter iter(&path);
