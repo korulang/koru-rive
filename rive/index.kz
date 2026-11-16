@@ -1444,7 +1444,6 @@ fn isNodeType(key: u64) bool {
     return lo < node_type_keys.len and node_type_keys[lo] == key;
 }
 
-const DRAW_FRAME: i64 = 0;
 const Mat2 = [6]f32; // [a,b,c,d,tx,ty] — Rive/Skia convention
 
 fn propF(props: []const Prop, key: u16, default: f32) f32 {
@@ -2240,7 +2239,7 @@ fn constrainedWorld(r: *const Riv, nodeIdx: usize, frame: i64) Mat2 {
     return world;
 }
 
-fn dumpDrawOps(r: *Riv) void {
+fn dumpDrawOps(r: *Riv, frame: i64) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect
     // emitted once per artboard before its drawables, golden clipPath op.
@@ -2293,7 +2292,7 @@ fn dumpDrawOps(r: *Riv) void {
         // PointsPath children carry isClosed on the PATH object, not shape —
         // for mixed shapes use last seen; single-path shapes dominate fixtures.
         if (pathVs.items.len >= 2) buildPath(pathVs.items, closed, &verbs, &pts, alloc);
-        const w = effectiveWorld(r, i, DRAW_FRAME);
+        const w = effectiveWorld(r, i, frame);
         for (r.objects, 0..) |*c, pi| {
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
             if (c.type_key != 20 and c.type_key != 24) continue; // Fill / Stroke only
@@ -2429,7 +2428,11 @@ fn dumpDrawOps(r: *Riv) void {
 ~pub tor drawops { r: *Riv<loaded> }
 
 ~proc drawops|zig {
-    dumpDrawOps(r);
+    var frame: i64 = 0;
+    if (std.posix.getenv("RIVE_FRAME")) |fv| {
+        frame = std.fmt.parseInt(i64, fv, 10) catch 0;
+    }
+    dumpDrawOps(r, frame);
 }
 
 ~pub tor keyed { r: *Riv<loaded> }
