@@ -562,3 +562,11 @@ committed producer-side (`ff18735`).
   differently, or (b) our premultiply->straighten->blend chain
   loses alpha vs browser's. Next: dump PNG texel (0,0) alpha +
   compare against rendered value — decides decode-vs-composite.
+
+- cin alpha verdict: texel(0,0)=rgba(0,0,0,223)=87% black ->
+  correct white-composite = ~32 gray = EXACTLY ours [32,32,32].
+  OURS IS SPEC-CORRECT. Ref [0,0,0] opaque black -> browser's
+  image decode/render drops alpha for this mask-PNG (or draws
+  opaque). Ours defensible; residual = browser image-pipeline
+  semantics, not our bug. cin stays FAIL-by-oracle but ours is
+  the correct render — candidate oracle-limitation reclass.
