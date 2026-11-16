@@ -327,3 +327,9 @@ committed producer-side (`ff18735`).
   likely a separate hidden/isVisible drawable flag or the paths
   are clip sources mis-emitted as draws. Named: hidden-content
   culling gap.
+
+- clip_tests refined: draw.clip.push.path EXISTS on macOS arm and
+  probe.kz already maps kind-9 ops to it — path clips ARE wired.
+  clip_tests still floods red -> failure is inside clip.push.path
+  realization or clip-path coordinate space, not missing verb.
+  Next diagnostic: clip path bounds vs expected ink region.
