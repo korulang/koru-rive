@@ -1474,6 +1474,17 @@ fn localMat(o: *const RivObj) Mat2 {
     const s = @sin(rot);
     return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
 }
+fn localMatA(r: *const Riv, o: *const RivObj, frame: i64) Mat2 {
+    if (frame < 0) return localMat(o);
+    const rot = if (hasKeyframed(r, o.slot, 15)) @as(f32, keyframedValue(r, o.slot, 15, frame)) else propF(o.props, 15, 0);
+    const sx = if (hasKeyframed(r, o.slot, 16)) @as(f32, keyframedValue(r, o.slot, 16, frame)) else propF(o.props, 16, 1);
+    const sy = if (hasKeyframed(r, o.slot, 17)) @as(f32, keyframedValue(r, o.slot, 17, frame)) else propF(o.props, 17, 1);
+    const x = if (hasKeyframed(r, o.slot, 13)) @as(f32, keyframedValue(r, o.slot, 13, frame)) else propF(o.props, 13, 0);
+    const y = if (hasKeyframed(r, o.slot, 14)) @as(f32, keyframedValue(r, o.slot, 14, frame)) else propF(o.props, 14, 0);
+    const c = @cos(rot);
+    const s = @sin(rot);
+    return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
+}
 
 fn dumpTransforms(r: *Riv) void {
     const alloc = std.heap.page_allocator;
@@ -2347,7 +2358,7 @@ fn hasConstraintChild(r: *const Riv, idx: usize) bool {
 fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
     if (hasConstraintChild(r, idx)) return constrainedWorld(r, idx, frame);
     const o = &r.objects[idx];
-    var acc = if (isNodeType(o.type_key)) localMat(o) else matIdent();
+    var acc = if (isNodeType(o.type_key)) localMatA(r, o, frame) else matIdent();
     var p = o.parent_obj;
     var depth: usize = 0;
     while (p >= 0 and depth < 32) : (depth += 1) {
@@ -2359,7 +2370,7 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
             // Artboard (type_key 1) is the coordinate root for its
             // content — its own Node.x/y applies only in the
             // PARENT's instantiation space, not internally.
-            if (po.type_key != 1) acc = matMul(localMat(po), acc);
+            if (po.type_key != 1) acc = matMul(localMatA(r, po, frame), acc);
         }
         p = po.parent_obj;
     }
