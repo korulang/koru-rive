@@ -1845,6 +1845,38 @@ fn propColor(props: []const Prop, key: u16) u32 {
 // shape's composed path geometry — golden drawPath format.
 fn dumpDrawOps(r: *Riv) void {
     const alloc = std.heap.page_allocator;
+    // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect
+    // emitted once per artboard before its drawables, golden clipPath op.
+    for (r.objects) |o| {
+        if (o.type_key != 1) continue;
+        const aw = propF(o.props, 7, 0);
+        const ah = propF(o.props, 8, 0);
+        var verbs = std.ArrayList(u8).empty;
+        var pts = std.ArrayList(V2).empty;
+        defer verbs.deinit(alloc); defer pts.deinit(alloc);
+        verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = 0, .y = 0 }) catch {};
+        for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah }, .{ .x = 0, .y = ah } }) |p| {
+            verbs.append(alloc, 1) catch {}; pts.append(alloc, p) catch {};
+        }
+        verbs.append(alloc, 1) catch {}; verbs.append(alloc, 5) catch {};
+        std.debug.print("save\n", .{});
+        std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n", .{});
+        std.debug.print("clipPath verbs={d} pts={d}\n", .{ verbs.items.len, pts.items.len });
+        var vp: usize = 0;
+        for (verbs.items) |v| {
+            const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+            var s = std.ArrayList(u8).empty;
+            defer s.deinit(alloc);
+            s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+            var k: usize = 0;
+            while (k < np and vp < pts.items.len) : (k += 1) {
+                s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+                vp += 1;
+            }
+            std.debug.print("{s}\n", .{s.items});
+        }
+        std.debug.print("restore\n", .{});
+    }
     for (r.objects, 0..) |o, i| {
         if (o.type_key != 3) continue; // Shape only
         // gather path objects (vertex children or Rectangle) + paint children
