@@ -182,3 +182,25 @@ Generated base headers declare `class ArtboardBase : public LayoutComponent`
 base mixes into; normalize parent+"Base" → file <snake>_base.hpp. First
 extract attempt returned 0 classes: regex expected "Base" suffix on
 parents. isComponent = chain reaches ComponentBase.
+
+## Path vertex storage — CONFIRMED on follow_path_shapes.riv
+
+Paths are OBJECT GRAPHS, not packed blobs:
+- `PointsPath` (parent→Shape): `PointsCommonPath.isClosed` (key 32, bool)
+- Vertex children (parent→PointsPath, stream order = path order):
+  `Vertex.x`/`Vertex.y` (keys 24/25, f32) + per-type tangent props —
+  CubicMirroredVertex: rotation(82)/distance(83); StraightVertex,
+  CubicVertex, CubicAsymmetricVertex, CubicDetachedVertex carry their
+  own. Vertex TYPE selects the segment kind (first = moveTo).
+- `ParametricPath` subclasses (Rectangle etc.) are procedural:
+  width(20)/height(21)/radius — NOT vertex lists; the player must
+  synthesize their geometry or the oracle shows what rive emits.
+- Forward refs confirmed real: SolidColor→Fill resolves post-pass.
+
+## Schema extraction bug found by fixture #2
+
+camel(filename) lost interior capitals: `interpolating_keyframe` →
+"InterpolatingKeyframe" ≠ class "InterpolatingKeyFrame" → its props
+never entered propField (propKey 68 desynced component_list_1 at obj62).
+Fix: read `class X` name from each header. propKeys 638→680,
+components 152→171 (hierarchy.json regenerated).
