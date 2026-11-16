@@ -570,3 +570,10 @@ committed producer-side (`ff18735`).
   opaque). Ours defensible; residual = browser image-pipeline
   semantics, not our bug. cin stays FAIL-by-oracle but ours is
   the correct render — candidate oracle-limitation reclass.
+
+- iba re-gate under image pipeline: emits kind-11 (308B blob)
+  but PNG is 1x1 grayscale ct=0 — single pixel, below ink
+  threshold both sides. ink=None ref+ours = honest
+  near-vacuous, NOT a decode failure. lwti ops=0 (type-544
+  class, nothing to emit). Image pipeline re-gates: cin=live
+  spec-correct, iba=vacuous-1px, lwti=out-of-scope.
