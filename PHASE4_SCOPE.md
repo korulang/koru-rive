@@ -647,3 +647,18 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (pk=634) paths have no pixel oracle. Not built; named gap until an
   input-injection oracle exists. cl2's animation is autoplay so t10
   gate is unaffected.
+
+- lwti/type-544 VERDICT (standing commission item 1): formula eval is
+  OUT-OF-SCOPE for this fixture — recon falsified the LIMIT premise.
+  (a) Formula tokens (544/543/538) are ORPHANED: no DataConverterFormula
+  (type 536) exists in library_with_text_and_image.riv to consume them.
+  (b) The pixel gate doesn't need it: ref_lwti_t1.png is a blank
+  (49,49,49) 500x500 frame and ours_lwti_t1.bmp is byte-equivalent
+  blank — both sides match already. (c) The real lwti gap, if the
+  fixture is meant to show content, is nested-library instantiation:
+  the artboard has no direct drawables; content lives in
+  FileAssetContents obj2 (embedded .riv, 428B) which neither renderer
+  instantiates. data_converter_formula.cpp is a 585-line shunting-yard
+  evaluator — real machinery, but zero observable pixels depend on it
+  here. Building it is unjustified until a fixture has an active
+  DataConverterFormula + a non-blank oracle.
