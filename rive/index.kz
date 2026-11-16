@@ -1370,6 +1370,64 @@ fn dumpRiv(r: *Riv) void {
     }
 }
 
+const vertex_type_keys = [_]u64{ 5, 6, 14, 34, 35, 36, 107, 108, 111 };
+
+fn isVertexType(key: u64) bool {
+    var lo: usize = 0;
+    var hi: usize = vertex_type_keys.len;
+    while (lo < hi) {
+        const mid = (lo + hi) / 2;
+        if (vertex_type_keys[mid] < key) lo = mid + 1 else hi = mid;
+    }
+    return lo < vertex_type_keys.len and vertex_type_keys[lo] == key;
+}
+
+fn propByKey(props: []const Prop, key: u16) ?PropValue {
+    for (props) |p| {
+        if (p.key == key) return p.value;
+    }
+    return null;
+}
+
+fn dumpPaths(r: *Riv) void {
+    const alloc = std.heap.page_allocator;
+    for (r.objects, 0..) |o, i| {
+        var kids = std.ArrayList(usize).empty;
+        defer kids.deinit(alloc);
+        for (r.objects, 0..) |c, j| {
+            if (c.parent_obj == @as(i64, @intCast(i)) and isVertexType(c.type_key)) {
+                kids.append(alloc, j) catch {};
+            }
+        }
+        if (kids.items.len == 0) continue;
+        var hdr = std.ArrayList(u8).empty;
+        defer hdr.deinit(alloc);
+        const closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| if (b) "closed" else "open", else => "?" } else "?";
+        const hole = if (propByKey(o.props, 770)) |v| switch (v) { .boolean => |b| if (b) " hole" else "", else => "" } else "";
+        const tname = o.type_name orelse "?";
+        hdr.appendSlice(alloc, std.fmt.allocPrint(alloc, "path obj[{d}] {s} {s}{s} verts={d}", .{ i, tname, closed, hole, kids.items.len }) catch "") catch {};
+        std.debug.print("{s}\n", .{hdr.items});
+        for (kids.items) |j| {
+            const v = r.objects[j];
+            const vt = v.type_name orelse "?";
+            var line = std.ArrayList(u8).empty;
+            defer line.deinit(alloc);
+            const xv = propByKey(v.props, 24);
+            const yv = propByKey(v.props, 25);
+            // unset float props default 0 — first vertex often omits x/y
+            const xs = if (xv) |x| switch (x) { .dbl => |f| std.fmt.allocPrint(alloc, "{d:.2}", .{f}) catch "?", else => "0.00" } else "0.00";
+            const ys = if (yv) |y| switch (y) { .dbl => |f| std.fmt.allocPrint(alloc, "{d:.2}", .{f}) catch "?", else => "0.00" } else "0.00";
+            line.appendSlice(alloc, std.fmt.allocPrint(alloc, "  v{d} {s} ({s},{s})", .{ j, vt, xs, ys }) catch "") catch {};
+            for (v.props) |p| {
+                if (p.key == 24 or p.key == 25 or p.key == 5) continue;
+                const vs = fmtValue(alloc, p.value);
+                line.appendSlice(alloc, std.fmt.allocPrint(alloc, " {s}={s}", .{ p.name, vs }) catch "") catch {};
+            }
+            std.debug.print("{s}\n", .{line.items});
+        }
+    }
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
@@ -1398,4 +1456,10 @@ fn dumpRiv(r: *Riv) void {
     std.heap.page_allocator.free(rr.objects);
     std.heap.page_allocator.free(rr.bytes);
     std.heap.page_allocator.destroy(rr);
+}
+
+~pub tor paths { r: *Riv<loaded> }
+
+~proc paths|zig {
+    dumpPaths(r);
 }
