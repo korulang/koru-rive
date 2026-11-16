@@ -3020,16 +3020,22 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         for (r.objects, 0..) |lo, li| {
             if (lo.type_key != 559) continue;
             if (owningArtboard(r, li) != abIdx) continue;
-            for (r.objects) |it| {
-                if (it.type_key != 427) continue;
+            const items = listRowItems(r, li, alloc);
+            defer alloc.free(items);
+            for (items) |ii| {
+                const it = &r.objects[ii];
                 const vmid = propU(it.props, 549, -1);
                 if (vmid < 0) continue;
+                g_rowVmid = vmid;
+                g_rowInstOrd = propU(it.props, 550, -1);
                 for (r.objects, 0..) |ao, ai2| {
                     if (ao.type_key != 1) continue;
                     if (propU(ao.props, 583, -1) == vmid) {
                         emitOps(r, frame, ai2, true, false, false);
                     }
                 }
+                g_rowVmid = -1;
+                g_rowInstOrd = -1;
             }
         }
     }
@@ -3246,6 +3252,14 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
 // bit4 = NameBased (needs the manifest resolver — absent in clfp, so only
 // absolute paths resolve: [viewModelId, ...hops, propertyId]).
 // converterId(660) indexes DataConverter objects in stream order.
+//
+// Row scope: while a component-list row emits, g_rowVmid/g_rowInstOrd
+// carry the ViewModelInstanceListItem's viewModelId(549)/viewModelInstanceId
+// (550). viewModelInstanceId is an ordinal into that ViewModel's instance
+// list (file.cpp: itemViewModel->instance(id) -> m_Instances[index]).
+
+var g_rowVmid: i64 = -1;
+var g_rowInstOrd: i64 = -1;
 
 fn isVmInstanceValueType(key: u64) bool {
     return switch (key) {
@@ -3340,13 +3354,22 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                 if (path.items.len != 2) return null; // nested VM hops — named gap
                 const vmId = path.items[0];
                 const propId = path.items[1];
+                // Row scope: a list item's viewModelInstanceId selects the
+                // Nth instance of this ViewModel (only when the bind's
+                // viewModelId matches the item's own).
+                var wantOrd: i64 = -1;
+                if (g_rowInstOrd >= 0 and g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
                 var instIdx: usize = 0;
                 var haveInst = false;
+                var seen: i64 = 0;
                 for (r.objects, 0..) |cand, ci| {
                     if (cand.type_key == 437 and propU(cand.props, 566, -1) == @as(i64, @intCast(vmId))) {
-                        instIdx = ci;
-                        haveInst = true;
-                        break;
+                        if (wantOrd < 0 or seen == wantOrd) {
+                            instIdx = ci;
+                            haveInst = true;
+                            break;
+                        }
+                        seen += 1;
                     }
                 }
                 if (!haveInst) return null;
@@ -3358,7 +3381,9 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                     if (!isVmInstanceValueType(vo.type_key)) break;
                     if (propU(vo.props, 554, -1) == @as(i64, @intCast(propId))) {
                         const scalar = vmScalarOf(vo) orelse return null;
-                        return vmScalarToString(r, conv, scalar, alloc);
+                        const res = vmScalarToString(r, conv, scalar, alloc) orelse return null;
+                        if (g_rowInstOrd >= 0) std.debug.print("rowbind ord={d} vmid={d} -> '{s}'\n", .{ g_rowInstOrd, g_rowVmid, res });
+                        return res;
                     }
                 }
                 return null;
@@ -3369,6 +3394,70 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
         lastBindable = @intCast(i);
     }
     return null;
+}
+
+// Resolve an ArtboardComponentList(559)'s row items: its pk=800
+// DataBindContext -> absolute source path -> ViewModelInstance ->
+// ViewModelInstanceList(441) value -> the contiguous 427 items that
+// follow it. Returns object indices; empty when any hop fails.
+fn listRowItems(r: *const Riv, loIdx: usize, alloc: std.mem.Allocator) []usize {
+    var lastBindable: i64 = -1;
+    var pathBytes: ?[]const u8 = null;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 446 or o.type_key == 447) {
+            if (lastBindable == @as(i64, @intCast(loIdx)) and o.type_key == 447) {
+                var pk: u64 = 0;
+                var pb: ?[]const u8 = null;
+                for (o.props) |p| {
+                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 588) { if (p.value == .bytes) pb = p.value.bytes; }
+                }
+                if (pk == 800) pathBytes = pb;
+            }
+            continue;
+        }
+        lastBindable = @intCast(i);
+    }
+    const bytes = pathBytes orelse return &.{};
+    var pos: usize = 0;
+    var path = std.ArrayList(u64).empty;
+    defer path.deinit(alloc);
+    while (pos < bytes.len) {
+        const v = readVarU64(bytes, &pos) orelse return &.{};
+        path.append(alloc, v) catch return &.{};
+    }
+    if (path.items.len != 2) return &.{}; // nested hops — named gap
+    const vmId = path.items[0];
+    const propId = path.items[1];
+    var instIdx: usize = 0;
+    var haveInst = false;
+    for (r.objects, 0..) |cand, ci| {
+        if (cand.type_key == 437 and propU(cand.props, 566, -1) == @as(i64, @intCast(vmId))) {
+            instIdx = ci;
+            haveInst = true;
+            break;
+        }
+    }
+    if (!haveInst) return &.{};
+    var j = instIdx + 1;
+    var listIdx: usize = 0;
+    var haveList = false;
+    while (j < r.objects.len) : (j += 1) {
+        const vo = &r.objects[j];
+        if (!isVmInstanceValueType(vo.type_key)) break;
+        if (propU(vo.props, 554, -1) == @as(i64, @intCast(propId))) {
+            if (vo.type_key == 441) { listIdx = j; haveList = true; }
+            break;
+        }
+    }
+    if (!haveList) return &.{};
+    var items = std.ArrayList(usize).empty;
+    j = listIdx + 1;
+    while (j < r.objects.len) : (j += 1) {
+        if (r.objects[j].type_key != 427) break;
+        items.append(alloc, j) catch break;
+    }
+    return items.items;
 }
 
 fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), textColor: *u32, textFillRule: *i64) bool {
@@ -4241,10 +4330,14 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     for (r.objects, 0..) |lo, li| {
         if (lo.type_key != 559) continue;
         if (owningArtboard(r, li) != abIdx) continue;
-        for (r.objects) |it| {
-            if (it.type_key != 427) continue;
+        const items = listRowItems(r, li, alloc);
+        defer alloc.free(items);
+        for (items) |ii| {
+            const it = &r.objects[ii];
             const vmid = propU(it.props, 549, -1);
             if (vmid < 0) continue;
+            g_rowVmid = vmid;
+            g_rowInstOrd = propU(it.props, 550, -1);
             for (r.objects, 0..) |ao, ai2| {
                 if (ao.type_key != 1) continue;
                 if (propU(ao.props, 583, -1) == vmid) {
@@ -4258,6 +4351,8 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     collectArtboardOps(r, ai2, -1, alloc, &out);
                 }
             }
+            g_rowVmid = -1;
+            g_rowInstOrd = -1;
         }
     }
     return out.items;
