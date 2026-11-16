@@ -1,4 +1,4 @@
-# Phase 4 scoping — GPU polygon path coverage (koru-native + i915)
+# Phase 4 scoping — GPU polygon path coverage (koru-native)
 
 Commission item (rive-runtime.md phase 4, stretch): "The SDF rasterizer
 has no polygon answer today." Correction applied: **no CPU scanline
@@ -15,9 +15,6 @@ means polygon fill on the GPU backends, Tier-2-verified.
   outlines. Rive's OpRec stream (kinds 0–10: move/line/quad/cubic/close,
   pushmat/popmat, draw, clipPush/clipPop) needs a GPU polygon path on
   backends that lack the canvas-verb route.
-- i915 thin-subset (`gpu-render-path.md` spike): BCS blitter does 2D
-  copies/fills today; polygon fill needs either tessellated triangles
-  or a coverage-capable pipe — the spike's open question.
 
 ## Per-backend coverage matrix
 
@@ -25,7 +22,6 @@ means polygon fill on the GPU backends, Tier-2-verified.
 |---|---|---|
 | Metal via `libs/canvas` | DONE — draw.path verbs, live-verified | none (reference) |
 | koru-native GPU (non-canvas) | MISSING — SDF fillShape only | tessellate OpRec paths → triangle mesh → GPU draw; or Metal-layer path reuse |
-| i915 thin-subset | MISSING — BCS 2D only | tessellated triangle soup → BCS/RCS draw calls; scoped by gpu-render-path spike |
 | CPU reference | n/a — deliberately out of scope | none |
 
 ## What "coverage" must handle (from the ops stream)
@@ -50,8 +46,8 @@ means polygon fill on the GPU backends, Tier-2-verified.
 - Pixel oracle: render same OpRec stream through each backend → compare
   vs `oracle/render_browser.mjs` reference PNGs (`oracle/images/` pairs
   committed). Backend parity = pixel-diff within threshold, not prose.
-- Metal-via-canvas is the reference implementation — koru-native and
-  i915 outputs must match it within AA tolerance.
+- Metal-via-canvas is the reference implementation — koru-native output
+  must match it within AA tolerance.
 
 ## Recommended order
 
@@ -61,8 +57,10 @@ means polygon fill on the GPU backends, Tier-2-verified.
 2. **Stroke expansion** — corpus stroke fixtures already stream-equal.
 3. **koru-native GPU path** — consume triangle soup on the native backend;
    Tier-2 verify vs canvas reference on stream-equal fixtures.
-4. **i915** — gated on `gpu-render-path.md` spike; consumes the same
-   triangle soup → BCS/RCS.
+4. **Backend consume** — koru-native GPU path draws the triangle soup;
+   Tier-2 verify vs canvas reference on stream-equal fixtures.
+
+*i915 excluded per Lars ruling 2026-11-16 — revisit only if he re-opens it.*
 
 ## What this is NOT
 
