@@ -32,6 +32,7 @@ calibration only.
 | linear-animation keyframe interpolation | DONE+gate-verified | <check> propFAnim/keyframedValue on transform+vertex keys → <verdict> PASS; animated color (`propColorAnim`) + opacity(18) eval added `f372fd8` — zero-effect on clfp, semantically owed |
 | gradients / image paints | NOT-STARTED | <check> ops kinds 11+ → <verdict> unmeasured — no fixture gated on them yet |
 | draw traversal / z-order | DONE-unverified | <check> stroke draw-order swap vs golden (cosmetic, non-overlapping) → <verdict> named, not blocking |
+| Tier-1 full-frame sweep (clfp Main) | DONE+gate-verified 29/30 | <check> golden fN vs ours fr=2N, transform set-match → <verdict> MATCH N=0..28; **f29 DIFF** — golden has 3 extra translate-only transforms (25.7/20.1, -25.7/-20.1, -17.7/-12.1) ours lacks — SM-state/follow-path content at final frame, named not root-caused |
 | Tier-1 gate coverage | PARTIAL | <check> frame-0 only on clfp Main → <verdict> full-frame sweep NOT RUN |
 | Tier-2 pixel calibration | DONE (band.py, selftest 19+6, verify_harness 8/8) | calibration only per regime |
 
