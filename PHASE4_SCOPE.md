@@ -140,3 +140,10 @@ committed producer-side (`ff18735`).
   ref ink concentrated (0,107,282,327). Browser bound "State Machine 1"
   SUCCESSFULLY for clfp (no SM error) -> animated state, not bind pose.
   Verdict: needs SM-eval parity, not fit — named, correct diagnosis.
+
+- Mesh AA attempt: `[[barycentric_coord]]`+fwidth smoothstep in
+  tri_fragment → ink-mass hit 1.00 but bbox exploded frame-wide
+  (94% gap) — tessellated stroke micro-tris get ramps wide relative
+  to tri size, painting partial-alpha haze. REVERTED (oshun tree
+  clean). Proper AA needs per-tri edge varyings or supersampled
+  offscreen pass — named, not attempted.
