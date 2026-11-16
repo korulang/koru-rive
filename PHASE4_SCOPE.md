@@ -256,3 +256,16 @@ committed producer-side (`ff18735`).
   vs ref (0,107)-(156,327) — ink-bbox PASS exact. Residual: ink-mass
   2.84x + coverage-gap 49% — likely cornerRadiusTL=8 rounded corners
   (obj85) we draw square + text edge detail. Named, smaller than before.
+
+- Rounded layout-box corners (t42 cont.): Fill-under-409 pass reads
+  cornerRadiusTL-643 off the component's own 420 style (TL-inherit,
+  clamp min(w,h)/2), emits op-kind-4 cubics; zero radii keep sharp
+  rect. clfp Item gate now PASS (--comp 255,255,255 --bg 255,255,255):
+  ink-bbox exact, ink-mass 1.05, coverage-gap 2.64%, within_1px ~96-99%.
+  cl1/dsm check: dsm has no triggers (only pk=800 binds, no 606/640)
+  -> ours_dsm_row_fit.bmp byte-identical, no regression. cl1 HAS
+  triggers: pk=268 bind {1,0} resolves to first vmId=1 instance
+  'Instance 3' -> text 'THREE' (per-item instance selection via
+  ViewModelInstanceListItem is the remaining gap — all rows would show
+  the same string until list replication lands); style TL=10 radius
+  now rounds its layout box. cl1 was already FAIL-scope (list binding).
