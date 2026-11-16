@@ -3436,3 +3436,106 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
 
 
 
+
+// ---- ops: flat command list for canvas replay (OpRec) ----
+// kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw
+const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64 };
+fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0, .e = 0, .g = 0 }; }
+fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
+    var out = std.ArrayList(OpRec).empty;
+    errdefer out.deinit(alloc);
+    var aw0: f32 = 0; var ah0: f32 = 0;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
+    }
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 1 or i != abIdx) continue;
+        for (r.objects, 0..) |*c, pi| {
+            if (c.type_key != 20 or c.parent_obj != @as(i64, @intCast(i))) continue;
+            var color: u32 = 0xFF313131;
+            for (r.objects, 0..) |*g, gi| {
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
+            }
+            out.append(alloc, op0(0)) catch {};
+            var o1 = op0(1); o1.x1 = 0; o1.y1 = 0; out.append(alloc, o1) catch {};
+            var o2 = op0(2); o2.x1 = @floatCast(aw0); o2.y1 = 0; out.append(alloc, o2) catch {};
+            var o3 = op0(2); o3.x1 = @floatCast(aw0); o3.y1 = @floatCast(ah0); out.append(alloc, o3) catch {};
+            const o4 = op0(5); out.append(alloc, o4) catch {};
+            var pm = op0(6); pm.a = 1; pm.d = 1; out.append(alloc, pm) catch {};
+            var dr = op0(8); dr.style = 1; dr.color = color; dr.join = -1; dr.cap = -1; out.append(alloc, dr) catch {};
+            out.append(alloc, op0(7)) catch {};
+        }
+    }
+    for (r.objects, 0..) |so, si| {
+        if (so.type_key != 3) continue;
+        if (owningArtboard(r, si) != abIdx) continue;
+        var pathVs = std.ArrayList(PV).empty;
+        var verbs = std.ArrayList(u8).empty;
+        var pts = std.ArrayList(V2).empty;
+        defer pathVs.deinit(alloc); defer verbs.deinit(alloc); defer pts.deinit(alloc);
+        var closed = false; var pathFR: i64 = -1;
+        for (r.objects, 0..) |*c, ci| {
+            if (c.parent_obj != @as(i64, @intCast(si))) continue;
+            if (propU(c.props, 128, @as(i64, -1)) >= 0) pathFR = propU(c.props, 128, 0);
+            if (isVertexType(c.type_key)) {
+                pathVs.append(alloc, fileVert(r, c, if (frame >= 0) frame else -1)) catch {};
+            } else if (c.type_key == 16) {
+                for (r.objects) |*gv| {
+                    if (gv.parent_obj == @as(i64, @intCast(ci)) and isVertexType(gv.type_key)) {
+                        pathVs.append(alloc, fileVert(r, gv, if (frame >= 0) frame else -1)) catch {};
+                    }
+                }
+            } else if (synthParametric(r, c, &pathVs, alloc, if (frame >= 0) frame else -1)) {
+                closed = true;
+            }
+        }
+        if (pathVs.items.len < 2) continue;
+        buildPath(pathVs.items, closed, &verbs, &pts, alloc);
+        if (verbs.items.len == 0) continue;
+        const w = effectiveWorld(r, si, frame);
+        for (r.objects, 0..) |*c, pi| {
+            if (c.parent_obj != @as(i64, @intCast(si))) continue;
+            if (c.type_key != 20 and c.type_key != 24) continue;
+            var color: u32 = 0xFF747474;
+            for (r.objects, 0..) |*g, gi| {
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
+            }
+            const isStroke = c.type_key == 24;
+            const style: i64 = if (isStroke) 0 else 1;
+            const thick = if (isStroke) propF(c.props, 47, 1) else 0;
+            const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
+            const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
+            const fr = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 2) else propU(c.props, 40, 0);
+            out.append(alloc, op0(0)) catch {};
+            var vp: usize = 0;
+            for (verbs.items) |v| {
+                const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+                if (vp >= pts.items.len) break;
+                var o = op0(if (v == 0) 1 else if (v == 1) 2 else if (v == 2 or v == 3) 3 else if (v == 4) 4 else 5);
+                if (v == 0 or v == 1) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; }
+                if (v == 2 or v == 3) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; o.x2 = pts.items[vp + 1].x; o.y2 = pts.items[vp + 1].y; }
+                if (v == 4) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; o.x2 = pts.items[vp + 1].x; o.y2 = pts.items[vp + 1].y; o.x3 = pts.items[vp + 2].x; o.y3 = pts.items[vp + 2].y; }
+                out.append(alloc, o) catch {};
+                vp += np;
+            }
+            var pm = op0(6); pm.a = w[0]; pm.b = w[1]; pm.c = w[2]; pm.d = w[3]; pm.e = w[4]; pm.g = w[5]; out.append(alloc, pm) catch {};
+            var dr = op0(8); dr.style = style; dr.color = color; dr.thick = thick; dr.join = join; dr.cap = cap; dr.eo = if (fr == 2) 1 else 0; out.append(alloc, dr) catch {};
+            out.append(alloc, op0(7)) catch {};
+        }
+    }
+    return out.items;
+}
+
+~pub tor ops { r: *Riv<loaded>, ab: i64, frame: i64 }
+! op OpRec
+| done usize
+
+~proc ops|zig {
+    const recs = $mod.collectOps(r, @intCast(ab), frame, std.heap.page_allocator);
+    var n: usize = 0;
+    for (recs) |rec| {
+        op(rec);
+        n += 1;
+    }
+    return .{ .done = n };
+}
