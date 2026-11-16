@@ -261,8 +261,9 @@ public:
     size_t p = 0;
     for (int v : rp->rec.verbs)
     {
-      // floats per verb: move/line=2, quad=4, cubic=6, close=0 (PathVerb: 0,1,2,4,5)
-      int np = (v == 0 || v == 1) ? 2 : (v == 2 ? 4 : (v == 4 ? 6 : 0));
+      // floats per verb via the runtime's own table — hardcoding missed
+      // verbs outside {0,1,2,4,5} (conic etc.) and desynced the stream
+      int np = (int)rive::path_verb_to_point_count((rive::PathVerb)v);
       std::string s = "V " + std::to_string(v);
       for (int i = 0; i < np && p + 1 < rp->rec.pts.size(); i++)
       {
