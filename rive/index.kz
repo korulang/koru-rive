@@ -4363,7 +4363,7 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
 // ---- draws: structured draw records for canvas replay ----
 const DrawRec = struct { style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64, nv: usize, verbs: []u8, pts: []f64 };
 fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []DrawRec {
-    const cf: i64 = if (frame >= 0) frame else g_cframe;
+    const cf: i64 = if (frame >= 0) frame else if (g_cframe > 0) g_cframe else -1;
     var out = std.ArrayList(DrawRec).empty;
     errdefer out.deinit(alloc);
     var aw0: f32 = 0; var ah0: f32 = 0;
@@ -4462,7 +4462,10 @@ var imgBlobs: std.ArrayList([]const u8) = .empty;
     return b;
 }
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
-    const cf: i64 = if (frame >= 0) frame else g_cframe;
+    // Rows pass frame=-1; g_cframe carries the host frame for colors only.
+    // Host frame 0 = pre-animation: fall back to -1 so keyframed colors
+    // hold their base value (cl2 t1 gray, not the kf end state).
+    const cf: i64 = if (frame >= 0) frame else if (g_cframe > 0) g_cframe else -1;
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
