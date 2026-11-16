@@ -197,3 +197,10 @@ committed producer-side (`ff18735`).
   tables visible). textDrawPath looks for type_key==106 with prop
   212 bytes; FileAssetContents may carry a different type_key ->
   font lookup misses -> zero glyphs. Verify type_key next.
+
+- Text emission CONFIRMED live: textDrawPath returns true for Item
+  obj77 — 100 verbs/192 pts, color ffffffff (white), one eo-fill
+  drawPath per frame (the "2 draws" = bg + all-glyphs path). Text
+  ops ARE in the stream and DO replay. The pixel gap is CONTENT:
+  TextValueRun holds literal "text" while the browser renders the
+  ViewModel-bound label — data-binding gap, not emission/glyphs.
