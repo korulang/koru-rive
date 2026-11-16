@@ -4379,6 +4379,15 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
 // kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw 9=clippush 10=clippop
 const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64 };
 fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0, .e = 0, .g = 0 }; }
+
+// Embedded image blobs for kind-11 image ops — FileAssetContents bytes
+// ride a side table; OpRec.kind==11 carries the blob index + draw rect.
+var imgBlobs: std.ArrayList([]u8) = .empty;
+~pub tor imgblob { i: i64 } -> string
+~proc imgblob|zig {
+    const b = imgBlobs.items[@intCast(i)];
+    return b;
+}
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
@@ -4509,6 +4518,32 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 out.append(alloc, op0(7)) catch {};
             }
         }
+    }
+    // Embedded images (type 100): FileAssetContents bytes -> kind-11 op;
+    // probe decodes via image.load.data + draws at the image rect.
+    for (r.objects, 0..) |im, ii| {
+        if (im.type_key != 100) continue;
+        if (owningArtboard(r, ii) != abIdx) continue;
+        var blob: ?[]u8 = null;
+        for (r.objects, 0..) |fc, fi| {
+            if (fc.type_key != 106) continue;
+            if (blob == null) {
+                if (propByKey(fc.props, 212)) |v| {
+                    switch (v) {
+                        .bytes => |bb| blob = bb,
+                        else => {},
+                    }
+                }
+            }
+            _ = fi;
+        }
+        const bytes = blob orelse continue;
+        imgBlobs.append(alloc, bytes) catch {};
+        const bidx: i64 = @intCast(imgBlobs.items.len - 1);
+        out.append(alloc, op0(6)) catch {};
+        var im1 = op0(11); im1.x1 = @as(f64, @floatFromInt(bidx));
+        out.append(alloc, im1) catch {};
+        out.append(alloc, op0(7)) catch {};
     }
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;

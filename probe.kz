@@ -32,9 +32,21 @@
 | c _ when o.kind == 7 -> libs/canvas:transform.pop(f)
 | c _ when o.kind == 9 -> libs/canvas:draw.clip.push.path(f, p: hcell[0].h, evenodd: o.eo)
 | c _ when o.kind == 10 -> libs/canvas:draw.clip.pop(f)
+| c _ when o.kind == 11 -> step-image(o, f)
 | c _ when o.kind == 8 and o.style == 0 -> libs/canvas:draw.path(f, p: hcell[0].h, fr: 0, fg: 0, fb: 0, fa: 0, sr: (@as(f64, @floatFromInt((o.color >> 16) & 0xFF)) / 255.0), sg: (@as(f64, @floatFromInt((o.color >> 8) & 0xFF)) / 255.0), sb: (@as(f64, @floatFromInt((o.color >> 0) & 0xFF)) / 255.0), sa: (@as(f64, @floatFromInt((o.color >> 24) & 0xFF)) / 255.0), sw: o.thick, o.join, o.cap, evenodd: o.eo)
 | c _ when o.kind == 8 -> libs/canvas:draw.path(f, p: hcell[0].h, fr: (@as(f64, @floatFromInt((o.color >> 16) & 0xFF)) / 255.0), fg: (@as(f64, @floatFromInt((o.color >> 8) & 0xFF)) / 255.0), fb: (@as(f64, @floatFromInt((o.color >> 0) & 0xFF)) / 255.0), fa: (@as(f64, @floatFromInt((o.color >> 24) & 0xFF)) / 255.0), sr: 0, sg: 0, sb: 0, sa: 0, sw: o.thick, o.join, o.cap, evenodd: o.eo)
 | c _ -> libs/canvas:draw.path(f, p: hcell[0].h, fr: 0, fg: 0, fb: 0, fa: 0, sr: 0, sg: 0, sb: 0, sa: 0, sw: 0, o.join, o.cap, evenodd: o.eo)
+
+~pub tor step-image { o: kr/rive:OpRec, f: *libs/canvas:Frame<frame> }
+~step-image =
+    |> kr/rive:imgblob(i: @intCast(o.x1)) : blob
+    |> libs/canvas:image.decode.data(data: blob)
+        | img t
+            |> libs/canvas:image.width(tex: t) : iw
+            |> libs/canvas:image.height(tex: t) : ih
+            |> libs/canvas:draw.image(f, tex: t, x: o.x2, y: o.y2, w: @as(f64, @floatFromInt(iw)), h: @as(f64, @floatFromInt(ih)))
+        | err _
+            |> libs/canvas:draw.rect(f, x: 0.0, y: 0.0, w: 1.0, h: 1.0, r: 1.0, g: 0.0, b: 1.0, a: 1.0)
 
 // ---- mesh consume: tessellated Tri soup -> canvas mesh.* verbs -------------
 // Uniform surface both arms. Grid cells carry the current mesh handle +
