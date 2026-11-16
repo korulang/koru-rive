@@ -1,0 +1,17 @@
+obj 42 type=LinearAnimation name='?' parent=-1 props=1
+obj 67 type=StateMachine name='?' parent=-1 props=1
+obj 68 type=StateMachineLayer name='?' parent=-1 props=1
+obj 72 type=AnimationState name='?' parent=-1 props=1
+obj 90 type=LinearAnimation name='?' parent=-1 props=1
+obj 94 type=LinearAnimation name='?' parent=-1 props=1
+obj 98 type=StateMachine name='?' parent=-1 props=1
+obj 99 type=StateMachineBool name='?' parent=-1 props=1
+obj 100 type=StateMachineLayer name='?' parent=-1 props=1
+obj 102 type=AnimationState name='?' parent=-1 props=1
+obj 103 type=AnimationState name='?' parent=-1 props=1
+obj 110 type=StateMachineListenerSingle name='?' parent=-1 props=3
+obj 112 type=StateMachineListenerSingle name='?' parent=-1 props=2
+obj 120 type=LinearAnimation name='?' parent=-1 props=1
+obj 121 type=StateMachine name='?' parent=-1 props=1
+obj 122 type=StateMachineLayer name='?' parent=-1 props=1
+obj 127 type=AnimationState name='?' parent=-1 props=1
