@@ -228,3 +228,14 @@ IK solving is player-eval scope, named gap not a bug.
 - text: glyph paths from embedded font (hello_world is ALL text —
   biggest single subsystem; needs font parsing + glyph outline extract)
 - images: DrawableAsset → drawImage
+
+## Animation model (mapped 2026-…, follow_path_shapes)
+
+Flat stream, parentId=-1 — linkage is by ID props, not parenting:
+- LinearAnimation (fps=56, duration=57, speed=58, loop=59, workStart/End=60/61)
+- KeyedObject.objectId (51) — component-slot ID of target (same slot space as parentId)
+- KeyedProperty.propertyKey (53) — the animated prop key (363 = FollowPathConstraint.distance here)
+- KeyFrame.frame (67), InterpolatingKeyFrame.interpolationType (68), interpolatorId (69)
+- Values: KeyFrameDouble.value (70 f2), KeyFrameColor.value (88 f3), KeyFrameBool (181), KeyFrameString (280), KeyFrameId (122)
+- Runtime applies via CoreRegistry::setColor/setDouble(object, propertyKey, v) — writes the live property; interpolated between surrounding keyframes (type 1 observed).
+- follow_path_shapes' LinearAnimation animates ONLY FollowPathConstraint.distance (6 keyed objects) — the ff747474 colors come from STATE-MACHINE animations (nested/blend), not this linear anim. Constraint solving still required to turn distance into shape transforms.
