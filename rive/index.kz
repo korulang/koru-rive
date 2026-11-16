@@ -4036,6 +4036,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         if (owningArtboard(r, lci) != abIdx) continue;
         var lw = propF(lc.props, 7, 0);
         var lh = propF(lc.props, 8, 0);
+        var rtl: f32 = 0; var rtr: f32 = 0; var rbr: f32 = 0; var rbl: f32 = 0;
         // LayoutSizingStyle width/height units on the component's style (a 420
         // child). 3 = fill the parent box, which is how a row background ends
         // up 200x50 instead of its base 178x55.
@@ -4061,6 +4062,12 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                     if (hu == 3 and ph > 0) lh = ph;
                 }
             }
+            // Corner radii on the same style (640-643, TL-inherit like the
+            // artboard backdrop path). Item obj85 carries TL=8.
+            rtl = propF(st.props, 640, 0);
+            rtr = propF(st.props, 641, rtl);
+            rbl = propF(st.props, 642, rtl);
+            rbr = propF(st.props, 643, rtl);
             break;
         }
         if (lw > 0 and lh > 0) {
@@ -4074,11 +4081,38 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                     if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) lcolor = propColor(g.props, 37);
                 }
                 if (((lcolor >> 24) & 0xFF) == 0) continue;
+                // Rounded-rect when the component's style carries corner
+                // radii (Item obj85 TL=8). Radii clamp to half the smaller
+                // side; a zero corner degrades to a plain line.
+                const rmax = @min(lw, lh) * 0.5;
+                const ctl = @min(rtl, rmax); const ctr = @min(rtr, rmax);
+                const cbr = @min(rbr, rmax); const cbl = @min(rbl, rmax);
+                const k: f32 = 0.5522847498;
                 out.append(alloc, op0(0)) catch {};
-                var b0 = op0(1); b0.x1 = 0; b0.y1 = 0; out.append(alloc, b0) catch {};
-                var b1 = op0(2); b1.x1 = @floatCast(lw); b1.y1 = 0; out.append(alloc, b1) catch {};
-                var b2 = op0(2); b2.x1 = @floatCast(lw); b2.y1 = @floatCast(lh); out.append(alloc, b2) catch {};
-                var b3 = op0(2); b3.x1 = 0; b3.y1 = @floatCast(lh); out.append(alloc, b3) catch {};
+                if (ctl + ctr + cbr + cbl > 0) {
+                    var m0 = op0(1); m0.x1 = @floatCast(ctl); m0.y1 = 0; out.append(alloc, m0) catch {};
+                    var t1 = op0(2); t1.x1 = @floatCast(lw - ctr); t1.y1 = 0; out.append(alloc, t1) catch {};
+                    if (ctr > 0) {
+                        var c1 = op0(4); c1.x1 = @floatCast(lw - ctr + ctr * k); c1.y1 = 0; c1.x2 = @floatCast(lw); c1.y2 = @floatCast(ctr * (1 - k)); c1.x3 = @floatCast(lw); c1.y3 = @floatCast(ctr); out.append(alloc, c1) catch {};
+                    } else { var l1 = op0(2); l1.x1 = @floatCast(lw); l1.y1 = 0; out.append(alloc, l1) catch {}; }
+                    var t2 = op0(2); t2.x1 = @floatCast(lw); t2.y1 = @floatCast(lh - cbr); out.append(alloc, t2) catch {};
+                    if (cbr > 0) {
+                        var c2 = op0(4); c2.x1 = @floatCast(lw); c2.y1 = @floatCast(lh - cbr + cbr * k); c2.x2 = @floatCast(lw - cbr + cbr * k); c2.y2 = @floatCast(lh); c2.x3 = @floatCast(lw - cbr); c2.y3 = @floatCast(lh); out.append(alloc, c2) catch {};
+                    } else { var l2 = op0(2); l2.x1 = @floatCast(lw); l2.y1 = @floatCast(lh); out.append(alloc, l2) catch {}; }
+                    var t3 = op0(2); t3.x1 = @floatCast(cbl); t3.y1 = @floatCast(lh); out.append(alloc, t3) catch {};
+                    if (cbl > 0) {
+                        var c3 = op0(4); c3.x1 = @floatCast(cbl - cbl * k); c3.y1 = @floatCast(lh); c3.x2 = 0; c3.y2 = @floatCast(lh - cbl + cbl * k); c3.x3 = 0; c3.y3 = @floatCast(lh - cbl); out.append(alloc, c3) catch {};
+                    } else { var l3 = op0(2); l3.x1 = 0; l3.y1 = @floatCast(lh); out.append(alloc, l3) catch {}; }
+                    var t4 = op0(2); t4.x1 = 0; t4.y1 = @floatCast(ctl); out.append(alloc, t4) catch {};
+                    if (ctl > 0) {
+                        var c4 = op0(4); c4.x1 = 0; c4.y1 = @floatCast(ctl - ctl * k); c4.x2 = @floatCast(ctl - ctl * k); c4.y2 = 0; c4.x3 = @floatCast(ctl); c4.y3 = 0; out.append(alloc, c4) catch {};
+                    } else { var l4 = op0(2); l4.x1 = 0; l4.y1 = 0; out.append(alloc, l4) catch {}; }
+                } else {
+                    var b0 = op0(1); b0.x1 = 0; b0.y1 = 0; out.append(alloc, b0) catch {};
+                    var b1 = op0(2); b1.x1 = @floatCast(lw); b1.y1 = 0; out.append(alloc, b1) catch {};
+                    var b2 = op0(2); b2.x1 = @floatCast(lw); b2.y1 = @floatCast(lh); out.append(alloc, b2) catch {};
+                    var b3 = op0(2); b3.x1 = 0; b3.y1 = @floatCast(lh); out.append(alloc, b3) catch {};
+                }
                 out.append(alloc, op0(5)) catch {};
                 var bpm = op0(6); bpm.a = 1; bpm.b = 0; bpm.c = 0; bpm.d = 1; bpm.e = @floatCast(lx); bpm.g = @floatCast(ly); out.append(alloc, bpm) catch {};
                 var bdr = op0(8); bdr.style = 1; bdr.color = lcolor; bdr.join = -1; bdr.cap = -1; out.append(alloc, bdr) catch {};
