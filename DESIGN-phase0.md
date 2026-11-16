@@ -307,3 +307,11 @@ is therefore in TIME BASE or INTERPOLATION, not selection:
 - fps prop absent -> default; duration default 60 frames; loop=1
 - candidate: cubic ease interpolator on the keyframes, or
   advanceAndApply time != frame index * (1/fps)
+
+## interpolationType (key 68) — open
+
+m_InterpolationType default 0; fixture keyframes carry 1.
+Consumer not yet located (property decl only so far) — likely read
+in keyed_property/linear_animation_instance apply path or selects
+hold-vs-interpolated segments. NEXT: grep interpolationType() call
+sites in src/animation/, then port easing if cubic.
