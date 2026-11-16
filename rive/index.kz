@@ -4596,6 +4596,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             // joined-single-contour form broke clip.push.path masks).
             for (r.objects, 0..) |*sc, sci| {
                 if (sc.parent_obj != @as(i64, @intCast(srcIdx))) continue;
+                // pathFlags(128) bit0 = hidden contour — clip_tests
+                // clipper's second ellipse (obj45, flags=1) must not
+                // join the clip region; only the +150 half clips.
+                if ((propU(sc.props, 128, 0) & 1) != 0) continue;
                 var cVs = std.ArrayList(PV).empty;
                 defer cVs.deinit(alloc);
                 var cClosed = false;
