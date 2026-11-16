@@ -2403,7 +2403,7 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
             // color: SolidColor child of this paint (index pi)
             var color: u32 = 0;
             for (r.objects) |*g| {
-                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColor(g.props, 37);
+                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = if (propByKey(g.props, 37)) |_| propColor(g.props, 37) else 0xFF747474; // SolidColorBase default m_ColorValue
             }
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
@@ -2440,7 +2440,7 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
             if (c.type_key != 20 and c.type_key != 24) continue;
             var color: u32 = 0;
             for (r.objects) |*g| {
-                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColor(g.props, 37);
+                if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = if (propByKey(g.props, 37)) |_| propColor(g.props, 37) else 0xFF747474; // SolidColorBase default m_ColorValue
             }
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
