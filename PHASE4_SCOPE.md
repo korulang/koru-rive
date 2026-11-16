@@ -185,3 +185,9 @@ committed producer-side (`ff18735`).
   TextStyleAxis(80,81) style chain — legacy TextStyle lookup
   misses -> no font size/asset -> zero glyph ops. Gap = text
   STYLE MODEL (new paint/axis chain), not emission wiring.
+
+- Text trace final: emission wired + style lookup may actually hit
+  (137 IS TextStylePaint; run styleId=4 vs paint slot TBD) — next
+  failure candidate is the FONT: textDrawPath needs type-106 font
+  objects with SFNT bytes (prop 212); clfp may reference a non-embedded
+  font asset -> font="" -> zero glyphs. Verify font presence next.
