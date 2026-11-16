@@ -111,3 +111,15 @@ emitted) but pixel-correctness is BLOCKED on koruc emit defect —
 `mtri(tv)` inside ~proc silently emitted loop var `t` (consumer
 binding-name collision; t4b owns the fix). CTM bake + clip events
 committed producer-side (`ff18735`).
+
+### Gate extension attempts (same session)
+
+- `clipping_and_draw_order [child]` ab:84 @786² — ours renders the
+  semi-transparent orange fill correctly (visible in BMP), but the ref
+  PNG is alpha-bearing (transparent bg + 50% fill) — pixel_oracle's
+  opaque-backdrop envelope doesn't fit; needs alpha compositing before
+  a verdict. Named: oracle-envelope gap, not renderer defect.
+- `databind_external_artboard_main [Main]` ab:15 @500² — vacuous for
+  pixels: solid backdrop only, zero ink both sides (ink-mass 0/0);
+  backdrop delta 9 vs tol 8 was a wrong --bg guess (fixture bg is
+  40,40,40). Not a useful gate fixture.
