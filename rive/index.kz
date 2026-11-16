@@ -1980,7 +1980,11 @@ const PMRes = struct { pos: V2, tan: V2, total: f32 };
 // each cubic flattens to n=Wang's-formula chords (cumDist = chord sums,
 // tol=0.5 -> invTolerance=2.0); getPosTan lerps t across sub-segments
 // then evaluates the cubic analytically.
-const PSeg = struct { dist: f32, pt: u32, t: f32, kind: u8 }; // kind 0=line 1=cubic
+const PSeg = struct { dist: f32, pt: u32, td: u32, kind: u8 }; // kind 0=line 1=cubic; td=Dot30 t
+const K_MAX_DOT30: u32 = (1 << 30) - 1;
+const K_INV_D30: f32 = 1.0 / @as(f32, @floatFromInt(K_MAX_DOT30));
+fn segT(s: PSeg) f32 { return @as(f32, @floatFromInt(s.td)) * K_INV_D30; }
+fn toDot30(x: f32) u32 { return @intFromFloat(x * @as(f32, @floatFromInt(@as(u64, 1) << 30))); }
 
 fn wangCubicN(p0: V2, p1: V2, p2: V2, p3: V2) u32 {
     const v0x = p0.x - 2 * p1.x + p2.x;
@@ -2069,7 +2073,7 @@ fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
                     const d = v2len(v2sub2(b, a));
                     if (d > 0) {
                         dist += d;
-                        segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = 1, .kind = 0 }) catch {};
+                        segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .td = K_MAX_DOT30, .kind = 0 }) catch {};
                     }
                     p += 1;
                 }
@@ -2086,11 +2090,11 @@ fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
                         while (i < n) : (i += 1) {
                             const np = cubicPowerAt(a, c1, c2, e, tt);
                             dist += v2len(v2sub2(np, prev));
-                            segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = tt, .kind = 1 }) catch {};
+                            segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .td = toDot30(tt), .kind = 1 }) catch {};
                             prev = np; tt += dt;
                         }
                         dist += v2len(v2sub2(e, prev));
-                        segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .t = 1, .kind = 1 }) catch {};
+                        segs.append(alloc, .{ .dist = dist, .pt = @as(u32, @intCast(p - 1)), .td = K_MAX_DOT30, .kind = 1 }) catch {};
                     }
                     p += 3;
                 }
@@ -2119,8 +2123,8 @@ fn pathMeasureAt(verbs: []const u8, pts: []const V2, frac: f32) PMRes {
     }
     // cubic: recover t by lerping prevT->seg.t across relD
     var prevT: f32 = 0;
-    if (idx > 0 and segs.items[idx - 1].pt == seg.pt) prevT = segs.items[idx - 1].t;
-    const t = prevT + (seg.t - prevT) * relD;
+    if (idx > 0 and segs.items[idx - 1].pt == seg.pt) prevT = segT(segs.items[idx - 1]);
+    const t = prevT + (segT(seg) - prevT) * relD;
     const a = pts[@as(usize, @intCast(seg.pt))];
     const c1 = pts[@as(usize, @intCast(seg.pt)) + 1];
     const c2 = pts[@as(usize, @intCast(seg.pt)) + 2];
