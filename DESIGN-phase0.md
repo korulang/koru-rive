@@ -347,3 +347,14 @@ loop=1 wraps at duration (60 frames default). If fps=60:
 golden f15 -> anim frame 30 — my RIVE_FRAME=30 test SHOULD have
 matched; divergence therefore likely fps!=60, loop/work-area
 clamping, or mix scaling — verify fps value next.
+
+## fps=60 CONFIRMED (linear_animation_base.hpp:32)
+
+m_Fps default 60 -> golden f15 == anim frame 30 mapping was CORRECT.
+Loop::loop wraps at duration end (60); workStart/workEnd absent ->
+full range; frame 30 is mid-loop, no clamp. Divergence therefore
+NOT time-mapping, NOT interp, NOT selection -> remaining: actualMix
+blend scaling (AnimationState mix / NestedLinear mix) or the
+keyframe->seconds conversion inside keyed_property (frame->seconds
+may use a different fps than playback). NEXT: read keyed_property
+frame->seconds + AnimationState mix defaults.
