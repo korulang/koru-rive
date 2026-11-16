@@ -145,3 +145,32 @@ pixel-read: fills, stroke, quad/cubic, CTM translate+scale+nested push,
 evenodd vs nonzero all at expected positions/colors. NOT yet verified:
 hidpi raster scale (1.0 unit=1px), clip.push.path, gradient shaders,
 per-frame re-raster cost under animation load.
+
+---
+
+## Component-slot model — CONFIRMED against hello_world.riv data
+
+`claimsArtboardSlot`: Core default false; `Component` override true;
+`Artboard` false BUT its import does `objects().addObject(this)` first —
+the artboard is slot 0 of its OWN list. ScriptInput* types also claim.
+Slots = index into the owning artboard's `objects()` list, assigned in
+STREAM ORDER among claiming objects only (assets/anims/states don't
+claim). Failed imports still hold their slot (ids stay aligned).
+
+Verified resolution on hello_world (slots: 0=Artboard obj[3], then
+objs[4..10] in stream order = slots 1..7):
+- Text parentId=0 → Artboard ✓
+- TextValueRun parentId=1 → Text; styleId=2 → TextStylePaint ✓
+- SolidColor obj[6] parentId=6 → Fill obj[9] (paint belongs to fill) ✓
+- SolidColor obj[8] parentId=7 → Fill obj[10] ✓
+- Fill obj[9] parentId=2 → TextStylePaint ✓
+- Fill obj[10] parentId=0 → Artboard (background fill) ✓
+
+NEXT IMPLEMENTATION: extract `class XBase : public YBase` parents from
+generated/*_base.hpp → isComponent = descendant of ComponentBase;
+decoder assigns slots per artboard (reset on each Artboard object),
+resolves parentId + styleId (component-slot space) to obj indices;
+other *Id props (animationId, stateToId, artboardId, fontAssetId…)
+each have their OWN id spaces — enumerate per-prop before resolving.
+Then path vertex storage via a shape-bearing fixture
+(component_list_*.riv found in tests/unit_tests/assets/).
