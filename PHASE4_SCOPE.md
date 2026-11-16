@@ -169,3 +169,10 @@ committed producer-side (`ff18735`).
   Fills) + animations + SM 98. ZERO NestedArtboard/artboard-instance
   objects — the missing content is TEXT (glyph layout/emission),
   not component-instance expansion. Revised gap attribution.
+
+- Text gap root cause: emitTextDraw/textDrawPath exist ONLY in the
+  golden-dump print path (dumpDrawOps) — they emit drawPath text to
+  stdout for golden comparison, never into the OpRec ops stream.
+  collectOps has no text arm -> text objects contribute zero ops ->
+  invisible in every renderer path (mesh AND path-verb). clfp Item's
+  missing content = unwired text emission, not missing glyph tech.
