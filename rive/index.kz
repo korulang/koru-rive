@@ -2124,13 +2124,21 @@ fn pathStreamsFor(r: *const Riv, idx: usize, alloc: std.mem.Allocator) ?struct {
     var pts = std.ArrayList(V2).empty;
     errdefer { verbs.deinit(alloc); pts.deinit(alloc); }
     var closed = false;
-    if (o.type_key == 3) { // Shape — path is a child
-        for (r.objects) |*c| {
+    if (o.type_key == 3) { // Shape — path is a child (direct verts,
+        // parametric, OR PointsPath whose own children are the verts)
+        for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(idx))) continue;
             if (isVertexType(c.type_key)) {
                 pvs.append(alloc, fileVert(c)) catch {};
             } else if (synthParametric(c, &pvs, alloc)) {
                 closed = true;
+            } else if (c.type_key == 16) { // PointsPath container — verts are ITS children
+                for (r.objects) |*v| {
+                    if (v.parent_obj == @as(i64, @intCast(ci)) and isVertexType(v.type_key)) {
+                        pvs.append(alloc, fileVert(v)) catch {};
+                    }
+                }
+                closed = propU(c.props, 32, 0) != 0;
             }
         }
     } else if (o.type_key == 16) { // PointsPath — vertex children, isClosed prop 32
