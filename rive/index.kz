@@ -1974,21 +1974,19 @@ fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
 fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     var kf = std.ArrayList(struct { f: i64, v: f32 }).empty;
     defer kf.deinit(std.heap.page_allocator);
-    var inGroup = false;
+    var curSlot: i64 = -1;
+    var curKey: i64 = -1;
     for (r.objects) |o| {
         if (propByKey(o.props, 51)) |v| {
-            const s: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
-            inGroup = (s == objSlot);
+            curSlot = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            curKey = -1;
             continue;
         }
         if (propByKey(o.props, 53)) |v| {
-            const pk: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
-            inGroup = inGroup and pk == propKey;
+            curKey = switch (v) { .uint => |u| @intCast(u), else => -1 };
             continue;
         }
-        if (!inGroup) continue;
-        // KeyFrameDouble.value (70) absent → runtime default 0.0; the
-        // keyframe still exists (frame/interp props mark it).
+        if (curSlot != objSlot or curKey != @as(i64, propKey)) continue;
         if (propByKey(o.props, 67) != null or propByKey(o.props, 68) != null or propByKey(o.props, 70) != null) {
             const val = if (propByKey(o.props, 70)) |v| switch (v) { .dbl => |x| x, else => 0 } else 0;
             kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = val }) catch {};
@@ -2004,23 +2002,18 @@ fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     }
     if (frame <= kf.items[0].f) return kf.items[0].v;
     if (frame >= kf.items[kf.items.len - 1].f) return kf.items[kf.items.len - 1].v;
-    for (kf.items[0 .. kf.items.len - 1], 0..) |a, i| {
-        const b = kf.items[i + 1];
-        if (frame >= a.f and frame <= b.f) {
-            const span = @as(f32, @floatFromInt(b.f - a.f));
-            if (span == 0) return b.v;
-            const t = @as(f32, @floatFromInt(frame - a.f)) / span;
-            return a.v + (b.v - a.v) * t;
-        }
+    var lo: usize = 0;
+    var hi: usize = kf.items.len - 1;
+    while (hi - lo > 1) {
+        const mid = (lo + hi) / 2;
+        if (kf.items[mid].f <= frame) lo = mid else hi = mid;
     }
-    return kf.items[kf.items.len - 1].v;
+    const t0 = kf.items[lo]; const t1 = kf.items[hi];
+    const span = @as(f32, @floatFromInt(t1.f - t0.f));
+    if (span <= 0) return t1.v;
+    const u = @as(f32, @floatFromInt(frame - t0.f)) / span;
+    return t0.v + (t1.v - t0.v) * u;
 }
-
-
-// ---- PathMeasure-lite: pos+tan at fraction of arc length -------------
-// Segments kept analytic (no flatten): line exact; cubic pos/tan via
-// de Casteljau, length via 16-chord approximation (TODO: Wang's formula
-// for exactness — golden transforms will falsify if insufficient).
 
 fn v2sub2(a: V2, b: V2) V2 { return .{ .x = a.x - b.x, .y = a.y - b.y }; }
 fn v2len(a: V2) f32 { return @sqrt(a.x * a.x + a.y * a.y); }
