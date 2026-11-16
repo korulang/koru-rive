@@ -514,3 +514,18 @@ transform (list's LayoutComponent worldTransform; fixture: row
 artboard Node.x=300). Row's OWN section still emits standalone
 (defaultSM=1). LayoutComponentStyle flex pass deferred — fixture
 has single row at fixed offset.
+
+## hello_world — text frontier mapped
+
+Object model: Text[4](x=73.48,y=175.79) -> TextValueRun[7]
+(text=<12B> "Hello World", styleId->TextStylePaint[5]
+fontSize=60, fontAssetId=0) -> Fill[9]->SolidColor ff313131.
+FontAsset[1](assetId=35321) + FileAssetContents[2](bytes=<33KB
+embedded font — real TTF/OTF bytes in the .riv).
+
+Golden glyph ops: per-glyph drawPath with cubic V4 outlines +
+per-glyph transform (advance positioning) — requires a font
+engine: SFNT parse -> cmap -> glyf/CFF outline extraction ->
+unitsPerEm scaling -> fontSize -> baseline/advance layout.
+This is the largest uncovered subsystem; everything upstream
+(decoder, custody, transforms, paints) already feeds it.
