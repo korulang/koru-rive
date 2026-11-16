@@ -443,3 +443,11 @@ committed producer-side (`ff18735`).
   are all oracle-limited. Remaining PASS fixtures mostly fall in
   the limited classes — expansion should target fixtures whose
   content is visible at bind pose.
+
+- mesh AA pairing RESOLVED: ref_clfp_c_t1.png was a /tmp artifact
+  (unrecoverable) BUT regenerated ref_clfp_main_t1.png has
+  IDENTICAL ink-bbox (24,89,471,452) = same capture. Pairing was
+  correct all along -> ours=(49,49,49) dominant IS our mesh
+  output regressed vs 0.71-mass baseline. Suspects: AA shader cov
+  OR meshops/ops changes since f4321af (t4f merge). Next:
+  A/B — stash AA shader, re-render, compare ink mass.
