@@ -444,3 +444,21 @@ New object types in this fixture: ArtboardComponentList,
 ViewModelInstance, ViewModel, LayoutComponent, StateMachineNumber,
 ViewModelPropertyNumber — the component-list subsystem is the
 next frontier (instantiation + VM property binding + SM gating).
+
+## Instantiation chain decoded (component_list_default_state_machine)
+
+ViewModel[1](name) + ViewModelPropertyNumber[2] + ViewModel[4]
++ ViewModelPropertyList[5]
+ -> ViewModelInstance[3](viewModelId=0), [6](viewModelId=1)
+ -> ViewModelInstanceList[7](viewModelPropertyId=0)
+   -> ViewModelInstanceListItem[8](viewModelId=0, instanceId=0)
+ -> Artboard[9](viewModelId=1, defaultSM=0, 200x200)
+   -> LayoutComponent[11](styleId=3)
+     -> LayoutComponentStyle[12](flexDirection=0, margin/pad units=1)
+     -> ArtboardComponentList[13]  <- instantiates per list item
+ -> Artboard[20] at x=300 = Row (Shape22+Rectangle23 = ff57a5e0 100x40)
+
+ONE list item -> ONE Row instance -> the single drawPath/frame.
+sm0 empty = Main artboard's own SM draws nothing; populated
+groups = instantiated Row content (+ possibly a second SM section).
+DataBindContext[14] binds source paths (VM->component props).
