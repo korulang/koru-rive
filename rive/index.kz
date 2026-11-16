@@ -3022,6 +3022,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             if (owningArtboard(r, li) != abIdx) continue;
             const items = listRowItems(r, li, alloc);
             defer alloc.free(items);
+            var rowIdx: usize = 0;
             for (items) |ii| {
                 const it = &r.objects[ii];
                 const vmid = propU(it.props, 549, -1);
@@ -3031,9 +3032,14 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
                 for (r.objects, 0..) |ao, ai2| {
                     if (ao.type_key != 1) continue;
                     if (propU(ao.props, 583, -1) == vmid) {
+                        const slot = listRowSlot(r, li, ai2, rowIdx);
+                        std.debug.print("save\n", .{});
+                        std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ slot[0], slot[1], slot[2], slot[3], slot[4], slot[5] });
                         emitOps(r, frame, ai2, true, false, false);
+                        std.debug.print("restore\n", .{});
                     }
                 }
+                rowIdx += 1;
                 g_rowVmid = -1;
                 g_rowInstOrd = -1;
             }
@@ -3458,6 +3464,34 @@ fn listRowItems(r: *const Riv, loIdx: usize, alloc: std.mem.Allocator) []usize {
         items.append(alloc, j) catch break;
     }
     return items.items;
+}
+
+// Slot transform for list row `rowIdx`: the 559's world transform
+// composed with a main-axis offset of rowIdx * (item size + gap).
+// cl1 measured: Item 200x50 + gapV 10 = pitch 60, column direction,
+// rows at canvas y = 0,60,120,180,240 (5 visible of 8, scroll-clipped).
+fn listRowSlot(r: *const Riv, loIdx: usize, itemArtIdx: usize, rowIdx: usize) Mat2 {
+    const lo = &r.objects[loIdx];
+    const p = lo.parent_obj;
+    var dir: i64 = 0;
+    var gapH: f32 = 0;
+    var gapV: f32 = 0;
+    if (p >= 0) {
+        for (r.objects) |st| {
+            if (st.type_key == 420 and st.parent_obj == p) {
+                dir = propU(st.props, 598, 0);
+                gapH = propF(st.props, 498, 0);
+                gapV = propF(st.props, 499, 0);
+                break;
+            }
+        }
+    }
+    const ia = &r.objects[itemArtIdx];
+    const es = artboardIntrinsicSize(r, itemArtIdx, propF(ia.props, 7, 0), propF(ia.props, 8, 0));
+    const pitch = if (dir == 2 or dir == 3) es.w + gapH else es.h + gapV;
+    const off: f32 = @as(f32, @floatFromInt(rowIdx)) * pitch;
+    const local: Mat2 = if (dir == 2 or dir == 3) .{ 1, 0, 0, 1, off, 0 } else .{ 1, 0, 0, 1, 0, off };
+    return matMul(effectiveWorldRaw(r, loIdx), local);
 }
 
 fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), textColor: *u32, textFillRule: *i64) bool {
@@ -4332,6 +4366,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         if (owningArtboard(r, li) != abIdx) continue;
         const items = listRowItems(r, li, alloc);
         defer alloc.free(items);
+        var rowIdx: usize = 0;
         for (items) |ii| {
             const it = &r.objects[ii];
             const vmid = propU(it.props, 549, -1);
@@ -4348,9 +4383,14 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     // width 100, keyframed to 150): Rive draws 100x40 in the
                     // list, while passing the host frame through drew 150x40.
                     // Static (-1) reproduces the observed 100x40 exactly.
+                    const slot = listRowSlot(r, li, ai2, rowIdx);
+                    var so = op0(6); so.a = slot[0]; so.b = slot[1]; so.c = slot[2]; so.d = slot[3]; so.e = slot[4]; so.g = slot[5];
+                    out.append(alloc, so) catch {};
                     collectArtboardOps(r, ai2, -1, alloc, &out);
+                    out.append(alloc, op0(7)) catch {};
                 }
             }
+            rowIdx += 1;
             g_rowVmid = -1;
             g_rowInstOrd = -1;
         }

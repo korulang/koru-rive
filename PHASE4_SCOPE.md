@@ -276,3 +276,16 @@ committed producer-side (`ff18735`).
   boundRunText picks Nth instance of bind's vmId on match. cl1 rows now
   ONE/TWO/THREE/THREE/THREE/THREE/TWO/ONE (verified rowbind print).
   clfp Item gate unaffected (no 427s); dsm ops identical.
+
+- cl1 row layout (t42 cont.): ref re-rendered with RIVE_FIXTURE=cl1
+  (prior "ref" was clfp — missing env var, falsifier caught it). True
+  cl1 ref: 5 visible rows 200x50 at x0, y=0/60/120/180/240 (pitch 60 =
+  50+gapV10, column). listRowSlot = 559 world x main-axis offset;
+  kind6/7 wrap per row in collectOps + emitOps. Ours now emits all 8
+  rows at correct slots — green bands match ref exactly for y<300.
+  Residuals: (a) no scroll clip — rows 6-8 overdraw y300-469 (ref
+  clips at ScrollView 300px); (b) intra-row text x-position differs
+  (ours ~x0-60 vs ref ~x66-128 — Item-internal alignment unsolved);
+  (c) oracle ink metric is luminance-based — green rows (mean 69.7 vs
+  bg 49) score 0.10 < 0.15 threshold, invisible to ink checks; gate
+  FAIL reflects text/bright-ink deltas + unclipped rows, not row fills.
