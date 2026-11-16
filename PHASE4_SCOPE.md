@@ -127,3 +127,10 @@ committed producer-side (`ff18735`).
   pixels: solid backdrop only, zero ink both sides (ink-mass 0/0);
   backdrop delta 9 vs tol 8 was a wrong --bg guess (fixture bg is
   40,40,40). Not a useful gate fixture.
+
+- `component_list_default_state_machine [Row]` ab:20 @500² — Fit.Contain
+  wrapper (200x40 -> scale 2.5, y-offset 200) lands ink in the right band
+  (y 200-299 both) but FAIL: ours x extends to 374 vs ref 249, mass 1.50.
+  Browser ref ran with "State Machine 1 not found" (wrong SM name) ->
+  bind-pose/static; our frame:0 eval differs. Verdict: content/state
+  mismatch, not transform — needs correct SM name for a fair ref.
