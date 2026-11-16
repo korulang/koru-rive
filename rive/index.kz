@@ -3238,6 +3238,138 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
     return @as(f32, @floatFromInt(be16(b, go)));
 }
 
+// ---- ViewModel data binding (subset) ----------------------------------
+// DataBindContext (447) targets the nearest preceding non-DataBind object
+// in stream order (file.cpp lastBindableObject). propertyKey(586) selects
+// the bound property; sourcePathIds(588) is a varuint list; flags(587)
+// bit4 = NameBased (needs the manifest resolver — absent in clfp, so only
+// absolute paths resolve: [viewModelId, ...hops, propertyId]).
+// converterId(660) indexes DataConverter objects in stream order.
+
+fn isVmInstanceValueType(key: u64) bool {
+    return switch (key) {
+        426, 428, 432, 433, 441, 442, 444, 449, 501, 565, 566, 586, 587, 427 => true,
+        else => false,
+    };
+}
+
+const VmScalar = union(enum) {
+    num: f64,
+    str: []const u8,
+    boolean: bool,
+    enumv: u64,
+    color: u32,
+    symbol: u64,
+};
+
+fn vmScalarOf(o: *const RivObj) ?VmScalar {
+    return switch (o.type_key) {
+        442 => .{ .num = @floatCast(propF(o.props, 575, 0)) },
+        433 => if (propByKey(o.props, 561)) |v| switch (v) { .bytes => |b| .{ .str = b }, else => null } else null,
+        449 => .{ .boolean = propU(o.props, 593, 0) != 0 },
+        432 => .{ .enumv = @intCast(propU(o.props, 560, 0)) },
+        426 => .{ .color = propColor(o.props, 555) },
+        565, 566 => .{ .symbol = @intCast(propU(o.props, 814, 0)) },
+        else => null,
+    };
+}
+
+// nth object whose type name starts with "DataConverter" (stream order =
+// file m_DataConverters order).
+fn dataConverterAt(r: *const Riv, n: i64) ?*const RivObj {
+    var seen: i64 = 0;
+    for (r.objects) |*o| {
+        const tn = o.type_name orelse continue;
+        if (!std.mem.startsWith(u8, tn, "DataConverter")) continue;
+        if (seen == n) return o;
+        seen += 1;
+    }
+    return null;
+}
+
+fn vmScalarToString(r: *const Riv, convIdx: i64, s: VmScalar, alloc: std.mem.Allocator) ?[]const u8 {
+    const conv = if (convIdx >= 0) dataConverterAt(r, convIdx) else null;
+    const ckey = if (conv) |c| c.type_key else 0;
+    switch (ckey) {
+        490 => { // DataConverterToString
+            return switch (s) {
+                .symbol => |v| std.fmt.allocPrint(alloc, "{d}", .{v}) catch null,
+                .enumv => |v| std.fmt.allocPrint(alloc, "{d}", .{v}) catch null,
+                .boolean => |b| if (b) "1" else "0",
+                .str => |b| b,
+                .num => |x| std.fmt.allocPrint(alloc, "{d:.6}", .{x}) catch null,
+                .color => null, // colorFormat() empty -> "" in rive-cpp; unhandled
+            };
+        },
+        0 => return switch (s) { // no converter: only a string source can land on text
+            .str => |b| b,
+            else => null,
+        },
+        else => return null, // other converters unimplemented — named gap
+    }
+}
+
+// Resolve the DataBindContext targeting targetIdx with propertyKey==268
+// to the bound text, or null when unbound/unresolvable (literal stays).
+fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]const u8 {
+    var lastBindable: i64 = -1;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 446 or o.type_key == 447) {
+            if (lastBindable == @as(i64, @intCast(targetIdx)) and o.type_key == 447) {
+                var pk: u64 = 0;
+                var flags: u64 = 0;
+                var conv: i64 = -1;
+                var pb: ?[]const u8 = null;
+                for (o.props) |p| {
+                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 587) flags = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 588) { if (p.value == .bytes) pb = p.value.bytes; }
+                    if (p.key == 660) conv = if (p.value == .uint) @intCast(p.value.uint) else -1;
+                }
+                if (pk == 268) {
+                const bytes = pb orelse return null;
+                if (flags & 16 != 0) return null; // NameBased: needs manifest resolver — absent
+                var pos: usize = 0;
+                var path = std.ArrayList(u64).empty;
+                defer path.deinit(alloc);
+                while (pos < bytes.len) {
+                    const v = readVarU64(bytes, &pos) orelse return null;
+                    path.append(alloc, v) catch return null;
+                }
+                if (path.items.len != 2) return null; // nested VM hops — named gap
+                const vmId = path.items[0];
+                const propId = path.items[1];
+                var instIdx: usize = 0;
+                var haveInst = false;
+                for (r.objects, 0..) |cand, ci| {
+                    if (cand.type_key == 437 and propU(cand.props, 566, -1) == @as(i64, @intCast(vmId))) {
+                        instIdx = ci;
+                        haveInst = true;
+                        break;
+                    }
+                }
+                if (!haveInst) return null;
+                // instance values are the contiguous VM-value block after the
+                // instance (import-stack body; ends at next VM/artboard type)
+                var j = instIdx + 1;
+                while (j < r.objects.len) : (j += 1) {
+                    const vo = &r.objects[j];
+                    if (!isVmInstanceValueType(vo.type_key)) break;
+                    if (propU(vo.props, 554, -1) == @as(i64, @intCast(propId))) {
+                        const scalar = vmScalarOf(vo) orelse return null;
+                        return vmScalarToString(r, conv, scalar, alloc);
+                    }
+                }
+                return null;
+                }
+            }
+            continue; // DataBind objects do not update lastBindableObject
+        }
+        lastBindable = @intCast(i);
+    }
+    return null;
+}
+
 fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), textColor: *u32, textFillRule: *i64) bool {
     _ = frame;
     var runIdx: usize = 0; var have = false;
@@ -3252,6 +3384,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         if (p.key == 268) { if (p.value == .bytes) text = p.value.bytes; }
         if (p.key == 272) styleId = switch (p.value) { .uint => |u| @intCast(u), else => -1 };
     }
+    if (boundRunText(r, runIdx, alloc)) |bt| text = bt;
     var fontSize: f32 = 0; var styleIdx: usize = 0; var haveStyle = false;
     for (r.objects, 0..) |c, ci| {
         if (c.type_key == 137 and c.slot == styleId) {
@@ -3670,6 +3803,53 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
         std.debug.print("obj {d} type={s} name='{s}' parent={d} parent_obj={d} props={d}\n", .{ i, tn, nm, o.parent, o.parent_obj, o.props.len });
         for (o.props) |p| {
             std.debug.print("  prop key={d} val={any}\n", .{ p.key, p.value });
+        }
+    }
+}
+
+~pub tor bindump { r: *Riv<loaded> }
+~proc bindump|zig {
+    const alloc = std.heap.page_allocator;
+    for (r.objects, 0..) |o, i| {
+        const tn = o.type_name orelse "?";
+        std.debug.print("obj {d} type={d}:{s} parent={d} parent_obj={d} slot={d} props={d}\n", .{ i, o.type_key, tn, o.parent, o.parent_obj, o.slot, o.props.len });
+        for (o.props) |p| {
+            switch (p.value) {
+                .uint => |u| std.debug.print("  k{d} {s} = {d}\n", .{ p.key, p.name, u }),
+                .dbl => |x| std.debug.print("  k{d} {s} = {d:.4}\n", .{ p.key, p.name, x }),
+                .boolean => |b| std.debug.print("  k{d} {s} = {s}\n", .{ p.key, p.name, if (b) "true" else "false" }),
+                .color => |c| std.debug.print("  k{d} {s} = 0x{x:0>8}\n", .{ p.key, p.name, c }),
+                .bytes => |b| {
+                    // varint-list keys decode as id lists; text keys print raw
+                    const isVarintKey = p.key == 588 or p.key == 920 or p.key == 711 or p.key == 866 or p.key == 963;
+                    if (isVarintKey) {
+                        var pos: usize = 0;
+                        var ids = std.ArrayList(u64).empty;
+                        while (pos < b.len) {
+                            const v = readVarU64(b, &pos) orelse break;
+                            ids.append(alloc, v) catch break;
+                        }
+                        std.debug.print("  k{d} {s} = varints{any}\n", .{ p.key, p.name, ids.items });
+                        ids.deinit(alloc);
+                    } else {
+                        var printable = b.len > 0;
+                        for (b) |ch| {
+                            if (ch < 0x20 and ch != 0x0A and ch != 0x0D and ch != 0x09) { printable = false; break; }
+                        }
+                        if (printable and b.len < 4000) {
+                            std.debug.print("  k{d} {s} = '{s}'\n", .{ p.key, p.name, b });
+                        } else {
+                            const n = @min(b.len, 32);
+                            var hex = std.ArrayList(u8).empty;
+                            for (b[0..n]) |ch| {
+                                hex.appendSlice(alloc, std.fmt.allocPrint(alloc, "{x:0>2}", .{ch}) catch "") catch {};
+                            }
+                            std.debug.print("  k{d} {s} = <{d}B> {s}\n", .{ p.key, p.name, b.len, hex.items });
+                            hex.deinit(alloc);
+                        }
+                    }
+                },
+            }
         }
     }
 }

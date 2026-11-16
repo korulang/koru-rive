@@ -229,3 +229,20 @@ committed producer-side (`ff18735`).
   converterId=2. Binding = propertyKey 268 on the text object <-
   sourcePathIds path -> VM instance property. {2,0} segment
   semantics next (index into instance prop list? nested path?).
+
+- VM binding RESOLVED for clfp Item text (t42): clfp.riv has NO
+  ManifestAsset(642)/DataBindPath(643)/flags(587) -> absolute path
+  semantics. DataBindContext obj83 targets obj82 via lastBindableObject
+  rule (nearest preceding non-DataBind in stream). sourcePathIds {2,0}
+  = [viewModelId=2, propertyId=0] -> ItemVM instance obj16 -> value
+  obj17 ViewModelInstanceSymbolListIndex propId=0 (prop814 absent -> 0).
+  converterId=2 -> 3rd DataConverter in stream order = obj5
+  DataConverterToString -> symbolListIndex -> "0". Implemented in
+  boundRunText/vmScalarOf/vmScalarToString (rive/index.kz); textDrawPath
+  substitutes before glyph emission. Measured: text-swap zone
+  (5,107)-(95,147) ref-mismatch 1282/1308px -> 13/1308px; content-zone
+  diff>60 3352->2083px, mean 53.8->33.2. Residual FAIL = pre-existing
+  layout overdraw (ours green covers 57% frame vs ref ink x0-155
+  y107-327) — layout-solving gap, not binding. render_browser.mjs gained
+  RIVE_VM env for binding a named ViewModel (ItemVM needed; default
+  byIndex(0)=StarItemVM binds nothing for Item — bound==unbound bytes).

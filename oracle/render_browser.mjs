@@ -40,6 +40,7 @@ const FIXTURE = process.env.RIVE_FIXTURE || '/Users/larsde/src/koru-rive/rive-cp
 
 const AB = abArg || 'Main';
 const SM = smArg === undefined ? 'State Machine 1' : smArg;
+const VMNAME = process.env.RIVE_VM || '';
 const SMPROP = SM ? `stateMachines: ${JSON.stringify(SM)},` : '';
 const ABPROP = AB ? `artboard: ${JSON.stringify(AB)},` : '';
 const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:transparent">
@@ -79,7 +80,8 @@ const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:trans
             // Bind by artboard name if possible, else the first ViewModel.
             // Hardcoding a VM name is how the dsm probe first read blank.
             let vm = null;
-            for (const n of [${JSON.stringify(AB)}, 'Main', 'Default']) {
+            const vmNames = ${JSON.stringify(VMNAME)} ? [${JSON.stringify(VMNAME)}, ${JSON.stringify(AB)}, 'Main', 'Default'] : [${JSON.stringify(AB)}, 'Main', 'Default'];
+            for (const n of vmNames) {
               if (vm) break;
               try { vm = r.viewModelByName ? r.viewModelByName(n) : null; } catch (e) {}
             }
