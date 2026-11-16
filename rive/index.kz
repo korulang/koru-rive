@@ -2343,6 +2343,19 @@ fn constrainedWorld(r: *const Riv, nodeIdx: usize, frame: i64) Mat2 {
     return world;
 }
 
+// Nearest Artboard ancestor via parent_obj chain (stream indices).
+fn owningArtboard(r: *const Riv, idx: usize) usize {
+    var cur: i64 = @intCast(idx);
+    var hops: usize = 0;
+    while (cur >= 0 and hops < 64) : (hops += 1) {
+        const oi: usize = @intCast(cur);
+        if (oi >= r.objects.len) return 0;
+        if (r.objects[oi].type_key == 1) return oi;
+        cur = r.objects[oi].parent_obj;
+    }
+    return 0;
+}
+
 fn dumpDrawOps(r: *Riv, frame: i64) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect

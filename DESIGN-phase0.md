@@ -477,3 +477,15 @@ emit each artboard's static ops, then its default SM's 30 frames.
 sm0's empty frames = Main artboard draws nothing itself (its only
 content is the component list, which instantiates Row — Row's own
 section is the populated one).
+
+## Per-artboard ordering — partial finding
+
+Object stream is already artboard-clustered: component_list
+emission order = Main ops (transform 0,0) then Row ops (300,0) —
+matches golden's per-artboard section ORDER without restructuring.
+Remaining gap is purely FRAME SECTIONING: golden repeats each
+artboard's ops under its default SM's 30 frames (sm0 empty for
+Main, populated for Row); my drawops emits one frame per call.
+Next leg: emitArtboardOps(abIdx, frame) extraction + frame loop
+in dumpDrawOps (static + smN x f=0..29, anim frame = f*2 @fps60).
+owningArtboard() helper landed (uncommitted->committed next).
