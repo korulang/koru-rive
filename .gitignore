@@ -14,3 +14,4 @@ build_output.zig
 output_emitted.zig
 compiler_env.json
 program.ast.json
+goldens/corpus/
