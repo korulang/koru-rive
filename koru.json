@@ -1,0 +1,9 @@
+{
+  "name": "koru-rive",
+  "version": "0.1.0",
+  "description": "Koru-native Rive runtime — .riv decoder/player/raster",
+  "paths": {
+    "std": "../koru/koru_std",
+    "kr": "."
+  }
+}
