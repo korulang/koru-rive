@@ -2533,8 +2533,20 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
     for (r.objects, 0..) |o, i| {
         if (o.type_key != 1) continue; // Artboard
         if (scoped and i != abIdx) continue;
-        const aw = propF(o.props, 7, 0);
-        const ah = propF(o.props, 8, 0);
+        const es = artboardIntrinsicSize(r, i, propF(o.props, 7, 0), propF(o.props, 8, 0));
+        const aw = es.w;
+        const ah = es.h;
+        // layout-managed artboards re-base content into origin-centered
+        // space: bg paint gets a -origin counter-transform (Item golden)
+        var hasLayout = false;
+        for (r.objects) |lo| {
+            if (lo.type_key == 88 and owningArtboard(r, @intCast(r.objects.len - 1)) >= 0) {}
+        }
+        for (r.objects, 0..) |lo, li| {
+            if (lo.type_key == 88 and owningArtboard(r, li) == i) { hasLayout = true; break; }
+        }
+        const ox = propF(o.props, 11, 0) * aw;
+        const oy = propF(o.props, 12, 0) * ah;
         for (r.objects, 0..) |*c, pi| {
             // artboard-level paint: parent is the Artboard or a non-Shape
             // descendant (LayoutComponent/Node) of it — shape fills are
@@ -2570,7 +2582,11 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
             verbs.append(alloc, 1) catch {}; // dangling close-line verb (golden shape)
             verbs.append(alloc, 5) catch {};
             std.debug.print("save\n", .{});
-            std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n", .{});
+            if (hasLayout and (ox != 0 or oy != 0)) {
+                std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 {d:.4} {d:.4}\n", .{ -ox, -oy });
+            } else {
+                std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n", .{});
+            }
             std.debug.print("drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pts.items.len });
             var vp: usize = 0;
             for (verbs.items) |v| {
