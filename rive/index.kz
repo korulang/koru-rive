@@ -2700,6 +2700,13 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
             // descendant (LayoutComponent/Node) of it — shape fills are
             // handled per-shape above.
             if (c.type_key != 20 and c.type_key != 24) continue;
+            // isVisible(41): false/0 paints emit nothing — rive-cpp culls
+            // them before raster (clip_tests hidden-path parity).
+            if (propByKey(c.props, 41)) |v| switch (v) {
+                .boolean => |b| if (!b) continue,
+                .dbl => |x| if (x == 0) continue,
+                else => {},
+            };
             if (c.parent_obj < 0) continue;
             const par = r.objects[@as(usize, @intCast(c.parent_obj))];
             if (par.type_key == 3) continue; // shape fill -> shape loop
@@ -3157,6 +3164,13 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         for (r.objects, 0..) |*c, pi| {
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
             if (c.type_key != 20 and c.type_key != 24) continue; // Fill / Stroke only
+            // isVisible(41): false/0 paints emit nothing — rive-cpp culls
+            // them before raster (clip_tests hidden-path parity).
+            if (propByKey(c.props, 41)) |v| switch (v) {
+                .boolean => |b| if (!b) continue,
+                .dbl => |x| if (x == 0) continue,
+                else => {},
+            };
             // color: SolidColor child of this paint (index pi)
             var color: u32 = 0;
             for (r.objects) |*g| {
