@@ -1,0 +1,76 @@
+<Rive version="1" kind="fragment">
+    <!-- Feed: a scrollable-style list of cards bound to a view model list.
+         Exercises the corpus's biggest named gap: ViewModel list binding +
+         ArtboardComponentList inside a LayoutComponent. -->
+    <Artboard viewModelId="0:60" defaultStateMachineId="0:7" width="400" height="600" styleId="0:5" name="Feed" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:5"/>
+
+        <Fill name="Background">
+            <SolidColor colorValue="FF1D1D1D" name="Color"/>
+        </Fill>
+
+        <LayoutComponent width="400" height="600" styleId="0:11" name="List" id="0:10">
+            <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed"
+                                  flexDirectionValue="column" gapVertical="12"
+                                  name="List Style" id="0:11"/>
+            <ArtboardComponentList name="Rows" id="0:12">
+                <DataBindContext sourcePathIds="0:60-0:62" propertyKey="800"/>
+            </ArtboardComponentList>
+        </LayoutComponent>
+
+        <!-- Minimal running state machine: binds only apply while one runs. -->
+        <StateMachine name="State Machine 1" id="0:7">
+            <StateMachineLayer name="Layer 1" id="0:8">
+                <AnyState x="200" y="-120"/>
+                <ExitState x="400" y="-120"/>
+                <EntryState/>
+            </StateMachineLayer>
+        </StateMachine>
+    </Artboard>
+
+    <!-- The row. isComponent + ComponentAsset + viewModelId is the join the
+         list resolves on; fixed/fixed root box keeps row sizing honest. -->
+    <Artboard isComponent="true" viewModelId="0:50" viewModelInstanceId="0:52"
+              x="420" y="0" width="360" height="80" styleId="0:31" name="Card" id="0:30">
+        <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed"
+                              name="Card Style" id="0:31"/>
+        <Shape x="180" y="40" name="Body" id="0:32">
+            <Rectangle width="360" height="80" originX="0.5" originY="0.5" name="Path"/>
+            <Fill name="Fill">
+                <SolidColor colorValue="FF888888" name="C">
+                    <DataBindContext sourcePathIds="0:50-0:51" propertyKey="37"/>
+                </SolidColor>
+            </Fill>
+        </Shape>
+    </Artboard>
+    <ComponentAsset artboardId="0:30" name="Card"/>
+
+    <!-- Card view model: one color property, four instances = four rows. -->
+    <ViewModel defaultInstanceId="0:52" name="Card" id="0:50">
+        <ViewModelPropertyColor name="tint" id="0:51"/>
+        <ViewModelInstance exports="true" name="Default" id="0:52">
+            <ViewModelInstanceColor propertyValue="FF888888" viewModelPropertyId="0:51"/>
+        </ViewModelInstance>
+        <ViewModelInstance exports="true" name="One" id="0:53">
+            <ViewModelInstanceColor propertyValue="FF57A5E0" viewModelPropertyId="0:51"/>
+        </ViewModelInstance>
+        <ViewModelInstance exports="true" name="Two" id="0:54">
+            <ViewModelInstanceColor propertyValue="FF3FA46A" viewModelPropertyId="0:51"/>
+        </ViewModelInstance>
+        <ViewModelInstance exports="true" name="Three" id="0:55">
+            <ViewModelInstanceColor propertyValue="FFE0A357" viewModelPropertyId="0:51"/>
+        </ViewModelInstance>
+    </ViewModel>
+
+    <!-- Feed view model: the list property and the instance holding 3 items. -->
+    <ViewModel defaultInstanceId="0:61" name="Feed" id="0:60">
+        <ViewModelPropertyList name="cards" id="0:62"/>
+        <ViewModelInstance exports="true" name="Default" id="0:61">
+            <ViewModelInstanceList viewModelPropertyId="0:62">
+                <ViewModelInstanceListItem viewModelId="0:50" viewModelInstanceId="0:53"/>
+                <ViewModelInstanceListItem viewModelId="0:50" viewModelInstanceId="0:54"/>
+                <ViewModelInstanceListItem viewModelId="0:50" viewModelInstanceId="0:55"/>
+            </ViewModelInstanceList>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>
