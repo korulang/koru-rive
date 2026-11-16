@@ -3322,6 +3322,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
                 g_rowVmid = row.vmId;
                 g_rowInstOrd = row.instOrd;
                 g_rowIdx = @intCast(rowIdx);
+                g_cframe = frame;
                 for (r.objects, 0..) |ao, ai2| {
                     if (ao.type_key != 1) continue;
                     if (propU(ao.props, 583, -1) == row.vmId) {
@@ -3336,6 +3337,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
                 g_rowVmid = -1;
                 g_rowInstOrd = -1;
                 g_rowIdx = -1;
+                g_cframe = -1;
             }
         }
     }
@@ -3561,6 +3563,11 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
 var g_rowVmid: i64 = -1;
 var g_rowInstOrd: i64 = -1;
 var g_rowIdx: i64 = -1;
+// Color keyframes keep animating inside row artboards even though their
+// transforms render at base pose (frame=-1): cl2's item fill 0xffcccccc
+// keyframes to black while geometry stays put. cf = frame>=0 ? frame :
+// g_cframe, set to the host frame for the duration of row emission.
+var g_cframe: i64 = -1;
 
 fn isVmInstanceValueType(key: u64) bool {
     return switch (key) {
@@ -4356,6 +4363,7 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
 // ---- draws: structured draw records for canvas replay ----
 const DrawRec = struct { style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64, nv: usize, verbs: []u8, pts: []f64 };
 fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []DrawRec {
+    const cf: i64 = if (frame >= 0) frame else g_cframe;
     var out = std.ArrayList(DrawRec).empty;
     errdefer out.deinit(alloc);
     var aw0: f32 = 0; var ah0: f32 = 0;
@@ -4409,7 +4417,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             };
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, frame); _ = gi; }
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, cf); _ = gi; }
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
@@ -4454,6 +4462,7 @@ var imgBlobs: std.ArrayList([]const u8) = .empty;
     return b;
 }
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
+    const cf: i64 = if (frame >= 0) frame else g_cframe;
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
@@ -4502,7 +4511,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         };
         var color: u32 = 0;
         for (r.objects) |*g| {
-            if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColor(g.props, 37);
+            if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColorAnim(r, g, 37, cf);
         }
         if (((color >> 24) & 0xFF) == 0) continue;
         var rtl: f32 = 0; var rtr: f32 = 0; var rbr: f32 = 0; var rbl: f32 = 0;
@@ -4597,8 +4606,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 if (c.type_key != 20) continue;
                 if (c.parent_obj != @as(i64, @intCast(lci))) continue;
                 var lcolor: u32 = 0;
-                for (r.objects) |g| {
-                    if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) lcolor = propColor(g.props, 37);
+                for (r.objects) |*g| {
+                    if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) lcolor = propColorAnim(r, g, 37, cf);
                 }
                 if (((lcolor >> 24) & 0xFF) == 0) continue;
                 // Rounded-rect when the component's style carries corner
@@ -4773,7 +4782,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             };
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, frame); _ = gi; }
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, cf); _ = gi; }
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
@@ -4897,6 +4906,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             g_rowVmid = row.vmId;
             g_rowInstOrd = row.instOrd;
             g_rowIdx = @intCast(rowIdx);
+            g_cframe = frame;
             for (r.objects, 0..) |ao, ai2| {
                 if (ao.type_key != 1) continue;
                 if (propU(ao.props, 583, -1) == row.vmId) {
@@ -4907,6 +4917,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     // width 100, keyframed to 150): Rive draws 100x40 in the
                     // list, while passing the host frame through drew 150x40.
                     // Static (-1) reproduces the observed 100x40 exactly.
+                    // Colors still animate via g_cframe (cl2 item fill).
                     const slot = listRowSlot(r, li, ai2, rowIdx);
                     var so = op0(6); so.a = slot[0]; so.b = slot[1]; so.c = slot[2]; so.d = slot[3]; so.e = slot[4]; so.g = slot[5];
                     out.append(alloc, so) catch {};
@@ -4918,6 +4929,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             g_rowVmid = -1;
             g_rowInstOrd = -1;
             g_rowIdx = -1;
+            g_cframe = -1;
         }
         if (clipLc >= 0) out.append(alloc, op0(10)) catch {};
     }

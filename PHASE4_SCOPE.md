@@ -630,3 +630,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   0.17%. SM listeners+keyframes not needed at t1 (entry-state colors
   match) — named residual for animated frames. Regression: cl1/clv/
   clfpItem all PASS unchanged.
+
+- cl2 t10 GATE PASS (color keyframes): KeyedObject.objectId=16 ->
+  SolidColor obj48 (item fill 0xffcccccc) keyframes 0xff887e00->
+  0xff000000 via Item's own Timeline. Rows render transforms at
+  frame=-1 (dsm rule) but colors now animate: g_cframe carries the
+  host frame into row emission; cf = frame>=0?frame:g_cframe feeds
+  propColorAnim in collectArtboardOps (artboard paints, layout-box,
+  shape fills) + collectDraws. cl2 t10: items black, ink-mass 1.00,
+  gap 0.80%. SM listeners still unexercised (autoplay animation,
+  no clicks in refs) — named residual. Regression: cl1/clv/clfpItem
+  PASS, dsm ops identical.
