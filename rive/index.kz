@@ -2090,6 +2090,37 @@ fn trsCompose(rot: f32, sx: f32, sy: f32, x: f32, y: f32) Mat2 {
     const c = @cos(rot); const s = @sin(rot);
     return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
 }
+
+// Mat2D::decompose / Mat2D::compose port (mat2d.cpp:204-240) — full
+// rot+scaleX+scaleY+skewX, no TRS loss.
+const TComp = struct { x: f32, y: f32, sx: f32, sy: f32, rot: f32, skew: f32 };
+
+fn matDecompose(m: Mat2) TComp {
+    const denom = m[0] * m[0] + m[1] * m[1];
+    const sx = @sqrt(denom);
+    const sy = if (sx == 0) 0 else (m[0] * m[3] - m[2] * m[1]) / sx;
+    return .{
+        .x = m[4], .y = m[5], .sx = sx, .sy = sy,
+        .rot = std.math.atan2(m[1], m[0]),
+        .skew = std.math.atan2(m[0] * m[2] + m[1] * m[3], denom),
+    };
+}
+
+fn matCompose(c: TComp) Mat2 {
+    const co = @cos(c.rot); const si = @sin(c.rot);
+    var m: Mat2 = .{ co, si, -si, co, c.x, c.y };
+    m[0] *= c.sx; m[1] *= c.sx; m[2] *= c.sy; m[3] *= c.sy;
+    if (c.skew != 0) {
+        m[2] = m[0] * c.skew + m[2];
+        m[3] = m[1] * c.skew + m[3];
+    }
+    return m;
+}
+
+fn fmod2pi(a: f32) f32 {
+    const twopi: f32 = 2 * std.math.pi;
+    return a - @trunc(a / twopi) * twopi;
+}
 fn decompRot(m: Mat2) f32 { return std.math.atan2(m[1], m[0]); }
 fn wrapPi(a: f32) f32 {
     const pi: f32 = std.math.pi;
@@ -2233,19 +2264,20 @@ fn constrainedWorld(r: *const Riv, nodeIdx: usize, frame: i64) Mat2 {
         const compParentWorld = parentWorld(r, nodeIdx);
         if (matInverse(tgtParentWorld)) |inv| tB = matMul(inv, tB);
         tB = matMul(compParentWorld, tB);
+        // constrainHelper: decompose A(node world) + B(transformB),
+        // blend x/y by strength, take A's scale+skew, keep B's rot
+        // (orient) — then compose() is the node's new worldTransform.
+        const cA = matDecompose(world);
+        var cB = matDecompose(tB);
         const t = strength;
         const ti = 1 - t;
-        var rotB = decompRot(tB);
-        if (!orient) {
-            var rotA = wrapPi(decompRot(world));
-            const pi: f32 = std.math.pi;
-            while (rotA > pi) rotA -= 2 * pi;
-            while (rotA < -pi) rotA += 2 * pi;
-            rotB = rotA;
-        }
-        const newX = world[4] * ti + tB[4] * t;
-        const newY = world[5] * ti + tB[5] * t;
-        world = trsCompose(rotB, decompSX(world), decompSY(world), newX, newY);
+        if (!orient) cB.rot = fmod2pi(cA.rot);
+        cB.x = cA.x * ti + cB.x * t;
+        cB.y = cA.y * ti + cB.y * t;
+        cB.sx = cA.sx;
+        cB.sy = cA.sy;
+        cB.skew = cA.skew;
+        world = matCompose(cB);
     }
     return world;
 }
