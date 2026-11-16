@@ -3244,7 +3244,6 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         std.debug.print("  -> verbs +{d}\n", .{verbs.items.len - vb});
         pen += @as(f64, hmtxAdvance(font, gid)) * scale;
     }
-    verbs.append(alloc, 5) catch {};
     std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
     var vp: usize = 0;
     for (verbs.items) |v| {
