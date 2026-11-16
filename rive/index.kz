@@ -1885,6 +1885,53 @@ fn dumpKeyed(r: *Riv) void {
     }
 }
 
+
+// KeyFrameDouble linear interpolation for one (objectId, propertyKey)
+// pair. Keyframes sorted by frame; clamp outside range. interpType 1
+// = linear (others TODO: hold/cubic via interpolatorId 69).
+fn keyframedValue(r: *Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
+    var kf = std.ArrayList(struct { f: i64, v: f32 }).empty;
+    defer kf.deinit(std.heap.page_allocator);
+    var inGroup = false;
+    for (r.objects) |o| {
+        if (propByKey(o.props, 51)) |v| {
+            const s: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            inGroup = (s == objSlot);
+            continue;
+        }
+        if (propByKey(o.props, 53)) |v| {
+            const pk: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            inGroup = inGroup and pk == propKey;
+            continue;
+        }
+        if (!inGroup) continue;
+        if (propByKey(o.props, 70)) |v| {
+            const val = switch (v) { .dbl => |x| x, else => 0 };
+            kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = val }) catch {};
+        }
+    }
+    if (kf.items.len == 0) return 0;
+    // insertion sort by frame (tiny n)
+    for (kf.items, 0..) |*a, i| {
+        var j = i;
+        while (j > 0 and kf.items[j - 1].f > a.f) : (j -= 1) {
+            const t = kf.items[j - 1]; kf.items[j - 1] = kf.items[j]; kf.items[j] = t;
+        }
+    }
+    if (frame <= kf.items[0].f) return kf.items[0].v;
+    if (frame >= kf.items[kf.items.len - 1].f) return kf.items[kf.items.len - 1].v;
+    for (kf.items[0 .. kf.items.len - 1], 0..) |a, i| {
+        const b = kf.items[i + 1];
+        if (frame >= a.f and frame <= b.f) {
+            const span = @as(f32, @floatFromInt(b.f - a.f));
+            if (span == 0) return b.v;
+            const t = @as(f32, @floatFromInt(frame - a.f)) / span;
+            return a.v + (b.v - a.v) * t;
+        }
+    }
+    return kf.items[kf.items.len - 1].v;
+}
+
 fn dumpDrawOps(r: *Riv) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect

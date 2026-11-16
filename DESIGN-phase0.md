@@ -239,3 +239,19 @@ Flat stream, parentId=-1 — linkage is by ID props, not parenting:
 - Values: KeyFrameDouble.value (70 f2), KeyFrameColor.value (88 f3), KeyFrameBool (181), KeyFrameString (280), KeyFrameId (122)
 - Runtime applies via CoreRegistry::setColor/setDouble(object, propertyKey, v) — writes the live property; interpolated between surrounding keyframes (type 1 observed).
 - follow_path_shapes' LinearAnimation animates ONLY FollowPathConstraint.distance (6 keyed objects) — the ff747474 colors come from STATE-MACHINE animations (nested/blend), not this linear anim. Constraint solving still required to turn distance into shape transforms.
+
+## Constraint solver semantics (follow_path_constraint.cpp + path_measure.cpp)
+
+- FollowPathConstraint props: distance(363 f2, KEYFRAMED 0→1.0),
+  orient(364 f4), offset(365 f4), strength(172), targetId(173).
+- PathMeasure.atPercentage(p) = atDistance(totalLength * clamp01(p))
+  — distance is a FRACTION of arc length, not pixels. Keyframes
+  animate it 0→1 = 0%→100% of path.
+- targetTransform(d): pos+tangent at d → transformB = target's
+  worldTransform, orient→rotate toward tangent (strength-blended),
+  offset→parent translation, [4,5]=pos+offset.
+- constrainHelper: decompose A(component world) + B(target),
+  blend x/y by strength t, keep A's rotation (if !orient)/scale/skew.
+- Needs: ContourMeasure flatten (cubic→polyline at tolerance) +
+  cumulative arc length + pos/tan interpolation — the missing math
+  piece. Keyframe eval: frame units, fps prop 56, interpType 1=linear.
