@@ -486,3 +486,14 @@ committed producer-side (`ff18735`).
   or is it artboard-background (different prop)? If (a) it's a
   real renderer defect affecting EVERY bg-fill fixture — higher
   value than more gates.
+
+- bg-fill divergence ROOT-CAUSED (iba dump): Fill obj6 +
+  SolidColor ff313131 are parented to the ARTBOARD/Image
+  (parent_obj=3, Image type100 sibling) — NOT a Shape. Our ops
+  emit them as full-frame solid rects; browser doesn't paint
+  image-attached fills as rects (image itself unrendered ->
+  blank ref). VERDICT: renderer defect — fills whose parent is
+  not a Shape (artboard/image-attached) must not emit solid-rect
+  draws. Reclassifies lwti/hff/deam/iba FAILs: they were this
+  defect + image-decode gap, not pure oracle-limitations.
+  Fix: gate fill emission on parent being a renderable shape.
