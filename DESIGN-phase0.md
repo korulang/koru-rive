@@ -255,3 +255,22 @@ Flat stream, parentId=-1 — linkage is by ID props, not parenting:
 - Needs: ContourMeasure flatten (cubic→polyline at tolerance) +
   cumulative arc length + pos/tan interpolation — the missing math
   piece. Keyframe eval: frame units, fps prop 56, interpType 1=linear.
+
+## ContourMeasure (skia-inspired, contour_measure.cpp)
+
+- Contour = vector<Segment> + vector<Vec2D> pts + length + isClosed.
+- Segment: {distance(cumulative start), ptIndex, type(2bit: line/quad/
+  cubic), tValue} — built by walking RawPath verbs, chopping cubics at
+  tolerance (m_invTolerance = 1/max(tol, kMinTolerance)).
+- Length via wangs_formula per segment; findSegment = lower_bound on
+  cumulative distance (skips zero-distance segs).
+- PosTan eval per segment type at local t (eval_quad/eval_cubic +
+  line) → pos + unit tangent.
+- PathMeasure.atPercentage(p) = atDistance(length*clamp01(p));
+  atDistance → findSegment → eval → pos/tan.
+- Koru port shape: build from my PV/buildPath V-stream (verbs+pts
+  already emitted) — flatten cubics to quads/lines OR keep cubics and
+  eval analytically (eval_cubic gives exact pos+tan — no flatten
+  needed if we keep segment params!). Skia chops for bounds; for
+  follow-path only pos+tan matter → analytic eval per verb segment
+  with cumulative EXACT-ish length (Wang's formula per segment).
