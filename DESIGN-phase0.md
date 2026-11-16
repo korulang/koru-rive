@@ -554,3 +554,17 @@ Remaining SFNT legs: glyfGlyph() contour extraction (simple
 glyphs: endPts+instructions+flags+coords; composite: components),
 quad->cubic elevation, hmtx advance, hhea baseline, then
 TextValueRun layout -> per-glyph drawPath emission.
+
+## component_list_follow_path — section topology finding
+
+Golden: 3 artboards x (static + sm0 + 30 frames) = 96 sections,
+ALL sm0, NO composed pass. My player: 126 (extra composed pass
+per list-containing artboard). The composed-pass rule banked
+for component_list_default_state_machine OVER-FIRES here.
+
+Reinterpretation needed: golden likely emits rows INSIDE the
+instantiator's own section frames (not a separate pass), and
+the earlier fixture's second sm0 group has a different cause
+(possibly a second SM on one artboard, or dump ordering).
+Correct model: rows-in-section always; composed pass only if
+golden proves a distinct render context exists.
