@@ -1,109 +1,73 @@
-# Phase 4 scoping — koru-native rasterizer + i915 thin-subset
+# Phase 4 scoping — GPU polygon path coverage (koru-native + i915)
 
 Commission item (rive-runtime.md phase 4, stretch): "The SDF rasterizer
-has no polygon answer today; this is where the realization/variant stress
-peaks." i915 thin-subset already scoped in `omni/commissions/gpu-render-path.md`.
-This doc scopes both against the measured state, not aspiration.
+has no polygon answer today." Correction applied: **no CPU scanline
+rasterizer** — the pipeline is Metal/GPU end-to-end. "Path coverage"
+means polygon fill on the GPU backends, Tier-2-verified.
 
-## What the ops stream actually demands (measured)
+## The actual gap (measured)
 
-`collectOps`/`collectArtboardOps` emits OpRec kinds 0–10:
+- `libs/canvas` verbs (`draw.path` etc.) already rasterize arbitrary
+  paths **on Metal** — gallery_live proves it live (Rive ops replay
+  through canvas verbs, pixels correct).
+- The gap is **koru-native GPU coverage**: the SDF `fillShape` path has
+  no polygon answer — it handles signed-distance shapes, not bezier
+  outlines. Rive's OpRec stream (kinds 0–10: move/line/quad/cubic/close,
+  pushmat/popmat, draw, clipPush/clipPop) needs a GPU polygon path on
+  backends that lack the canvas-verb route.
+- i915 thin-subset (`gpu-render-path.md` spike): BCS blitter does 2D
+  copies/fills today; polygon fill needs either tessellated triangles
+  or a coverage-capable pipe — the spike's open question.
 
-- `0` pathBegin, `1` move, `2` line, `3` quad, `4` cubic, `5` close —
-  arbitrary cubic beziers in local coords
-- `6` pushmat (3×2 affine a,b,c,d,e,g), `7` popmat
-- `8` draw (style fill/stroke, color u32, thick, join, cap, eo fill-rule)
-- `9`/`10` clipPush/clipPop (clip = path geometry, not just rect)
+## Per-backend coverage matrix
 
-Corpus measurement (TIER1_DEEP, 406 fixtures): the stream-equal set
-proves our decoder emits the right *commands*; what no Koru code does
-today is turn them into pixels without `libs/canvas` (CoreGraphics
-backend). Phase 4 = a rasterizer that consumes this exact stream.
+| backend | polygon path today | phase-4 work |
+|---|---|---|
+| Metal via `libs/canvas` | DONE — draw.path verbs, live-verified | none (reference) |
+| koru-native GPU (non-canvas) | MISSING — SDF fillShape only | tessellate OpRec paths → triangle mesh → GPU draw; or Metal-layer path reuse |
+| i915 thin-subset | MISSING — BCS 2D only | tessellated triangle soup → BCS/RCS draw calls; scoped by gpu-render-path spike |
+| CPU reference | n/a — deliberately out of scope | none |
 
-## A. koru-native rasterizer — path coverage
+## What "coverage" must handle (from the ops stream)
 
-### Input contract (fixed, already gate-verified)
-OpRec stream per frame per artboard. No new decoder work needed.
+1. **Flattening** — cubic/quad → polyline at GPU-appropriate tolerance
+   (can happen on CPU cheaply; it's math, not rasterization).
+2. **Tessellation** — flattened polygon → triangle soup (ear-clipping or
+   monotone partition; fill-rule even-odd vs nonzero already on OpRec).
+3. **Stroke expansion** — thick/join/cap → outline geometry before
+   tessellation (same math regardless of backend).
+4. **Transforms** — pushmat 3×2 affine; apply in vertex shader or bake
+   into tessellated coords.
+5. **Clips** — clipPush/clipPop as scissor rects where possible, stencil
+   or mask texture for arbitrary path clips.
+6. **Paint** — solid fills v1 (corpus stream-equal set is overwhelmingly
+   solid); gradients/image paints remain named gaps.
 
-### Required coverage, ordered by corpus frequency
+## Verification (Tier-2, per regime)
 
-1. **Scanline polygon fill** — flatten cubics/quads to line segments
-   (de Casteljau subdivision to tolerance), even-odd + nonzero winding
-   (eo flag already on OpRec), 4×4 or 8×8 ordered-grid AA.
-   *This is the irreducible core — every fixture needs it.*
-2. **Stroke expansion** — thick/join/cap (miter/round/bevel) → outline
-   path → fill. Rive stroke joins map to canvas joins; corpus shows
-   join=999 defaults (miter) dominate.
-3. **Affine transforms** — pushmat 3×2 compose; apply to flattened
-   geometry or transform rasterizer space.
-4. **Clip paths** — clipPush/clipPop as stencil/mask layer (offscreen
-   coverage buffer AND-ed into frame) or scanline clip-list.
-5. **Paint** — solid color only for v1 (corpus stream-equal set is
-   overwhelmingly solid fills; gradients/image paints are named gaps).
-
-### Explicitly out of scope (named gaps, not silent)
-- Gradients, image paints, feathered shadows — separate commissions.
-- Text — glyph paths arrive as ordinary path ops already (textDrawPath
-  emits V-streams), so text *renders* once path fill exists; shaping
-  stays in the decoder layer.
-- Blend modes beyond source-over (blend=3 normal dominates corpus).
-
-### Verification path (already built)
-- Tier-1 unchanged: ops stream is the input contract — rasterizer must
-  not alter it.
-- Tier-2 pixels: render OpRec stream → RGBA buffer in Koru, compare
-  against `oracle/render_browser.mjs` PNGs (already committed pairs in
-  `oracle/images/`). RMSE/diff-pixel thresholds exist from the
-  side-by-side work.
-- Performance gate: 500×500 frame rasterize < ~8ms single-thread on
-  M-series (measurement, not aspiration — set by canvas parity needs).
-
-### Where it lives
-`rive/index.kz` grows a `raster` section or a sibling `rive/raster.kz`;
-output = `*Pixels<rasterized!>` custody type feeding `libs/canvas`
-blit or headless compare. Koru-native means: no CoreGraphics calls in
-the fill path — CG only at the final present/blit edge if at all.
-
-### Honest unknowns
-- Bezier flattening tolerance vs golden pixel parity — needs empirical
-  tuning against Tier-2 pairs; too coarse = visible facets on curves.
-- AA kernel choice (ordered grid vs supersample) — pick by measuring
-  both against browser reference on the 20 stream-equal fixtures.
-- Stroke join math (miter limit behavior) — Rive uses Skia semantics;
-  corpus fixtures mostly exercise round joins, miter-limit edge cases
-  rare.
-
-## B. i915 thin-subset
-
-Already commissioned separately (`gpu-render-path.md`): price full
-pipeline vs thin subset on T590/HD620. koru-rive's stake is narrower:
-
-- Rive's draw model is 2D affine + solid fills + alpha — squarely in
-  "Lantern-sufficient GPU" territory IF the thin subset covers:
-  transformed textured/solid quads, alpha blend, scissor/clip rects.
-- Path fill is the problem: i915 has no fragment-shader-free polygon
-  rasterizer in the thin model — either tessellate to triangles on CPU
-  (rasterizer §A emits triangle soup instead of scanlines) or the thin
-  subset needs a coverage/shader path → scope collision with the
-  gpu-render-path spike's open question.
-- **Dependency**: i915 work should consume the rasterizer's flattened
-  geometry, not re-derive it. Order: §A first (correctness), i915 second
-  (port the triangle-soup output to BCS/RCS).
+- Input contract unchanged: OpRec stream (61 stream-equal sections are
+  the gate's proof the commands are right).
+- Pixel oracle: render same OpRec stream through each backend → compare
+  vs `oracle/render_browser.mjs` reference PNGs (`oracle/images/` pairs
+  committed). Backend parity = pixel-diff within threshold, not prose.
+- Metal-via-canvas is the reference implementation — koru-native and
+  i915 outputs must match it within AA tolerance.
 
 ## Recommended order
 
-1. §A.1 scanline fill + AA (unblocks everything, pure Koru, Tier-2
-   verifiable today)
-2. §A.2 stroke expansion (corpus stroke fixtures already stream-equal)
-3. §A.3 transforms + §A.4 clips (mostly plumbing — ops already carry them)
-4. Tier-2 pixel gate across the 61 stream-equal sections
-5. §B i915 — gated on gpu-render-path.md spike outcome; consumes §A
-   triangle output
+1. **Tessellation core** (backend-agnostic): OpRec path → flattened
+   polygon → triangle soup with fill-rule. Pure geometry, Tier-1-adjacent
+   (can be unit-verified against canvas output).
+2. **Stroke expansion** — corpus stroke fixtures already stream-equal.
+3. **koru-native GPU path** — consume triangle soup on the native backend;
+   Tier-2 verify vs canvas reference on stream-equal fixtures.
+4. **i915** — gated on `gpu-render-path.md` spike; consumes the same
+   triangle soup → BCS/RCS.
 
 ## What this is NOT
 
-- Not a claim the rasterizer exists — it doesn't; this is scope.
-- Not replacing `libs/canvas` — canvas stays the present/blit surface;
-  the rasterizer is the fill engine underneath or beside it.
-- Not phase-4-complete when scanline fill lands — strokes/clips/AA all
-  required before "path coverage" is honest.
+- Not a CPU rasterizer — struck entirely. Flattening/tessellation math on
+  CPU is fine; pixel coverage happens on GPU.
+- Not decoder work — ops stream is done and gate-verified.
+- Not claiming coverage exists — Metal-via-canvas works today; native +
+  i915 polygon paths do not. This doc is scope, not status.
