@@ -2798,12 +2798,13 @@ fn artboardContentBounds(r: *const Riv, abIdx: usize) ArtboardSize {
         if (owningArtboard(r, ti) != abIdx) continue;
         // TextValueRun child -> text + styleId
         var text: []const u8 = ""; var styleId: i64 = -1;
-        for (r.objects) |run| {
+        for (r.objects, 0..) |run, ri| {
             if (run.type_key == 135 and run.parent_obj == @as(i64, @intCast(ti))) {
                 for (run.props) |p| {
                     if (p.key == 268 and p.value == .bytes) text = p.value.bytes;
                     if (p.key == 272) styleId = switch (p.value) { .uint => |u| @intCast(u), else => -1 };
                 }
+                if (boundRunText(r, ri, std.heap.page_allocator)) |bt| text = bt;
             }
         }
         var fontSize: f32 = 0; var styleIdx2: usize = 0;
@@ -4047,8 +4048,15 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 const p = lc.parent_obj;
                 if (p >= 0 and @as(usize, @intCast(p)) < r.objects.len) {
                     const po = &r.objects[@intCast(p)];
-                    const pw = propF(po.props, 7, 0);
-                    const ph = propF(po.props, 8, 0);
+                    var pw = propF(po.props, 7, 0);
+                    var ph = propF(po.props, 8, 0);
+                    // An intrinsically-sized artboard's layout box is its
+                    // content bounds + padding, not the declared w/h —
+                    // Item's green row must hug the "0" glyph, not fill 91x52.
+                    if (po.type_key == 1) {
+                        const es = artboardIntrinsicSize(r, @intCast(p), pw, ph);
+                        pw = es.w; ph = es.h;
+                    }
                     if (wu == 3 and pw > 0) lw = pw;
                     if (hu == 3 and ph > 0) lh = ph;
                 }

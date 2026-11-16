@@ -246,3 +246,13 @@ committed producer-side (`ff18735`).
   y107-327) — layout-solving gap, not binding. render_browser.mjs gained
   RIVE_VM env for binding a named ViewModel (ItemVM needed; default
   byIndex(0)=StarItemVM binds nothing for Item — bound==unbound bytes).
+
+- Layout fill-parent fix (t42 cont.): Layout-box bg pass now resolves
+  units==3 against artboardIntrinsicSize when parent is the artboard —
+  Item's style obj87 intrinsicallySized=true makes its layout box
+  content-bounds+padding (~27x40pt), not declared 91x52. Also
+  artboardContentBounds now measures boundRunText (was literal 'text',
+  4 chars -> box 2x too wide). Result: ours content bbox (0,107)-(157,327)
+  vs ref (0,107)-(156,327) — ink-bbox PASS exact. Residual: ink-mass
+  2.84x + coverage-gap 49% — likely cornerRadiusTL=8 rounded corners
+  (obj85) we draw square + text edge detail. Named, smaller than before.
