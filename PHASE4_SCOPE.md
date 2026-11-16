@@ -647,3 +647,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (pk=634) paths have no pixel oracle. Not built; named gap until an
   input-injection oracle exists. cl2's animation is autoplay so t10
   gate is unaffected.
+
+- koru-native arm link attempt: --build=koru-native flag works
+  (part gates exclude macos parts correctly) BUT render drivers
+  fail frontend: libs/canvas:* tors are macos-part-gated —
+  canvas surface absent on koru-native. The arm needs either
+  (a) a canvas-free driver (decode+ops only, no raster) to
+  reach link stage, or (b) a koru-native canvas/ CmdView
+  surface (oshun/koruos ui_probe path exists for that).
+  Undefined-symbol census NOT yet reachable — blocked at
+  frontend, not linker.
