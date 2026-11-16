@@ -293,3 +293,17 @@ Flat stream, parentId=-1 — linkage is by ID props, not parenting:
   instance graph for this fixture (state names, animationIds, mixes)
   and compare the played animation's keyframe timeline vs my
   keyframedValue(363) assumption.
+
+## follow_path_shapes SM graph (decoded)
+
+StateMachine[217] -> StateMachineLayer[218] -> EntryState[219],
+StateTransition[220] (stateToId=3), ExitState[221], AnyState[222],
+AnimationState[223] (animationId=0 -> LinearAnimation obj[190]).
+SM DOES play our LinearAnimation — selection confirmed. Divergence
+is therefore in TIME BASE or INTERPOLATION, not selection:
+- interpType=1 semantics unresolved (linear vs eased — check
+  interpolating_keyframe.cpp effectiveInterpolator +
+  keyframe_interpolator.hpp)
+- fps prop absent -> default; duration default 60 frames; loop=1
+- candidate: cubic ease interpolator on the keyframes, or
+  advanceAndApply time != frame index * (1/fps)
