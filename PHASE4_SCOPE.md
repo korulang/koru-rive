@@ -542,3 +542,13 @@ committed producer-side (`ff18735`).
   draw.image at Image node's world rect. Bounded but real
   canvas+emit work — candidate next feature if image fixtures
   matter (cin + iba + lwti-class all gated on it).
+
+- image rect semantics: originX/Y default = 0.0 (component_origin
+  m_OriginX=0.0f) — center-clip theory FALSIFIED for default.
+  cin image obj4 has only parentId+assetId props -> origin 0,
+  scale 1, intrinsic 15x15 -> ours (0,0,14,14) is spec-correct
+  per rive-cpp Image::draw. Ref (0,0,7,7) ~half-size unexplained
+  — remaining suspects: browser-side image decode size, PNG
+  display-density handling, or hidden layout-fit prop. Next
+  probe: compare actual pixel colors ours-vs-ref in the 8x8
+  region (scale vs alpha-vs-position bisect).
