@@ -497,3 +497,12 @@ committed producer-side (`ff18735`).
   draws. Reclassifies lwti/hff/deam/iba FAILs: they were this
   defect + image-decode gap, not pure oracle-limitations.
   Fix: gate fill emission on parent being a renderable shape.
+
+- bg-paint arm located (~4300): paints ANY type-20 Fill with
+  parent_obj==artboard as full-frame solid — over-reaches: iba's
+  Fill (props=1, only SolidColor link, no isVisible) is likely
+  orphaned/image-consumed data browser ignores. Artboard-child
+  Fill != guaranteed background — need rive-cpp semantics for
+  when it actually renders (or whether artboard bg is a color
+  prop, not a Fill object). Fix candidate: restrict arm or
+  verify against rive-cpp Artboard::background.
