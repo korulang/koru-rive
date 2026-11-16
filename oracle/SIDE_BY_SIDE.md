@@ -33,8 +33,8 @@ Frame mapping (STATE.md §8): clfp `frame = 2*(tick-1)`; dsm/hw `frame = tick-1`
 |---|---|---|
 | 1 | 0 | ![dsm t1](images/pair_dsm_t1.png) |
 
-- <check> ref required `BIND_VM=1` (ViewModel-bound rows; unbound = blank) → <verdict> ours renders file-items unbound — the named ViewModel-binding gap (§6.1); row content/count will differ by design until binding lands.
-- <check> dsm SM name → <verdict> "State Machine 1" not found in file (console error, content still rendered via binding).
+- <check> ref SM name → <verdict> FIXED — the file's SM is "Main Machine" (not "State Machine 1"); earlier render was unbound+wrong-SM → transparent right half. Correct invocation: `BIND_VM=1` + `sm="Main Machine"`.
+- <check> coverage parity → <verdict> DIVERGENT — ref nonzero-alpha 25,000 px bbox x[0,249] y[0,99] (left column of bound rows); ours 40,000 px bbox x[0,499] y[0,79] (full-width band). The named ViewModel-binding + layout gaps (§6.1/§6.2) — pair is UNVERIFIED, not a pass.
 
 ## Named live-surface defect (banked, undiagnosed)
 
