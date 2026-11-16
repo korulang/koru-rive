@@ -2719,7 +2719,34 @@ fn glyfGlyph(b: []const u8, gid: u32, ends: *std.ArrayList(u32), alloc: std.mem.
     if (g1 <= g0 or g0 + 10 > b.len) return out.items;
     // numberOfContours is i16 — read as signed
     const ncs: i32 = @as(i16, @bitCast(@as(u16, @intCast(be16(b, g0)))));
-    if (ncs < 0) return out.items; // composite: TODO components
+    if (ncs < 0) {
+        // composite: components until MORE_COMPONENTS(0x20) clears
+        var cp = g0 + 10;
+        var depth_guard: usize = 0;
+        while (depth_guard < 16) : (depth_guard += 1) {
+            if (cp + 4 > b.len) break;
+            const flags = be16(b, cp); cp += 2;
+            const cgid = be16(b, cp); cp += 2;
+            var dx: i32 = 0; var dy: i32 = 0;
+            var sx: f32 = 1; var sy: f32 = 1;
+            if (flags & 1 != 0) { dx = beS16(b, cp); dy = beS16(b, cp + 2); cp += 4; }
+            else { dx = @as(i32, @intCast(@as(i8, @bitCast(b[cp])))); dy = @as(i32, @intCast(@as(i8, @bitCast(b[cp + 1])))); cp += 2; }
+            _ = flags & 2; // ARGS_ARE_XY_VALUES assumed (point-match TODO)
+            if (flags & 8 != 0) { const sc = beS16(b, cp); cp += 2; sx = @as(f32, @floatFromInt(sc)) / 16384; sy = sx; }
+            else if (flags & 64 != 0) { sx = @as(f32, @floatFromInt(beS16(b, cp))) / 16384; sy = @as(f32, @floatFromInt(beS16(b, cp + 2))) / 16384; cp += 4; }
+            else if (flags & 128 != 0) { cp += 8; } // 2x2 TODO
+            var cends = std.ArrayList(u32).empty;
+            const cpts = glyfGlyph(b, cgid, &cends, alloc);
+            const base = out.items.len;
+            for (cpts) |pt| {
+                out.append(alloc, .{ .x = @as(i32, @intFromFloat(@as(f32, @floatFromInt(pt.x)) * sx)) + dx, .y = @as(i32, @intFromFloat(@as(f32, @floatFromInt(pt.y)) * sy)) + dy, .on = pt.on }) catch {};
+            }
+            for (cends.items) |ce| ends.append(alloc, @intCast(base + @as(usize, ce) + 1)) catch {};
+            cends.deinit(alloc);
+            if (flags & 32 == 0) break; // !MORE_COMPONENTS
+        }
+        return out.items;
+    }
     var ei: usize = 0;
     while (ei < @as(usize, @intCast(ncs))) : (ei += 1) {
         ends.append(alloc, be16(b, g0 + 10 + 2 * ei)) catch {};
@@ -2845,6 +2872,10 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         const gid = cmapGlyph(font, ch);
         var ends = std.ArrayList(u32).empty; defer ends.deinit(alloc);
         const gp = glyfGlyph(font, gid, &ends, alloc);
+        var on_cnt: usize = 0;
+        for (gp) |q| { if (q.on) on_cnt += 1; }
+        const vb = verbs.items.len;
+        std.debug.print("glyph {c} gid={d} pts={d} on={d} ends={d} vb={d} e0={d} e1={d}\n", .{ch, gid, gp.len, on_cnt, ends.items.len, vb, if(ends.items.len>0) ends.items[0] else 9999, if(ends.items.len>1) ends.items[1] else 9999});
         if (gp.len == 0) { pen += hmtxAdvance(font, gid) * scale; continue; }
         // contour-split + TTF implied-midpoint + quad->cubic elevation
         var cstart: usize = 0;
@@ -2909,11 +2940,11 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
                     }
                     cur = ni;
                 }
-                if (cur == m0) break;
             }
             cstart = cend;
         }
         verbs.append(alloc, 5) catch {};
+        std.debug.print("  -> verbs +{d}\n", .{verbs.items.len - vb});
         pen += hmtxAdvance(font, gid) * scale;
     }
     verbs.append(alloc, 5) catch {};
