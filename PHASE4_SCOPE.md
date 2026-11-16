@@ -460,3 +460,11 @@ committed producer-side (`ff18735`).
   visible at edges (mesh doesn't cover full frame) — separate
   coverage question, not AA. Honest: AA landed, no measurable
   delta on this fixture; degenerate guard correct regardless.
+
+- magenta-edge residual DIAGNOSED: exactly 10 px at diagonal
+  corners (0,0)-(4,4) and (495,495)-(499,499), color
+  (152,25,152)=magenta/dark 50/50 blend. A/B proved pre-AA
+  (identical histograms) -> tessellation micro-gap: bg quad's two
+  tris don't share bit-identical diagonal endpoints -> hairline
+  wedge at tips lets clear bleed. Cosmetic (10px/250k) but real;
+  fix = snap shared-edge verts or weld duplicates in meshops.
