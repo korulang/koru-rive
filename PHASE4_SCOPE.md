@@ -374,3 +374,14 @@ committed producer-side (`ff18735`).
   miss child-node transforms -> mask shifted ~-150px left -> ink=0.
   Main draw path handles this somehow (passes elsewhere) — diff the
   transform composition for clip-source vs draw-source gathers.
+
+- clip residual isolated: ops now correct-looking — ellipse clip
+  path (cubic loop, r=85.8) + source world translate(209.7,231.8)
+  -> device ellipse x[124,295] y[146,318]; draw rect -> x[35,483]
+  y[17,336]. Intersection NON-EMPTY -> ink should appear. ink=0
+  means clip.push.path mask rasterization fails on this input:
+  suspects = cubic-path flattening in mask rasterizer, or AND
+  with the artboard frame clip (500x500 path clip also active).
+  NOTE: ellipse child Node.x offsets STILL absent from clip verts
+  (+/-85.8 centered at origin, not +150/-89 halves) — Ellipse
+  type_key 4 may not be isNodeType -> pathSpaceMat identity.
