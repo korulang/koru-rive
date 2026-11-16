@@ -394,3 +394,13 @@ committed producer-side (`ff18735`).
   yield translate(150.1,...) since isNodeType(4)=true and prop13
   present. Next: count PVs per child / check if synthParametric
   early-returns on pathFlags=1 for obj45.
+
+- clip mask internals: clip.push.path stores per-entry ctm and
+  rasterizes each entry's mask with ITS OWN pctm (index.macos.kz
+  ~3779) into a union-bounds atlas ANDed across active entries.
+  Draw-time lookup (652-654) samples clip_path[clip_depth-1] —
+  TOP entry only. clip_tests has TWO path clips active (frame
+  500x500 + ellipse) — if top-entry sampling is correct that's
+  the ellipse mask; ink=0 means ellipse mask itself rasterized
+  empty OR clip_depth ordering off. Next: verify which entry is
+  top at draw time + whether ellipse mask atlas region is nonzero.
