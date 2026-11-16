@@ -552,3 +552,13 @@ committed producer-side (`ff18735`).
   display-density handling, or hidden layout-fit prop. Next
   probe: compare actual pixel colors ours-vs-ref in the 8x8
   region (scale vs alpha-vs-position bisect).
+
+- cin pixel bisect: REF renders BLACK silhouette ([0,0,0]
+  across region) — PNG RGB~0 + alpha shape (mask-style image).
+  OURS renders gray alpha-blends ([32,32,32],[223,223,223]) —
+  semi-transparent black texels blending on white. Decode
+  pipeline works; residual = alpha fidelity: either (a) PNG
+  texels genuinely semi-transparent and browser composites
+  differently, or (b) our premultiply->straighten->blend chain
+  loses alpha vs browser's. Next: dump PNG texel (0,0) alpha +
+  compare against rendered value — decides decode-vs-composite.
