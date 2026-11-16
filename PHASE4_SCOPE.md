@@ -506,3 +506,12 @@ committed producer-side (`ff18735`).
   when it actually renders (or whether artboard bg is a color
   prop, not a Fill object). Fix candidate: restrict arm or
   verify against rive-cpp Artboard::background.
+
+- bg-arm removal BLOCKED by compiler: deleting the two
+  artboard-child-Fill arms (collectDraws ~4300 +
+  collectArtboardOps ~4417) triggers KORU112 in UNRELATED
+  meshops proc ('k','m','ring' bare module names, index.kz:5372)
+  — verified stash/compile/pop A/B. Per koru rules this is a
+  compiler gap (removing code shouldn't break an unrelated
+  proc's name resolution); belongs in /Users/larsde/src/koru.
+  Arm stays until compiler fix or alternative gate shape.
