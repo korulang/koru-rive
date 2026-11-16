@@ -413,3 +413,15 @@ branch for CURVED paths — eval_cubic tangent vs my cubicTan, or
 angleB wrap semantics (C++ fmod vs my wrapPi on angleB+diff).
 NEXT: print pm.tan + final cB.rot per constraint vs golden
 transform decompose — isolates tangent-vs-compose.
+
+## cB.rot diagnostic (frame 30)
+
+node102=3.024 (golden decompose ~3.030, delta 0.006)
+node2=1.571, node22/42/62=-3.142 (pi-wrap equivalent),
+node82=2.658. Positions oracle-exact. Residual rotation delta
+~0.006 rad on cubic paths -> tangent eval difference: eval_cubic
+uses ENDPOINT DIFFERENCING at t==0/1 (contour_measure.cpp:76+)
+vs my cubicTan derivative everywhere; at path ends tangent can
+differ. Also possible: angleB fmod vs wrapPi edge at +-pi.
+NEXT: port eval_cubic's t==0/1 differencing into cubicTan call
+site (posTan needs both pos+tan from same eval).
