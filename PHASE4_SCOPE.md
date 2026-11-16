@@ -147,3 +147,12 @@ committed producer-side (`ff18735`).
   to tri size, painting partial-alpha haze. REVERTED (oshun tree
   clean). Proper AA needs per-tri edge varyings or supersampled
   offscreen pass — named, not attempted.
+
+- SM binding for clfp Item (ab:74): stream-cluster membership —
+  SMs are flat (parent=-1); an SM belongs to the artboard whose
+  object-index range contains it. clfp layout: Main@18, Item@74,
+  Artboard@114; SMs at 67 (Main's cluster), 98+121 (Item's cluster).
+  Item prop236 defaultStateMachineId=0 -> first SM in cluster =
+  obj 98 ("State Machine 1", Hover bool input + Row listeners).
+  ops() has NO sm parameter — selection is implicit via cluster;
+  eval gap = entering AnimationStates/transitions/inputs at frame.
