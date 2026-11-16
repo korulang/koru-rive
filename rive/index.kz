@@ -2689,6 +2689,72 @@ fn locaOff(b: []const u8, gid: u32, shortFmt: bool) u32 {
     return be32(b, lc.off + 4 * gid);
 }
 
+
+// glyf simple-glyph contour extraction -> point list (x,y on-curve
+// or quad control). Returns points in font units (y up).
+const GlyfPt = struct { x: i32, y: i32, on: bool };
+
+fn glyfGlyph(b: []const u8, gid: u32) []GlyfPt {
+    const alloc = std.heap.page_allocator;
+    var out = std.ArrayList(GlyfPt).empty;
+    const hd = sfntFind(b, tag4("head")) orelse return out.items;
+    const shortFmt = be16(b, hd.off + 50) == 0;
+    const go = locaOff(b, gid, shortFmt);
+    const gn = locaOff(b, gid + 1, shortFmt);
+    const gl = sfntFind(b, tag4("glyf")) orelse return out.items;
+    const g0 = gl.off + go;
+    const g1 = gl.off + gn;
+    if (g1 <= g0 or g0 + 10 > b.len) return out.items;
+    // numberOfContours is i16 — read as signed
+    const ncs: i32 = @as(i16, @bitCast(@as(u16, be16(b, g0 + 10)))) ;
+    if (ncs < 0) return out.items; // composite: TODO components
+    const npts = be16(b, g0 + 10 + 2 * ncs - 2) + 1; // last endPt
+    var p = g0 + 10 + 2 * ncs;
+    const instrLen = be16(b, p); p += 2 + instrLen;
+    // flags
+    var flags = std.ArrayList(u8).empty;
+    defer flags.deinit(alloc);
+    while (flags.items.len < npts) {
+        const f = b[p]; p += 1;
+        flags.append(alloc, f) catch {};
+        if (f & 8 != 0) {
+            const rep = b[p]; p += 1;
+            var k: usize = 0;
+            while (k < rep) : (k += 1) flags.append(alloc, f) catch {};
+        }
+    }
+    // x coords
+    var xs = std.ArrayList(i32).empty;
+    defer xs.deinit(alloc);
+    var x: i32 = 0;
+    for (flags.items) |f| {
+        if (f & 2 != 0) {
+            const d = b[p]; p += 1;
+            x += if (f & 16 != 0) @as(i32, d) else -@as(i32, d);
+        } else if (f & 16 == 0) {
+            x += @as(i32, @bitCast(@as(i16, @bitCast(be16(b, p))))); p += 2;
+        }
+        xs.append(alloc, x) catch {};
+    }
+    // y coords
+    var ys = std.ArrayList(i32).empty;
+    defer ys.deinit(alloc);
+    var y: i32 = 0;
+    for (flags.items) |f| {
+        if (f & 4 != 0) {
+            const d = b[p]; p += 1;
+            y += if (f & 32 != 0) @as(i32, d) else -@as(i32, d);
+        } else if (f & 32 == 0) {
+            y += @as(i32, @bitCast(@as(i16, @bitCast(be16(b, p))))); p += 2;
+        }
+        ys.append(alloc, y) catch {};
+    }
+    for (xs.items, ys.items, flags.items) |px, py, f| {
+        out.append(alloc, .{ .x = px, .y = py, .on = f & 1 != 0 }) catch {};
+    }
+    return out.items;
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
