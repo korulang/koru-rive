@@ -2505,7 +2505,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             }
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
-            const thick = if (isStroke) propF(c.props, 47, 0) else 0;
+            const thick = if (isStroke) propF(c.props, 47, 1) else 0;
             const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const blend = propU(c.props, 747, 3);
@@ -2561,7 +2561,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             }
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
-            const thick = if (isStroke) propF(c.props, 47, 0) else 0;
+            const thick = if (isStroke) propF(c.props, 47, 1) else 0;
             const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const blend = propU(c.props, 747, 3);
