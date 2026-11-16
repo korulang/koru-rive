@@ -163,3 +163,9 @@ committed producer-side (`ff18735`).
   CONTENT region — component-instance children our ops stream doesn't
   expand for this artboard. Gap = component-content expansion inside
   Item, not bg alpha, not SM eval, not fit.
+
+- clfp Item cluster dump (objs 74-113): content = LayoutComponents +
+  Text obj 77 (TextValueRun 82, style paints/axes, SolidColors,
+  Fills) + animations + SM 98. ZERO NestedArtboard/artboard-instance
+  objects — the missing content is TEXT (glyph layout/emission),
+  not component-instance expansion. Revised gap attribution.
