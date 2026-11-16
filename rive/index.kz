@@ -2616,6 +2616,79 @@ fn dumpFont(r: *Riv) void {
     }
 }
 
+
+// ---- SFNT / TrueType glyf engine ------------------------------------
+// Table directory walk + cmap fmt4 + glyf simple-glyph extraction.
+// Big-endian SFNT; offsets verified against rive_font.bin dump.
+
+const SfntTable = struct { tag: u32, off: u32, len: u32 };
+
+fn be16(b: []const u8, o: usize) u32 { return (@as(u32, b[o]) << 8) | b[o + 1]; }
+fn be32(b: []const u8, o: usize) u32 {
+    return (@as(u32, b[o]) << 24) | (@as(u32, b[o + 1]) << 16) | (@as(u32, b[o + 2]) << 8) | b[o + 3];
+}
+
+fn sfntFind(b: []const u8, want: u32) ?SfntTable {
+    if (b.len < 12) return null;
+    const n = be16(b, 4);
+    var i: usize = 0;
+    while (i < n) : (i += 1) {
+        const o = 12 + i * 16;
+        if (o + 16 > b.len) return null;
+        const t = be32(b, o);
+        if (t == want) return .{ .tag = t, .off = be32(b, o + 8), .len = be32(b, o + 12) };
+    }
+    return null;
+}
+
+fn tag4(s: []const u8) u32 {
+    return (@as(u32, s[0]) << 24) | (@as(u32, s[1]) << 16) | (@as(u32, s[2]) << 8) | s[3];
+}
+
+// cmap format-4: char code -> glyph index. Picks first fmt4 subtable.
+fn cmapGlyph(b: []const u8, cp: u32) u32 {
+    const cm = sfntFind(b, tag4("cmap")) orelse return 0;
+    const base = cm.off;
+    if (base + 4 > b.len) return 0;
+    const nsub = be16(b, base + 2);
+    var best: usize = 0;
+    var i: usize = 0;
+    while (i < nsub) : (i += 1) {
+        const ro = base + 4 + i * 8;
+        const pid = be16(b, ro); _ = be16(b, ro + 2);
+        const off = be32(b, ro + 4);
+        const fmt = be16(b, base + off);
+        if (fmt == 4 and (pid == 3 or pid == 0)) { best = base + off; break; }
+    }
+    if (best == 0) return 0;
+    const segCount = be16(b, best + 6) / 2;
+    const endO = best + 14;
+    const startO = endO + 2 * segCount + 2;
+    const deltaO = startO + 2 * segCount;
+    const roO = deltaO + 2 * segCount;
+    var s: usize = 0;
+    while (s < segCount) : (s += 1) {
+        const end = be16(b, endO + 2 * s);
+        const start = be16(b, startO + 2 * s);
+        if (cp < start or cp > end) continue;
+        const delta = be16(b, deltaO + 2 * s);
+        const ro = be16(b, roO + 2 * s);
+        if (ro == 0) return (cp + delta) & 0xFFFF;
+        const go = roO + 2 * s + ro + 2 * (cp - start);
+        const g = be16(b, go);
+        if (g == 0) return 0;
+        return (g + delta) & 0xFFFF;
+    }
+    return 0;
+}
+
+// loca offsets (short or long per head.indexToLocFormat)
+fn locaOff(b: []const u8, gid: u32, shortFmt: bool) u32 {
+    const lc = sfntFind(b, tag4("loca")) orelse return 0;
+    if (shortFmt) return be16(b, lc.off + 2 * gid) * 2;
+    return be32(b, lc.off + 4 * gid);
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }

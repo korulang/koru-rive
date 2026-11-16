@@ -541,3 +541,16 @@ maxp->numGlyphs, cmap format-4 subtable -> char->glyphID,
 loca+glyf -> contours (simple=flags+coords, composite=components),
 hmtx->advance, hhea->ascender/lineGap for baseline.
 Quad->cubic degree elevation: C1=P0+2/3(Q-P0), C2=P3+2/3(Q-P3).
+
+## cmap verified against live font
+
+"Hello World" glyph IDs (python cross-check of cmapGlyph):
+H=43 e=72 l=79 o=82 sp=3 W=58 r=85 d=71. head: unitsPerEm=2048,
+indexToLocFormat=0 (SHORT loca = u16*2 offsets). maxp numGlyphs=251.
+cmapGlyph() Koru port mirrors this exactly — fmt4 pid 0/3 subtable,
+segCount search, delta/ro branches.
+
+Remaining SFNT legs: glyfGlyph() contour extraction (simple
+glyphs: endPts+instructions+flags+coords; composite: components),
+quad->cubic elevation, hmtx advance, hhea baseline, then
+TextValueRun layout -> per-glyph drawPath emission.
