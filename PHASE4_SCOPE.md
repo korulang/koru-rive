@@ -451,3 +451,12 @@ committed producer-side (`ff18735`).
   output regressed vs 0.71-mass baseline. Suspects: AA shader cov
   OR meshops/ops changes since f4321af (t4f merge). Next:
   A/B — stash AA shader, re-render, compare ink mass.
+
+- mesh AA verdict: A/B identical histograms (AA shader = pixel
+  no-op on clfp mesh content — cov saturates on large tris).
+  Backdrop resolved: scene bg IS (49,49,49) dark gray — correct
+  oracle params --bg 49,49,49 (earlier magenta/white params were
+  wrong). Residual ink-bbox whole-frame = sparse magenta clear
+  visible at edges (mesh doesn't cover full frame) — separate
+  coverage question, not AA. Honest: AA landed, no measurable
+  delta on this fixture; degenerate guard correct regardless.
