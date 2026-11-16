@@ -3502,6 +3502,18 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
 
 ~pub tor opsdump { r: *Riv<loaded>, ab: i64, frame: i64 }
 ~proc opsdump|zig {
+    if (frame < 0) {
+        var fr: i64 = 0;
+        while (fr < 60) : (fr += 1) {
+            std.debug.print("=== frame {d} ===\n", .{fr});
+            const recs = $mod.collectOps(r, @intCast(ab), fr, std.heap.page_allocator);
+            for (recs) |rec| {
+                std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
+            }
+            std.heap.page_allocator.free(recs);
+        }
+        return;
+    }
     const recs = $mod.collectOps(r, @intCast(ab), frame, std.heap.page_allocator);
     for (recs) |rec| {
         std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
