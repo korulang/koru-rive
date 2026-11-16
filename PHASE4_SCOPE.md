@@ -431,3 +431,15 @@ committed producer-side (`ff18735`).
 - ik_over_distance_constraint: BROWSER-VACUOUS ticks 1/15/30/60 —
   IK fixtures need input-driven animation (pointer/drag), oracle
   can't inject -> oracle-limitation, gate skipped.
+
+- early_exit_reversal_blend: BROWSER-VACUOUS ticks 1/15/30/60 —
+  SM-transition fixture needs inputs the oracle doesn't fire;
+  oracle-limitation, gate skipped. Same expected for
+  early_exit_reversal_blend_elastic and other SM-input fixtures.
+- Corpus-expansion finding: viable pixel-gate set is NARROW —
+  only self-contained fixtures with default-visible static/SM
+  content render non-vacuous refs (clfp, cl1, clip_tests, hw,
+  cdo, dsm passed). Hosted/type-544/VM-data/input-driven classes
+  are all oracle-limited. Remaining PASS fixtures mostly fall in
+  the limited classes — expansion should target fixtures whose
+  content is visible at bind pose.
