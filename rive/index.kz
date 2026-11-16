@@ -2397,7 +2397,7 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
                 if (r.objects[sj].type_key == 53) smCount += 1;
             }
             std.debug.print("--- static t=0 ---\n", .{});
-            emitOps(r, 0, ai, true, false, true);
+            emitOps(r, -1, ai, true, false, true);
             var si: usize = 0;
             while (si < smCount) : (si += 1) {
                 std.debug.print("--- sm{d} ---\n", .{si});
