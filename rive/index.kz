@@ -4614,12 +4614,15 @@ fn strokeVerbs(verbs: []const u8, pts: []const V2, thick: f32, join: i64, cap: i
 // clip ops produce no events (consumer sees fewer draws, same as a
 // backend without clip.push.path).
 
+const MeshClip = struct { x0: f64, y0: f64, x1: f64, y1: f64 };
 const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, ntris: usize };
 
 ~pub tor meshops { r: *Riv<loaded>, ab: i64, frame: i64 }
 ! mdraw MeshDrawHdr
 ! mtri Tri
 ! mdone usize
+! mclip MeshClip
+! mclippop usize
 | mend usize
 
 ~proc meshops|zig {
@@ -4639,6 +4642,54 @@ const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap:
                     const ys = if (k == 0) rec.y1 else if (k == 1) rec.y2 else rec.y3;
                     pts.append(alloc, .{ .x = @floatCast(xs), .y = @floatCast(ys) }) catch {};
                 }
+            },
+            9 => {
+                // clip push: geometry sits in verbs/pts — axis-aligned
+                // rect -> scissor event; anything else is a path clip,
+                // which soup can't stencil — counted gap, skipped.
+                const conts = $mod.flattenPath(verbs.items, pts.items, 0.25, alloc);
+                var isRect = false;
+                var x0: f64 = 0; var y0: f64 = 0; var x1: f64 = 0; var y1: f64 = 0;
+                if (conts.len == 1) {
+                    const c = conts[0];
+                    if (c.len >= 4 and c.len <= 6) {
+                        var mnx: f32 = c[0].x; var mxx: f32 = c[0].x;
+                        var mny: f32 = c[0].y; var mxy: f32 = c[0].y;
+                        var axis = true;
+                        for (c) |p| {
+                            if (p.x < mnx) mnx = p.x; if (p.x > mxx) mxx = p.x;
+                            if (p.y < mny) mny = p.y; if (p.y > mxy) mxy = p.y;
+                        }
+                        // every vertex must sit on the bbox boundary
+                        for (c) |p| {
+                            const onX = @abs(p.x - mnx) < 0.01 or @abs(p.x - mxx) < 0.01;
+                            const onY = @abs(p.y - mny) < 0.01 or @abs(p.y - mxy) < 0.01;
+                            if (!(onX or onY)) { axis = false; break; }
+                            if (!(onX and onY)) {
+                                // edge point must share one coord with a corner axis —
+                                // for a true rect each vertex is a corner: both coords extreme
+                            }
+                        }
+                        // stricter: 4 distinct corners
+                        if (axis and (mxx - mnx) > 0.01 and (mxy - mny) > 0.01) {
+                            var corners: usize = 0;
+                            for (c) |p| {
+                                const cx = (@abs(p.x - mnx) < 0.01 or @abs(p.x - mxx) < 0.01);
+                                const cy = (@abs(p.y - mny) < 0.01 or @abs(p.y - mxy) < 0.01);
+                                if (cx and cy) corners += 1;
+                            }
+                            if (corners >= 4) { isRect = true; x0 = mnx; y0 = mny; x1 = mxx; y1 = mxy; }
+                        }
+                    }
+                }
+                for (conts) |cc| alloc.free(cc);
+                alloc.free(conts);
+                if (isRect) { const cv: $mod.MeshClip = .{ .x0 = x0, .y0 = y0, .x1 = x1, .y1 = y1 }; mclip(cv); }
+                verbs.clearRetainingCapacity(); pts.clearRetainingCapacity();
+            },
+            10 => {
+                mclippop(.{ .done = 0 });
+                verbs.clearRetainingCapacity(); pts.clearRetainingCapacity();
             },
             8 => {
                 if (verbs.items.len > 0) {

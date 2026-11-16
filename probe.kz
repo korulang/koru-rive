@@ -58,3 +58,11 @@
 ~pub tor mesh-end { f: *libs/canvas:Frame<frame> }
 ~mesh-end =
     |> libs/canvas:draw.mesh(f, h: mhcell[0].h, r: mccell[0].r, g: mccell[0].g, b: mccell[0].b, a: mccell[0].a)
+
+~pub tor mesh-clip { c: kr/rive:MeshClip, f: *libs/canvas:Frame<frame> }
+~mesh-clip =
+    |> libs/canvas:draw.clip.push(f, x: c.x0, y: c.y0, w: c.x1 - c.x0, h: c.y1 - c.y0)
+
+~pub tor mesh-clippop { f: *libs/canvas:Frame<frame> }
+~mesh-clippop =
+    |> libs/canvas:draw.clip.pop(f)
