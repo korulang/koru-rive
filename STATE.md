@@ -11,15 +11,19 @@ Harness status at time of writing: **`oracle/verify_harness.py` → 8/8 PASS**.
 ## 1. One-paragraph summary
 
 We have a from-scratch Rive `.riv` runtime (decode → player → flat ops stream →
-canvas replay → raster) in `rive/index.kz`, replayed by Oshun's canvas. It is
-**verified correct** against two independent Rive renderers for
-`component_list_follow_path` (6 animation ticks + the 320×320 card path) and
-`hello_world`, and for one row of `component_list_default_state_machine`. It is
-**not verified** for data-bound component-list fixtures: `component_list_1`
-renders a fraction of what Rive draws, because we do not model ViewModel list
-binding or layout solving. Three real defects were found and fixed along the
-way. Three earlier conclusions were retracted after the reference renderer
-turned out to be an outlier.
+canvas replay → raster) in `rive/index.kz`, replayed by Oshun's canvas. Tier-1
+verified: `component_list_follow_path`, `hello_world`, `component_list_default_
+state_machine` row, clfp Tier-1 14/30 stream-equal, corpus 61 stream-equal.
+Tier-2 pixel-oracle arc (this session's end-state): **9 pixel-PASS + clip_tests
+pixel-exact** (clip defect chain fixed across both repos), mesh placement-exact
+(mass 0.71 — AA honest negative, degenerate guard landed), image decode LIVE
+and spec-correct (alpha-verified vs PNG texels), systematic bg-fill divergence
+FIXED (artboard-child Fill arms removed — KORU112 resolved upstream @ koru
+439af385c). Corpus expansion exhausted: remaining fixtures classified
+oracle-limitation (hosted-404, type-544 formula tokens, VM-data-unbound,
+browser-vacuous SM-input) or feature-limitation (image decode now closed;
+formula eval/VM binding = t4f lane). `component_list_1` list-binding/layout
+solving remains the primary unverified gap.
 
 ---
 
@@ -139,8 +143,12 @@ surface is retired. Tier-1 at frame 0: transforms/styles/colors/V-coords
 match the clfp golden (draw order of the two strokes swapped — cosmetic,
 non-overlapping).
 
-**5. Other fixtures.** Only the four rows in §3 have been compared. The ~200
-other `.riv` assets in `rive-cpp/tests/unit_tests/assets` are untested.
+**5. Other fixtures.** SUPERSEDED 2026-11-17: corpus sweep + Tier-2 gates
+classified the viable set — 9 pixel-PASS + clip_tests PASS; the rest are
+oracle-limitation (hosted assets, type-544 formula tokens, unbound VM data,
+browser-vacuous state-machine inputs) or feature-limitation classes now
+mostly closed (image decode landed `koru-rive@8d1a31b`+`oshun@6190fac`). See
+`PHASE4_SCOPE.md` for the full classification log.
 
 ---
 

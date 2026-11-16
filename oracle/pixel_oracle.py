@@ -108,11 +108,16 @@ def box_blur(a, r=1):
 
 
 def coverage(rgb, bg):
-    b = float(np.mean(bg))
-    # Two-sided: ink may be darker OR brighter than the backdrop
-    # (white strokes on dark clfp bg; orange fill on white cdo bg).
-    # Normalized by the larger of the two dynamic ranges.
-    return np.clip(np.abs(rgb.mean(axis=2) - b) / max(b, 255.0 - b, 1.0), 0, 1)
+    # Two-sided AND channel-aware: ink may be darker OR brighter than
+    # the backdrop, and mean-luminance alone misses colored fills whose
+    # channels average out (dark green rows scored ~0.10 < 0.15 ink
+    # threshold -> invisible to the metric). Per-channel max diff
+    # catches any single-channel divergence; normalized by the larger
+    # of the two dynamic ranges like before.
+    bgc = np.asarray(bg, dtype=np.float64)
+    chan = np.abs(rgb.astype(np.float64) - bgc).max(axis=2)
+    b = float(np.mean(bgc))
+    return np.clip(chan / max(b, 255.0 - b, 1.0), 0, 1)
 
 
 # ---------------------------------------------------------------- evaluation

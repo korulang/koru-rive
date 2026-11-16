@@ -1486,6 +1486,28 @@ fn localMatA(r: *const Riv, o: *const RivObj, frame: i64) Mat2 {
     return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
 }
 
+// Path-child local transform composed up to (excluding) the shape —
+// path objects carry their own Node.x/y/rot/scale in shape space
+// (clip_tests ellipse halves at +150/-89). Composing nowhere was the
+// measured gap: offset path children rendered wrong everywhere.
+fn pathSpaceMat(r: *const Riv, childIdx: usize, shapeIdx: usize, frame: i64) Mat2 {
+    var acc = matIdent();
+    var cur: i64 = @intCast(childIdx);
+    var depth: usize = 0;
+    while (cur >= 0 and cur != @as(i64, @intCast(shapeIdx)) and depth < 32) : (depth += 1) {
+        const o = &r.objects[@intCast(cur)];
+        if (isNodeType(o.type_key)) acc = matMul(localMatA(r, o, frame), acc);
+        cur = o.parent_obj;
+    }
+    return acc;
+}
+
+fn xformPV(m: Mat2, pv: *PV) void {
+    pv.pos = matApply(m, pv.pos);
+    pv.in_p = matApply(m, pv.in_p);
+    pv.out_p = matApply(m, pv.out_p);
+}
+
 fn dumpTransforms(r: *Riv) void {
     const alloc = std.heap.page_allocator;
     for (r.objects, 0..) |*o, i| {
@@ -4275,19 +4297,6 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
     }
-    for (r.objects, 0..) |o, i| {
-        if (o.type_key != 1 or i != abIdx) continue;
-        for (r.objects, 0..) |*c, pi| {
-            if (c.type_key != 20 or c.parent_obj != @as(i64, @intCast(i))) continue;
-            var color: u32 = 0xFF313131;
-            for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
-            }
-            var bv = [_]u8{ 0, 1, 1, 1, 1, 5 };
-            var bp = [_]f64{ 0, 0, @floatCast(aw0), 0, @floatCast(aw0), @floatCast(ah0), 0, @floatCast(ah0) };
-            out.append(alloc, .{ .style = 1, .color = color, .thick = 0, .join = -1, .cap = -1, .eo = 0, .a = 1, .b = 0, .c = 0, .d = 1, .e = 0, .g = 0, .nv = 6, .verbs = bv[0..], .pts = bp[0..] }) catch {};
-        }
-    }
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;
@@ -4299,6 +4308,8 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
         for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
             if (propU(c.props, 128, @as(i64, -1)) >= 0) pathFR = propU(c.props, 128, 0);
+            const cm = pathSpaceMat(r, ci, si, if (frame >= 0) frame else -1);
+            const pvStart = pathVs.items.len;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(r, c, if (frame >= 0) frame else -1)) catch {};
             } else if (c.type_key == 16) {
@@ -4310,6 +4321,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             } else if (synthParametric(r, c, &pathVs, alloc, if (frame >= 0) frame else -1)) {
                 closed = true;
             }
+            for (pathVs.items[pvStart..]) |*pv| xformPV(cm, pv);
         }
         if (pathVs.items.len < 2) continue;
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
@@ -4367,6 +4379,15 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
 // kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw 9=clippush 10=clippop
 const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64 };
 fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0, .e = 0, .g = 0 }; }
+
+// Embedded image blobs for kind-11 image ops — FileAssetContents bytes
+// ride a side table; OpRec.kind==11 carries the blob index + draw rect.
+var imgBlobs: std.ArrayList([]const u8) = .empty;
+~pub tor imgblob { i: f64 } -> string
+~proc imgblob|zig {
+    const b = imgBlobs.items[@intFromFloat(i)];
+    return b;
+}
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
@@ -4400,27 +4421,6 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var cpm = op0(6); cpm.a = 1; cpm.d = 1; out.append(alloc, cpm) catch {};
         var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
         out.append(alloc, op0(7)) catch {};
-    }
-    for (r.objects, 0..) |o, i| {
-        if (o.type_key != 1 or i != abIdx) continue;
-        for (r.objects, 0..) |*c, pi| {
-            if (c.type_key != 20 or c.parent_obj != @as(i64, @intCast(i))) continue;
-            var color: u32 = 0xFF313131;
-            for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
-            }
-            out.append(alloc, op0(0)) catch {};
-            var o1 = op0(1); o1.x1 = 0; o1.y1 = 0; out.append(alloc, o1) catch {};
-            var o2 = op0(2); o2.x1 = @floatCast(aw0); o2.y1 = 0; out.append(alloc, o2) catch {};
-            var o3 = op0(2); o3.x1 = @floatCast(aw0); o3.y1 = @floatCast(ah0); out.append(alloc, o3) catch {};
-            // 4th corner — without it the backdrop fills as a right triangle
-            // along y=x, leaving half the artboard uncovered (the 45-deg split).
-            var o3b = op0(2); o3b.x1 = 0; o3b.y1 = @floatCast(ah0); out.append(alloc, o3b) catch {};
-            const o4 = op0(5); out.append(alloc, o4) catch {};
-            var pm = op0(6); pm.a = 1; pm.d = 1; out.append(alloc, pm) catch {};
-            var dr = op0(8); dr.style = 1; dr.color = color; dr.join = -1; dr.cap = -1; out.append(alloc, dr) catch {};
-            out.append(alloc, op0(7)) catch {};
-        }
     }
     // Layout-box backgrounds: a Fill parented to a LayoutComponent (409)
     // paints that box. rive renders these; without them a data-bound list is
@@ -4519,6 +4519,33 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
         }
     }
+    // Embedded images (type 100): FileAssetContents bytes -> kind-11 op;
+    // probe decodes via image.load.data + draws at the image rect.
+    for (r.objects, 0..) |im, ii| {
+        if (im.type_key != 100) continue;
+        if (owningArtboard(r, ii) != abIdx) continue;
+        var blob: ?[]const u8 = null;
+        for (r.objects, 0..) |fc, fi| {
+            if (fc.type_key != 106) continue;
+            if (blob == null) {
+                if (propByKey(fc.props, 212)) |v| {
+                    switch (v) {
+                        .bytes => |bb| blob = bb,
+                        else => {},
+                    }
+                }
+            }
+            _ = fi;
+        }
+        const bytes = blob orelse { std.debug.print("imgemit: no blob for obj {d}\n", .{ii}); continue; };
+        std.debug.print("imgemit: obj {d} blob {d}B\n", .{ ii, bytes.len });
+        imgBlobs.append(alloc, bytes) catch {};
+        const bidx: i64 = @intCast(imgBlobs.items.len - 1);
+        out.append(alloc, op0(6)) catch {};
+        var im1 = op0(11); im1.x1 = @as(f64, @floatFromInt(bidx));
+        out.append(alloc, im1) catch {};
+        out.append(alloc, op0(7)) catch {};
+    }
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;
@@ -4530,6 +4557,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
             if (propU(c.props, 128, @as(i64, -1)) >= 0) pathFR = propU(c.props, 128, 0);
+            const cm = pathSpaceMat(r, ci, si, if (frame >= 0) frame else -1);
+            const pvStart = pathVs.items.len;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(r, c, if (frame >= 0) frame else -1)) catch {};
             } else if (c.type_key == 16) {
@@ -4541,6 +4570,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             } else if (synthParametric(r, c, &pathVs, alloc, if (frame >= 0) frame else -1)) {
                 closed = true;
             }
+            for (pathVs.items[pvStart..]) |*pv| xformPV(cm, pv);
         }
         if (pathVs.items.len < 2) continue;
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
@@ -4556,30 +4586,40 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             if (srcId < 0) continue;
             var srcIdx: usize = r.objects.len;
             for (r.objects, 0..) |*so2, sj| {
-                if (so2.type_key == 3 and so2.slot == srcId) { srcIdx = sj; break; }
+                if (so2.type_key == 3 and so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
             }
             if (srcIdx == r.objects.len) continue;
-            var sVs = std.ArrayList(PV).empty;
             var sVerbs = std.ArrayList(u8).empty;
             var sPts = std.ArrayList(V2).empty;
-            defer sVs.deinit(alloc); defer sVerbs.deinit(alloc); defer sPts.deinit(alloc);
-            var sClosed = false;
+            defer sVerbs.deinit(alloc); defer sPts.deinit(alloc);
+            // Per-child contours: each path object is its own contour —
+            // buildPath emits a move verb per call, so concatenating
+            // per-child outputs yields move-separated subpaths (the
+            // joined-single-contour form broke clip.push.path masks).
             for (r.objects, 0..) |*sc, sci| {
                 if (sc.parent_obj != @as(i64, @intCast(srcIdx))) continue;
+                // pathFlags(128) bit0 = hidden contour — clip_tests
+                // clipper's second ellipse (obj45, flags=1) must not
+                // join the clip region; only the +150 half clips.
+                if ((propU(sc.props, 128, 0) & 1) != 0) continue;
+                var cVs = std.ArrayList(PV).empty;
+                defer cVs.deinit(alloc);
+                var cClosed = false;
+                const scm2 = pathSpaceMat(r, sci, srcIdx, if (frame >= 0) frame else -1);
                 if (isVertexType(sc.type_key)) {
-                    sVs.append(alloc, fileVert(r, sc, if (frame >= 0) frame else -1)) catch {};
+                    cVs.append(alloc, fileVert(r, sc, if (frame >= 0) frame else -1)) catch {};
                 } else if (sc.type_key == 16) {
                     for (r.objects) |*gv| {
                         if (gv.parent_obj == @as(i64, @intCast(sci)) and isVertexType(gv.type_key)) {
-                            sVs.append(alloc, fileVert(r, gv, if (frame >= 0) frame else -1)) catch {};
+                            cVs.append(alloc, fileVert(r, gv, if (frame >= 0) frame else -1)) catch {};
                         }
                     }
-                } else if (synthParametric(r, sc, &sVs, alloc, if (frame >= 0) frame else -1)) {
-                    sClosed = true;
+                } else if (synthParametric(r, sc, &cVs, alloc, if (frame >= 0) frame else -1)) {
+                    cClosed = true;
                 }
+                for (cVs.items) |*pv| xformPV(scm2, pv);
+                if (cVs.items.len >= 2) buildPath(cVs.items, cClosed, &sVerbs, &sPts, alloc);
             }
-            if (sVs.items.len < 2) continue;
-            buildPath(sVs.items, sClosed, &sVerbs, &sPts, alloc);
             if (sVerbs.items.len == 0) continue;
             const sw = effectiveWorld(r, srcIdx, frame);
             out.append(alloc, op0(0)) catch {};

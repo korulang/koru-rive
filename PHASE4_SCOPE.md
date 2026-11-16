@@ -390,3 +390,222 @@ committed producer-side (`ff18735`).
   ellipses (entry-state colors at frame 0). Item obj31: 100x100,
   Node.x=534 offscreen base (layout overrides), gray box obj46
   111x105 units3 + 2 white ellipses 34x34 + centered label.
+- clip residual isolated: ops now correct-looking — ellipse clip
+  path (cubic loop, r=85.8) + source world translate(209.7,231.8)
+  -> device ellipse x[124,295] y[146,318]; draw rect -> x[35,483]
+  y[17,336]. Intersection NON-EMPTY -> ink should appear. ink=0
+  means clip.push.path mask rasterization fails on this input:
+  suspects = cubic-path flattening in mask rasterizer, or AND
+  with the artboard frame clip (500x500 path clip also active).
+  NOTE: ellipse child Node.x offsets STILL absent from clip verts
+  (+/-85.8 centered at origin, not +150/-89 halves) — Ellipse
+  type_key 4 may not be isNodeType -> pathSpaceMat identity.
+
+- clip ellipse mystery narrowed: synthParametric DOES handle
+  type_key 4 (Ellipse, line ~1905). Clipper shape43 has TWO ellipse
+  children (44@+150.1, 45@-89.1, 45 has pathFlags=1) but clip path
+  emitted ONE centered ellipse r=85.8 — either only one child
+  gathered or offsets still absent. pathSpaceMat(44,43) should
+  yield translate(150.1,...) since isNodeType(4)=true and prop13
+  present. Next: count PVs per child / check if synthParametric
+  early-returns on pathFlags=1 for obj45.
+
+- clip mask internals: clip.push.path stores per-entry ctm and
+  rasterizes each entry's mask with ITS OWN pctm (index.macos.kz
+  ~3779) into a union-bounds atlas ANDed across active entries.
+  Draw-time lookup (652-654) samples clip_path[clip_depth-1] —
+  TOP entry only. clip_tests has TWO path clips active (frame
+  500x500 + ellipse) — if top-entry sampling is correct that's
+  the ellipse mask; ink=0 means ellipse mask itself rasterized
+  empty OR clip_depth ordering off. Next: verify which entry is
+  top at draw time + whether ellipse mask atlas region is nonzero.
+
+- clip ordering verified: frame clip depth0 + ellipse clip depth1
+  (top) during draws — top-entry sampling IS the ellipse mask.
+  Emit-side fully correct; ink=0 = ellipse mask rasterizes empty
+  inside clip.push.path despite correct path+ctm. Needs canvas-
+  side instrumentation (dump mask atlas coverage or clipCov
+  samples) — op-level debugging exhausted. Named: clip mask
+  rasterization defect candidate in index.macos.kz.
+
+- lwti classification: ops(ab:7) = frame clip + ONE fill
+  ff313131 over the 500x500 rect = artboard bg fill. Browser ref
+  is blank white (nonEmptyPx=250000 opaque, ink=None) because it
+  failed to import type-544 content — the fixture's real
+  text+image surface is undecoded on BOTH sides. Our bg-fill
+  emission vs browser's blank = divergent handling of the same
+  undecoded type-544 surface. Classification: oracle-limitation /
+  undecoded-type territory, NOT a renderer defect. Type 544 =
+  next decode target if this fixture matters.
+
+- component_list_rtl_row: BROWSER-VACUOUS — Host AND Row render
+  alphaMax=0 at ticks 1/10/30/60. Fixture needs VM data the oracle
+  doesn't inject; no reference obtainable -> oracle-limitation,
+  pixel gate skipped honestly (not a renderer FAIL).
+
+- ik_over_distance_constraint: BROWSER-VACUOUS ticks 1/15/30/60 —
+  IK fixtures need input-driven animation (pointer/drag), oracle
+  can't inject -> oracle-limitation, gate skipped.
+
+- early_exit_reversal_blend: BROWSER-VACUOUS ticks 1/15/30/60 —
+  SM-transition fixture needs inputs the oracle doesn't fire;
+  oracle-limitation, gate skipped. Same expected for
+  early_exit_reversal_blend_elastic and other SM-input fixtures.
+- Corpus-expansion finding: viable pixel-gate set is NARROW —
+  only self-contained fixtures with default-visible static/SM
+  content render non-vacuous refs (clfp, cl1, clip_tests, hw,
+  cdo, dsm passed). Hosted/type-544/VM-data/input-driven classes
+  are all oracle-limited. Remaining PASS fixtures mostly fall in
+  the limited classes — expansion should target fixtures whose
+  content is visible at bind pose.
+
+- mesh AA pairing RESOLVED: ref_clfp_c_t1.png was a /tmp artifact
+  (unrecoverable) BUT regenerated ref_clfp_main_t1.png has
+  IDENTICAL ink-bbox (24,89,471,452) = same capture. Pairing was
+  correct all along -> ours=(49,49,49) dominant IS our mesh
+  output regressed vs 0.71-mass baseline. Suspects: AA shader cov
+  OR meshops/ops changes since f4321af (t4f merge). Next:
+  A/B — stash AA shader, re-render, compare ink mass.
+
+- mesh AA verdict: A/B identical histograms (AA shader = pixel
+  no-op on clfp mesh content — cov saturates on large tris).
+  Backdrop resolved: scene bg IS (49,49,49) dark gray — correct
+  oracle params --bg 49,49,49 (earlier magenta/white params were
+  wrong). Residual ink-bbox whole-frame = sparse magenta clear
+  visible at edges (mesh doesn't cover full frame) — separate
+  coverage question, not AA. Honest: AA landed, no measurable
+  delta on this fixture; degenerate guard correct regardless.
+
+- magenta-edge residual DIAGNOSED: exactly 10 px at diagonal
+  corners (0,0)-(4,4) and (495,495)-(499,499), color
+  (152,25,152)=magenta/dark 50/50 blend. A/B proved pre-AA
+  (identical histograms) -> tessellation micro-gap: bg quad's two
+  tris don't share bit-identical diagonal endpoints -> hairline
+  wedge at tips lets clear bleed. Cosmetic (10px/250k) but real;
+  fix = snap shared-edge verts or weld duplicates in meshops.
+
+- CORRECTION on 892b052: the 10px seam-bleed diagnosis was measured
+  on a STALE /tmp/ours_mesh_t1.bmp (older driver state). Clean
+  A/B (pre-AA 3f1c7c2 vs current, fresh renders both): identical
+  853 nonbg / 0 edge px — no seam bleed exists in current output.
+  Seam-gap diagnosis RETRACTED as unverified; mesh AA confirmed
+  pixel no-op on this fixture; no coverage residual stands.
+
+- in_band_asset: FAIL same signature — ours (49,49,49) bg field,
+  ref blank (ink=None). PATTERN across lwti/hff/deam/iba: our
+  runtime emits an ff313131 bg fill the browser doesn't draw.
+  Either (a) systematic defect — hidden/invisible bg shape
+  reaching paint loops via a path isVisible(41) doesn't cover
+  (artboard-level bg?), or (b) browser genuinely shows nothing.
+  ONE check decides: does the .riv's bg shape carry isVisible=0
+  or is it artboard-background (different prop)? If (a) it's a
+  real renderer defect affecting EVERY bg-fill fixture — higher
+  value than more gates.
+
+- bg-fill divergence ROOT-CAUSED (iba dump): Fill obj6 +
+  SolidColor ff313131 are parented to the ARTBOARD/Image
+  (parent_obj=3, Image type100 sibling) — NOT a Shape. Our ops
+  emit them as full-frame solid rects; browser doesn't paint
+  image-attached fills as rects (image itself unrendered ->
+  blank ref). VERDICT: renderer defect — fills whose parent is
+  not a Shape (artboard/image-attached) must not emit solid-rect
+  draws. Reclassifies lwti/hff/deam/iba FAILs: they were this
+  defect + image-decode gap, not pure oracle-limitations.
+  Fix: gate fill emission on parent being a renderable shape.
+
+- bg-paint arm located (~4300): paints ANY type-20 Fill with
+  parent_obj==artboard as full-frame solid — over-reaches: iba's
+  Fill (props=1, only SolidColor link, no isVisible) is likely
+  orphaned/image-consumed data browser ignores. Artboard-child
+  Fill != guaranteed background — need rive-cpp semantics for
+  when it actually renders (or whether artboard bg is a color
+  prop, not a Fill object). Fix candidate: restrict arm or
+  verify against rive-cpp Artboard::background.
+
+- bg-arm removal BLOCKED by compiler: deleting the two
+  artboard-child-Fill arms (collectDraws ~4300 +
+  collectArtboardOps ~4417) triggers KORU112 in UNRELATED
+  meshops proc ('k','m','ring' bare module names, index.kz:5372)
+  — verified stash/compile/pop A/B. Per koru rules this is a
+  compiler gap (removing code shouldn't break an unrelated
+  proc's name resolution); belongs in /Users/larsde/src/koru.
+  Arm stays until compiler fix or alternative gate shape.
+
+- oracle-metric re-measure: dcpo/iba/lwti/deam/hff/cin re-run
+  under channel-aware coverage — NO verdict flips; refs genuinely
+  ink-free (limitation classifications stand). Metric fix helps
+  future colored-ink fixtures, not absent content.
+
+- type-544 decode recon VERDICT: 544 =
+  FormulaTokenParenthesisOpen (data_bind/converters/formula) —
+  a databind FORMULA token, not renderable content. Browser
+  rive 2.37.0 itself fails to import it -> blank refs are
+  oracle-design, not our gap. Minimal decode pointless: real
+  requirement = formula eval + VM binding (t4f lane). lwti
+  classification CONFIRMED oracle-limitation, out-of-scope for
+  renderer work.
+
+- image decode recon VERDICT: cin's image IS embedded —
+  FileAssetContents obj2 carries 245B PNG (89504e47 magic,
+  IHDR 15x15); ImageAsset 'customLibraryImageAsset' assetId=123;
+  Image type-100 assetId=0 -> resolves to the embedded bytes.
+  Canvas side: draw.image/imagetint exist but take texture
+  handles from image.load(PATH) only — NO bytes-load verb.
+  Minimal decode spec: (a) canvas verb image.load.data(bytes)
+  via CGImageSourceCreateWithData (one new verb, CG does PNG),
+  (b) emit-side: FileAssetContents.bytes -> temp/handle ->
+  draw.image at Image node's world rect. Bounded but real
+  canvas+emit work — candidate next feature if image fixtures
+  matter (cin + iba + lwti-class all gated on it).
+
+- image rect semantics: originX/Y default = 0.0 (component_origin
+  m_OriginX=0.0f) — center-clip theory FALSIFIED for default.
+  cin image obj4 has only parentId+assetId props -> origin 0,
+  scale 1, intrinsic 15x15 -> ours (0,0,14,14) is spec-correct
+  per rive-cpp Image::draw. Ref (0,0,7,7) ~half-size unexplained
+  — remaining suspects: browser-side image decode size, PNG
+  display-density handling, or hidden layout-fit prop. Next
+  probe: compare actual pixel colors ours-vs-ref in the 8x8
+  region (scale vs alpha-vs-position bisect).
+
+- cin pixel bisect: REF renders BLACK silhouette ([0,0,0]
+  across region) — PNG RGB~0 + alpha shape (mask-style image).
+  OURS renders gray alpha-blends ([32,32,32],[223,223,223]) —
+  semi-transparent black texels blending on white. Decode
+  pipeline works; residual = alpha fidelity: either (a) PNG
+  texels genuinely semi-transparent and browser composites
+  differently, or (b) our premultiply->straighten->blend chain
+  loses alpha vs browser's. Next: dump PNG texel (0,0) alpha +
+  compare against rendered value — decides decode-vs-composite.
+
+- cin alpha verdict: texel(0,0)=rgba(0,0,0,223)=87% black ->
+  correct white-composite = ~32 gray = EXACTLY ours [32,32,32].
+  OURS IS SPEC-CORRECT. Ref [0,0,0] opaque black -> browser's
+  image decode/render drops alpha for this mask-PNG (or draws
+  opaque). Ours defensible; residual = browser image-pipeline
+  semantics, not our bug. cin stays FAIL-by-oracle but ours is
+  the correct render — candidate oracle-limitation reclass.
+
+- iba re-gate under image pipeline: emits kind-11 (308B blob)
+  but PNG is 1x1 grayscale ct=0 — single pixel, below ink
+  threshold both sides. ink=None ref+ours = honest
+  near-vacuous, NOT a decode failure. lwti ops=0 (type-544
+  class, nothing to emit). Image pipeline re-gates: cin=live
+  spec-correct, iba=vacuous-1px, lwti=out-of-scope.
+
+- emitOps audit: LIVE but debug-only — callers are dumpDrawOps
+  + list-row dump (drawops_clfp.k/drawops_dump.k/inspect3.k).
+  Render path = collectOps->collectArtboardOps exclusively.
+  emitOps is PRE-FIX semantics: no pathSpaceMat/xformPV (path-
+  child compose gap from 1abec30 never ported), own fill loop
+  at 3262. Verdict: superseded for render; debug dumps diverge
+  from render on offset path children — name it, don't fix
+  (debug-only, fixing doubles maintenance for zero gate value).
+
+## Standing rule — visual gallery (Lars 2026-11-16)
+
+Every visual change gets eyeball-able evidence, not just metrics.
+`oracle/gallery.py` regenerates `oracle/gallery.html` + `oracle/images/pair_*.png`
+(ours|ref composites for all 17 gates). Run it after ANY visual-affecting change
+and commit the outputs. Add new gates to the GATES manifest when a fixture gets
+a pixel verdict. Verdict labels are authoritative; images are the evidence.
