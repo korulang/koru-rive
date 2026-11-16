@@ -427,3 +427,7 @@ committed producer-side (`ff18735`).
   alphaMax=0 at ticks 1/10/30/60. Fixture needs VM data the oracle
   doesn't inject; no reference obtainable -> oracle-limitation,
   pixel gate skipped honestly (not a renderer FAIL).
+
+- ik_over_distance_constraint: BROWSER-VACUOUS ticks 1/15/30/60 —
+  IK fixtures need input-driven animation (pointer/drag), oracle
+  can't inject -> oracle-limitation, gate skipped.
