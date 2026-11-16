@@ -2859,11 +2859,11 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
     const hd = sfntFind(font, tag4("head")) orelse return;
     const upem = @as(f32, @floatFromInt(be16(font, @as(usize, @intCast(hd.off)) + 18)));
     if (font.len < 12 or fontSize == 0 or upem == 0) return;
-    const scale = fontSize / upem;
+    const scale: f64 = @as(f64, fontSize) / @as(f64, upem);
     const hh2 = sfntFind(font, tag4("hhea")) orelse return;
-    const asc: f32 = @as(f32, @floatFromInt(beS16(font, @as(usize, @intCast(hh2.off)) + 4))) * scale;
+    const asc: f64 = @as(f64, @floatFromInt(beS16(font, @as(usize, @intCast(hh2.off)) + 4))) * scale;
     _ = frame;
-    var pen: f32 = 0;
+    var pen: f64 = 0;
     var verbs = std.ArrayList(u8).empty;
     var pts = std.ArrayList(V2).empty;
     defer verbs.deinit(alloc); defer pts.deinit(alloc);
@@ -2876,7 +2876,7 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         for (gp) |q| { if (q.on) on_cnt += 1; }
         const vb = verbs.items.len;
         std.debug.print("glyph {c} gid={d} pts={d} on={d} ends={d} vb={d} e0={d} e1={d}\n", .{ch, gid, gp.len, on_cnt, ends.items.len, vb, if(ends.items.len>0) ends.items[0] else 9999, if(ends.items.len>1) ends.items[1] else 9999});
-        if (gp.len == 0) { pen += hmtxAdvance(font, gid) * scale; continue; }
+        if (gp.len == 0) { pen += @as(f64, hmtxAdvance(font, gid)) * scale; continue; }
         // contour-split + TTF implied-midpoint + quad->cubic elevation
         var cstart: usize = 0;
         for (ends.items) |e| {
@@ -2889,17 +2889,17 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
             while (scanned < cn and !gp[@as(usize, @intCast(firstOn))].on) : (scanned += 1) firstOn = if (firstOn + 1 >= cend) cstart else firstOn + 1;
             if (scanned == cn) { cstart = cend; continue; } // all off: degenerate
             const m0 = firstOn;
-            const sx = pen + @as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
-            const sy = -@as(f32, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + asc;
-            verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = sx, .y = sy }) catch {};
+            const sx = pen + @as(f64, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
+            const sy = -@as(f64, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + asc;
+            verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = @floatCast(sx), .y = @floatCast(sy) }) catch {};
             var curIdx = m0;
             // coordinate-based walk: cur = current on-curve point (font
             // units); off-curve runs imply on-curve midpoints (TTF spec)
-            var curFx: f32 = @floatFromInt(gp[@as(usize, @intCast(m0))].x);
-            var curFy: f32 = @floatFromInt(gp[@as(usize, @intCast(m0))].y);
+            var curFx: f64 = @floatFromInt(gp[@as(usize, @intCast(m0))].x);
+            var curFy: f64 = @floatFromInt(gp[@as(usize, @intCast(m0))].y);
             var guard: usize = 0;
             var pendingOff = false;
-            var offFx: f32 = 0; var offFy: f32 = 0;
+            var offFx: f64 = 0; var offFy: f64 = 0;
             while (guard < cn * 3 + 8) : (guard += 1) {
                 const ni = if (curIdx + 1 >= cend) cstart else curIdx + 1;
                 const np = gp[@as(usize, @intCast(ni))];
@@ -2907,8 +2907,8 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
                     const mpt = gp[@as(usize, @intCast(m0))];
                     const alreadyThere = !pendingOff and curFx == @as(f32, @floatFromInt(mpt.x)) and curFy == @as(f32, @floatFromInt(mpt.y));
                     if (!alreadyThere) {
-                        const ex = pen + @as(f32, @floatFromInt(mpt.x)) * scale;
-                        const ey = -@as(f32, @floatFromInt(mpt.y)) * scale + asc;
+                        const ex = pen + @as(f64, @floatFromInt(mpt.x)) * scale;
+                        const ey = -@as(f64, @floatFromInt(mpt.y)) * scale + asc;
                         emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(mpt.x), @floatFromInt(mpt.y), ex, ey);
                     }
                     verbs.append(alloc, 5) catch {};
@@ -2919,15 +2919,15 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
                         // implied on-curve mid between offPt and np:
                         // emit cubic cur->offPt->mid, then mid becomes cur
                         // with np as new pending control
-                        const mx = (offFx + @as(f32, @floatFromInt(np.x))) / 2;
-                        const my = (offFy + @as(f32, @floatFromInt(np.y))) / 2;
+                        const mx = (offFx + @as(f64, @floatFromInt(np.x))) / 2;
+                        const my = (offFy + @as(f64, @floatFromInt(np.y))) / 2;
                         emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, true, offFx, offFy, mx, my, pen + mx * scale, -my * scale + asc);
                         curFx = mx; curFy = my;
                         offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); // np stays pending
                     } else { offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); pendingOff = true; }
                 } else {
-                    const ex = pen + @as(f32, @floatFromInt(np.x)) * scale;
-                    const ey = -@as(f32, @floatFromInt(np.y)) * scale + asc;
+                    const ex = pen + @as(f64, @floatFromInt(np.x)) * scale;
+                    const ey = -@as(f64, @floatFromInt(np.y)) * scale + asc;
                     emitQuadCubic(alloc, &verbs, &pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(np.x), @floatFromInt(np.y), ex, ey);
                     pendingOff = false;
                     curFx = @floatFromInt(np.x); curFy = @floatFromInt(np.y);
@@ -2937,7 +2937,7 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
             cstart = cend;
         }
         std.debug.print("  -> verbs +{d}\n", .{verbs.items.len - vb});
-        pen += hmtxAdvance(font, gid) * scale;
+        pen += @as(f64, hmtxAdvance(font, gid)) * scale;
     }
     verbs.append(alloc, 5) catch {};
     std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
@@ -2959,9 +2959,9 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
 
 // emit one glyph segment: line if no pending control, else elevated
 // cubic for quad (cur on-curve, offPt control, end on-curve).
-fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), pen: f32, scale: f32, asc: f32, curFx: f32, curFy: f32, hasOff: bool, offFx: f32, offFy: f32, endFx: f32, endFy: f32, ex: f32, ey: f32) void {
+fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), pen: f64, scale: f64, asc: f64, curFx: f64, curFy: f64, hasOff: bool, offFx: f64, offFy: f64, endFx: f64, endFy: f64, ex: f64, ey: f64) void {
     if (!hasOff) {
-        verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+        verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = @floatCast(ex), .y = @floatCast(ey) }) catch {};
         return;
     }
     const p0x = pen + curFx * scale;
@@ -2969,9 +2969,9 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     const qx = pen + offFx * scale;
     const qy = -offFy * scale + asc;
     verbs.append(alloc, 4) catch {};
-    pts.append(alloc, .{ .x = p0x + (qx - p0x) * (2.0 / 3.0), .y = p0y + (qy - p0y) * (2.0 / 3.0) }) catch {};
-    pts.append(alloc, .{ .x = ex + (qx - ex) * (2.0 / 3.0), .y = ey + (qy - ey) * (2.0 / 3.0) }) catch {};
-    pts.append(alloc, .{ .x = ex, .y = ey }) catch {};
+    pts.append(alloc, .{ .x = @floatCast(p0x + (qx - p0x) * (2.0 / 3.0)), .y = @floatCast(p0y + (qy - p0y) * (2.0 / 3.0)) }) catch {};
+    pts.append(alloc, .{ .x = @floatCast(ex + (qx - ex) * (2.0 / 3.0)), .y = @floatCast(ey + (qy - ey) * (2.0 / 3.0)) }) catch {};
+    pts.append(alloc, .{ .x = @floatCast(ex), .y = @floatCast(ey) }) catch {};
     _ = endFx; _ = endFy;
 }
 
