@@ -520,3 +520,12 @@ committed producer-side (`ff18735`).
   under channel-aware coverage — NO verdict flips; refs genuinely
   ink-free (limitation classifications stand). Metric fix helps
   future colored-ink fixtures, not absent content.
+
+- type-544 decode recon VERDICT: 544 =
+  FormulaTokenParenthesisOpen (data_bind/converters/formula) —
+  a databind FORMULA token, not renderable content. Browser
+  rive 2.37.0 itself fails to import it -> blank refs are
+  oracle-design, not our gap. Minimal decode pointless: real
+  requirement = formula eval + VM binding (t4f lane). lwti
+  classification CONFIRMED oracle-limitation, out-of-scope for
+  renderer work.
