@@ -3521,6 +3521,111 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     std.debug.print("OPSDUMP total={d}\n", .{recs.len});
 }
 
+~pub tor vmdump { r: *Riv<loaded> }
+~proc vmdump|zig {
+    var n427: usize = 0; var n437: usize = 0; var n441: usize = 0; var n559: usize = 0; var n435: usize = 0; var n429: usize = 0;
+    for (r.objects) |o| {
+        switch (o.type_key) {
+            427 => n427 += 1, 437 => n437 += 1, 441 => n441 += 1,
+            559 => n559 += 1, 435 => n435 += 1, 429 => n429 += 1,
+            else => {},
+        }
+    }
+    std.debug.print("counts 427={d} 437={d} 441={d} 559={d} 435={d} 429={d}\n", .{ n427, n437, n441, n559, n435, n429 });
+    // 427 items: vmid prop549 + index
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 427) continue;
+        const vmid = propU(o.props, 549, -1);
+        std.debug.print("item[{d}] obj={d} vmid={d} parent={d}\n", .{ n427, i, vmid, o.parent_obj });
+    }
+    // artboards with prop583
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 1) continue;
+        if (propU(o.props, 583, -1) >= 0) {
+            std.debug.print("ab obj={d} prop583={d}\n", .{ i, propU(o.props, 583, -1) });
+        }
+    }
+    // VM instances/lists: dump all props
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 437 and o.type_key != 441 and o.type_key != 435 and o.type_key != 429) continue;
+        std.debug.print("vmtype {d} obj={d} parent={d} props:", .{ o.type_key, i, o.parent_obj });
+        for (o.props) |p| {
+            switch (p.value) {
+                .uint => |u| std.debug.print(" k{d}={d}", .{ p.key, u }),
+                .dbl => |x| std.debug.print(" k{d}={d:.2}", .{ p.key, x }),
+                .boolean => |b| std.debug.print(" k{d}={s}", .{ p.key, if (b) "true" else "false" }),
+                .color => |c| std.debug.print(" k{d}={x}", .{ p.key, c }),
+                .bytes => |b| std.debug.print(" k{d}=<{d}B>", .{ p.key, b.len }),
+            }
+        }
+        std.debug.print("\n", .{});
+        // who references this object? scan all props for uint==i
+        for (r.objects, 0..) |q, qi| {
+            if (qi == i) continue;
+            for (q.props) |p| {
+                if (p.value == .uint and p.value.uint == @as(u64, @intCast(i))) {
+                    std.debug.print("  ref: obj{d} type{d} key{d}\n", .{ qi, q.type_key, p.key });
+                }
+            }
+        }
+    }
+}
+
+~pub tor cl1dump { r: *Riv<loaded> }
+~proc cl1dump|zig {
+    // children of obj6 (441 list) + obj6 full props + SM objects (53-59) props
+    for (r.objects, 0..) |o, i| {
+        if (o.parent_obj == 6 or i == 6) {
+            std.debug.print("obj{d} type{d} parent{d} props:", .{ i, o.type_key, o.parent_obj });
+            for (o.props) |p| switch (p.value) {
+                .uint => |u| std.debug.print(" k{d}={d}", .{ p.key, u }),
+                .dbl => |x| std.debug.print(" k{d}={d:.2}", .{ p.key, x }),
+                .boolean => |b| std.debug.print(" k{d}={s}", .{ p.key, if (b) "true" else "false" }),
+                .color => |c| std.debug.print(" k{d}={x}", .{ p.key, c }),
+                .bytes => |b| std.debug.print(" k{d}=<{d}B>", .{ p.key, b.len }),
+            };
+            std.debug.print("\n", .{});
+        }
+        if (o.type_key >= 53 and o.type_key <= 59) {
+            std.debug.print("SM obj{d} type{d} parent{d} props:", .{ i, o.type_key, o.parent_obj });
+            for (o.props) |p| switch (p.value) {
+                .uint => |u| std.debug.print(" k{d}={d}", .{ p.key, u }),
+                .dbl => |x| std.debug.print(" k{d}={d:.2}", .{ p.key, x }),
+                .boolean => |b| std.debug.print(" k{d}={s}", .{ p.key, if (b) "true" else "false" }),
+                .color => |c| std.debug.print(" k{d}={x}", .{ p.key, c }),
+                .bytes => |b| std.debug.print(" k{d}=<{d}B>", .{ p.key, b.len }),
+            };
+            std.debug.print("\n", .{});
+        }
+    }
+}
+
+~pub tor corpusdump { r: *Riv<loaded> }
+~proc corpusdump|zig {
+    // print artboard map first
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 1) continue;
+        var nm: []const u8 = "?";
+        for (o.props) |p| {
+            if (p.key == 4) switch (p.value) { .bytes => |b| nm = b, else => {} };
+        }
+        std.debug.print("AB idx={d} name='{s}'\n", .{ i, nm });
+    }
+    // per artboard x frame ops
+    for (r.objects, 0..) |o, abi| {
+        if (o.type_key != 1) continue;
+        var fr: i64 = 0;
+        while (fr < 30) : (fr += 1) {
+            std.debug.print("=== ab {d} fr {d} ===\n", .{ abi, fr });
+            const recs = $mod.collectOps(r, @intCast(abi), fr, std.heap.page_allocator);
+            for (recs) |rec| {
+                std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
+            }
+            std.heap.page_allocator.free(recs);
+        }
+    }
+}
+
 ~pub tor abnames { r: *Riv<loaded> }
 ~proc abnames|zig {
     for (r.objects, 0..) |o, i| {
