@@ -1,9 +1,11 @@
 {
   "name": "koru-rive",
   "version": "0.1.0",
-  "description": "Koru-native Rive runtime — .riv decoder/player/raster",
+  "description": "Koru-native Rive runtime \u2014 .riv decoder/player/raster",
   "paths": {
     "std": "../koru/koru_std",
-    "kr": "."
+    "kr": ".",
+    "libs": "../oshun",
+    "oshun": "../oshun"
   }
 }
