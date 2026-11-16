@@ -2392,17 +2392,16 @@ fn dumpDrawOps(r: *Riv, frame: i64) void {
             for (r.objects, 0..) |c, ci| {
                 if (c.type_key == 559 and owningArtboard(r, ci) == oi) has_list = true;
             }
-            const npass: usize = if (has_list) 2 else 1;
+            const npass: usize = 1;
             var pass: usize = 0;
             while (pass < npass) : (pass += 1) {
-                const rows = pass == 1;
                 if (oi == first_ab) std.debug.print("--- static t=0 ---\n", .{});
-                emitOps(r, 0, oi, true, rows, true);
+                emitOps(r, 0, oi, true, true, true);
                 std.debug.print("--- sm{d} ---\n", .{propU(o.props, 236, @intCast(pass))});
                 var f: i64 = 0;
                 while (f < 30) : (f += 1) {
                     std.debug.print("--- frame {d} t={d:.4} ---\n", .{ f, @as(f32, @floatFromInt(f + 1)) / 30 });
-                    emitOps(r, f * 2, oi, true, rows, true);
+                    emitOps(r, f * 2, oi, true, true, true);
                 }
             }
         }
