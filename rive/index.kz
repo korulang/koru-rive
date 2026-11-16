@@ -3633,6 +3633,13 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     for (r.objects, 0..) |o, i| {
         if (o.type_key < 5 or o.type_key > 36) continue;
         if (!isVertexType(@intCast(o.type_key))) continue;
+        const k82 = propFAnim(r, &r.objects[i], 82, -999, frame);
+        const k83 = propFAnim(r, &r.objects[i], 83, -999, frame);
+        const s82 = propF(o.props, 82, -999);
+        const s83 = propF(o.props, 83, -999);
+        const kf82 = hasKeyframed(r, r.objects[i].slot, 82);
+        const kf83 = hasKeyframed(r, r.objects[i].slot, 83);
+        std.debug.print("vert obj={d} type{d} slot={d} k82 anim={d:.4} static={d:.4} kf={} | k83 anim={d:.4} static={d:.4} kf={}\n", .{ i, o.type_key, o.slot, k82, s82, kf82, k83, s83, kf83 });
         std.debug.print("vert obj={d} type{d} parent={d} props:", .{ i, o.type_key, o.parent_obj });
         for (o.props) |p| switch (p.value) {
             .uint => |u| std.debug.print(" k{d}={d}", .{ p.key, u }),
