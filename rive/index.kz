@@ -2778,7 +2778,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         var pts = std.ArrayList(V2).empty;
         defer verbs.deinit(alloc); defer pts.deinit(alloc);
         verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = 0, .y = 0 }) catch {};
-        for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah }, .{ .x = 0, .y = ah } }) |p| {
+        for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah } }) |p| {
             verbs.append(alloc, 1) catch {}; pts.append(alloc, p) catch {};
         }
         verbs.append(alloc, 1) catch {}; verbs.append(alloc, 5) catch {};
@@ -2881,8 +2881,10 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         if (to.type_key != 134) continue;
         if (scoped and owningArtboard(r, ti) != abIdx) continue;
         const w = effectiveWorld(r, ti, frame);
+        std.debug.print("save\n", .{});
         std.debug.print("save\n  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
         emitTextDraw(r, ti, frame);
+        std.debug.print("restore\n", .{});
         std.debug.print("restore\n", .{});
     }
     // Composed pass: ArtboardComponentList rows render inside the
@@ -3134,7 +3136,7 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         }
     }
     // style paint: Fill child -> SolidColor.colorValue + fillRule
-    var textColor: u32 = 0xFF313131; var textFillRule: i64 = 0;
+    var textColor: u32 = 0xFF313131; var textFillRule: i64 = 2;
     if (haveStyle) {
         for (r.objects, 0..) |fc, fi| {
             if (fc.type_key == 20 and fc.parent_obj == @as(i64, @intCast(styleIdx))) {
