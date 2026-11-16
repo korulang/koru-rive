@@ -39,7 +39,7 @@
 
 ~pub tor step-image { o: kr/rive:OpRec, f: *libs/canvas:Frame<frame> }
 ~step-image =
-    |> kr/rive:imgblob(i: @intCast(o.x1)) : blob
+    |> kr/rive:imgblob(i: o.x1) : blob
     |> libs/canvas:image.decode.data(data: blob)
         | img t
             |> libs/canvas:image.width(tex: t) : iw

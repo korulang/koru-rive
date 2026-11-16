@@ -4382,10 +4382,10 @@ fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2
 
 // Embedded image blobs for kind-11 image ops — FileAssetContents bytes
 // ride a side table; OpRec.kind==11 carries the blob index + draw rect.
-var imgBlobs: std.ArrayList([]u8) = .empty;
-~pub tor imgblob { i: i64 } -> string
+var imgBlobs: std.ArrayList([]const u8) = .empty;
+~pub tor imgblob { i: f64 } -> string
 ~proc imgblob|zig {
-    const b = imgBlobs.items[@intCast(i)];
+    const b = imgBlobs.items[@intFromFloat(i)];
     return b;
 }
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
@@ -4524,7 +4524,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
     for (r.objects, 0..) |im, ii| {
         if (im.type_key != 100) continue;
         if (owningArtboard(r, ii) != abIdx) continue;
-        var blob: ?[]u8 = null;
+        var blob: ?[]const u8 = null;
         for (r.objects, 0..) |fc, fi| {
             if (fc.type_key != 106) continue;
             if (blob == null) {
@@ -4537,7 +4537,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             _ = fi;
         }
-        const bytes = blob orelse continue;
+        const bytes = blob orelse { std.debug.print("imgemit: no blob for obj {d}\n", .{ii}); continue; };
+        std.debug.print("imgemit: obj {d} blob {d}B\n", .{ ii, bytes.len });
         imgBlobs.append(alloc, bytes) catch {};
         const bidx: i64 = @intCast(imgBlobs.items.len - 1);
         out.append(alloc, op0(6)) catch {};
