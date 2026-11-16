@@ -4587,30 +4587,33 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 if (so2.type_key == 3 and so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
             }
             if (srcIdx == r.objects.len) continue;
-            var sVs = std.ArrayList(PV).empty;
             var sVerbs = std.ArrayList(u8).empty;
             var sPts = std.ArrayList(V2).empty;
-            defer sVs.deinit(alloc); defer sVerbs.deinit(alloc); defer sPts.deinit(alloc);
-            var sClosed = false;
+            defer sVerbs.deinit(alloc); defer sPts.deinit(alloc);
+            // Per-child contours: each path object is its own contour —
+            // buildPath emits a move verb per call, so concatenating
+            // per-child outputs yields move-separated subpaths (the
+            // joined-single-contour form broke clip.push.path masks).
             for (r.objects, 0..) |*sc, sci| {
                 if (sc.parent_obj != @as(i64, @intCast(srcIdx))) continue;
+                var cVs = std.ArrayList(PV).empty;
+                defer cVs.deinit(alloc);
+                var cClosed = false;
                 const scm2 = pathSpaceMat(r, sci, srcIdx, if (frame >= 0) frame else -1);
-                const spvStart = sVs.items.len;
                 if (isVertexType(sc.type_key)) {
-                    sVs.append(alloc, fileVert(r, sc, if (frame >= 0) frame else -1)) catch {};
+                    cVs.append(alloc, fileVert(r, sc, if (frame >= 0) frame else -1)) catch {};
                 } else if (sc.type_key == 16) {
                     for (r.objects) |*gv| {
                         if (gv.parent_obj == @as(i64, @intCast(sci)) and isVertexType(gv.type_key)) {
-                            sVs.append(alloc, fileVert(r, gv, if (frame >= 0) frame else -1)) catch {};
+                            cVs.append(alloc, fileVert(r, gv, if (frame >= 0) frame else -1)) catch {};
                         }
                     }
-                } else if (synthParametric(r, sc, &sVs, alloc, if (frame >= 0) frame else -1)) {
-                    sClosed = true;
+                } else if (synthParametric(r, sc, &cVs, alloc, if (frame >= 0) frame else -1)) {
+                    cClosed = true;
                 }
-                for (sVs.items[spvStart..]) |*pv| xformPV(scm2, pv);
+                for (cVs.items) |*pv| xformPV(scm2, pv);
+                if (cVs.items.len >= 2) buildPath(cVs.items, cClosed, &sVerbs, &sPts, alloc);
             }
-            if (sVs.items.len < 2) continue;
-            buildPath(sVs.items, sClosed, &sVerbs, &sPts, alloc);
             if (sVerbs.items.len == 0) continue;
             const sw = effectiveWorld(r, srcIdx, frame);
             out.append(alloc, op0(0)) catch {};
