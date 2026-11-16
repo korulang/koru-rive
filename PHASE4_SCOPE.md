@@ -422,3 +422,8 @@ committed producer-side (`ff18735`).
   undecoded type-544 surface. Classification: oracle-limitation /
   undecoded-type territory, NOT a renderer defect. Type 544 =
   next decode target if this fixture matters.
+
+- component_list_rtl_row: BROWSER-VACUOUS — Host AND Row render
+  alphaMax=0 at ticks 1/10/30/60. Fixture needs VM data the oracle
+  doesn't inject; no reference obtainable -> oracle-limitation,
+  pixel gate skipped honestly (not a renderer FAIL).
