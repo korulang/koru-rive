@@ -609,3 +609,11 @@ Every visual change gets eyeball-able evidence, not just metrics.
 (ours|ref composites for all 17 gates). Run it after ANY visual-affecting change
 and commit the outputs. Add new gates to the GATES manifest when a fixture gets
 a pixel verdict. Verdict labels are authoritative; images are the evidence.
+
+- cl2 converter semantics (rive-cpp data_converter_number_to_list.cpp):
+  input DataValueNumber N -> count=max(0,floor(N)); per item creates
+  ViewModelInstanceListItem + createDefaultViewModelInstance(viewModel
+  [converter's viewModelId=0=ItemVM]); output DataValueList of items.
+  Item artboard obj31 viewModelId=0 matches -> rows resolve. Per-row
+  instance = fresh default ItemVM instance each (identical values;
+  'List Index' component likely supplies row index separately).
