@@ -342,3 +342,12 @@ committed producer-side (`ff18735`).
   post-transform space but pushed before/after the wrong transform,
   the mask lands wrong -> effective no-clip -> red flood. Next:
   verify clip path coords vs the k=6 transform ordering in collectOps.
+
+- clip_tests ROOT CAUSE: Shape47 "Rectangle-clipped" has ClippingShape
+  child (type42, sourceId=1 -> Shape43 "Ellipse-clipper" slot1).
+  Clipper's own Fill51 isVisible=false (now culled by 969669c).
+  Real clip = clipper's ELLIPSE geometry (~171x171 = ref ink bbox).
+  Our ops emit a generic 500x500 clip instead — ClippingShape objects
+  are never resolved to sourceId geometry. Bounded fix: shape with
+  ClippingShape child -> emit kind-9 clip from SOURCE shape's path,
+  wrap draws, pop.
