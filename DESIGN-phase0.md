@@ -462,3 +462,18 @@ ONE list item -> ONE Row instance -> the single drawPath/frame.
 sm0 empty = Main artboard's own SM draws nothing; populated
 groups = instantiated Row content (+ possibly a second SM section).
 DataBindContext[14] binds source paths (VM->component props).
+
+## Section structure + instantiation link confirmed
+
+Golden emits PER-ARTBOARD sections: static + smN frame groups.
+sm0 appears twice (two artboard contexts), sm1 once.
+Artboard[20] Row: viewModelId=0 == ViewModelInstanceListItem
+.viewModelId=0 -> THE instantiation link (list item selects which
+VM-bound artboard materializes). defaultStateMachineId=1 (Main=0).
+
+Flat-traversal drawops already emits all content unconditionally —
+the REAL structural gap is per-artboard x per-defaultSM sectioning:
+emit each artboard's static ops, then its default SM's 30 frames.
+sm0's empty frames = Main artboard draws nothing itself (its only
+content is the component list, which instantiates Row — Row's own
+section is the populated one).
