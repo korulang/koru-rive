@@ -1494,6 +1494,164 @@ fn dumpTransforms(r: *Riv) void {
     }
 }
 
+
+const V2 = struct { x: f32, y: f32 };
+
+fn isCubicType(key: u64) bool {
+    return key == 6 or key == 34 or key == 35 or key == 36;
+}
+
+fn vertPos(v: *const RivObj) V2 {
+    return .{ .x = propF(v.props, 24, 0), .y = propF(v.props, 25, 0) };
+}
+
+fn vertIn(v: *const RivObj) V2 {
+    const p = vertPos(v);
+    return switch (v.type_key) {
+        35 => blk: { // CubicMirroredVertex: pos - (cos*dist, sin*dist)
+            const r = propF(v.props, 82, 0);
+            const d = propF(v.props, 83, 0);
+            break :blk .{ .x = p.x - @cos(r) * d, .y = p.y - @sin(r) * d };
+        },
+        34 => blk: { // CubicAsymmetricVertex in: pos - (cos*rot*inDist)
+            const r = propF(v.props, 79, 0);
+            const d = propF(v.props, 80, 0);
+            break :blk .{ .x = p.x - @cos(r) * d, .y = p.y - @sin(r) * d };
+        },
+        6 => blk: { // CubicDetachedVertex in
+            const r = propF(v.props, 84, 0);
+            const d = propF(v.props, 85, 0);
+            break :blk .{ .x = p.x - @cos(r) * d, .y = p.y - @sin(r) * d };
+        },
+        else => p, // plain CubicVertex: degenerate (documented gap)
+    };
+}
+
+fn vertOut(v: *const RivObj) V2 {
+    const p = vertPos(v);
+    return switch (v.type_key) {
+        35 => blk: {
+            const r = propF(v.props, 82, 0);
+            const d = propF(v.props, 83, 0);
+            break :blk .{ .x = p.x + @cos(r) * d, .y = p.y + @sin(r) * d };
+        },
+        34 => blk: {
+            const r = propF(v.props, 79, 0);
+            const d = propF(v.props, 81, 0); // outDistance
+            break :blk .{ .x = p.x + @cos(r) * d, .y = p.y + @sin(r) * d };
+        },
+        6 => blk: {
+            const r = propF(v.props, 86, 0); // outRotation
+            const d = propF(v.props, 87, 0); // outDistance
+            break :blk .{ .x = p.x + @cos(r) * d, .y = p.y + @sin(r) * d };
+        },
+        else => p,
+    };
+}
+
+fn v2add(a: V2, b: V2) V2 { return .{ .x = a.x + b.x, .y = a.y + b.y }; }
+fn v2sub(a: V2, b: V2) V2 { return .{ .x = a.x - b.x, .y = a.y - b.y }; }
+fn v2scale(a: V2, s: f32) V2 { return .{ .x = a.x * s, .y = a.y * s }; }
+
+// Path::buildPath replication — cubic-vertex paths complete;
+// StraightVertex.radius corner synthesis is the named next slice.
+fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
+    const n = verts.len;
+    if (n < 2) return;
+    const first = verts[0];
+    var startIsCubic = false;
+    var prevIsCubic = false;
+    var startIn: V2 = .{ .x = 0, .y = 0 };
+    var start: V2 = .{ .x = 0, .y = 0 };
+    var out: V2 = .{ .x = 0, .y = 0 };
+
+    if (isCubicType(first.type_key)) {
+        startIsCubic = true;
+        prevIsCubic = true;
+        startIn = vertIn(first);
+        out = vertOut(first);
+        start = vertPos(first);
+        verbs.append(alloc, 0) catch {}; pts.append(alloc, start) catch {};
+    } else {
+        const pos = vertPos(first);
+        const radius = propF(first.props, 26, 0);
+        if (radius != 0) {
+            // rounded-start corner — needs neighbor tangents; deferred
+            // slice, fail loud rather than emit wrong geometry
+            @panic("buildPath: StraightVertex.radius start corner not yet implemented");
+        }
+        startIn = pos;
+        start = pos;
+        out = pos;
+        verbs.append(alloc, 0) catch {}; pts.append(alloc, out) catch {};
+    }
+    for (verts[1..]) |vertex| {
+        if (isCubicType(vertex.type_key)) {
+            const inP = vertIn(vertex);
+            const trans = vertPos(vertex);
+            verbs.append(alloc, 4) catch {}; pts.append(alloc, out) catch {}; pts.append(alloc, inP) catch {}; pts.append(alloc, trans) catch {};
+            prevIsCubic = true;
+            out = vertOut(vertex);
+        } else {
+            const pos = vertPos(vertex);
+            const radius = propF(vertex.props, 26, 0);
+            if (radius != 0) {
+                @panic("buildPath: StraightVertex.radius corner not yet implemented");
+            } else if (prevIsCubic) {
+                verbs.append(alloc, 4) catch {}; pts.append(alloc, out) catch {}; pts.append(alloc, pos) catch {}; pts.append(alloc, pos) catch {};
+                prevIsCubic = false;
+                out = pos;
+            } else {
+                out = pos;
+                verbs.append(alloc, 1) catch {}; pts.append(alloc, out) catch {};
+            }
+        }
+    }
+    if (closed) {
+        if (prevIsCubic or startIsCubic) {
+            verbs.append(alloc, 4) catch {}; pts.append(alloc, out) catch {}; pts.append(alloc, startIn) catch {}; pts.append(alloc, start) catch {};
+        } else {
+            verbs.append(alloc, 1) catch {}; pts.append(alloc, start) catch {};
+        }
+        verbs.append(alloc, 5) catch {};
+    }
+}
+
+fn dumpPathOps(r: *Riv) void {
+    const alloc = std.heap.page_allocator;
+    for (r.objects, 0..) |o, i| {
+        var kids = std.ArrayList(*const RivObj).empty;
+        defer kids.deinit(alloc);
+        for (r.objects) |*c| {
+            if (c.parent_obj == @as(i64, @intCast(i)) and isVertexType(c.type_key)) {
+                kids.append(alloc, c) catch {};
+            }
+        }
+        if (kids.items.len == 0) continue;
+        const closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, else => false } else false;
+        var verbs = std.ArrayList(u8).empty;
+        var pts = std.ArrayList(V2).empty;
+        defer verbs.deinit(alloc);
+        defer pts.deinit(alloc);
+        buildPath(kids.items, closed, &verbs, &pts, alloc);
+        const tname = o.type_name orelse "?";
+        std.debug.print("pathops obj[{d}] {s} verbs={d} pts={d}\\n", .{ i, tname, verbs.items.len, pts.items.len });
+        var p: usize = 0;
+        for (verbs.items) |v| {
+            const np: usize = if (v == 0 or v == 1) 2 else if (v == 2) 4 else if (v == 4) 6 else 0;
+            var s = std.ArrayList(u8).empty;
+            defer s.deinit(alloc);
+            s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+            var k: usize = 0;
+            while (k < np and p + 1 < pts.items.len) : (k += 2) {
+                s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[p].x, pts.items[p].y }) catch "") catch {};
+                p += 1;
+            }
+            std.debug.print("{s}\\n", .{s.items});
+        }
+    }
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
@@ -1534,4 +1692,10 @@ fn dumpTransforms(r: *Riv) void {
 
 ~proc transforms|zig {
     dumpTransforms(r);
+}
+
+~pub tor pathops { r: *Riv<loaded> }
+
+~proc pathops|zig {
+    dumpPathOps(r);
 }
