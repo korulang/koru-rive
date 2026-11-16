@@ -1592,9 +1592,28 @@ fn rotatePoints(nextPoint: V2, prevPoint: V2, point: V2, outPoint: *V2, inPoint:
     }
 }
 
-// Path::buildPath replication — cubic-vertex paths complete;
-// StraightVertex.radius corner synthesis is the named next slice.
-fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
+const PV = struct {
+    is_cubic: bool,
+    pos: V2,
+    in_p: V2,
+    out_p: V2,
+    radius: f32,
+};
+
+fn fileVert(v: *const RivObj) PV {
+    return .{
+        .is_cubic = isCubicType(v.type_key),
+        .pos = vertPos(v),
+        .in_p = vertIn(v),
+        .out_p = vertOut(v),
+        .radius = propF(v.props, 26, 0),
+    };
+}
+
+// Path::buildPath replication — works on precomputed PV vertices so
+// file PointsPath children and runtime-synthesized ParametricPath
+// vertices share one code path.
+fn buildPath(verts: []const PV, closed: bool, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
     const n = verts.len;
     if (n < 2) return;
     const first = verts[0];
@@ -1604,22 +1623,22 @@ fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u
     var start: V2 = .{ .x = 0, .y = 0 };
     var out: V2 = .{ .x = 0, .y = 0 };
 
-    if (isCubicType(first.type_key)) {
+    if (first.is_cubic) {
         startIsCubic = true;
         prevIsCubic = true;
-        startIn = vertIn(first);
-        out = vertOut(first);
-        start = vertPos(first);
+        startIn = first.in_p;
+        out = first.out_p;
+        start = first.pos;
         verbs.append(alloc, 0) catch {}; pts.append(alloc, start) catch {};
     } else {
-        const pos = vertPos(first);
-        const radius = propF(first.props, 26, 0);
+        const pos = first.pos;
+        const radius = first.radius;
         if (radius != 0) {
             const prev = verts[n - 1];
-            var toPrev = if (isCubicType(prev.type_key)) v2sub(vertOut(prev), pos) else v2sub(vertPos(prev), pos);
+            var toPrev = if (prev.is_cubic) v2sub(prev.out_p, pos) else v2sub(prev.pos, pos);
             const toPrevLen = v2normLen(&toPrev);
             const next = verts[1];
-            var toNext = if (isCubicType(next.type_key)) v2sub(vertIn(next), pos) else v2sub(vertPos(next), pos);
+            var toNext = if (next.is_cubic) v2sub(next.in_p, pos) else v2sub(next.pos, pos);
             const toNextLen = v2normLen(&toNext);
             const rr = @min(@min(toPrevLen / 2, toNextLen / 2), if (radius > 0) radius else -radius);
             const ideal = idealControlDist(toPrev, toNext, rr);
@@ -1640,21 +1659,21 @@ fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u
         }
     }
     for (verts[1..], 1..) |vertex, vi| {
-        if (isCubicType(vertex.type_key)) {
-            const inP = vertIn(vertex);
-            const trans = vertPos(vertex);
+        if (vertex.is_cubic) {
+            const inP = vertex.in_p;
+            const trans = vertex.pos;
             verbs.append(alloc, 4) catch {}; pts.append(alloc, out) catch {}; pts.append(alloc, inP) catch {}; pts.append(alloc, trans) catch {};
             prevIsCubic = true;
-            out = vertOut(vertex);
+            out = vertex.out_p;
         } else {
-            const pos = vertPos(vertex);
-            const radius = propF(vertex.props, 26, 0);
+            const pos = vertex.pos;
+            const radius = vertex.radius;
             if (radius != 0) {
                 const prev = verts[vi - 1];
-                var toPrev = if (isCubicType(prev.type_key)) v2sub(vertOut(prev), pos) else v2sub(vertPos(prev), pos);
+                var toPrev = if (prev.is_cubic) v2sub(prev.out_p, pos) else v2sub(prev.pos, pos);
                 const toPrevLen = v2normLen(&toPrev);
                 const next = verts[(vi + 1) % n];
-                var toNext = if (isCubicType(next.type_key)) v2sub(vertIn(next), pos) else v2sub(vertPos(next), pos);
+                var toNext = if (next.is_cubic) v2sub(next.in_p, pos) else v2sub(next.pos, pos);
                 const toNextLen = v2normLen(&toNext);
                 const rr = @min(@min(toPrevLen / 2, toNextLen / 2), if (radius > 0) radius else -radius);
                 const ideal = idealControlDist(toPrev, toNext, rr);
@@ -1700,15 +1719,39 @@ fn dumpPathOps(r: *Riv) void {
                 kids.append(alloc, c) catch {};
             }
         }
-        if (kids.items.len == 0) continue;
-        const closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, else => false } else false;
+        var pvs = std.ArrayList(PV).empty;
+        defer pvs.deinit(alloc);
+        var closed = false;
+        if (kids.items.len > 0) {
+            closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, else => false } else false;
+            for (kids.items) |kv| pvs.append(alloc, fileVert(kv)) catch {};
+        } else if (o.type_key == 7) {
+            // Rectangle parametric synthesis — rectangle.cpp update():
+            // 4 StraightVertex at corners, origin-centered by default.
+            closed = true;
+            const w = propF(o.props, 20, 0);
+            const h = propF(o.props, 21, 0);
+            const ox = -propF(o.props, 123, 0.5) * w;
+            const oy = -propF(o.props, 124, 0.5) * h;
+            const rtl = propF(o.props, 31, 0);
+            const rtr = propF(o.props, 161, 0);
+            const rbl = propF(o.props, 162, 0);
+            const rbr = propF(o.props, 163, 0);
+            const link = if (propByKey(o.props, 164)) |v| switch (v) { .boolean => |b| b, else => true } else true; // linkCornerRadius defaults TRUE
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rtl }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = if (link) rtl else rtr }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = if (link) rtl else rbr }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = if (link) rtl else rbl }) catch {};
+        } else {
+            continue;
+        }
         var verbs = std.ArrayList(u8).empty;
         var pts = std.ArrayList(V2).empty;
         defer verbs.deinit(alloc);
         defer pts.deinit(alloc);
-        buildPath(kids.items, closed, &verbs, &pts, alloc);
+        buildPath(pvs.items, closed, &verbs, &pts, alloc);
         const tname = o.type_name orelse "?";
-        std.debug.print("pathops obj[{d}] {s} verbs={d} pts={d}\\n", .{ i, tname, verbs.items.len, pts.items.len });
+        std.debug.print("pathops obj[{d}] {s} tk={d} verbs={d} pts={d}\\n", .{ i, tname, o.type_key, verbs.items.len, pts.items.len });
         var p: usize = 0;
         for (verbs.items) |v| {
             const np: usize = if (v == 0 or v == 1) 2 else if (v == 2) 4 else if (v == 4) 6 else 0;
