@@ -568,3 +568,13 @@ the earlier fixture's second sm0 group has a different cause
 (possibly a second SM on one artboard, or dump ordering).
 Correct model: rows-in-section always; composed pass only if
 golden proves a distinct render context exists.
+
+## default_state_machine — 3 StateMachine objects, 2 artboards
+
+obj15, obj30, obj37 StateMachines; Artboard9 defaultSM=0,
+Artboard20 defaultSM=1. The extra SM (37) is unowned by any
+artboard's defaultSM prop — golden's sm0,sm0,sm1 = likely
+per-(artboard x SM) sectioning where Main carries TWO SMs
+(SM15+SM37), NOT a composed/instantiation pass. Section rule
+re-derivation: emit per artboard -> static + per owned SM ->
+smN+frames; rows inside instantiator's own frames (rows=true).
