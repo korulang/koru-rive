@@ -385,3 +385,12 @@ committed producer-side (`ff18735`).
   NOTE: ellipse child Node.x offsets STILL absent from clip verts
   (+/-85.8 centered at origin, not +150/-89 halves) — Ellipse
   type_key 4 may not be isNodeType -> pathSpaceMat identity.
+
+- clip ellipse mystery narrowed: synthParametric DOES handle
+  type_key 4 (Ellipse, line ~1905). Clipper shape43 has TWO ellipse
+  children (44@+150.1, 45@-89.1, 45 has pathFlags=1) but clip path
+  emitted ONE centered ellipse r=85.8 — either only one child
+  gathered or offsets still absent. pathSpaceMat(44,43) should
+  yield translate(150.1,...) since isNodeType(4)=true and prop13
+  present. Next: count PVs per child / check if synthParametric
+  early-returns on pathFlags=1 for obj45.
