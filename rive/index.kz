@@ -3456,7 +3456,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
 
 
 // ---- ops: flat command list for canvas replay (OpRec) ----
-// kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw
+// kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw 9=clippush 10=clippop
 const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64 };
 fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0, .e = 0, .g = 0 }; }
 fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
@@ -3465,6 +3465,25 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
+    }
+    // Artboard default clip (prop 196, default true): bounds rect wraps
+    // all artboard content — clipPath op in golden, clip.push/pop in canvas.
+    var clipOn = true;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 1 and i == abIdx) {
+            if (propByKey(o.props, 196)) |v| clipOn = switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => true };
+        }
+    }
+    if (clipOn) {
+        out.append(alloc, op0(0)) catch {};
+        var c0 = op0(1); c0.x1 = 0; c0.y1 = 0; out.append(alloc, c0) catch {};
+        var c1 = op0(2); c1.x1 = @floatCast(aw0); c1.y1 = 0; out.append(alloc, c1) catch {};
+        var c2 = op0(2); c2.x1 = @floatCast(aw0); c2.y1 = @floatCast(ah0); out.append(alloc, c2) catch {};
+        var c3 = op0(2); c3.x1 = 0; c3.y1 = @floatCast(ah0); out.append(alloc, c3) catch {};
+        out.append(alloc, op0(5)) catch {};
+        var cpm = op0(6); cpm.a = 1; cpm.d = 1; out.append(alloc, cpm) catch {};
+        var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
+        out.append(alloc, op0(7)) catch {};
     }
     for (r.objects, 0..) |o, i| {
         if (o.type_key != 1 or i != abIdx) continue;
@@ -3568,6 +3587,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         var dr = op0(8); dr.style = 1; dr.color = tcolor; dr.join = -1; dr.cap = -1; dr.eo = if (tfr == 2) 1 else 0; out.append(alloc, dr) catch {};
         out.append(alloc, op0(7)) catch {};
     }
+    if (clipOn) out.append(alloc, op0(10)) catch {};
     return out.items;
 }
 
