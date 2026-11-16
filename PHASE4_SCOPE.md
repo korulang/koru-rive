@@ -176,3 +176,12 @@ committed producer-side (`ff18735`).
   collectOps has no text arm -> text objects contribute zero ops ->
   invisible in every renderer path (mesh AND path-verb). clfp Item's
   missing content = unwired text emission, not missing glyph tech.
+
+- Text emission deep trace: text IS wired into collectOps already
+  (glyph paths -> OpRec under world transform) — but textDrawPath
+  returns false for Item's Text obj 77: it requires a TextStyle
+  object (type_key 137, slot==styleId) which does NOT exist in
+  Item's cluster. Item uses the newer TextStylePaint(78)/
+  TextStyleAxis(80,81) style chain — legacy TextStyle lookup
+  misses -> no font size/asset -> zero glyph ops. Gap = text
+  STYLE MODEL (new paint/axis chain), not emission wiring.
