@@ -2646,19 +2646,10 @@ fn artboardContentBounds(r: *const Riv, abIdx: usize) ArtboardSize {
         for (text) |ch| {
             if (ch < 0x20) continue;
             nchars += 1;
-            w += hmtxAdvance(font, cmapGlyph(font, ch)) * scale + ls * scale;
+            w += hmtxAdvance(font, cmapGlyph(font, ch)) * scale;
         }
         // OS/2 usWinAscent+usWinDescent approximates Rive's line box
-        var hgt = (ascU - descU) * scale;
-        if (sfntFind(font, tag4("OS/2"))) |o2| {
-            const wa = @as(f32, @floatFromInt(be16(font, @as(usize, @intCast(o2.off)) + 74)));
-            const wd = @as(f32, @floatFromInt(be16(font, @as(usize, @intCast(o2.off)) + 76)));
-            const ta = @as(f32, @floatFromInt(beS16(font, @as(usize, @intCast(o2.off)) + 68)));
-            const td = @as(f32, @floatFromInt(beS16(font, @as(usize, @intCast(o2.off)) + 70)));
-            const tg = @as(f32, @floatFromInt(beS16(font, @as(usize, @intCast(o2.off)) + 72)));
-            if (wa + wd > 0) hgt = (wa + wd) * scale;
-            if (ta - td + tg > 0) hgt = @max(hgt, (ta - td + tg) * scale);
-        }
+        const hgt = (ascU - descU + gapU) * scale;
         const m = effectiveWorld(r, ti, -1);
         const x0 = m[4] + @min(0, w);
         const y0 = m[5];
@@ -2683,7 +2674,23 @@ fn artboardIntrinsicSize(r: *const Riv, abIdx: usize, aw: f32, ah: f32) Artboard
     if (!intrinsic) return ArtboardSize{ .w = aw, .h = ah };
     const b = artboardContentBounds(r, abIdx);
     if (b.w <= 0 or b.h <= 0) return ArtboardSize{ .w = aw, .h = ah };
-    return ArtboardSize{ .w = b.w, .h = b.h };
+    // padding lives on the LayoutComponentStyle parenting the artboard's
+    // layout components (Item: obj85 -> LayoutComponent75, keys 512-515)
+    var padL: f32 = 0; var padR: f32 = 0; var padT: f32 = 0; var padB: f32 = 0;
+    for (r.objects, 0..) |ls, li| {
+        if (ls.type_key != 420) continue;
+        const par = ls.parent_obj;
+        if (par < 0) continue;
+        const po = &r.objects[@intCast(par)];
+        // style parents a LayoutComponent (type 88?) inside this artboard
+        if (owningArtboard(r, li) != abIdx) continue;
+        padL = @max(padL, propF(ls.props, 512, 0));
+        padR = @max(padR, propF(ls.props, 513, 0));
+        padT = @max(padT, propF(ls.props, 514, 0));
+        padB = @max(padB, propF(ls.props, 515, 0));
+        _ = po;
+    }
+    return ArtboardSize{ .w = b.w + padL + padR, .h = b.h + padT + padB };
 }
 fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold: bool) void {
     const alloc = std.heap.page_allocator;
