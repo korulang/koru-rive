@@ -274,3 +274,22 @@ Flat stream, parentId=-1 — linkage is by ID props, not parenting:
   needed if we keep segment params!). Skia chops for bounds; for
   follow-path only pos+tan matter → analytic eval per verb segment
   with cumulative EXACT-ish length (Wang's formula per segment).
+
+## State-machine eval path (state_machine_instance.cpp et al.)
+
+- sm->advanceAndApply(dt): per-layer StateMachineLayerInstance advances
+  its LayerState (Entry/Exit/Animation states), transitions gated by
+  SMI inputs (SMIBool/SMINumber/SMITrigger) + transition conditions.
+- AnimationState wraps LinearAnimationInstance(s); NestedLinear/
+  NestedSimple/NestedRemap wrap sub-animations with mix/speed/time;
+  BlendAnimation* mix multiple animations by weight.
+- Each active animation instance applies its KeyedObject/KeyedProperty/
+  KeyFrame values via CoreRegistry::set*(object, propertyKey, v) —
+  same write path my keyframedValue models, but TIME BASE + MIX +
+  WHICH-ANIMATION-IS-ACTIVE are SM-decided, not a single timeline.
+- follow_path_shapes divergence hypothesis: SM selects/nests the
+  LinearAnimation with nonzero time offset or blend — OR a different
+  animation object plays. Next: dump the SM's layer/state/animation
+  instance graph for this fixture (state names, animationIds, mixes)
+  and compare the played animation's keyframe timeline vs my
+  keyframedValue(363) assumption.
