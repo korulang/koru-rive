@@ -1,0 +1,122 @@
+animascript [My Artboard]: 0/30 ['0', '1', '2', '3']
+animascript_shader_signed [My Artboard]: 0/30 ['0', '1', '2', '3']
+bindable_artboard_child [Artboard]: 30/30 
+clip_tests [Empty-Shape]: 0/30 ['0', '1', '2', '3']
+clip_tests [One-Clipping-Shape-Visible-One-Hidden]: 0/30 ['0', '1', '2', '3']
+clip_tests [Hidden-Path-Visible-Path]: 0/30 ['0', '1', '2', '3']
+collapsed_nested_databind [host]: 0/0 
+collapsed_nested_databind [bodyB]: 0/0 
+collapsed_nested_databind [deep]: 0/0 
+component_list_rtl_host [Host]: 0/0 
+component_list_rtl_host [Row]: 0/0 
+component_list_rtl_row [Host]: 0/0 
+component_list_rtl_row [Row]: 0/0 
+component_list_virtualized_ltr_row [Host]: 0/30 ['0', '1', '2', '3']
+component_list_virtualized_ltr_row [Row]: 0/0 
+component_list_virtualized_rtl_row [Host]: 0/30 ['0', '1', '2', '3']
+component_list_virtualized_rtl_row [Row]: 0/0 
+component_trigger_condition [Main]: 0/30 ['0', '1', '2', '3']
+custom_image_name [My Artboard]: 0/30 ['0', '1', '2', '3']
+databind_external_artboard_main [Main]: 30/30 
+databind_null_artboard_swap [Swap Host Artboard]: 0/30 ['0', '1', '2', '3']
+databind_null_artboard_swap [Panel]: 0/30 ['0', '1', '2', '3']
+drawable_custom_properties_other [Other]: 0/30 ['0', '1', '2', '3']
+early_exit_reversal_blend [main]: 0/30 ['0', '1', '2', '3']
+early_exit_reversal_blend_elastic [main]: 0/30 ['0', '1', '2', '3']
+hittest_collapsed_layouts [Artboard]: 0/30 ['0', '1', '2', '3']
+hosted_audio_file [Artboard]: 30/30 
+hosted_font_file [New Artboard]: 0/30 ['0', '1', '2', '3']
+hosted_image_file [New Artboard]: 0/30 ['0', '1', '2', '3']
+ik_over_distance_constraint [My Artboard]: 0/30 ['0', '1', '2', '3']
+ik_over_rotation_constraint [My Artboard]: 0/30 ['0', '1', '2', '3']
+ik_stacked_constraints [My Artboard]: 0/30 ['0', '1', '2', '3']
+image_listener_targets [Images]: 30/30 
+in_band_asset [New Artboard]: 0/30 ['0', '1', '2', '3']
+keyboard_event_to_script [Artboard]: 30/30 
+later_layer_trigger [LaterLayer]: 0/30 ['0', '1', '2', '3']
+library_data_enum_test [my_artboard]: 30/30 
+library_scope_edge_test [My Artboard]: 0/30 ['0', '1', '2', '3']
+library_with_text_and_image [Artboard]: 30/30 
+list_item_parent_trigger [Main]: 0/0 
+list_item_parent_trigger [Quiet]: 0/0 
+list_item_parent_trigger [Item]: 0/0 
+listener_viewmodel_assign [FromProperty]: 0/30 ['0', '1', '2', '3']
+listener_viewmodel_assign [MyViewModel]: 0/30 ['0', '1', '2', '3']
+listener_viewmodel_assign [Child]: 0/30 ['0', '1', '2', '3']
+looping_timeline_events [New Artboard]: 0/30 ['0', '1', '2', '3']
+luau_shader_signed [Artboard]: 30/30 
+multiple_state_machines [New Artboard]: 0/30 ['0', '1', '2', '3']
+nested_artboard_cycle [Main]: 0/0 
+nested_artboard_cycle [Widget]: 0/0 
+nested_library_scope_test [My Artboard]: 0/30 ['0', '1', '2', '3']
+nested_trigger_relay [Main]: 0/30 ['0', '1', '2', '3']
+nested_trigger_relay [Consumer]: 0/30 ['0', '1', '2', '3']
+nested_trigger_relay [Producer1]: 0/30 ['0', '1', '2', '3']
+nested_trigger_relay [Producer2]: 0/30 ['0', '1', '2', '3']
+recursive_lists [Feed]: 0/0 
+recursive_lists [Card]: 0/0 
+recursive_lists [Chain]: 0/0 
+recursive_lists [Link]: 0/0 
+recursive_lists [Forest]: 0/0 
+recursive_lists [Node]: 0/0 
+recursive_lists [Shelf]: 0/0 
+recursive_lists [Page]: 0/0 
+recursive_lists [Tab]: 0/0 
+recursive_lists [Album]: 0/0 
+recursive_lists [Photo]: 0/0 
+recursive_lists [Wall]: 0/1 ['29']
+recursive_lists [Tile]: 0/30 ['0', '1', '2', '3']
+recursive_lists [Deep]: 0/0 
+recursive_lists [Level 1]: 0/0 
+recursive_lists [Level 2]: 0/0 
+recursive_lists [Level 3]: 0/0 
+recursive_lists [Level 4]: 0/0 
+recursive_lists [Level 5]: 0/0 
+recursive_lists [Level 6]: 0/0 
+recursive_lists [Level 7]: 0/0 
+recursive_lists [Level 8]: 0/0 
+recursive_lists [Level 9]: 0/0 
+recursive_lists [Level 10]: 0/0 
+recursive_lists [Level 11]: 0/0 
+recursive_lists [Level 12]: 0/0 
+recursive_lists [Level 13]: 0/0 
+recursive_lists [Level 14]: 0/0 
+recursive_lists [Level 15]: 0/0 
+recursive_lists [Level 16]: 0/0 
+recursive_lists [Leaf]: 0/0 
+rotation_constraint_wrap [Artboard]: 0/0 
+scope_probe [Artboard]: 30/30 
+script_input_artboard_cycle [Host]: 0/0 
+script_input_artboard_cycle [Holder]: 0/0 
+script_inputs_test_1 [Artboard]: 30/30 
+script_paths_opacity_test [Artboard]: 30/30 
+script_paths_test [PathsScript]: 30/30 
+scripted_boolean [BooleanArtboard]: 30/30 
+scripted_color [ColorArtboard]: 30/30 
+scripted_enum [EnumArtboard]: 30/30 
+scripted_graph [Artboard]: 30/30 
+scripted_interpolator_converter_inputs [Main]: 0/0 
+scripted_interpolator_transition_converter [Main]: 0/0 
+scripted_property_image [Main]: 30/30 
+scripted_string [StringArtboard]: 0/0 
+state_action_vm_sync [StateEnter]: 0/30 ['0', '1', '2', '3']
+state_action_vm_sync [TransitionEnd]: 0/30 ['0', '1', '2', '3']
+string_template [A]: 0/30 ['0', '1', '2', '3']
+text_language_no_assets [My Artboard]: 0/30 ['0', '1', '2', '3']
+text_style_global_list [Main]: 0/30 ['0', '1', '2', '3']
+text_style_global_list [Body]: 0/30 ['0', '1', '2', '3']
+text_style_global_list [Plain]: 0/30 ['0', '1', '2', '3']
+text_style_global_list [Heading]: 0/30 ['0', '1', '2', '3']
+text_style_global_list_item [Main]: 30/30 
+text_style_global_list_item [Text Style1]: 0/0 
+text_style_global_list_item [Text Style2]: 0/0 
+text_variation_modifier_hug [Main]: 0/30 ['0', '1', '2', '3']
+trigger_vs_trigger [Main]: 0/30 ['0', '1', '2', '3']
+viewmodel_deep_chain [Main]: 0/0 
+viewmodel_fan_out [Main]: 0/0 
+viewmodel_image_reset [main]: 30/30 
+viewmodel_instance_chain [Main]: 0/0 
+viewmodel_runtime_file [Artboard]: 30/30 
+viewmodel_self_reference [Main]: 0/0 
+vm_listener_fire_event [Artboard]: 0/30 ['0', '1', '2', '3']
+fixtures:67 ab-stream-equal:20

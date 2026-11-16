@@ -3619,7 +3619,7 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
             std.debug.print("=== ab {d} fr {d} ===\n", .{ abi, fr });
             const recs = $mod.collectOps(r, @intCast(abi), fr, std.heap.page_allocator);
             for (recs) |rec| {
-                std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
+                std.debug.print("OP k={d} x1={d:.4} y1={d:.4} x2={d:.4} y2={d:.4} x3={d:.4} y3={d:.4} style={d} color={x} thick={d:.4} eo={d} a={d:.4} b={d:.4} c={d:.4} d={d:.4} e={d:.4} g={d:.4}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
             }
             std.heap.page_allocator.free(recs);
         }
