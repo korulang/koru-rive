@@ -2063,6 +2063,61 @@ fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     return t0.v + (t1.v - t0.v) * u;
 }
 
+fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
+    var kf = std.ArrayList(struct { f: i64, v: u32 }).empty;
+    defer kf.deinit(std.heap.page_allocator);
+    var curSlot: i64 = -1;
+    var curKey: i64 = -1;
+    for (r.objects) |o| {
+        if (propByKey(o.props, 51)) |v| {
+            curSlot = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            curKey = -1;
+            continue;
+        }
+        if (propByKey(o.props, 53)) |v| {
+            curKey = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            continue;
+        }
+        if (curSlot != objSlot or curKey != @as(i64, propKey)) continue;
+        if (propByKey(o.props, 88)) |v| switch (v) {
+            .color => |c| kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = c }) catch {},
+            else => {},
+        };
+    }
+    if (kf.items.len == 0) return 0;
+    for (kf.items, 0..) |*a, i| {
+        var j = i;
+        while (j > 0 and kf.items[j - 1].f > a.f) : (j -= 1) {
+            const t = kf.items[j - 1]; kf.items[j - 1] = kf.items[j]; kf.items[j] = t;
+        }
+    }
+    var v0 = kf.items[0].v;
+    if (frame <= kf.items[0].f) v0 = kf.items[0].v;
+    if (frame >= kf.items[kf.items.len - 1].f) v0 = kf.items[kf.items.len - 1].v;
+    if (frame > kf.items[0].f and frame < kf.items[kf.items.len - 1].f) {
+        var lo: usize = 0; var hi: usize = kf.items.len - 1;
+        while (hi - lo > 1) { const mid = (lo + hi) / 2; if (kf.items[mid].f <= frame) lo = mid else hi = mid; }
+        const t0 = kf.items[lo]; const t1 = kf.items[hi];
+        const span = @as(f32, @floatFromInt(t1.f - t0.f));
+        const u = if (span <= 0) 0 else @as(f32, @floatFromInt(frame - t0.f)) / span;
+        // lerp each channel
+        var outc: u32 = 0;
+        var sh: u5 = 0;
+        while (sh < 32) : (sh += 8) {
+            const a0 = @as(f32, @floatFromInt((t0.v >> sh) & 0xFF));
+            const a1 = @as(f32, @floatFromInt((t1.v >> sh) & 0xFF));
+            outc |= @as(u32, @intFromFloat(a0 + (a1 - a0) * u)) << sh;
+        }
+        return outc;
+    }
+    return v0;
+}
+
+fn propColorAnim(r: *const Riv, v: *const RivObj, key: u16, frame: i64) u32 {
+    if (frame >= 0 and hasKeyframed(r, v.slot, key)) return keyframedColor(r, v.slot, key, frame);
+    return propColor(v.props, key);
+}
+
 fn v2sub2(a: V2, b: V2) V2 { return .{ .x = a.x - b.x, .y = a.y - b.y }; }
 fn v2len(a: V2) f32 { return @sqrt(a.x * a.x + a.y * a.y); }
 
@@ -3437,6 +3492,32 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     return "hello";
 }
 
+~pub tor opsdump { r: *Riv<loaded>, ab: i64, frame: i64 }
+~proc opsdump|zig {
+    const recs = $mod.collectOps(r, @intCast(ab), frame, std.heap.page_allocator);
+    for (recs) |rec| {
+        std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
+    }
+    std.debug.print("OPSDUMP total={d}\n", .{recs.len});
+}
+
+~pub tor abnames { r: *Riv<loaded> }
+~proc abnames|zig {
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 1) continue;
+        var nm: []const u8 = "?";
+        for (o.props) |p| {
+            if (p.key == 4) {
+                switch (p.value) {
+                    .bytes => |b| nm = b,
+                    else => {},
+                }
+            }
+        }
+        std.debug.print("AB idx={d} name='{s}' w={d:.0} h={d:.0}\n", .{ i, nm, propF(o.props, 7, 0), propF(o.props, 8, 0) });
+    }
+}
+
 // ---- draws: structured draw records for canvas replay ----
 const DrawRec = struct { style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64, nv: usize, verbs: []u8, pts: []f64 };
 fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []DrawRec {
@@ -3503,8 +3584,14 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             };
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, frame); _ = gi; }
             }
+            // WorldTransformComponent.opacity(18) keyframes scale alpha;
+            // opacity 0 = object hidden by SM — skip the draw entirely.
+            const op: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            if (op <= 0) continue;
+            const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
+            color = (color & 0x00FFFFFF) | (oa << 24);
             // Alpha-0 paint: draw.path would rasterize invisible pixels —
             // skip the op stream entirely (same pixels, fewer ops).
             if (((color >> 24) & 0xFF) == 0) continue;
@@ -3622,8 +3709,14 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             };
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, frame); _ = gi; }
             }
+            // WorldTransformComponent.opacity(18) keyframes scale alpha;
+            // opacity 0 = object hidden by SM — skip the draw entirely.
+            const op: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            if (op <= 0) continue;
+            const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
+            color = (color & 0x00FFFFFF) | (oa << 24);
             // Alpha-0 paint: draw.path would rasterize invisible pixels —
             // skip the op stream entirely (same pixels, fewer ops).
             if (((color >> 24) & 0xFF) == 0) continue;
