@@ -289,3 +289,16 @@ committed producer-side (`ff18735`).
   (c) oracle ink metric is luminance-based — green rows (mean 69.7 vs
   bg 49) score 0.10 < 0.15 threshold, invisible to ink checks; gate
   FAIL reflects text/bright-ink deltas + unclipped rows, not row fills.
+
+- cl1 scroll clip (t42 cont.): collectOps wraps each 559's rows in a
+  clip rect from nearest clip=true(196) LayoutComponent ancestor
+  (obj26 ScrollView 460x300 at origin -> y<300). Ours now shows exactly
+  the ref's 5 green bands (47332 vs 47557 px, 99.5%). Gate: ink-mass
+  1.60->1.00 PASS; remaining FAIL = ink-bbox x (text alignment) +
+  coverage-gap, both from intra-row text x-position.
+- NAMED ORACLE LIMITATION: pixel_oracle ink = luminance coverage
+  |mean(bg)|>0.15 — green rows (mean 69.7 vs bg 49) score 0.10 and are
+  invisible to ink-bbox/mass/gap. cl1 gate can only see text+bright
+  ink; row fills need a color-aware ink channel (two-sided like the
+  coverage() comment anticipates) before green-on-dark fixtures gate
+  fairly.

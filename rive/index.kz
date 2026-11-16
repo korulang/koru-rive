@@ -4366,6 +4366,39 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         if (owningArtboard(r, li) != abIdx) continue;
         const items = listRowItems(r, li, alloc);
         defer alloc.free(items);
+        // Scroll clip: nearest LayoutComponent(409) ancestor with
+        // clip=true (prop 196) bounds the rows — cl1 ScrollView
+        // 460x300 at origin clips rows 6-8 below y=300.
+        var clipLc: i64 = -1;
+        {
+            var cp = lo.parent_obj;
+            var cd: usize = 0;
+            while (cp >= 0 and cd < 32) : (cd += 1) {
+                const cpo = &r.objects[@intCast(cp)];
+                if (cpo.type_key == 409) {
+                    if (propByKey(cpo.props, 196)) |v| {
+                        const on = switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => false };
+                        if (on) { clipLc = cp; break; }
+                    }
+                }
+                cp = cpo.parent_obj;
+            }
+        }
+        if (clipLc >= 0) {
+            const clo = &r.objects[@intCast(clipLc)];
+            const cw = propF(clo.props, 7, 0);
+            const ch = propF(clo.props, 8, 0);
+            const cwm = effectiveWorldRaw(r, @intCast(clipLc));
+            out.append(alloc, op0(0)) catch {};
+            var q0 = op0(1); q0.x1 = 0; q0.y1 = 0; out.append(alloc, q0) catch {};
+            var q1 = op0(2); q1.x1 = @floatCast(cw); q1.y1 = 0; out.append(alloc, q1) catch {};
+            var q2 = op0(2); q2.x1 = @floatCast(cw); q2.y1 = @floatCast(ch); out.append(alloc, q2) catch {};
+            var q3 = op0(2); q3.x1 = 0; q3.y1 = @floatCast(ch); out.append(alloc, q3) catch {};
+            out.append(alloc, op0(5)) catch {};
+            var qm = op0(6); qm.a = cwm[0]; qm.b = cwm[1]; qm.c = cwm[2]; qm.d = cwm[3]; qm.e = cwm[4]; qm.g = cwm[5]; out.append(alloc, qm) catch {};
+            var qp = op0(9); qp.eo = 0; out.append(alloc, qp) catch {};
+            out.append(alloc, op0(7)) catch {};
+        }
         var rowIdx: usize = 0;
         for (items) |ii| {
             const it = &r.objects[ii];
@@ -4394,6 +4427,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             g_rowVmid = -1;
             g_rowInstOrd = -1;
         }
+        if (clipLc >= 0) out.append(alloc, op0(10)) catch {};
     }
     return out.items;
 }
