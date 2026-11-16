@@ -1094,36 +1094,76 @@ fn skipValue(b: []const u8, pos: *usize, field: i8) bool {
     return true;
 }
 
-pub fn inspectImpl(path: []const u8) void {
-    const file = std.fs.cwd().openFile(path, .{}) catch {
-        std.debug.print("inspect: cannot open {s}\n", .{path});
-        return;
+const PropValue = union(enum) {
+    uint: u64,
+    dbl: f32,
+    color: u32,
+    boolean: bool,
+    bytes: []const u8,
+};
+
+const Prop = struct { key: u16, name: [:0]const u8, field: i8, value: PropValue };
+const RivObj = struct { type_key: u64, type_name: ?[:0]const u8, parent: i64, props: []Prop };
+const Riv = struct { bytes: []u8, objects: []RivObj };
+
+fn readValue(b: []const u8, pos: *usize, field: i8) ?PropValue {
+    switch (field) {
+        0 => return .{ .uint = readVarU64(b, pos) orelse return null },
+        1 => {
+            const n = readVarU64(b, pos) orelse return null;
+            if (pos.* + n > b.len) return null;
+            const s = b[pos.*..pos.* + @as(usize, @intCast(n))];
+            pos.* += @intCast(n);
+            return .{ .bytes = s };
+        },
+        2, 3 => {
+            if (pos.* + 4 > b.len) return null;
+            const v = std.mem.readInt(u32, b[pos.*..][0..4], .little);
+            pos.* += 4;
+            if (field == 2) return .{ .dbl = @bitCast(v) };
+            return .{ .color = v };
+        },
+        4 => {
+            if (pos.* + 1 > b.len) return null;
+            const v = b[pos.*] == 1;
+            pos.* += 1;
+            return .{ .boolean = v };
+        },
+        else => return null,
+    }
+}
+
+fn fmtValue(alloc: std.mem.Allocator, v: PropValue) []const u8 {
+    return switch (v) {
+        .uint => |x| std.fmt.allocPrint(alloc, "{d}", .{x}) catch "?",
+        .dbl => |x| std.fmt.allocPrint(alloc, "{d:.3}", .{x}) catch "?",
+        .color => |x| std.fmt.allocPrint(alloc, "0x{x:0>8}", .{x}) catch "?",
+        .boolean => |x| if (x) "true" else "false",
+        .bytes => |s| std.fmt.allocPrint(alloc, "<{d}B>", .{s.len}) catch "?",
     };
+}
+
+fn decodeImpl(path: []const u8) ?*Riv {
+    const file = std.fs.cwd().openFile(path, .{}) catch return null;
     defer file.close();
-    const bytes = file.readToEndAlloc(std.heap.page_allocator, 64 * 1024 * 1024) catch {
-        std.debug.print("inspect: read failed\n", .{});
-        return;
-    };
-    defer std.heap.page_allocator.free(bytes);
+    const bytes = file.readToEndAlloc(std.heap.page_allocator, 64 * 1024 * 1024) catch return null;
     var pos: usize = 0;
 
     if (bytes.len < 4 or !std.mem.eql(u8, bytes[0..4], "RIVE")) {
-        std.debug.print("inspect: bad fingerprint\n", .{});
-        return;
+        std.heap.page_allocator.free(bytes);
+        return null;
     }
     pos = 4;
-    const major = readVarU64(bytes, &pos) orelse return;
-    const minor = readVarU64(bytes, &pos) orelse return;
-    const fileId = readVarU64(bytes, &pos) orelse return;
-    std.debug.print("header: RIVE v{d}.{d} fileId={d}\n", .{ major, minor, fileId });
+    _ = readVarU64(bytes, &pos) orelse { std.heap.page_allocator.free(bytes); return null; };
+    _ = readVarU64(bytes, &pos) orelse { std.heap.page_allocator.free(bytes); return null; };
+    _ = readVarU64(bytes, &pos) orelse { std.heap.page_allocator.free(bytes); return null; };
 
-    // ToC: property keys until 0, then 2-bit field indices from u32 stream.
     var toc_keys = std.ArrayList(u16).empty;
     defer toc_keys.deinit(std.heap.page_allocator);
     while (true) {
-        const k = readVarU64(bytes, &pos) orelse return;
+        const k = readVarU64(bytes, &pos) orelse { std.heap.page_allocator.free(bytes); return null; };
         if (k == 0) break;
-        toc_keys.append(std.heap.page_allocator, @intCast(k)) catch return;
+        toc_keys.append(std.heap.page_allocator, @intCast(k)) catch { std.heap.page_allocator.free(bytes); return null; };
     }
     var toc_field = std.AutoHashMap(u16, i8).init(std.heap.page_allocator);
     defer toc_field.deinit();
@@ -1132,78 +1172,94 @@ pub fn inspectImpl(path: []const u8) void {
         var bit: u4 = 8;
         for (toc_keys.items) |k| {
             if (bit == 8) {
-                cur = readU32(bytes, &pos) orelse return;
+                cur = readU32(bytes, &pos) orelse { std.heap.page_allocator.free(bytes); return null; };
                 bit = 0;
             }
-            toc_field.put(k, @intCast((cur >> bit) & 3)) catch return;
+            toc_field.put(k, @intCast((cur >> bit) & 3)) catch { std.heap.page_allocator.free(bytes); return null; };
             bit += 2;
         }
     }
-    std.debug.print("toc: {d} property keys\n", .{toc_keys.items.len});
 
-    // Object stream.
+    var objects = std.ArrayList(RivObj).empty;
     var obj_i: usize = 0;
-    var unknown_types = std.AutoHashMap(u64, usize).init(std.heap.page_allocator);
-    defer unknown_types.deinit();
-    while (pos < bytes.len) {
-        const typeKey = readVarU64(bytes, &pos) orelse {
-            std.debug.print("inspect: truncated typeKey at obj {d}\n", .{obj_i});
-            return;
-        };
+    var ok = true;
+    decode: while (pos < bytes.len) {
+        const typeKey = readVarU64(bytes, &pos) orelse { ok = false; break; };
         const tn = typeName(typeKey);
-        var nprops: usize = 0;
-        var first_props = std.ArrayList(u8).empty;
-        defer first_props.deinit(std.heap.page_allocator);
+        var props = std.ArrayList(Prop).empty;
+        var parent: i64 = -1;
         while (true) {
-            const pk = readVarU64(bytes, &pos) orelse {
-                std.debug.print("inspect: truncated propKey at obj {d}\n", .{obj_i});
-                return;
-            };
+            const pk = readVarU64(bytes, &pos) orelse { ok = false; break :decode; };
             if (pk == 0) break;
             const pkey: u16 = @intCast(pk);
-            // registry first, then the file's ToC (0-3 only)
             var field: i8 = -1;
             if (propEntry(pkey)) |pe| {
                 field = pe.field;
             } else if (toc_field.get(pkey)) |tf| {
                 field = tf;
             }
-            if (field == -1) {
-                std.debug.print("inspect: obj {d} unknown propKey {d} — stream unreadable\n", .{ obj_i, pk });
-                return;
+            if (field == -1) { ok = false; break :decode; }
+            const value = readValue(bytes, &pos, field) orelse { ok = false; break :decode; };
+            const nm = if (propEntry(pkey)) |pe| pe.name else "?";
+            if (pk == 5) { // Component.parentId — object index in stream order
+                if (value == .uint) parent = @intCast(value.uint);
             }
-            if (!skipValue(bytes, &pos, field)) {
-                std.debug.print("inspect: obj {d} prop {d} value overrun\n", .{ obj_i, pk });
-                return;
-            }
-            nprops += 1;
-            if (nprops <= 6 and first_props.items.len < 200) {
-                const nm = if (propEntry(pkey)) |pe| pe.name else "?";
-                const s = std.fmt.allocPrint(std.heap.page_allocator, " {s}={d}", .{ nm, pk }) catch continue;
-                first_props.appendSlice(std.heap.page_allocator, s) catch {};
-                std.heap.page_allocator.free(s);
-            }
+            props.append(std.heap.page_allocator, .{ .key = pkey, .name = nm, .field = field, .value = value }) catch { ok = false; break :decode; };
         }
-        if (tn) |name| {
-            std.debug.print("obj[{d}] type={d} {s} props={d}%{s}\n", .{ obj_i, typeKey, name, nprops, first_props.items });
-        } else {
-            const c = unknown_types.getOrPut(typeKey) catch continue;
-            c.value_ptr.* += 1;
-            std.debug.print("obj[{d}] type={d} <unknown> props={d}%{s}\n", .{ obj_i, typeKey, nprops, first_props.items });
-        }
+        objects.append(std.heap.page_allocator, .{ .type_key = typeKey, .type_name = tn, .parent = parent, .props = props.items }) catch { ok = false; break; };
         obj_i += 1;
     }
-    std.debug.print("inspect: {d} objects, end pos {d}/{d}\n", .{ obj_i, pos, bytes.len });
-    var it = unknown_types.iterator();
-    while (it.next()) |e| {
-        std.debug.print("  unknown typeKey {d} x{d}\n", .{ e.key_ptr.*, e.value_ptr.* });
+    if (!ok or pos != bytes.len) {
+        // free partial state best-effort; decode failure is loud upstream
+        std.heap.page_allocator.free(bytes);
+        return null;
+    }
+    const riv = std.heap.page_allocator.create(Riv) catch { std.heap.page_allocator.free(bytes); return null; };
+    riv.* = .{ .bytes = bytes, .objects = objects.items };
+    return riv;
+}
+
+fn dumpRiv(r: *Riv) void {
+    std.debug.print("riv: {d} objects\n", .{r.objects.len});
+    for (r.objects, 0..) |o, i| {
+        const tname = o.type_name orelse "?";
+        // parentId is an ARTBOARD COMPONENT SLOT, not a stream index —
+        // slot numbering counts only objects that claimArtboardSlot, so
+        // resolving it needs the component model (next leg). Print raw.
+        std.debug.print("obj[{d}] {s} parentId={d} props={d}\n", .{ i, tname, o.parent, o.props.len });
+        for (o.props) |p| {
+            const vs = fmtValue(std.heap.page_allocator, p.value);
+            std.debug.print("    {s} (key {d}, f{d}) = {s}\n", .{ p.name, p.key, p.field, vs });
+        }
     }
 }
 
 // ---- Koru surface ---------------------------------------------------------
 
-~pub tor inspect { path: string }
+~pub tor open { path: string }
+| loaded *Riv<loaded!>
+| failed string
+
+~proc open|zig {
+    const r = decodeImpl(path) orelse return .{ .failed = "not a .riv or truncated" };
+    return .{ .loaded = r };
+}
+
+~pub tor inspect { r: *Riv<loaded> }
 
 ~proc inspect|zig {
-    inspectImpl(path);
+    dumpRiv(r);
+}
+
+~pub tor free { r: *Riv<!loaded> }
+
+~proc free|zig {
+    // discharge: bytes + object array + props arrays + Riv itself
+    const rr = r;
+    for (rr.objects) |o| {
+        std.heap.page_allocator.free(o.props);
+    }
+    std.heap.page_allocator.free(rr.objects);
+    std.heap.page_allocator.free(rr.bytes);
+    std.heap.page_allocator.destroy(rr);
 }

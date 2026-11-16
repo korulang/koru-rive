@@ -1,5 +1,7 @@
-// Phase-1 probe: dump the object listing for hello_world.riv.
+// Phase-1 probe: decode hello_world.riv into the object model and dump it.
 import kr/rive
 import std/io
 
-kr/rive:inspect(path: "/Users/larsde/src/koru-rive/rive-cpp/tests/unit_tests/assets/hello_world.riv")
+kr/rive:open(path: "/Users/larsde/src/koru-rive/rive-cpp/tests/unit_tests/assets/hello_world.riv")
+| loaded r |> kr/rive:inspect(r) |> kr/rive:free(r)
+| failed e |> std/io:print.ln("open failed: {{ e:s }}")
