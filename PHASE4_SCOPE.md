@@ -69,3 +69,17 @@ means polygon fill on the GPU backends, Tier-2-verified.
 - Not decoder work — ops stream is done and gate-verified.
 - Not claiming coverage exists — Metal-via-canvas works today; the
   koru-native polygon path does not. This doc is scope, not status.
+
+## Consume surface — uniform realization contract (Lars 2026-11-16)
+
+The interface Omni consumes must be UNIFORM across realizations —
+Metal first, then koru-native — with variant/realization surfaces
+monomorphizing to static calls. Phase-0 law applies: the koru-native
+part declares identical signatures or refuses loudly at compile.
+Deliverable is that uniform surface, not a second API.
+
+Concretely: `draw.path`-equivalent verbs take the OpRec stream (or the
+tessellated Tri soup) identically on both backends; realization choice
+is a compile-time variant, not a runtime branch. Stroke/fill/clip
+semantics must match canvas-verb behavior bit-for-bit where the Tier-2
+gate measures.
