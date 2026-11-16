@@ -174,3 +174,11 @@ other *Id props (animationId, stateToId, artboardId, fontAssetId…)
 each have their OWN id spaces — enumerate per-prop before resolving.
 Then path vertex storage via a shape-bearing fixture
 (component_list_*.riv found in tests/unit_tests/assets/).
+
+## Hierarchy extraction — gotcha found (2026-11-16)
+
+Generated base headers declare `class ArtboardBase : public LayoutComponent`
+— parents are CONCRETE names (no "Base" suffix) pointing at the class the
+base mixes into; normalize parent+"Base" → file <snake>_base.hpp. First
+extract attempt returned 0 classes: regex expected "Base" suffix on
+parents. isComponent = chain reaches ComponentBase.
