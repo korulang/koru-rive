@@ -4436,10 +4436,7 @@ fn strokeContour(ptsIn: []const V2, thick: f32, join: i64, cap: i64, closedIn: b
     const closed = closedIn or v2dist2(ptsIn[0], ptsIn[n - 1]) < 0.01;
     const m = if (closed) n - 1 else n; // distinct vertices
     if (m < 2) return null;
-    // per-vertex unit normals (avg of adjacent segment normals for smooth joints)
-    var left = std.ArrayList(V2).empty;
-    var right = std.ArrayList(V2).empty;
-    defer left.deinit(alloc); defer right.deinit(alloc);
+    // per-segment normals; joins expand each interior vertex per style
     var segN = std.ArrayList(V2).empty;
     defer segN.deinit(alloc);
     const segCount = if (closed) m else m - 1;
@@ -4447,47 +4444,105 @@ fn strokeContour(ptsIn: []const V2, thick: f32, join: i64, cap: i64, closedIn: b
         const a = ptsIn[i]; const b = ptsIn[(i + 1) % m];
         segN.append(alloc, v2perp(v2unit(v2sub(b, a)))) catch {};
     }
-    for (0..m) |i| {
-        var nx: f32 = 0; var ny: f32 = 0; var cnt: f32 = 0;
-        // previous segment normal
-        const pi: ?usize = if (closed) (if (i == 0) segCount - 1 else i - 1) else if (i > 0) i - 1 else null;
-        const ni: ?usize = if (i < segCount) i else null;
-        if (pi) |p| { nx += segN.items[@intCast(p)].x; ny += segN.items[@intCast(p)].y; cnt += 1; }
-        if (ni) |nn| { nx += segN.items[@intCast(nn)].x; ny += segN.items[@intCast(nn)].y; cnt += 1; }
-        if (cnt == 0) { nx = 0; ny = 1; cnt = 1; }
-        const inv = 1.0 / @sqrt(nx * nx + ny * ny);
-        nx *= inv; ny *= inv;
+    // build left/right offset polylines with join treatment at each vertex.
+    // leftPts[k] corresponds to offset point on segment k's start side;
+    // interior vertices may contribute multiple points (join geometry).
+    var left = std.ArrayList(V2).empty;
+    var right = std.ArrayList(V2).empty;
+    defer left.deinit(alloc); defer right.deinit(alloc);
+    const miterLimit: f32 = 4.0;
+    // emit join points at vertex i between seg (i-1) and seg i normals
+    const joinAt = struct {
+        fn f(p: V2, nPrev: V2, nNext: V2, hh: f32, joinKind: i64, allocJ: std.mem.Allocator, lp: *std.ArrayList(V2), rp: *std.ArrayList(V2)) void {
+            const lpEnd: V2 = .{ .x = p.x + nPrev.x * hh, .y = p.y + nPrev.y * hh };
+            const lpStart: V2 = .{ .x = p.x + nNext.x * hh, .y = p.y + nNext.y * hh };
+            const rpEnd: V2 = .{ .x = p.x - nPrev.x * hh, .y = p.y - nPrev.y * hh };
+            const rpStart: V2 = .{ .x = p.x - nNext.x * hh, .y = p.y - nNext.y * hh };
+            switch (joinKind) {
+                0 => { // miter: intersect offset lines, clamp at miterLimit*thick
+                    // solve p + nPrev*h + t*dPrev = p + nNext*h + s*dNext
+                    const dPrev = v2perp(nPrev); const dNext = v2perp(nNext);
+                    const den = dPrev.x * (-dNext.y) - dPrev.y * (-dNext.x);
+                    var mx = lpEnd.x; var my = lpEnd.y; var beveled = false;
+                    if (@abs(den) > 0.000001) {
+                        const rx = lpStart.x - lpEnd.x; const ry = lpStart.y - lpEnd.y;
+                        const t = (rx * (-dNext.y) - ry * (-dNext.x)) / den;
+                        mx = lpEnd.x + dPrev.x * t; my = lpEnd.y + dPrev.y * t;
+                        const dl = @sqrt((mx - p.x) * (mx - p.x) + (my - p.y) * (my - p.y));
+                        if (dl > hh * miterLimit) beveled = true;
+                    } else { beveled = true; }
+                    if (beveled) {
+                        lp.append(allocJ, lpEnd) catch {}; lp.append(allocJ, lpStart) catch {};
+                        rp.append(allocJ, rpEnd) catch {}; rp.append(allocJ, rpStart) catch {};
+                    } else {
+                        const mp: V2 = .{ .x = mx, .y = my };
+                        const mq: V2 = .{ .x = 2.0 * p.x - mx, .y = 2.0 * p.y - my };
+                        lp.append(allocJ, mp) catch {}; rp.append(allocJ, mq) catch {};
+                    }
+                },
+                1 => { // round: arc around p from prev-offset to next-offset
+                    const a0 = std.math.atan2(lpEnd.y - p.y, lpEnd.x - p.x);
+                    var a1 = std.math.atan2(lpStart.y - p.y, lpStart.x - p.x);
+                    if (a1 < a0) a1 += 6.2831853;
+                    arcPts(p ,hh, a0, a1, 6, lp, allocJ);
+                    lp.append(allocJ, lpStart) catch {};
+                    const b0 = std.math.atan2(rpEnd.y - p.y, rpEnd.x - p.x);
+                    var b1 = std.math.atan2(rpStart.y - p.y, rpStart.x - p.x);
+                    if (b1 < b0) b1 += 6.2831853;
+                    arcPts(p ,hh, b0, b1, 6, rp, allocJ);
+                    rp.append(allocJ, rpStart) catch {};
+                },
+                else => { // bevel: both offset endpoints
+                    lp.append(allocJ, lpEnd) catch {}; lp.append(allocJ, lpStart) catch {};
+                    rp.append(allocJ, rpEnd) catch {}; rp.append(allocJ, rpStart) catch {};
+                },
+            }
+        }
+    }.f;
+    // walk vertices; at each interior vertex emit the join between the
+    // incoming and outgoing segment offsets.
+    const vcount = if (closed) m else m;
+    for (0..vcount) |i| {
+        const isInterior = closed or (i > 0 and i < m - 1);
         const p = ptsIn[i % m];
-        left.append(alloc, .{ .x = p.x + nx * half, .y = p.y + ny * half }) catch {};
-        right.append(alloc, .{ .x = p.x - nx * half, .y = p.y - ny * half }) catch {};
+        if (!isInterior) {
+            // endpoint: single averaged offset (cap handles the end)
+            const si = if (i < segCount) i else segCount - 1;
+            const nv = segN.items[si];
+            left.append(alloc, .{ .x = p.x + nv.x * half, .y = p.y + nv.y * half }) catch {};
+            right.append(alloc, .{ .x = p.x - nv.x * half, .y = p.y - nv.y * half }) catch {};
+            continue;
+        }
+        const sPrev = if (closed) @rem(@as(usize, i + segCount - 1), segCount) else i - 1;
+        const sNext = if (i < segCount) i else segCount - 1;
+        const nPrev = segN.items[sPrev]; const nNext = segN.items[sNext];
+        // tangent check: near-180 reversal -> emit both offsets raw
+        const dot = nPrev.x * nNext.x + nPrev.y * nNext.y;
+        if (dot < -0.999) {
+            left.append(alloc, .{ .x = p.x + nPrev.x * half, .y = p.y + nPrev.y * half }) catch {};
+            left.append(alloc, .{ .x = p.x + nNext.x * half, .y = p.y + nNext.y * half }) catch {};
+            right.append(alloc, .{ .x = p.x - nPrev.x * half, .y = p.y - nPrev.y * half }) catch {};
+            right.append(alloc, .{ .x = p.x - nNext.x * half, .y = p.y - nNext.y * half }) catch {};
+            continue;
+        }
+        joinAt(p, nPrev, nNext, half, join, alloc, &left, &right);
     }
-    // assemble outline: left side forward, end cap, right side backward, start cap
+    // assemble outline: left side forward, end cap, right side backward,
+    // start cap. left/right are join-expanded polylines (not per-vertex).
     var ring = std.ArrayList(V2).empty;
     defer ring.deinit(alloc);
     for (left.items) |p| ring.append(alloc, p) catch {};
-    // end cap at vertex m-1 (or m for open): between left[m-1] and right[m-1]
-    const endI = if (closed) 0 else m - 1;
-    _ = endI;
-    // cap helpers append arc/line points between two offset points around center c
-
     if (!closed) {
-        // end cap: center = last point, from = left[m-1] to = right[m-1]
-        capRun(ptsIn[m - 1], left.items[m - 1], right.items[m - 1], half, cap, alloc, &ring);
+        // end cap: last point -> right side's last point
+        capRun(ptsIn[m - 1], left.items[left.items.len - 1], right.items[right.items.len - 1], half, cap, alloc, &ring);
     }
-    // right side backward (skip duplicate joint at end for closed)
-    var ri: usize = m;
+    var ri: usize = right.items.len;
     while (ri > 0) : (ri -= 1) {
-        const idx = if (closed) @rem(@as(usize, ri - 1), m) else ri - 1;
-        if (!closed and ri == m) continue; // right[m-1] already placed by cap
-        ring.append(alloc, right.items[idx]) catch {};
+        ring.append(alloc, right.items[ri - 1]) catch {};
     }
     if (!closed) {
         capRun(ptsIn[0], right.items[0], left.items[0], half, cap, alloc, &ring);
     }
-    // joins: for v1 miter/bevel via averaged normals already smooth;
-    // round joins need per-vertex arcs — deferred (named gap: round join
-    // currently approximated by the averaged-normal offset point).
-    _ = join;
     return ring.toOwnedSlice(alloc) catch null;
 }
 
