@@ -4584,7 +4584,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             if (srcId < 0) continue;
             var srcIdx: usize = r.objects.len;
             for (r.objects, 0..) |*so2, sj| {
-                if (so2.type_key == 3 and so2.slot == srcId) { srcIdx = sj; break; }
+                if (so2.type_key == 3 and so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
             }
             if (srcIdx == r.objects.len) continue;
             var sVs = std.ArrayList(PV).empty;
