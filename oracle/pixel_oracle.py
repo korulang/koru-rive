@@ -109,7 +109,10 @@ def box_blur(a, r=1):
 
 def coverage(rgb, bg):
     b = float(np.mean(bg))
-    return np.clip((rgb.mean(axis=2) - b) / max(1.0, 255.0 - b), 0, 1)
+    # Two-sided: ink may be darker OR brighter than the backdrop
+    # (white strokes on dark clfp bg; orange fill on white cdo bg).
+    # Normalized by the larger of the two dynamic ranges.
+    return np.clip(np.abs(rgb.mean(axis=2) - b) / max(b, 255.0 - b, 1.0), 0, 1)
 
 
 # ---------------------------------------------------------------- evaluation
@@ -130,11 +133,29 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
              prev=None, bbox_axes="x", bbox_tol=6, bg_tol=8,
              mass_min=0.85, mass_max=1.15, gap_max=0.05, gap_px=1,
              stale_min_pixels=1, allow_missing_time=False,
-             tile=10, tile_min=0.80, tile_max=1.60, tile_floor=20.0):
+             tile=10, tile_min=0.80, tile_max=1.60, tile_floor=20.0,
+             comp=None):
     """Run every check. Returns {'pass': bool, 'checks': [...], 'report': {...}}.
     Never exits, never prints: callers decide what to do with the verdict."""
     ref_rgb, ref_alpha, ref_size = load_rgb(ref_path)
     our_rgb, our_alpha, our_size = load_rgb(ours_path)
+
+    # Alpha compositing: a semi-transparent reference (PNG with alpha)
+    # can't be compared pixel-for-pixel against an opaque BMP — the
+    # backdrop it was authored over is unknown. Composite BOTH sides
+    # over --comp so the comparison measures the rendered appearance
+    # over a declared neutral field. Alpha equality is then vacuous by
+    # construction and reported as such.
+    composited = False
+    if comp is not None and ((ref_alpha != 255).any() or (our_alpha != 255).any()):
+        cb = np.array(comp, dtype=np.int16)
+        ra = (ref_alpha.astype(np.float64) / 255.0)[:, :, None]
+        oa = (our_alpha.astype(np.float64) / 255.0)[:, :, None]
+        ref_rgb = np.clip(ref_rgb * ra + cb * (1 - ra), 0, 255).astype(np.int16)
+        our_rgb = np.clip(our_rgb * oa + cb * (1 - oa), 0, 255).astype(np.int16)
+        ref_alpha = np.full_like(ref_alpha, 255)
+        our_alpha = np.full_like(our_alpha, 255)
+        composited = True
     if inset:
         i = inset
         ref_rgb, ref_alpha = ref_rgb[i:-i, i:-i], ref_alpha[i:-i, i:-i]
@@ -171,6 +192,8 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
               "ref opaque=%d ours opaque=%d differing px=%d"
               % ((ref_alpha == 255).sum(), (our_alpha == 255).sum(),
                  (ref_alpha != our_alpha).sum()))
+    elif composited:
+        check("alpha", True, "composited over %s — alpha vacuous" % (comp,))
     else:
         check("alpha", True, "both fully opaque")
 
@@ -284,6 +307,9 @@ def main():
     ap.add_argument("--ours", required=True)
     ap.add_argument("--prev")
     ap.add_argument("--clear", help="R,G,B of a probe clear colour that must be fully covered")
+    ap.add_argument("--comp", default=None,
+                    help="backdrop RGB to composite alpha-bearing refs over "
+                         "(e.g. 255,255,255); enables semi-transparent fixtures")
     ap.add_argument("--bg", default="49,49,49")
     ap.add_argument("--bg-tol", type=int, default=8)
     ap.add_argument("--bbox-tol", type=int, default=6)
@@ -323,6 +349,7 @@ def main():
         mass_min=a.mass_min, mass_max=a.mass_max, gap_max=a.gap_max, gap_px=a.gap_px,
         allow_missing_time=a.allow_missing_time,
         tile=a.tile, tile_min=a.tile_min, tile_max=a.tile_max, tile_floor=a.tile_floor,
+        comp=tuple(int(x) for x in a.comp.split(",")) if a.comp else None,
     )
     if a.json:
         print(json.dumps(res, indent=2, default=str))
