@@ -351,3 +351,11 @@ committed producer-side (`ff18735`).
   are never resolved to sourceId geometry. Bounded fix: shape with
   ClippingShape child -> emit kind-9 clip from SOURCE shape's path,
   wrap draws, pop.
+
+- clip emission debug: clip path verbs emit correctly (ellipse
+  cubics, radius 85.8 = 171.5/2 exact) under source world transform.
+  Suspect: clipper's TWO ellipse children carry Node.x offsets
+  (+150.1 / -89.1) forming left+right halves — clip path gather may
+  miss child-node transforms -> mask shifted ~-150px left -> ink=0.
+  Main draw path handles this somehow (passes elsewhere) — diff the
+  transform composition for clip-source vs draw-source gathers.
