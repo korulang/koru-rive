@@ -2537,9 +2537,11 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         }
     }
     emitArtboardPaints(r, abIdx, scoped);
-    for (r.objects, 0..) |o, i| {
-        if (o.type_key != 3) continue; // Shape only
-        if (scoped and owningArtboard(r, i) != abIdx) continue;
+    var shi: usize = r.objects.len;
+    while (shi > 0) : (shi -= 1) {
+        const i = shi - 1;
+        const o = &r.objects[i];
+        if (o.type_key != 3) continue; // Shape onlyi) != abIdx) continue;
         // gather path objects (vertex children or Rectangle) + paint children
         var pathVs = std.ArrayList(PV).empty;
         var verbs = std.ArrayList(u8).empty;
