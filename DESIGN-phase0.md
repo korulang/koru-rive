@@ -578,3 +578,13 @@ per-(artboard x SM) sectioning where Main carries TWO SMs
 (SM15+SM37), NOT a composed/instantiation pass. Section rule
 re-derivation: emit per artboard -> static + per owned SM ->
 smN+frames; rows inside instantiator's own frames (rows=true).
+
+## emitOps structure — paint/text/rows share one artboard loop
+
+The 'for |o,i| type_key==1' loop at ~2543 wraps ALL of:
+artboard paints (inner for|*c,pi|), text objects (for|to,ti|),
+composed rows — scoped by 'i != abIdx'. Shapes are a SEPARATE
+earlier loop. Golden order = bg-fill -> shapes -> text -> rows.
+Reorder = split the for|o,i|: paint inner-loop extracts to
+emitArtboardPaints(r, abIdx, scoped) called before shape loop;
+text+rows stay post-shape. aw/ah come from the artboard obj.
