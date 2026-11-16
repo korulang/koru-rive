@@ -1031,6 +1031,19 @@ const prop_entries = [_]PropEntry{
     .{ .key = 1137, .field = 0, .name = "StateMachineListener.listenerFlags" },
 };
 
+
+const comp_type_keys = [_]u64{1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,24,34,35,36,38,39,40,41,42,43,44,45,46,47,48,49,51,52,79,80,82,83,85,86,87,88,89,90,91,92,93,95,96,97,98,100,107,108,109,110,111,113,121,122,123,124,127,128,129,130,131,134,135,136,137,144,147,148,154,158,159,160,161,162,163,164,165,167,407,409,420,451,452,491,492,493,494,495,506,507,508,513,520,521,522,523,524,525,533,546,547,548,559,569,570,571,572,573,574,575,592,603,606,611,613,616,618,619,620,621,625,626,627,631,637,640,644,645,648,653,668,1039,1056,1057,1058,1066,1068,1069,1089,1100,1101};
+
+fn isComponentType(key: u64) bool {
+    var lo: usize = 0;
+    var hi: usize = comp_type_keys.len;
+    while (lo < hi) {
+        const mid = (lo + hi) / 2;
+        if (comp_type_keys[mid] < key) lo = mid + 1 else hi = mid;
+    }
+    return lo < comp_type_keys.len and comp_type_keys[lo] == key;
+}
+
 fn typeName(key: u64) ?[:0]const u8 {
     const e = zsearch(TypeKeyEntry, key, &type_keys, struct {
         fn f(t: TypeKeyEntry) u64 { return t.key; }
@@ -1103,7 +1116,7 @@ const PropValue = union(enum) {
 };
 
 const Prop = struct { key: u16, name: [:0]const u8, field: i8, value: PropValue };
-const RivObj = struct { type_key: u64, type_name: ?[:0]const u8, parent: i64, props: []Prop };
+const RivObj = struct { type_key: u64, type_name: ?[:0]const u8, parent: i64, parent_obj: i64, style_obj: i64, props: []Prop };
 const Riv = struct { bytes: []u8, objects: []RivObj };
 
 fn readValue(b: []const u8, pos: *usize, field: i8) ?PropValue {
@@ -1188,6 +1201,7 @@ fn decodeImpl(path: []const u8) ?*Riv {
         const tn = typeName(typeKey);
         var props = std.ArrayList(Prop).empty;
         var parent: i64 = -1;
+        var style_id: i64 = -1;
         while (true) {
             const pk = readVarU64(bytes, &pos) orelse { ok = false; break :decode; };
             if (pk == 0) break;
@@ -1201,14 +1215,84 @@ fn decodeImpl(path: []const u8) ?*Riv {
             if (field == -1) { ok = false; break :decode; }
             const value = readValue(bytes, &pos, field) orelse { ok = false; break :decode; };
             const nm = if (propEntry(pkey)) |pe| pe.name else "?";
-            if (pk == 5) { // Component.parentId — object index in stream order
+            if (pk == 5) { // Component.parentId — component slot
                 if (value == .uint) parent = @intCast(value.uint);
+            } else if (pk == 272) { // TextValueRun.styleId — component slot
+                if (value == .uint) style_id = @intCast(value.uint);
             }
             props.append(std.heap.page_allocator, .{ .key = pkey, .name = nm, .field = field, .value = value }) catch { ok = false; break :decode; };
         }
-        objects.append(std.heap.page_allocator, .{ .type_key = typeKey, .type_name = tn, .parent = parent, .props = props.items }) catch { ok = false; break; };
+        objects.append(std.heap.page_allocator, .{ .type_key = typeKey, .type_name = tn, .parent = parent, .parent_obj = -1, .style_obj = style_id, .props = props.items }) catch { ok = false; break; };
         obj_i += 1;
     }
+    // ---- component-slot resolution (post-pass: forward refs exist —
+    // SolidColor obj[6] parentIds Fill obj[9] which streams LATER) ----
+    // Slot space resets per Artboard; artboard itself = slot 0; each
+    // isComponentType object claims the next slot in stream order.
+    {
+        var slot_of = std.heap.page_allocator.alloc(i64, objects.items.len) catch unreachable;
+        defer std.heap.page_allocator.free(slot_of);
+        @memset(slot_of, -1);
+        var cur = std.ArrayList(usize).empty;
+        defer cur.deinit(std.heap.page_allocator);
+        var artboards = std.ArrayList(usize).empty;
+        defer artboards.deinit(std.heap.page_allocator);
+        var slot_maps = std.ArrayList(std.ArrayList(usize)).empty;
+        defer {
+            for (slot_maps.items) |*m| m.deinit(std.heap.page_allocator);
+            slot_maps.deinit(std.heap.page_allocator);
+        }
+        for (objects.items, 0..) |*o, i| {
+            if (o.type_key == 1) { // Artboard — new slot space, self = slot 0
+                cur.clearRetainingCapacity();
+                cur.append(std.heap.page_allocator, i) catch {};
+                artboards.append(std.heap.page_allocator, i) catch {};
+                var m = std.ArrayList(usize).empty;
+                m.append(std.heap.page_allocator, i) catch {};
+                slot_maps.append(std.heap.page_allocator, m) catch {};
+                slot_of[i] = 0;
+            } else if (isComponentType(o.type_key)) {
+                const li = artboards.items.len -| 1;
+                if (li < slot_maps.items.len) {
+                    slot_maps.items[li].append(std.heap.page_allocator, i) catch {};
+                    slot_of[i] = @intCast(slot_maps.items[li].items.len - 1);
+                }
+            }
+        }
+        // resolve parentId/styleId → object index via owning artboard's map
+        for (objects.items, 0..) |*o, i| {
+            // owning artboard = last artboard obj index <= i
+            var owner: usize = 0;
+            for (artboards.items) |ab| {
+                if (ab <= i) owner = ab else break;
+            }
+            // find slot_maps index for that artboard
+            var mi: usize = 0;
+            for (artboards.items, 0..) |ab, j| {
+                if (ab == owner) { mi = j; break; }
+            }
+            const smap = slot_maps.items[mi].items;
+            if (o.parent >= 0 and o.parent < @as(i64, @intCast(smap.len))) {
+                o.parent_obj = @intCast(smap[@intCast(o.parent)]);
+            }
+            if (o.style_obj >= 0 and o.style_obj < @as(i64, @intCast(smap.len))) {
+                // style_obj holds the raw slot; resolve in place below
+            }
+        }
+        // style resolution second loop (kept separate: style_obj stores slot)
+        for (objects.items, 0..) |*o, i| {
+            if (o.style_obj < 0) continue;
+            var owner: usize = 0;
+            for (artboards.items) |ab| { if (ab <= i) owner = ab else break; }
+            var mi: usize = 0;
+            for (artboards.items, 0..) |ab, j| { if (ab == owner) { mi = j; break; } }
+            const smap = slot_maps.items[mi].items;
+            if (o.style_obj < @as(i64, @intCast(smap.len))) {
+                o.style_obj = @intCast(smap[@intCast(o.style_obj)]);
+            } else o.style_obj = -1;
+        }
+    }
+
     if (!ok or pos != bytes.len) {
         // free partial state best-effort; decode failure is loud upstream
         std.heap.page_allocator.free(bytes);
@@ -1226,7 +1310,17 @@ fn dumpRiv(r: *Riv) void {
         // parentId is an ARTBOARD COMPONENT SLOT, not a stream index —
         // slot numbering counts only objects that claimArtboardSlot, so
         // resolving it needs the component model (next leg). Print raw.
-        std.debug.print("obj[{d}] {s} parentId={d} props={d}\n", .{ i, tname, o.parent, o.props.len });
+        var link = std.ArrayList(u8).empty;
+        defer link.deinit(std.heap.page_allocator);
+        if (o.parent_obj >= 0) {
+            const pn = r.objects[@intCast(o.parent_obj)].type_name orelse "?";
+            link.appendSlice(std.heap.page_allocator, std.fmt.allocPrint(std.heap.page_allocator, " ->{d}:{s}", .{ o.parent_obj, pn }) catch "") catch {};
+        }
+        if (o.style_obj >= 0) {
+            const sn = r.objects[@intCast(o.style_obj)].type_name orelse "?";
+            link.appendSlice(std.heap.page_allocator, std.fmt.allocPrint(std.heap.page_allocator, " style->{d}:{s}", .{ o.style_obj, sn }) catch "") catch {};
+        }
+        std.debug.print("obj[{d}] {s} parentId={d}%{s} props={d}\n", .{ i, tname, o.parent, link.items, o.props.len });
         for (o.props) |p| {
             const vs = fmtValue(std.heap.page_allocator, p.value);
             std.debug.print("    {s} (key {d}, f{d}) = {s}\n", .{ p.name, p.key, p.field, vs });
