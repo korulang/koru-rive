@@ -1843,6 +1843,48 @@ fn propColor(props: []const Prop, key: u16) u32 {
 
 // Emit one drawPath op per ShapePaint child of each Shape, with the
 // shape's composed path geometry — golden drawPath format.
+
+// KeyedObject.objectId / KeyedProperty.propertyKey / KeyFrame.* —
+// flat stream (parentId=-1), linkage by ID props. List animation
+// structure: which slot/property each keyframe group animates.
+fn dumpKeyed(r: *Riv) void {
+    const alloc = std.heap.page_allocator;
+    var curObj: i64 = -1;
+    var curProp: i64 = -1;
+    for (r.objects) |o| {
+        switch (o.type_key) {
+            55 => { // placeholder — LinearAnimation handled below by name check
+            },
+            else => {},
+        }
+        if (o.type_key == 0) continue;
+        // KeyedObject typeKey? detect by prop 51 presence
+        if (propByKey(o.props, 51)) |v| {
+            curObj = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            curProp = -1;
+            std.debug.print("keyed object slot={d} [{s}]\\n", .{ curObj, o.type_name orelse "?" });
+        } else if (propByKey(o.props, 53)) |v| {
+            curProp = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            std.debug.print("  property key={d}\\n", .{curProp});
+        } else if (o.type_key == 70 or o.type_key == 88 or propByKey(o.props, 67) != null) {
+            const fr = propU(o.props, 67, 0);
+            const it = propU(o.props, 68, 0);
+            var val = std.ArrayList(u8).empty;
+            defer val.deinit(alloc);
+            if (propByKey(o.props, 70)) |v2| {
+                const d = switch (v2) { .dbl => |x| x, else => 0 };
+                val.appendSlice(alloc, std.fmt.allocPrint(alloc, "{d:.4}", .{d}) catch "") catch {};
+            } else if (propByKey(o.props, 88)) |v2| {
+                const c = switch (v2) { .color => |x| x, else => 0 };
+                val.appendSlice(alloc, std.fmt.allocPrint(alloc, "{x:0>8}", .{c}) catch "") catch {};
+            } else if (propByKey(o.props, 181) != null) {
+                val.appendSlice(alloc, "bool") catch {};
+            }
+            std.debug.print("    frame={d} interp={d} value={s}\\n", .{ fr, it, val.items });
+        }
+    }
+}
+
 fn dumpDrawOps(r: *Riv) void {
     const alloc = std.heap.page_allocator;
     // Artboard default clip (artboard.cpp:127 — clip=true): bounds rect
@@ -2033,4 +2075,10 @@ fn dumpDrawOps(r: *Riv) void {
 
 ~proc drawops|zig {
     dumpDrawOps(r);
+}
+
+~pub tor keyed { r: *Riv<loaded> }
+
+~proc keyed|zig {
+    dumpKeyed(r);
 }
