@@ -2549,8 +2549,10 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
         var pts = std.ArrayList(V2).empty;
         defer pathVs.deinit(alloc); defer verbs.deinit(alloc); defer pts.deinit(alloc);
         var closed = false;
+        var pathFR: i64 = -1;
         for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
+            if (propU(c.props, 128, @as(i64, -1)) >= 0) pathFR = propU(c.props, 128, 0);
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(c)) catch {};
             } else if (c.type_key == 16) {
@@ -2582,7 +2584,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const blend = propU(c.props, 747, 3);
-            const fillRule = if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
+            const fillRule = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
             std.debug.print("save\n", .{});
             std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
             // Golden close-line encoding: trailing "V 1 <start> V 5"
