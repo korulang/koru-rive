@@ -2794,11 +2794,31 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         if (p.key == 268) { if (p.value == .bytes) text = p.value.bytes; }
         if (p.key == 272) styleId = switch (p.value) { .uint => |u| @intCast(u), else => -1 };
     }
-    var fontSize: f32 = 0;
-    for (r.objects) |c| {
+    var fontSize: f32 = 0; var styleIdx: usize = 0; var haveStyle = false;
+    for (r.objects, 0..) |c, ci| {
         if (c.type_key == 137 and c.slot == styleId) {
+            styleIdx = ci; haveStyle = true;
             for (c.props) |p| {
                 if (p.key == 274) fontSize = switch (p.value) { .dbl => |x| x, else => 0 };
+            }
+        }
+    }
+    // style paint: Fill child -> SolidColor.colorValue + fillRule
+    var textColor: u32 = 0xFF313131; var textFillRule: i64 = 0;
+    if (haveStyle) {
+        for (r.objects, 0..) |fc, fi| {
+            if (fc.type_key == 20 and fc.parent_obj == @as(i64, @intCast(styleIdx))) {
+                for (fc.props) |p| {
+                    if (p.key == 40) textFillRule = switch (p.value) { .uint => |u| @intCast(u), else => 0 };
+                }
+                for (r.objects, 0..) |sc, si| {
+                    if (sc.type_key == 18 and sc.parent_obj == @as(i64, @intCast(fi))) {
+                        for (sc.props) |p| {
+                            if (p.key == 37) textColor = switch (p.value) { .color => |u| u, else => textColor };
+                        }
+                    }
+                    _ = si;
+                }
             }
         }
     }
@@ -2897,7 +2917,7 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
         pen += hmtxAdvance(font, gid) * scale;
     }
     verbs.append(alloc, 5) catch {};
-    std.debug.print("drawPath style=1 color=ff313131 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs={d} pts={d}\n", .{ verbs.items.len, pts.items.len });
+    std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
     var vp: usize = 0;
     for (verbs.items) |v| {
         const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
