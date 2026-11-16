@@ -374,3 +374,19 @@ committed producer-side (`ff18735`).
   miss child-node transforms -> mask shifted ~-150px left -> ink=0.
   Main draw path handles this somehow (passes elsewhere) — diff the
   transform composition for clip-source vs draw-source gathers.
+
+- cl2 recon (component_list_2, commissioned arc): NO 427/441 objects —
+  list is SYNTHETIC via DataConverter 'Number to List 1' (converterId=0,
+  viewModelId=0) on MainVM 'ItemCount' (=12). listRowItems' 441->427
+  chain absent -> ours renders pure bg (9 ops). Ref (BIND_VM=MainVM,
+  RIVE_VM_INST=0, SM 'State Machine 1', tick=1): gray items
+  0xcccccc ~96k px + white ellipses/text ~21k on 0x313131 bg.
+  DECOMPOSITION: (1) NumberToList converter resolution in the pk=800
+  path — generate N items from bound number; (2) flexWrap grid —
+  obj17 style flexWrapValue=1 gap10 pad10 units3, 2D slots
+  perRow=floor(availW/(itemW+gapH)); (3) per-row ItemVM index bind
+  ('List Index'/'State' components -> ItemLabel text + ellipse
+  visibility); (4) SM listeners pk=634 + KeyFrameColor anim on
+  ellipses (entry-state colors at frame 0). Item obj31: 100x100,
+  Node.x=534 offscreen base (layout overrides), gray box obj46
+  111x105 units3 + 2 white ellipses 34x34 + centered label.
