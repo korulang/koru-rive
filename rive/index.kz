@@ -3356,18 +3356,15 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     return "hello";
 }
 
-// ---- draws: flat text encoding of replayable draw ops ----
-// Per draw: "D style color thick join cap eo a b c d e g" then V-lines
-// "V <verb> <coords...>". Consumer parses + chains canvas verbs.
-fn collectDrawsText(r: *Riv, abIdx: usize, frame: i64) [:0]u8 {
-    const alloc = std.heap.page_allocator;
-    var out = std.ArrayList(u8).empty;
-    defer out.deinit(alloc);
+// ---- draws: structured draw records for canvas replay ----
+const DrawRec = struct { style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64, nv: usize, verbs: []u8, pts: []f64 };
+fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []DrawRec {
+    var out = std.ArrayList(DrawRec).empty;
+    errdefer out.deinit(alloc);
     var aw0: f32 = 0; var ah0: f32 = 0;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 1 and i == abIdx) { aw0 = propF(o.props, 7, 0); ah0 = propF(o.props, 8, 0); }
     }
-    // artboard bg: Fill child of artboard -> SolidColor
     for (r.objects, 0..) |o, i| {
         if (o.type_key != 1 or i != abIdx) continue;
         for (r.objects, 0..) |*c, pi| {
@@ -3376,10 +3373,9 @@ fn collectDrawsText(r: *Riv, abIdx: usize, frame: i64) [:0]u8 {
             for (r.objects, 0..) |*g, gi| {
                 if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColor(g.props, 37); _ = gi; }
             }
-            out.appendSlice(alloc, std.fmt.allocPrint(alloc, "D 1 {x} 0 0 -1 -1 0\n", .{color}) catch "") catch {};
-            out.appendSlice(alloc, "M 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000\n") catch {};
-            out.appendSlice(alloc, "V 0 0 0\n") catch {};
-            out.appendSlice(alloc, std.fmt.allocPrint(alloc, "V 1 {d:.4} 0\nV 1 {d:.4} {d:.4}\nV 1\nV 5\n", .{ aw0, aw0, ah0 }) catch "") catch {};
+            var bv = [_]u8{ 0, 1, 1, 1, 1, 5 };
+            var bp = [_]f64{ 0, 0, @floatCast(aw0), 0, @floatCast(aw0), @floatCast(ah0), 0, @floatCast(ah0) };
+            out.append(alloc, .{ .style = 1, .color = color, .thick = 0, .join = -1, .cap = -1, .eo = 0, .a = 1, .b = 0, .c = 0, .d = 1, .e = 0, .g = 0, .nv = 6, .verbs = bv[0..], .pts = bp[0..] }) catch {};
         }
     }
     for (r.objects, 0..) |so, si| {
@@ -3409,6 +3405,11 @@ fn collectDrawsText(r: *Riv, abIdx: usize, frame: i64) [:0]u8 {
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
         if (verbs.items.len == 0) continue;
         const w = effectiveWorld(r, si, frame);
+        var flat = std.ArrayList(f64).empty;
+        defer flat.deinit(alloc);
+        for (pts.items) |p| { flat.append(alloc, p.x) catch {}; flat.append(alloc, p.y) catch {}; }
+        const flatOwned = flat.toOwnedSlice(alloc) catch continue;
+        const verbsOwned = verbs.toOwnedSlice(alloc) catch continue;
         for (r.objects, 0..) |*c, pi| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
             if (c.type_key != 20 and c.type_key != 24) continue;
@@ -3422,31 +3423,16 @@ fn collectDrawsText(r: *Riv, abIdx: usize, frame: i64) [:0]u8 {
             const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const fr = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 2) else propU(c.props, 40, 0);
-            const eo: i64 = if (fr == 2) 1 else 0;
-            out.appendSlice(alloc, std.fmt.allocPrint(alloc, "D {d} {x} {d:.4} {d} {d} {d}\n", .{ style, color, thick, join, cap, eo }) catch "") catch {};
-            out.appendSlice(alloc, std.fmt.allocPrint(alloc, "M {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] }) catch "") catch {};
-            var vp: usize = 0;
-            for (verbs.items) |v| {
-                const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-                var s = std.ArrayList(u8).empty;
-                defer s.deinit(alloc);
-                s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
-                var k: usize = 0;
-                while (k < np and vp < pts.items.len) : (k += 1) {
-                    s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
-                    vp += 1;
-                }
-                s.appendSlice(alloc, "\n") catch {};
-                out.appendSlice(alloc, s.items) catch {};
-            }
+            out.append(alloc, .{ .style = style, .color = color, .thick = thick, .join = join, .cap = cap, .eo = if (fr == 2) 1 else 0, .a = w[0], .b = w[1], .c = w[2], .d = w[3], .e = w[4], .g = w[5], .nv = verbsOwned.len, .verbs = verbsOwned, .pts = flatOwned }) catch {};
         }
     }
-    out.append(alloc, 0) catch {};
-    const z = out.toOwnedSlice(alloc) catch unreachable;
-    return z[0 .. z.len - 1 :0];
+    return out.items;
 }
 
-~pub tor draws { r: *Riv<loaded>, ab: i64, frame: i64 } -> [:0]u8
+~pub tor draws { r: *Riv<loaded>, ab: i64, frame: i64 } -> [DrawRec]
 ~proc draws|zig {
-    return collectDrawsText(r, @intCast(ab), frame);
+    return collectDraws(r, @intCast(ab), frame, std.heap.page_allocator);
 }
+
+
+
