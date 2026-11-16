@@ -529,3 +529,15 @@ engine: SFNT parse -> cmap -> glyf/CFF outline extraction ->
 unitsPerEm scaling -> fontSize -> baseline/advance layout.
 This is the largest uncovered subsystem; everything upstream
 (decoder, custody, transforms, paints) already feeds it.
+
+## SFNT table directory (rive_font.bin, 33,184B, 13 tables)
+
+sfnt v1.0 (00010000), numTables=13. Offsets:
+glyf 220/24666, head 25424/54, hhea 26484/36, hmtx 25480/1004,
+loca 24920/504 (~250 glyphs), maxp 24888/32, cmap 26616/268,
+kern 26892/4506, name, post, OS/2, gasp, prep.
+All required tables present. Next: head->unitsPerEm/indexToLocFormat,
+maxp->numGlyphs, cmap format-4 subtable -> char->glyphID,
+loca+glyf -> contours (simple=flags+coords, composite=components),
+hmtx->advance, hhea->ascender/lineGap for baseline.
+Quad->cubic degree elevation: C1=P0+2/3(Q-P0), C2=P3+2/3(Q-P3).
