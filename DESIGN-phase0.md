@@ -425,3 +425,22 @@ vs my cubicTan derivative everywhere; at path ends tangent can
 differ. Also possible: angleB fmod vs wrapPi edge at +-pi.
 NEXT: port eval_cubic's t==0/1 differencing into cubicTan call
 site (posTan needs both pos+tan from same eval).
+
+## component_list_default_state_machine — second falsifier mapped
+
+Golden structure: artboards=2 (Main + Row); 3 frame-groups of 30
+(sm0 all-empty; two populated groups each 1 drawPath/frame).
+Populated op: ff57a5e0 rect 100x40, verbs=6 pts=4, identity
+transform + local coords (0,0)-(100,40).
+
+My player ALREADY emits the rect statically (color ff57a5e0 exact,
+geometry matches modulo known close-line pts delta) — divergence
+is STRUCTURAL not math: golden's sm0 frames are EMPTY (component
+list populates Row instances via ViewModel/default-state timing);
+my drawops emits unconditional static ops per artboard and has no
+per-SM/per-artboard visibility or component-instantiation model.
+
+New object types in this fixture: ArtboardComponentList,
+ViewModelInstance, ViewModel, LayoutComponent, StateMachineNumber,
+ViewModelPropertyNumber — the component-list subsystem is the
+next frontier (instantiation + VM property binding + SM gating).
