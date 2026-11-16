@@ -2452,8 +2452,9 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool) void {
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const blend = propU(c.props, 747, 3);
             const fillRule = if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
-            std.debug.print("transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
-            std.debug.print("drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pts.items.len });
+            std.debug.print("save\n", .{});
+            std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
+            std.debug.print("  drawPath style={d} color={x:0>8} thick={d:.3} join={d} cap={d} blend={d} shader=0() fillRule={d} verbs={d} pts={d}\n", .{ style, color, thick, join, cap, blend, fillRule, verbs.items.len, pts.items.len });
             var vp: usize = 0;
             for (verbs.items) |v| {
                 const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
@@ -2465,8 +2466,9 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool) void {
                     s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
                     vp += 1;
                 }
-                std.debug.print("{s}\n", .{s.items});
+                std.debug.print("  {s}\n", .{s.items});
             }
+            std.debug.print("restore\n", .{});
         }
     }
     // Artboard-level paints: background Fill/Stroke parented to the
