@@ -204,3 +204,13 @@ committed producer-side (`ff18735`).
   ops ARE in the stream and DO replay. The pixel gap is CONTENT:
   TextValueRun holds literal "text" while the browser renders the
   ViewModel-bound label — data-binding gap, not emission/glyphs.
+
+- VM-binding probe (clfp): decoded graph complete — 3 ViewModels
+  (StarItemVM@6, MainVM@8, ItemVM@14), 3 ViewModelInstances
+  (prop566 = VM index 0/1/2), typed props (ViewModelPropertyNumber,
+  SymbolListIndex), DataBindContexts (21/25/83: prop586=bound
+  property id, prop660=context slot, prop588=path bytes).
+  TextValueRun obj82 text prop268="text" literal; DataBindContext
+  obj83 prop586=268 binds that property id -> VM instance value.
+  Split verdict: VM DECODE complete; BINDING RESOLUTION (prop586
+  -> instance -> property -> value) is the missing eval step.
