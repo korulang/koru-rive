@@ -1553,6 +1553,45 @@ fn v2add(a: V2, b: V2) V2 { return .{ .x = a.x + b.x, .y = a.y + b.y }; }
 fn v2sub(a: V2, b: V2) V2 { return .{ .x = a.x - b.x, .y = a.y - b.y }; }
 fn v2scale(a: V2, s: f32) V2 { return .{ .x = a.x * s, .y = a.y * s }; }
 
+
+fn v2normLen(v: *V2) f32 {
+    const len = @sqrt(v.x * v.x + v.y * v.y);
+    if (len > 0) { v.x /= len; v.y /= len; }
+    return len;
+}
+fn v2cross(a: V2, b: V2) f32 { return a.x * b.y - a.y * b.x; }
+fn v2dot(a: V2, b: V2) f32 { return a.x * b.x + a.y * b.y; }
+fn v2scaleAdd(pos: V2, dir: V2, s: f32) V2 { return .{ .x = pos.x + dir.x * s, .y = pos.y + dir.y * s }; }
+
+fn idealControlDist(toPrev: V2, toNext: V2, radius: f32) f32 {
+    const angle = @abs(std.math.atan2(v2cross(toPrev, toNext), v2dot(toPrev, toNext)));
+    const t = @tan(angle / 4.0); // PI/(2*(2PI/angle)) simplifies to angle/4
+    const factor = if (angle < 3.14159265 / 2.0) 1.0 + @cos(angle) else 2.0 - @sin(angle);
+    return @min(radius, (4.0 / 3.0) * t * radius * factor);
+}
+
+fn rotatePoints(nextPoint: V2, prevPoint: V2, point: V2, outPoint: *V2, inPoint: *V2) void {
+    const v1 = v2sub(prevPoint, nextPoint);
+    const v2 = v2sub(point, nextPoint);
+    const angle = std.math.atan2(v2cross(v1, v2), v2dot(v1, v2));
+    {
+        const s = @sin(angle * 2);
+        const c = @cos(angle * 2);
+        const dx = outPoint.x - prevPoint.x;
+        const dy = outPoint.y - prevPoint.y;
+        outPoint.x = dx * c - dy * s + prevPoint.x;
+        outPoint.y = dx * s + dy * c + prevPoint.y;
+    }
+    {
+        const s = @sin(-angle * 2);
+        const c = @cos(-angle * 2);
+        const dx = inPoint.x - nextPoint.x;
+        const dy = inPoint.y - nextPoint.y;
+        inPoint.x = dx * c - dy * s + nextPoint.x;
+        inPoint.y = dx * s + dy * c + nextPoint.y;
+    }
+}
+
 // Path::buildPath replication — cubic-vertex paths complete;
 // StraightVertex.radius corner synthesis is the named next slice.
 fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
@@ -1576,16 +1615,31 @@ fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u
         const pos = vertPos(first);
         const radius = propF(first.props, 26, 0);
         if (radius != 0) {
-            // rounded-start corner — needs neighbor tangents; deferred
-            // slice, fail loud rather than emit wrong geometry
-            @panic("buildPath: StraightVertex.radius start corner not yet implemented");
-        }
+            const prev = verts[n - 1];
+            var toPrev = if (isCubicType(prev.type_key)) v2sub(vertOut(prev), pos) else v2sub(vertPos(prev), pos);
+            const toPrevLen = v2normLen(&toPrev);
+            const next = verts[1];
+            var toNext = if (isCubicType(next.type_key)) v2sub(vertIn(next), pos) else v2sub(vertPos(next), pos);
+            const toNextLen = v2normLen(&toNext);
+            const rr = @min(@min(toPrevLen / 2, toNextLen / 2), if (radius > 0) radius else -radius);
+            const ideal = idealControlDist(toPrev, toNext, rr);
+            startIn = v2scaleAdd(pos, toPrev, rr);
+            start = startIn;
+            verbs.append(alloc, 0) catch {}; pts.append(alloc, startIn) catch {};
+            var outPoint = v2scaleAdd(pos, toPrev, rr - ideal);
+            var inPoint = v2scaleAdd(pos, toNext, rr - ideal);
+            out = v2scaleAdd(pos, toNext, rr);
+            if (radius < 0) rotatePoints(out, startIn, pos, &outPoint, &inPoint);
+            verbs.append(alloc, 4) catch {}; pts.append(alloc, outPoint) catch {}; pts.append(alloc, inPoint) catch {}; pts.append(alloc, out) catch {};
+            prevIsCubic = false;
+        } else {
         startIn = pos;
         start = pos;
         out = pos;
         verbs.append(alloc, 0) catch {}; pts.append(alloc, out) catch {};
+        }
     }
-    for (verts[1..]) |vertex| {
+    for (verts[1..], 1..) |vertex, vi| {
         if (isCubicType(vertex.type_key)) {
             const inP = vertIn(vertex);
             const trans = vertPos(vertex);
@@ -1596,7 +1650,26 @@ fn buildPath(verts: []const *const RivObj, closed: bool, verbs: *std.ArrayList(u
             const pos = vertPos(vertex);
             const radius = propF(vertex.props, 26, 0);
             if (radius != 0) {
-                @panic("buildPath: StraightVertex.radius corner not yet implemented");
+                const prev = verts[vi - 1];
+                var toPrev = if (isCubicType(prev.type_key)) v2sub(vertOut(prev), pos) else v2sub(vertPos(prev), pos);
+                const toPrevLen = v2normLen(&toPrev);
+                const next = verts[(vi + 1) % n];
+                var toNext = if (isCubicType(next.type_key)) v2sub(vertIn(next), pos) else v2sub(vertPos(next), pos);
+                const toNextLen = v2normLen(&toNext);
+                const rr = @min(@min(toPrevLen / 2, toNextLen / 2), if (radius > 0) radius else -radius);
+                const ideal = idealControlDist(toPrev, toNext, rr);
+                const translation = v2scaleAdd(pos, toPrev, rr);
+                if (prevIsCubic) {
+                    verbs.append(alloc, 4) catch {}; pts.append(alloc, out) catch {}; pts.append(alloc, translation) catch {}; pts.append(alloc, translation) catch {};
+                } else {
+                    verbs.append(alloc, 1) catch {}; pts.append(alloc, translation) catch {};
+                }
+                var outPoint = v2scaleAdd(pos, toPrev, rr - ideal);
+                var inPoint = v2scaleAdd(pos, toNext, rr - ideal);
+                out = v2scaleAdd(pos, toNext, rr);
+                if (radius < 0) rotatePoints(out, translation, pos, &outPoint, &inPoint);
+                verbs.append(alloc, 4) catch {}; pts.append(alloc, outPoint) catch {}; pts.append(alloc, inPoint) catch {}; pts.append(alloc, out) catch {};
+                prevIsCubic = false;
             } else if (prevIsCubic) {
                 verbs.append(alloc, 4) catch {}; pts.append(alloc, out) catch {}; pts.append(alloc, pos) catch {}; pts.append(alloc, pos) catch {};
                 prevIsCubic = false;
