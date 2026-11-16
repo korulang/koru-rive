@@ -404,3 +404,11 @@ committed producer-side (`ff18735`).
   the ellipse mask; ink=0 means ellipse mask itself rasterized
   empty OR clip_depth ordering off. Next: verify which entry is
   top at draw time + whether ellipse mask atlas region is nonzero.
+
+- clip ordering verified: frame clip depth0 + ellipse clip depth1
+  (top) during draws — top-entry sampling IS the ellipse mask.
+  Emit-side fully correct; ink=0 = ellipse mask rasterizes empty
+  inside clip.push.path despite correct path+ctm. Needs canvas-
+  side instrumentation (dump mask atlas coverage or clipCov
+  samples) — op-level debugging exhausted. Named: clip mask
+  rasterization defect candidate in index.macos.kz.
