@@ -489,3 +489,17 @@ Main, populated for Row); my drawops emits one frame per call.
 Next leg: emitArtboardOps(abIdx, frame) extraction + frame loop
 in dumpDrawOps (static + smN x f=0..29, anim frame = f*2 @fps60).
 owningArtboard() helper landed (uncommitted->committed next).
+
+## Instantiation-transform answer (artboard_component_list.cpp)
+
+ArtboardComponentList::draw (line 2047) renders each row INSIDE
+the list's own draw pass using worldTransform() + layout pass —
+instantiated components draw in the INSTANTIATOR's section at
+layout position, NOT as separate artboard sections. RowPass::
+advance/settle (1569-1721) advances each row's own SM instance.
+=> golden's populated groups = Row artboard's OWN section
+(defaultSM=1, identity/local coords); Main's sm0 empty because
+Main's SM produces no direct draws AND the dump records per-SM
+sections, while row content appears under whichever section
+advances the list. The 300,0 offset = instantiation layout pos,
+distinct from Row's own-section identity transform.
