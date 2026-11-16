@@ -1428,6 +1428,72 @@ fn dumpPaths(r: *Riv) void {
     }
 }
 
+
+const node_type_keys = [_]u64{1,2,3,4,7,8,12,13,15,16,51,52,92,100,110,134,147,409,451,452,508,513,559,569,570,571,572,574,575,603,619,620,637};
+
+fn isNodeType(key: u64) bool {
+    var lo: usize = 0;
+    var hi: usize = node_type_keys.len;
+    while (lo < hi) {
+        const mid = (lo + hi) / 2;
+        if (node_type_keys[mid] < key) lo = mid + 1 else hi = mid;
+    }
+    return lo < node_type_keys.len and node_type_keys[lo] == key;
+}
+
+const Mat2 = [6]f32; // [a,b,c,d,tx,ty] — Rive/Skia convention
+
+fn propF(props: []const Prop, key: u16, default: f32) f32 {
+    if (propByKey(props, key)) |v| {
+        return switch (v) { .dbl => |f| f, else => default };
+    }
+    return default;
+}
+
+fn matMul(a: Mat2, b: Mat2) Mat2 {
+    return .{
+        a[0] * b[0] + a[2] * b[1],
+        a[1] * b[0] + a[3] * b[1],
+        a[0] * b[2] + a[2] * b[3],
+        a[1] * b[2] + a[3] * b[3],
+        a[0] * b[4] + a[2] * b[5] + a[4],
+        a[1] * b[4] + a[3] * b[5] + a[5],
+    };
+}
+
+fn localMat(o: *const RivObj) Mat2 {
+    const rot = propF(o.props, 15, 0);      // TransformComponent.rotation (rad)
+    const sx = propF(o.props, 16, 1);       // scaleX
+    const sy = propF(o.props, 17, 1);       // scaleY
+    const x = propF(o.props, 13, 0);        // Node.x
+    const y = propF(o.props, 14, 0);        // Node.y
+    const c = @cos(rot);
+    const s = @sin(rot);
+    return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
+}
+
+fn dumpTransforms(r: *Riv) void {
+    const alloc = std.heap.page_allocator;
+    for (r.objects, 0..) |*o, i| {
+        if (!isNodeType(o.type_key)) continue;
+        // world = chain of localMat up parent_obj links
+        var world = localMat(o);
+        var p = o.parent_obj;
+        var depth: usize = 0;
+        while (p >= 0 and depth < 32) : (depth += 1) {
+            const po = &r.objects[@intCast(p)];
+            if (isNodeType(po.type_key)) {
+                world = matMul(localMat(po), world);
+            }
+            p = po.parent_obj;
+        }
+        const tname = o.type_name orelse "?";
+        const s = std.fmt.allocPrint(alloc, "obj[{d}] {s} transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}", .{ i, tname, world[0], world[1], world[2], world[3], world[4], world[5] }) catch "";
+        std.debug.print("{s}\n", .{s});
+        alloc.free(s);
+    }
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
@@ -1462,4 +1528,10 @@ fn dumpPaths(r: *Riv) void {
 
 ~proc paths|zig {
     dumpPaths(r);
+}
+
+~pub tor transforms { r: *Riv<loaded> }
+
+~proc transforms|zig {
+    dumpTransforms(r);
 }

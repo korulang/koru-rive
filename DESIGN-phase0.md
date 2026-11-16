@@ -204,3 +204,27 @@ camel(filename) lost interior capitals: `interpolating_keyframe` →
 never entered propField (propKey 68 desynced component_list_1 at obj62).
 Fix: read `class X` name from each header. propKeys 638→680,
 components 152→171 (hierarchy.json regenerated).
+
+## Transform eval — VERIFIED exact on unconstrained nodes
+
+Composition (transform_component.cpp:63-82): local =
+fromRotation(rot) with [4]=x,[5]=y then scaleByValues(sx,sy)
+(m[0,1]*=sx; m[2,3]*=sy — translation UNSCALED); world =
+parentWorld * local, root = local. Node.x/y = keys 13/14,
+rotation=15, scaleX/Y=16/17 (radians, defaults 0/1/1).
+isNodeType = 33 typeKeys descendant of NodeBase (hierarchy.json).
+
+VERIFIED: hello_world Text world transform = 73.4805 175.7852 —
+byte-identical to golden. follow_path_shapes deltas (+100y, small
+rotation on scaled shapes) are CONSTRAINT effects: constraints run
+in updateConstraints() AFTER composeWorldTransform — FollowPath/
+IK solving is player-eval scope, named gap not a bug.
+
+## Player-leg remaining map
+- t=0 static: transforms(done) → buildPath tangent math → paints
+  (Fill/Stroke→SolidColor/gradient) → golden-format emitter → diff
+- animation: KeyedObject/KeyedProperty/KeyFrame* interpolation
+- constraints: FollowPath/IK/TransformComponentConstraint solvers
+- text: glyph paths from embedded font (hello_world is ALL text —
+  biggest single subsystem; needs font parsing + glyph outline extract)
+- images: DrawableAsset → drawImage
