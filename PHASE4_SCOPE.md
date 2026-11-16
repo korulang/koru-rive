@@ -586,3 +586,11 @@ committed producer-side (`ff18735`).
   at 3262. Verdict: superseded for render; debug dumps diverge
   from render on offset path children — name it, don't fix
   (debug-only, fixing doubles maintenance for zero gate value).
+
+## Standing rule — visual gallery (Lars 2026-11-16)
+
+Every visual change gets eyeball-able evidence, not just metrics.
+`oracle/gallery.py` regenerates `oracle/gallery.html` + `oracle/images/pair_*.png`
+(ours|ref composites for all 17 gates). Run it after ANY visual-affecting change
+and commit the outputs. Add new gates to the GATES manifest when a fixture gets
+a pixel verdict. Verdict labels are authoritative; images are the evidence.
