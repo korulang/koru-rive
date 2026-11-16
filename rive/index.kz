@@ -1486,6 +1486,28 @@ fn localMatA(r: *const Riv, o: *const RivObj, frame: i64) Mat2 {
     return .{ c * sx, s * sx, -s * sy, c * sy, x, y };
 }
 
+// Path-child local transform composed up to (excluding) the shape —
+// path objects carry their own Node.x/y/rot/scale in shape space
+// (clip_tests ellipse halves at +150/-89). Composing nowhere was the
+// measured gap: offset path children rendered wrong everywhere.
+fn pathSpaceMat(r: *const Riv, childIdx: usize, shapeIdx: usize, frame: i64) Mat2 {
+    var acc = matIdent();
+    var cur: i64 = @intCast(childIdx);
+    var depth: usize = 0;
+    while (cur >= 0 and cur != @as(i64, @intCast(shapeIdx)) and depth < 32) : (depth += 1) {
+        const o = &r.objects[@intCast(cur)];
+        if (isNodeType(o.type_key)) acc = matMul(localMatA(r, o, frame), acc);
+        cur = o.parent_obj;
+    }
+    return acc;
+}
+
+fn xformPV(m: Mat2, pv: *PV) void {
+    pv.pos = matApply(m, pv.pos);
+    pv.in_p = matApply(m, pv.in_p);
+    pv.out_p = matApply(m, pv.out_p);
+}
+
 fn dumpTransforms(r: *Riv) void {
     const alloc = std.heap.page_allocator;
     for (r.objects, 0..) |*o, i| {
@@ -4299,6 +4321,8 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
         for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
             if (propU(c.props, 128, @as(i64, -1)) >= 0) pathFR = propU(c.props, 128, 0);
+            const cm = pathSpaceMat(r, ci, si, if (frame >= 0) frame else -1);
+            const pvStart = pathVs.items.len;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(r, c, if (frame >= 0) frame else -1)) catch {};
             } else if (c.type_key == 16) {
@@ -4310,6 +4334,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             } else if (synthParametric(r, c, &pathVs, alloc, if (frame >= 0) frame else -1)) {
                 closed = true;
             }
+            for (pathVs.items[pvStart..]) |*pv| xformPV(cm, pv);
         }
         if (pathVs.items.len < 2) continue;
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
@@ -4530,6 +4555,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         for (r.objects, 0..) |*c, ci| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
             if (propU(c.props, 128, @as(i64, -1)) >= 0) pathFR = propU(c.props, 128, 0);
+            const cm = pathSpaceMat(r, ci, si, if (frame >= 0) frame else -1);
+            const pvStart = pathVs.items.len;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(r, c, if (frame >= 0) frame else -1)) catch {};
             } else if (c.type_key == 16) {
@@ -4541,6 +4568,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             } else if (synthParametric(r, c, &pathVs, alloc, if (frame >= 0) frame else -1)) {
                 closed = true;
             }
+            for (pathVs.items[pvStart..]) |*pv| xformPV(cm, pv);
         }
         if (pathVs.items.len < 2) continue;
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
@@ -4566,6 +4594,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var sClosed = false;
             for (r.objects, 0..) |*sc, sci| {
                 if (sc.parent_obj != @as(i64, @intCast(srcIdx))) continue;
+                const scm2 = pathSpaceMat(r, sci, srcIdx, if (frame >= 0) frame else -1);
+                const spvStart = sVs.items.len;
                 if (isVertexType(sc.type_key)) {
                     sVs.append(alloc, fileVert(r, sc, if (frame >= 0) frame else -1)) catch {};
                 } else if (sc.type_key == 16) {
@@ -4577,6 +4607,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 } else if (synthParametric(r, sc, &sVs, alloc, if (frame >= 0) frame else -1)) {
                     sClosed = true;
                 }
+                for (sVs.items[spvStart..]) |*pv| xformPV(scm2, pv);
             }
             if (sVs.items.len < 2) continue;
             buildPath(sVs.items, sClosed, &sVerbs, &sPts, alloc);
