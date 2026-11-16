@@ -1709,6 +1709,15 @@ fn buildPath(verts: []const PV, closed: bool, verbs: *std.ArrayList(u8), pts: *s
             verbs.append(alloc, 1) catch {}; pts.append(alloc, start) catch {};
         }
         verbs.append(alloc, 5) catch {};
+        // cubic close: endpoint==start is implicit in Skia RawPath —
+        // golden tail cubic prints 2 pts not 3 (clfp PointsPath/ellipse).
+        if (verbs.items.len >= 2 and verbs.items[verbs.items.len - 2] == 4) {
+            _ = pts.pop();
+        }
+    } else if (verbs.items.len > 0 and (verbs.items[verbs.items.len - 1] == 4 or verbs.items[verbs.items.len - 1] == 2)) {
+        // Skia RawPath omits the final segment's endpoint on open
+        // contours — golden prints 2 pts for the tail cubic, not 3.
+        _ = pts.pop();
     }
 }
 
@@ -2584,7 +2593,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const blend = propU(c.props, 747, 3);
-            const fillRule = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
+            const fillRule = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 2) else propU(c.props, 40, 0);
             std.debug.print("save\n", .{});
             std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ w[0], w[1], w[2], w[3], w[4], w[5] });
             // Golden close-line encoding: trailing "V 1 <start> V 5"
