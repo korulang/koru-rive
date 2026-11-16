@@ -2488,12 +2488,21 @@ fn hasConstraintChild(r: *const Riv, idx: usize) bool {
 fn effectiveWorldRaw(r: *const Riv, idx: usize) Mat2 {
     const o = &r.objects[idx];
     var acc = if (isNodeType(o.type_key)) localMatA(r, o, -1) else matIdent();
+    // Layout-managed child: position comes from the parent's layout
+    // (alignment/units/intrinsic), not Node.x/y.
+    if (o.parent_obj >= 0 and r.objects[@intCast(o.parent_obj)].type_key == 409) {
+        acc = matMul(layoutOffsetOf(r, idx), acc);
+    }
     var p = o.parent_obj;
     var depth: usize = 0;
     while (p >= 0 and depth < 32) : (depth += 1) {
         const po = &r.objects[@intCast(p)];
         if (isNodeType(po.type_key) and po.type_key != 1) {
-            acc = matMul(localMatA(r, po, -1), acc);
+            if (po.type_key == 409) {
+                acc = matMul(layoutOffsetOf(r, @intCast(p)), acc);
+            } else {
+                acc = matMul(localMatA(r, po, -1), acc);
+            }
         }
         p = po.parent_obj;
     }
@@ -2503,6 +2512,9 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
     if (hasConstraintChild(r, idx)) return constrainedWorld(r, idx, frame);
     const o = &r.objects[idx];
     var acc = if (isNodeType(o.type_key)) localMatA(r, o, frame) else matIdent();
+    if (o.parent_obj >= 0 and r.objects[@intCast(o.parent_obj)].type_key == 409) {
+        acc = matMul(layoutOffsetOf(r, idx), acc);
+    }
     var p = o.parent_obj;
     var depth: usize = 0;
     var rootAb: i64 = -1;
@@ -2515,7 +2527,13 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
             // Artboard (type_key 1) is the coordinate root for its
             // content — its own Node.x/y applies only in the
             // PARENT's instantiation space, not internally.
-            if (po.type_key == 1) rootAb = p else acc = matMul(localMatA(r, po, frame), acc);
+            if (po.type_key == 1) {
+                rootAb = p;
+            } else if (po.type_key == 409) {
+                acc = matMul(layoutOffsetOf(r, @intCast(p)), acc);
+            } else {
+                acc = matMul(localMatA(r, po, frame), acc);
+            }
         }
         p = po.parent_obj;
     }
@@ -2875,6 +2893,172 @@ fn artboardIntrinsicSize(r: *const Riv, abIdx: usize, aw: f32, ah: f32) Artboard
     }
     return ArtboardSize{ .w = b.w + padL + padR, .h = b.h + padT + padB };
 }
+
+// ---- layout-managed child geometry (subset) -----------------------------
+// A node whose parent is a LayoutComponent(409) is positioned by the
+// parent's layout, not Node.x/y: size from units(607/608)==3 fill or
+// intrinsicallySized(606) content bounds, position from the parent's
+// style alignment(632) inside its padding(512-515)-inset content box.
+// cl1 Item: Button(obj45) centers Label(obj47) -> text x~69 vs ref 66-128.
+
+fn layoutStyleOf(r: *const Riv, compIdx: usize) ?usize {
+    for (r.objects, 0..) |st, si| {
+        if (st.type_key == 420 and st.parent_obj == @as(i64, @intCast(compIdx))) return si;
+    }
+    return null;
+}
+
+fn measureTextSize(r: *const Riv, ti: usize) struct { w: f32, h: f32 } {
+    var font: []const u8 = "";
+    for (r.objects) |fc| {
+        if (fc.type_key == 106) {
+            for (fc.props) |p| { if (p.key == 212 and p.value == .bytes) { font = p.value.bytes; break; } }
+        }
+        if (font.len > 0) break;
+    }
+    const hd = sfntFind(font, tag4("head"));
+    const upem: f32 = if (hd) |h| @floatFromInt(be16(font, @as(usize, @intCast(h.off)) + 18)) else 0;
+    const hh = sfntFind(font, tag4("hhea"));
+    const ascU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 4)) else 0;
+    const descU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 6)) else 0;
+    const gapU: f32 = if (hh) |h| @floatFromInt(beS16(font, @as(usize, @intCast(h.off)) + 8)) else 0;
+    var text: []const u8 = ""; var styleId: i64 = -1; var runIdx: usize = 0;
+    for (r.objects, 0..) |run, ri| {
+        if (run.type_key == 135 and run.parent_obj == @as(i64, @intCast(ti))) {
+            runIdx = ri;
+            for (run.props) |p| {
+                if (p.key == 268 and p.value == .bytes) text = p.value.bytes;
+                if (p.key == 272) styleId = switch (p.value) { .uint => |u| @intCast(u), else => -1 };
+            }
+        }
+    }
+    if (boundRunText(r, runIdx, std.heap.page_allocator)) |bt| text = bt;
+    var fontSize: f32 = 0;
+    for (r.objects, 0..) |st, sti| {
+        _ = sti;
+        if (st.type_key == 137 and st.slot == styleId) {
+            for (st.props) |p| { if (p.key == 274) fontSize = switch (p.value) { .dbl => |x| x, else => 0 }; }
+        }
+    }
+    if (font.len == 0 or upem == 0 or fontSize == 0) return .{ .w = 0, .h = 0 };
+    const scale = fontSize / upem;
+    var w: f32 = 0;
+    for (text) |ch| {
+        if (ch < 0x20) continue;
+        w += hmtxAdvance(font, cmapGlyph(font, ch)) * scale;
+    }
+    return .{ .w = w, .h = (ascU - descU + gapU) * scale };
+}
+
+// Content bounds of a layout component's children in its local space —
+// text children measured via the embedded font; nested 409s contribute
+// their laid-out size at origin (positions ignored — v1).
+fn layoutContentSize(r: *const Riv, idx: usize) struct { w: f32, h: f32 } {
+    var maxX: f32 = 0;
+    var maxY: f32 = 0;
+    for (r.objects, 0..) |c, ci| {
+        if (c.parent_obj != @as(i64, @intCast(idx))) continue;
+        if (c.type_key == 134) {
+            const ts = measureTextSize(r, ci);
+            if (ts.w > maxX) maxX = ts.w;
+            if (ts.h > maxY) maxY = ts.h;
+        } else if (c.type_key == 409) {
+            // declared size only — layoutSizeOf(child) can recurse back
+            // through an intrinsic parent and cycle.
+            const cw = propF(c.props, 7, 0);
+            const ch = propF(c.props, 8, 0);
+            if (cw > maxX) maxX = cw;
+            if (ch > maxY) maxY = ch;
+        }
+    }
+    return .{ .w = maxX, .h = maxY };
+}
+
+fn layoutSizeOf(r: *const Riv, idx: usize) struct { w: f32, h: f32 } {
+    const node = &r.objects[idx];
+    var wu: i64 = 0; var hu: i64 = 0; var intrinsic = false;
+    if (layoutStyleOf(r, idx)) |si| {
+        const st = &r.objects[si];
+        wu = propU(st.props, 607, 0);
+        hu = propU(st.props, 608, 0);
+        intrinsic = if (propByKey(st.props, 606)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => false } else false;
+    }
+    var dw = propF(node.props, 7, 0);
+    var dh = propF(node.props, 8, 0);
+    if (wu == 3 or hu == 3) {
+        const p = node.parent_obj;
+        if (p >= 0) {
+            const ps = layoutAvailOf(r, @intCast(p));
+            if (wu == 3 and ps.w > 0) dw = ps.w;
+            if (hu == 3 and ps.h > 0) dh = ps.h;
+        }
+    }
+    // intrinsicallySized wins over fill — Label(obj47) carries both
+    // units=3 and 606 and still hugs its text.
+    if (intrinsic) {
+        const cs = layoutContentSize(r, idx);
+        if (cs.w > 0) dw = cs.w;
+        if (cs.h > 0) dh = cs.h;
+    }
+    return .{ .w = dw, .h = dh };
+}
+
+// Parent's content-box size in its own local space (size minus padding).
+fn layoutAvailOf(r: *const Riv, parentIdx: usize) struct { w: f32, h: f32 } {
+    const po = &r.objects[parentIdx];
+    var pw: f32 = 0; var ph: f32 = 0;
+    var padL: f32 = 0; var padR: f32 = 0; var padT: f32 = 0; var padB: f32 = 0;
+    if (po.type_key == 409) {
+        const ps = layoutSizeOf(r, parentIdx);
+        pw = ps.w; ph = ps.h;
+        if (layoutStyleOf(r, parentIdx)) |si| {
+            const st = &r.objects[si];
+            padL = propF(st.props, 512, 0); padR = propF(st.props, 513, 0);
+            padT = propF(st.props, 514, 0); padB = propF(st.props, 515, 0);
+        }
+    } else if (po.type_key == 1) {
+        const es = artboardIntrinsicSize(r, parentIdx, propF(po.props, 7, 0), propF(po.props, 8, 0));
+        pw = es.w; ph = es.h;
+    } else return .{ .w = 0, .h = 0 };
+    return .{ .w = @max(0, pw - padL - padR), .h = @max(0, ph - padT - padB) };
+}
+
+// Node's rect origin within its layout parent (alignment applied;
+// 632==4 centers both axes — cl1 Button->Label). Other alignments fall
+// to top-left, named gap.
+fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
+    const node = &r.objects[idx];
+    const p = node.parent_obj;
+    if (p < 0) return matIdent();
+    const po = &r.objects[@intCast(p)];
+    if (po.type_key != 409 and po.type_key != 1) return matIdent();
+    const avail = layoutAvailOf(r, @intCast(p));
+    if (avail.w <= 0 and avail.h <= 0) return matIdent();
+    const sz = layoutSizeOf(r, idx);
+    var palign: i64 = 0;
+    if (layoutStyleOf(r, @intCast(p))) |psi| palign = propU(r.objects[psi].props, 632, 0);
+    var ax: f32 = 0;
+    var ay: f32 = 0;
+    if (palign == 4) {
+        ax = (avail.w - sz.w) * 0.5;
+        ay = (avail.h - sz.h) * 0.5;
+    }
+    // padding origin: content box starts at parent's padL/padT
+    var padL: f32 = 0; var padT: f32 = 0;
+    if (po.type_key == 409) {
+        if (layoutStyleOf(r, @intCast(p))) |psi| {
+            const st = &r.objects[psi];
+            padL = propF(st.props, 512, 0);
+            padT = propF(st.props, 514, 0);
+        }
+    }
+    return .{ 1, 0, 0, 1, padL + ax, padT + ay };
+}
+
+fn isLayoutParent(t: u64) bool {
+    return t == 409 or t == 1;
+}
+
 fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold: bool) void {
     const alloc = std.heap.page_allocator;
     if (scoped and scaffold) {

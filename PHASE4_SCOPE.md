@@ -302,3 +302,14 @@ committed producer-side (`ff18735`).
   ink; row fills need a color-aware ink channel (two-sided like the
   coverage() comment anticipates) before green-on-dark fixtures gate
   fairly.
+
+- cl1 intra-row layout (t42 cont.): layoutSizeOf/layoutAvailOf/
+  layoutOffsetOf — 409-parented nodes get layout position (alignment
+  632==4 center, units 607/608, intrinsic 606 content bounds via
+  measureTextSize) instead of Node.x/y, hooked into effectiveWorld +
+  effectiveWorldRaw. cl1 gate now PASS: ink-bbox exact, mass 1.00,
+  gap 0.05%. Text white-bbox ours (69,18,130,271) vs ref (69,18,129,271).
+  clfp Item gate still PASS (no regression). Named gaps: alignments
+  other than center(4) fall to top-left; nested-409 intrinsic content
+  uses declared size (cycle guard); non-position local transforms on
+  layout children ignored.
