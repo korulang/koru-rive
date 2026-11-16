@@ -67,5 +67,5 @@ means polygon fill on the GPU backends, Tier-2-verified.
 - Not a CPU rasterizer — struck entirely. Flattening/tessellation math on
   CPU is fine; pixel coverage happens on GPU.
 - Not decoder work — ops stream is done and gate-verified.
-- Not claiming coverage exists — Metal-via-canvas works today; native +
-  i915 polygon paths do not. This doc is scope, not status.
+- Not claiming coverage exists — Metal-via-canvas works today; the
+  koru-native polygon path does not. This doc is scope, not status.
