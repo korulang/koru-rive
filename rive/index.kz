@@ -2607,19 +2607,61 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const blend = propU(c.props, 747, 3);
             const fillRule = if (isStroke) @as(i64, 0) else propU(c.props, 40, 0);
-            // background rect: golden shows move(0,0) line(w,0) line(w,h)
-            // line(0,h) close — artboard bounds, no corner radius.
+            // background path: plain bounds rect, or rounded rect when a
+            // LayoutComponentStyle(420) in this artboard carries corner
+            // radii (cl_1 golden: verbs=10 pts=16, radius 10 all corners).
+            var rtl: f64 = 0; var rtr: f64 = 0; var rbr: f64 = 0; var rbl: f64 = 0;
+            for (r.objects, 0..) |st, sti| {
+                if (propByKey(st.props, 640) == null) continue; // cornerRadiusTL carrier
+                if (owningArtboard(r, sti) != i) continue;
+                rtl = @floatCast(propF(st.props, 640, 0));
+                // absent per-corner radii inherit TL (uniform radius —
+                // cl_1 golden rounds all four corners at r=10 from TL only)
+                rtr = @floatCast(propF(st.props, 641, @floatCast(rtl))); rbl = @floatCast(propF(st.props, 642, @floatCast(rtl))); rbr = @floatCast(propF(st.props, 643, @floatCast(rtl)));
+                break;
+            }
             var verbs = std.ArrayList(u8).empty;
             var pts = std.ArrayList(V2).empty;
             defer verbs.deinit(alloc); defer pts.deinit(alloc);
-            verbs.append(alloc, 0) catch {};
-            pts.append(alloc, .{ .x = 0, .y = 0 }) catch {};
-            for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah } }) |p| {
-                verbs.append(alloc, 1) catch {};
-                pts.append(alloc, p) catch {};
+            if (rtl + rtr + rbr + rbl > 0) {
+                const k = 0.5522847498; // (4/3)(sqrt2-1) circle-approx
+                const w = @as(f64, aw); const h = @as(f64, ah);
+                verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = 0, .y = @floatCast(rtl) }) catch {};
+                // TL arc: (0,rtl) -> (rtl,0)
+                verbs.append(alloc, 4) catch {};
+                pts.append(alloc, .{ .x = 0, .y = @floatCast(rtl - rtr * 0 - rtl * k) }) catch {};
+                pts.append(alloc, .{ .x = @floatCast(rtl - rtl * k), .y = 0 }) catch {};
+                pts.append(alloc, .{ .x = @floatCast(rtl), .y = 0 }) catch {};
+                verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = @floatCast(w - rtr), .y = 0 }) catch {};
+                // TR arc: (w-rtr,0) -> (w,rtr)
+                verbs.append(alloc, 4) catch {};
+                pts.append(alloc, .{ .x = @floatCast(w - rtr + rtr * k), .y = 0 }) catch {};
+                pts.append(alloc, .{ .x = @floatCast(w), .y = @floatCast(rtr - rtr * k) }) catch {};
+                pts.append(alloc, .{ .x = @floatCast(w), .y = @floatCast(rtr) }) catch {};
+                verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = @floatCast(w), .y = @floatCast(h - rbr) }) catch {};
+                // BR arc: (w,h-rbr) -> (w-rbr,h)
+                verbs.append(alloc, 4) catch {};
+                pts.append(alloc, .{ .x = @floatCast(w), .y = @floatCast(h - rbr + rbr * k) }) catch {};
+                pts.append(alloc, .{ .x = @floatCast(w - rbr + rbr * k), .y = @floatCast(h) }) catch {};
+                pts.append(alloc, .{ .x = @floatCast(w - rbr), .y = @floatCast(h) }) catch {};
+                verbs.append(alloc, 1) catch {}; pts.append(alloc, .{ .x = @floatCast(rbl), .y = @floatCast(h) }) catch {};
+                // BL arc: (rbl,h) -> (0,h-rbl)
+                verbs.append(alloc, 4) catch {};
+                pts.append(alloc, .{ .x = @floatCast(rbl - rbl * k), .y = @floatCast(h) }) catch {};
+                pts.append(alloc, .{ .x = 0, .y = @floatCast(h - rbl + rbl * k) }) catch {};
+                pts.append(alloc, .{ .x = 0, .y = @floatCast(h - rbl) }) catch {};
+                verbs.append(alloc, 1) catch {}; // dangling close-line verb
+                verbs.append(alloc, 5) catch {};
+            } else {
+                verbs.append(alloc, 0) catch {};
+                pts.append(alloc, .{ .x = 0, .y = 0 }) catch {};
+                for ([_]V2{ .{ .x = aw, .y = 0 }, .{ .x = aw, .y = ah } }) |p| {
+                    verbs.append(alloc, 1) catch {};
+                    pts.append(alloc, p) catch {};
+                }
+                verbs.append(alloc, 1) catch {}; // dangling close-line verb (golden shape)
+                verbs.append(alloc, 5) catch {};
             }
-            verbs.append(alloc, 1) catch {}; // dangling close-line verb (golden shape)
-            verbs.append(alloc, 5) catch {};
             std.debug.print("save\n", .{});
             if (hasLayout and (ox != 0 or oy != 0)) {
                 std.debug.print("transform 1.0000 0.0000 0.0000 1.0000 {d:.4} {d:.4}\n", .{ -ox, -oy });
