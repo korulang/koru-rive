@@ -1709,6 +1709,63 @@ fn buildPath(verts: []const PV, closed: bool, verbs: *std.ArrayList(u8), pts: *s
     }
 }
 
+
+const CIRCLE_C = 0.552284749831;
+
+fn synthParametric(o: *const RivObj, pvs: *std.ArrayList(PV), alloc: std.mem.Allocator) bool {
+    const w = propF(o.props, 20, 0);
+    const h = propF(o.props, 21, 0);
+    const oxx = -propF(o.props, 123, 0.5) * w;
+    const oyy = -propF(o.props, 124, 0.5) * h;
+    const Z: V2 = .{ .x = 0, .y = 0 };
+    switch (o.type_key) {
+        7 => { // Rectangle — rectangle.cpp update()
+            const ox = oxx; const oy = oyy;
+            const rtl = propF(o.props, 31, 0);
+            const link = if (propByKey(o.props, 164)) |v| switch (v) { .boolean => |b| b, else => true } else true;
+            const rtr = if (link) rtl else propF(o.props, 161, 0);
+            const rbr = if (link) rtl else propF(o.props, 163, 0);
+            const rbl = if (link) rtl else propF(o.props, 162, 0);
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy }, .in_p = Z, .out_p = Z, .radius = rtl }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy }, .in_p = Z, .out_p = Z, .radius = rtr }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy + h }, .in_p = Z, .out_p = Z, .radius = rbr }) catch {};
+            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy + h }, .in_p = Z, .out_p = Z, .radius = rbl }) catch {};
+            return true;
+        },
+        4 => { // Ellipse — ellipse.cpp update(), explicit cubic in/out
+            const rx = w / 2; const ry = h / 2;
+            const ecx = oxx + rx; const ecy = oyy + ry;
+            const cc = CIRCLE_C;
+            const pts = [_]struct { p: V2, i: V2, o: V2 }{
+                .{ .p = .{ .x = ecx, .y = ecy - ry }, .i = .{ .x = ecx - rx * cc, .y = ecy - ry }, .o = .{ .x = ecx + rx * cc, .y = ecy - ry } },
+                .{ .p = .{ .x = ecx + rx, .y = ecy }, .i = .{ .x = ecx + rx, .y = ecy - ry * cc }, .o = .{ .x = ecx + rx, .y = ecy + ry * cc } },
+                .{ .p = .{ .x = ecx, .y = ecy + ry }, .i = .{ .x = ecx + rx * cc, .y = ecy + ry }, .o = .{ .x = ecx - rx * cc, .y = ecy + ry } },
+                .{ .p = .{ .x = ecx - rx, .y = ecy }, .i = .{ .x = ecx - rx, .y = ecy + ry * cc }, .o = .{ .x = ecx - rx, .y = ecy - ry * cc } },
+            };
+            for (pts) |v| pvs.append(alloc, .{ .is_cubic = true, .pos = v.p, .in_p = v.i, .out_p = v.o, .radius = 0 }) catch {};
+            return true;
+        },
+        51, 52 => { // Polygon / Star — buildPolygon(), StraightVertex ring
+            const n: usize = @intCast(if (o.type_key == 52) propU(o.props, 125, 5) * 2 else propU(o.props, 125, 5));
+            if (n == 0) return false;
+            const hw = w / 2; const hh = h / 2;
+            const ir = if (o.type_key == 52) propF(o.props, 127, 0.5) else 1.0;
+            const cr = propF(o.props, 126, 0);
+            const pcx = oxx + hw; const pcy = oyy + hh;
+            var angle: f32 = @as(f32, -std.math.pi / 2.0);
+            const inc: f32 = @as(f32, 2.0 * std.math.pi) / @as(f32, @floatFromInt(n));
+            var vi: usize = 0;
+            while (vi < n) : (vi += 1) {
+                const scale = if (o.type_key == 52 and (vi % 2) == 1) ir else 1.0;
+                pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = pcx + @cos(angle) * hw * scale, .y = pcy + @sin(angle) * hh * scale }, .in_p = Z, .out_p = Z, .radius = cr }) catch {};
+                angle += inc;
+            }
+            return true;
+        },
+        else => return false,
+    }
+}
+
 fn dumpPathOps(r: *Riv) void {
     const alloc = std.heap.page_allocator;
     for (r.objects, 0..) |o, i| {
@@ -1725,23 +1782,8 @@ fn dumpPathOps(r: *Riv) void {
         if (kids.items.len > 0) {
             closed = if (propByKey(o.props, 32)) |v| switch (v) { .boolean => |b| b, else => false } else false;
             for (kids.items) |kv| pvs.append(alloc, fileVert(kv)) catch {};
-        } else if (o.type_key == 7) {
-            // Rectangle parametric synthesis — rectangle.cpp update():
-            // 4 StraightVertex at corners, origin-centered by default.
+        } else if (synthParametric(&o, &pvs, alloc)) {
             closed = true;
-            const w = propF(o.props, 20, 0);
-            const h = propF(o.props, 21, 0);
-            const ox = -propF(o.props, 123, 0.5) * w;
-            const oy = -propF(o.props, 124, 0.5) * h;
-            const rtl = propF(o.props, 31, 0);
-            const rtr = propF(o.props, 161, 0);
-            const rbl = propF(o.props, 162, 0);
-            const rbr = propF(o.props, 163, 0);
-            const link = if (propByKey(o.props, 164)) |v| switch (v) { .boolean => |b| b, else => true } else true; // linkCornerRadius defaults TRUE
-            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rtl }) catch {};
-            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = if (link) rtl else rtr }) catch {};
-            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = if (link) rtl else rbr }) catch {};
-            pvs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = if (link) rtl else rbl }) catch {};
         } else {
             continue;
         }
@@ -1808,19 +1850,7 @@ fn dumpDrawOps(r: *Riv) void {
             if (c.parent_obj != @as(i64, @intCast(i))) continue;
             if (isVertexType(c.type_key)) {
                 pathVs.append(alloc, fileVert(c)) catch {};
-            } else if (c.type_key == 7) {
-                // Rectangle synth (same as dumpPathOps)
-                const w = propF(c.props, 20, 0); const h = propF(c.props, 21, 0);
-                const ox = -propF(c.props, 123, 0.5) * w; const oy = -propF(c.props, 124, 0.5) * h;
-                const rtl = propF(c.props, 31, 0);
-                const link = if (propByKey(c.props, 164)) |v| switch (v) { .boolean => |b| b, else => true } else true;
-                const rtr = if (link) rtl else propF(c.props, 161, 0);
-                const rbr = if (link) rtl else propF(c.props, 163, 0);
-                const rbl = if (link) rtl else propF(c.props, 162, 0);
-                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rtl }) catch {};
-                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rtr }) catch {};
-                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox + w, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rbr }) catch {};
-                pathVs.append(alloc, .{ .is_cubic = false, .pos = .{ .x = ox, .y = oy + h }, .in_p = .{ .x = 0, .y = 0 }, .out_p = .{ .x = 0, .y = 0 }, .radius = rbl }) catch {};
+            } else if (synthParametric(c, &pathVs, alloc)) {
                 closed = true;
             }
         }
