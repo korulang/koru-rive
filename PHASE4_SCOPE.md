@@ -134,3 +134,9 @@ committed producer-side (`ff18735`).
   Browser ref ran with "State Machine 1 not found" (wrong SM name) ->
   bind-pose/static; our frame:0 eval differs. Verdict: content/state
   mismatch, not transform — needs correct SM name for a fair ref.
+
+- `component_list_follow_path [Item]` ab:74 @500² — bind pose FAIL:
+  ours covers full canvas with Item's green field (modal 18,161,0),
+  ref ink concentrated (0,107,282,327). Browser bound "State Machine 1"
+  SUCCESSFULLY for clfp (no SM error) -> animated state, not bind pose.
+  Verdict: needs SM-eval parity, not fit — named, correct diagnosis.
