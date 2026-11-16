@@ -3626,6 +3626,25 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     }
 }
 
+~pub tor vertdump { r: *Riv<loaded>, ab: i64, frame: i64 }
+~proc vertdump|zig {
+    const alloc = std.heap.page_allocator;
+    // find shape objects under ab, then their vertex children
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key < 5 or o.type_key > 36) continue;
+        if (!isVertexType(@intCast(o.type_key))) continue;
+        std.debug.print("vert obj={d} type{d} parent={d} props:", .{ i, o.type_key, o.parent_obj });
+        for (o.props) |p| switch (p.value) {
+            .uint => |u| std.debug.print(" k{d}={d}", .{ p.key, u }),
+            .dbl => |x| std.debug.print(" k{d}={d:.4}", .{ p.key, x }),
+            .boolean => |b| std.debug.print(" k{d}={s}", .{ p.key, if (b) "t" else "f" }),
+            else => {},
+        };
+        std.debug.print("\n", .{});
+    }
+    _ = alloc; _ = ab; _ = frame;
+}
+
 ~pub tor abnames { r: *Riv<loaded> }
 ~proc abnames|zig {
     for (r.objects, 0..) |o, i| {
