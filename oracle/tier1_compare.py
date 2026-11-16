@@ -103,14 +103,10 @@ def events_match(g,o):
             for (gverb,gc),(overb,oc) in zip(gv,ov):
                 if gverb!=overb: return False
                 if len(gc)==0: continue  # golden tail-suppressed endpoint (V <verb> bare)
-                # golden V coords: move/line=2, cubic=6, close=0; ours xyz always 6
-                if gverb in (0,1):
-                    if not close(gc[:2],(oc[0],oc[1])): return False
-                elif gverb==4:
-                    if len(gc)!=6 or not close(gc,oc): return False
-                elif gverb==5: pass
-                else:
-                    if len(gc)!=6 or not close(gc,oc): return False
+                # golden suppresses trailing coords on tail segments too
+                # (last cubic drops its end point): prefix-compare what exists
+                if gverb==5: continue
+                if not close(gc, oc[:len(gc)]): return False
         elif ge[0]=='clip':
             if ge[2] != (oe[1] if len(oe)>1 else None): return False
     return True
