@@ -657,3 +657,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   surface (oshun/koruos ui_probe path exists for that).
   Undefined-symbol census NOT yet reachable — blocked at
   frontend, not linker.
+
+- koru-native arm CENSUS RESULT: opsdump_clip.k (decode+ops,
+  canvas-free) compiles+links+RUNS clean on --build=koru-native.
+  nm shows ZERO undefined _koruos_*/_koru_kbd_* symbols — the
+  runtime core is fully self-contained, NO host shim needed for
+  decode+ops. The undefined symbols the arc feared live on the
+  RASTER side only (canvas verbs are macos-part-gated, never
+  reach koru-native frontend). VERDICT: bounded-shim question
+  is moot for core; real gap = koru-native raster surface
+  (CmdView/kwin path, oshun/koruos ui_probe idiom) — path (b).
