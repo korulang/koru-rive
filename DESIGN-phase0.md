@@ -396,3 +396,20 @@ cubicLen approximation accumulates length error vs Skia's Wang's-
 formula segment lengths -> arc-fraction maps to wrong position.
 NEXT: port wangs_formula cubic length (include/rive/math/
 wangs_formula.hpp) into cubicLen — the only remaining math gap.
+
+## Keyframe uniformity confirmed
+
+All 6 KeyedObjects: prop 363, identical keyframes (frame0 default
+-> frame60 value 1.0) => distance(t)=t/60 uniform across
+constraints. NOT the divergence source. orient (364) animation
+status still unchecked (truncated listing).
+
+## Remaining divergence hypothesis
+
+pm.pos oracle-exact but transforms diverge on cubic-path nodes
+only (line-path nodes match: 8/24 = the rect/square-target
+groups). Suspect: tangent direction or the targetTransform orient
+branch for CURVED paths — eval_cubic tangent vs my cubicTan, or
+angleB wrap semantics (C++ fmod vs my wrapPi on angleB+diff).
+NEXT: print pm.tan + final cB.rot per constraint vs golden
+transform decompose — isolates tangent-vs-compose.
