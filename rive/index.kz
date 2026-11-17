@@ -3019,12 +3019,24 @@ fn layoutContentSize(r: *const Riv, idx: usize) struct { w: f32, h: f32 } {
             if (ts.w > maxX) maxX = ts.w;
             if (ts.h > maxY) maxY = ts.h;
         } else if (c.type_key == 409) {
-            // declared size only — layoutSizeOf(child) can recurse back
-            // through an intrinsic parent and cycle.
-            const cw = propF(c.props, 7, 0);
-            const ch = propF(c.props, 8, 0);
-            if (cw > maxX) maxX = cw;
-            if (ch > maxY) maxY = ch;
+            // Nested intrinsic 409: an intrinsicallySized child contributes
+            // its own content bounds, not its declared box (named residual).
+            // contentSize only descends the tree — no parent lookup, so the
+            // layoutSizeOf<->layoutAvailOf cycle can't form through here.
+            var intrinsic = false;
+            if (layoutStyleOf(r, ci)) |csi| {
+                intrinsic = if (propByKey(r.objects[csi].props, 606)) |v| switch (v) { .boolean => |b| b, .dbl => |x| x != 0, else => false } else false;
+            }
+            if (intrinsic) {
+                const cc = layoutContentSize(r, ci);
+                if (cc.w > maxX) maxX = cc.w;
+                if (cc.h > maxY) maxY = cc.h;
+            } else {
+                const cw = propF(c.props, 7, 0);
+                const ch = propF(c.props, 8, 0);
+                if (cw > maxX) maxX = cw;
+                if (ch > maxY) maxY = ch;
+            }
         }
     }
     return .{ .w = maxX, .h = maxY };
@@ -3140,11 +3152,17 @@ fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
     if (avail.w <= 0 and avail.h <= 0) return matIdent();
     var palign: i64 = 0;
     if (layoutStyleOf(r, @intCast(p))) |psi| palign = propU(r.objects[psi].props, 632, 0);
+    // 3x3 alignment grid, row-major: 0=topLeft..2=topRight, 3=centerLeft..
+    // 4=center..5=centerRight, 6..8=bottom row (4==center — cl1 Label).
+    const fx = [_]f32{ 0, 0.5, 1 };
+    const fy = [_]f32{ 0, 0.5, 1 };
+    const cx = @rem(palign, 3);
+    const cy = @divTrunc(palign, 3);
     var ax: f32 = 0;
     var ay: f32 = 0;
-    if (palign == 4) {
-        ax = (avail.w - sz.w) * 0.5;
-        ay = (avail.h - sz.h) * 0.5;
+    if (cx >= 0 and cx < 3 and cy >= 0 and cy < 3) {
+        ax = (avail.w - sz.w) * fx[@intCast(cx)];
+        ay = (avail.h - sz.h) * fy[@intCast(cy)];
     }
     // padding origin: content box starts at parent's padL/padT
     var padL: f32 = 0; var padT: f32 = 0;
