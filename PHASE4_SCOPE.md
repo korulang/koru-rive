@@ -803,8 +803,9 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
 
 - Native coverage milestone 2: render_kn_clfp_item.k (ab74 f-1) +
   render_kn_cl2_t10.k (ab15 f10) both oracle PASS natively. kn_cdo
-  RESIDUAL: render_kn_cdo.k (clipping_and_draw_order ab84 f0 786px)
-  renders mostly-empty magenta (ink-mass 0.08 vs ref) — the child-
-  artboard params don't reproduce the full cdo frame; needs correct
-  ab/transform recon before it can gate. Named, not hidden.
+  RESOLVED: render_kn_cdo.bmp is byte-IDENTICAL to the known-good
+  ours_cdo_child_t1.bmp gallery asset — driver reproduces the PASS
+  render exactly. The earlier oracle FAIL was wrong --bg arg
+  (49,49,49 vs the fixture's actual clear), not an emit gap.
+  kn_cdo = PASS.
   Gallery: 23 gates.
