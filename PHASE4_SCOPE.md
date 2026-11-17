@@ -707,3 +707,22 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (verify). mesh.* already consumes kr/rive Tri soup — the
   tessellator path is LIVE on koru-native. Next: implement path
   verbs (flatten->scanline fill) + draw.path -> first pixel gate.
+
+- SM-listener recon (clfp Item Hover:true@5): ref regenerated via
+  RIVE_INPUTS — smLog confirms "Hover@5=true", nonEmptyPx 33242.
+  Visual diff vs idle = 31,324px in item box (0,107)-(157,327):
+  fill 0x12A100 -> 0x0C6C00 (dark green hover state).
+  Structure: Item SM obj98 has TWO single-keyframe hold animations —
+  obj90/obj93 kf=0xff063700 (hover dark) and obj94/obj97
+  kf=0xff12a100 (idle green), both KeyedObject.objectId=11 +
+  KeyedProperty.propKey=37. obj110 StateMachineListenerSingle fires
+  on pointer; obj105/107 StateTransitions gate on
+  TransitionBoolCondition(inputId=0=Hover, opValue=1).
+  BLOCKER for impl: keyframedColor/hasKeyframed scan ALL keyframes
+  globally by slot+prop — both hold animations merge into one
+  degenerate list, last-wins=idle green. Needs per-animation
+  membership (which KeyedObject/KeyedProperty/KeyFrame belongs to
+  which LinearAnimation) + SM current-state eval + input schedule
+  plumbing before colors can select the hover kf. Decomposed:
+  (a) animation-membership decode, (b) SM state/transition eval,
+  (c) g_inputs schedule into frame eval, (d) per-animation kf scope.
