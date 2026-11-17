@@ -32,35 +32,40 @@ def load_gates():
             sys.exit("gallery: verdict for gate %s is missing or was computed on different files "
                      "-- re-run oracle/run_gates.py" % g["gate"])
         note = g["note"] if v["verdict"] == "PASS" else "%s  [failed: %s]" % (g["note"], ", ".join(v["failed"]))
-        out.append((g["gate"], os.path.join(IMG, g["ours"]), os.path.join(IMG, g["ref"]), v["verdict"], note))
+        out.append((g["gate"], os.path.join(IMG, g["ours"]), os.path.join(IMG, g["ref"]), g["comp"], v["verdict"], note))
     return out
 
-def load(p):
-    im = Image.open(p).convert("RGBA")
-    return im
-
-def composite(ours_p, ref_p, out_p, label):
-    o, r = load(ours_p), load(ref_p)
+def composite(ours_p, ref_p, out_p, label, comp):
+    # Match pixel_oracle's --comp handling: a semi-transparent side is
+    # flattened over the gate's declared clear colour so the pair shows the
+    # rendered appearance, not raw RGB under alpha=0 (which displays black).
+    def flat(p):
+        im = Image.open(p).convert("RGBA")
+        if comp is None:
+            return im.convert("RGB")
+        bg = Image.new("RGBA", im.size, tuple(comp) + (255,))
+        return Image.alpha_composite(bg, im).convert("RGB")
+    o, r = flat(ours_p), flat(ref_p)
     h = max(o.height, r.height)
     w = o.width + r.width + 8
-    canvas = Image.new("RGBA", (w, h + 18), (24, 24, 28, 255))
+    canvas = Image.new("RGB", (w, h + 18), (24, 24, 28))
     dr = ImageDraw.Draw(canvas)
-    dr.text((4, 2), "OURS", fill=(255, 255, 255, 255))
-    dr.text((o.width + 12, 2), "REF (browser rive_canvas)", fill=(255, 255, 255, 255))
+    dr.text((4, 2), "OURS", fill=(255, 255, 255))
+    dr.text((o.width + 12, 2), "REF (browser rive_canvas)", fill=(255, 255, 255))
     canvas.paste(o, (0, 18))
     canvas.paste(r, (o.width + 8, 18))
-    canvas.convert("RGB").save(out_p)
+    canvas.save(out_p)
     return (o.width, h)
 
 def main():
     rows, missing = [], []
-    for gate, op, rp, verdict, note in load_gates():
+    for gate, op, rp, comp, verdict, note in load_gates():
         if not os.path.isfile(op) or not os.path.isfile(rp):
             missing.append((gate, op, rp))
             rows.append((gate, None, verdict, note + "  [MISSING: ours=%s ref=%s]" % (os.path.isfile(op), os.path.isfile(rp))))
             continue
         out = os.path.join(IMG, "pair_%s.png" % gate)
-        composite(op, rp, out, gate)
+        composite(op, rp, out, gate, comp)
         rows.append((gate, "images/pair_%s.png" % gate, verdict, note))
     rows.sort(key=lambda r: r[2] != "PASS")  # stable: PASS block, then FAIL block
     # html
