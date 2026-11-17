@@ -2059,15 +2059,46 @@ fn dumpKeyed(r: *Riv) void {
 // KeyFrameDouble linear interpolation for one (objectId, propertyKey)
 // pair. Keyframes sorted by frame; clamp outside range. interpType 1
 // = linear (others TODO: hold/cubic via interpolatorId 69).
+// Active LinearAnimation for keyframe scoping (-1 = unscoped/global,
+// the pre-SM-eval behavior). Set by the SM-state pass once listener
+// eval lands; clfp Item hover needs it to pick the dark-green hold
+// animation over the idle one on the same slot+prop.
+var g_activeAnim: i64 = -1;
+
+fn isKfClusterObj(o: *const RivObj) bool {
+    if (o.type_key == 25 or o.type_key == 26) return true;
+    const tn = o.type_name orelse return false;
+    return std.mem.startsWith(u8, tn, "KeyFrame");
+}
+
+// Animation membership: the exporter writes an animation's keyed objects
+// right after it (linear_animation.cpp:177), so the nearest preceding
+// LinearAnimation(31) owns the contiguous kf-cluster that follows.
+fn animOwnerOf(r: *const Riv, objIdx: usize) i64 {
+    var cur: i64 = -1;
+    for (r.objects, 0..objIdx + 1) |*o, i| {
+        if (o.type_key == 31) { cur = @intCast(i); continue; }
+        if (@as(usize, @intCast(i)) == objIdx) return cur;
+        if (!isKfClusterObj(o)) cur = -1;
+    }
+    return -1;
+}
+
+fn kfOwnerOk(r: *const Riv, keyedObjIdx: i64) bool {
+    return g_activeAnim < 0 or animOwnerOf(r, @intCast(keyedObjIdx)) == g_activeAnim;
+}
+
 fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
     var inGroup = false;
-    for (r.objects) |o| {
+    var curObjIdx: i64 = -1;
+    for (r.objects, 0..) |o, oi| {
         if (propByKey(o.props, 51)) |v| {
             const s: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
             inGroup = (s == objSlot);
+            curObjIdx = @intCast(oi);
             continue;
         }
-        if (inGroup) {
+        if (inGroup and kfOwnerOk(r, curObjIdx)) {
             if (propByKey(o.props, 53)) |v| {
                 const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
                 if (k == @as(i64, propKey)) return true;
@@ -2082,17 +2113,19 @@ fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
     defer kf.deinit(std.heap.page_allocator);
     var curSlot: i64 = -1;
     var curKey: i64 = -1;
-    for (r.objects) |o| {
+    var curObjIdx: i64 = -1;
+    for (r.objects, 0..) |o, oi| {
         if (propByKey(o.props, 51)) |v| {
             curSlot = switch (v) { .uint => |u| @intCast(u), else => -1 };
             curKey = -1;
+            curObjIdx = @intCast(oi);
             continue;
         }
         if (propByKey(o.props, 53)) |v| {
             curKey = switch (v) { .uint => |u| @intCast(u), else => -1 };
             continue;
         }
-        if (curSlot != objSlot or curKey != @as(i64, propKey)) continue;
+        if (curSlot != objSlot or curKey != @as(i64, propKey) or !kfOwnerOk(r, curObjIdx)) continue;
         if (propByKey(o.props, 67) != null or propByKey(o.props, 68) != null or propByKey(o.props, 70) != null) {
             const val = if (propByKey(o.props, 70)) |v| switch (v) { .dbl => |x| x, else => 0 } else 0;
             kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = val }) catch {};
@@ -2126,17 +2159,19 @@ fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
     defer kf.deinit(std.heap.page_allocator);
     var curSlot: i64 = -1;
     var curKey: i64 = -1;
-    for (r.objects) |o| {
+    var curObjIdx: i64 = -1;
+    for (r.objects, 0..) |o, oi| {
         if (propByKey(o.props, 51)) |v| {
             curSlot = switch (v) { .uint => |u| @intCast(u), else => -1 };
             curKey = -1;
+            curObjIdx = @intCast(oi);
             continue;
         }
         if (propByKey(o.props, 53)) |v| {
             curKey = switch (v) { .uint => |u| @intCast(u), else => -1 };
             continue;
         }
-        if (curSlot != objSlot or curKey != @as(i64, propKey)) continue;
+        if (curSlot != objSlot or curKey != @as(i64, propKey) or !kfOwnerOk(r, curObjIdx)) continue;
         if (propByKey(o.props, 88)) |v| switch (v) {
             .color => |c| kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = c }) catch {},
             else => {},

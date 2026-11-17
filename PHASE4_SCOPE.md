@@ -726,3 +726,18 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   plumbing before colors can select the hover kf. Decomposed:
   (a) animation-membership decode, (b) SM state/transition eval,
   (c) g_inputs schedule into frame eval, (d) per-animation kf scope.
+
+- SM-listener milestone (a)+(d): animation membership decoded —
+  exporter writes keyed objects right after their LinearAnimation
+  (linear_animation.cpp:177); animOwnerOf maps each KeyedObject to
+  its owning animation via contiguous kf-cluster stream order.
+  g_activeAnim + kfOwnerOk now scope hasKeyframed/keyframedValue/
+  keyframedColor per-animation (-1 = unscoped, all prior gates
+  unchanged: ops identical). clfp Item structure verified: obj90
+  'Timeline 2' owns kf 0xff063700 (hover dark), obj94 'Timeline 1'
+  owns kf 0xff12a100 (idle green), both slot11+prop37.
+  REMAINING (b)+(c): SM state/transition eval + RIVE_INPUTS schedule
+  to set g_activeAnim. stateToId = index into layer's m_States
+  (stream order); animationId = index into artboard's animations
+  (stream order); TransitionBoolCondition inputId+opValue semantics
+  still being pinned (opValue=1 vs absent polarity).
