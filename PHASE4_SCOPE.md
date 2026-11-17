@@ -755,3 +755,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (item fill SolidColor slot vs objectId=11 unverified; possibly
   the layout-box pass resolves a different SolidColor). Debug
   prints reverted; machinery compiles clean, gates unchanged.
+
+- SM-listener residual recon: Item fill SolidColor IS slot 11 —
+  obj86 (parent_obj=88 Fill under obj75 LayoutComponent), matching
+  KeyedObject.objectId=11. Mechanism should paint dark: propColorAnim
+  (slot11, key37, cf=10) under g_activeAnim=90 -> keyframedColor ->
+  obj93 0xff063700. Render still green -> the visible green is likely
+  painted by a DIFFERENT pass/object than the obj75 layout-box fill
+  (shape-fill pass or a second Fill), OR layout-box pass resolves a
+  different SolidColor. Next: trace which op emits the green rect.
