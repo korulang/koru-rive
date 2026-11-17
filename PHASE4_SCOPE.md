@@ -861,3 +861,9 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   129 vs 340) — missing right-side ink is NOT winding.
   Next bisect: which op kind owns x>129 region (dump ops,
   check kind distribution in that bbox).
+
+- Metal frame-batch: consecutive unclipped solid fills now
+  accumulate into g_mbatch -> ONE texture/encoder/readback
+  per flush. Flush hooks at every px-writer + clip verb +
+  snap (ordering contract). eo + clipped draws stay per-call.
+  All 5 knm gates re-verified PASS post-batch.
