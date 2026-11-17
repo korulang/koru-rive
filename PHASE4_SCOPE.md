@@ -898,3 +898,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   browser half-size + alpha composite), NOT a Metal defect.
   Codec delta fully closed on darwin: kind-11 -> CGImageSource
   -> MTLTexture -> pixels. 5/5 knm gates re-verified.
+
+- Metal eo batching: fills+strokes+eo all record into
+  g_mbatch/g_msegs (seg = start/count/kind/col); flush =
+  ONE texture+command buffer+readback, ordered seg draws,
+  per-eo-seg stencil parity sub-passes. All 5 knm gates
+  re-verified PASS. GPU path now fully batched except
+  clipped draws (per-call) and images (per-call).
