@@ -48,7 +48,7 @@ GATES = [
     ("knm_cl1",   ["knm_cl1.bmp"],      ["ref_cl1_main_t1.png"], "PASS", "METAL raster cl1"),
     ("knm_clv",   ["knm_clv.bmp"],      ["ref_clv_t1.png"], "PASS", "METAL raster clv"),
     ("knm_clip",  ["knm_clip.bmp"],     ["ref_clip_t1.png"], "PASS", "METAL raster clip_tests"),
-    ("knm_hw",    ["knm_hw.bmp"],       ["ref_hw_c_t1.png"], "FAIL", "METAL raster hw — earClip concave/evenodd delta"),
+    ("knm_hw",    ["knm_hw.bmp"],       ["ref_hw_c_t1.png"], "PASS", "METAL raster hw (eo fills on software path)"),
     ("mesh",      ["ours_mesh_t1.bmp", "ours_mesh_noaa.bmp", "ours_mesh_paa.bmp"],
                    ["ref_clfp_c_t1.png", "ref_mesh*.png"], "NOTE", "mesh path — placement exact, AA verified pixel no-op"),
 ]
