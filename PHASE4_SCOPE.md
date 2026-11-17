@@ -669,3 +669,41 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   intrinsicallySized 409 children (cycle-safe — tree descent only, no
   parent lookup). All 5 gates re-verified PASS (cl1/clv/clfpItem/
   cl2t1/cl2t10), dsm ops identical.
+- SM listeners UNBLOCKED (ebd588c): render_browser.mjs gained
+  RIVE_INPUTS="Name:value@tick;Trig@tick" schedule -> stateMachineInputs
+  at pump ticks. Proven: clfp Item Hover:true@5 -> 56,580 px diff vs
+  no-input ref (listener->bool->visual path measurable). Remaining
+  gap is OUR side: listener->boolean (pk=634) eval + input schedule in
+  ops emission — t4f lane. cl2 autoplay unaffected.
+
+- koru-native arm link attempt: --build=koru-native flag works
+  (part gates exclude macos parts correctly) BUT render drivers
+  fail frontend: libs/canvas:* tors are macos-part-gated —
+  canvas surface absent on koru-native. The arm needs either
+  (a) a canvas-free driver (decode+ops only, no raster) to
+  reach link stage, or (b) a koru-native canvas/ CmdView
+  surface (oshun/koruos ui_probe path exists for that).
+  Undefined-symbol census NOT yet reachable — blocked at
+  frontend, not linker.
+
+- koru-native arm CENSUS RESULT: opsdump_clip.k (decode+ops,
+  canvas-free) compiles+links+RUNS clean on --build=koru-native.
+  nm shows ZERO undefined _koruos_*/_koru_kbd_* symbols — the
+  runtime core is fully self-contained, NO host shim needed for
+  decode+ops. The undefined symbols the arc feared live on the
+  RASTER side only (canvas verbs are macos-part-gated, never
+  reach koru-native frontend). VERDICT: bounded-shim question
+  is moot for core; real gap = koru-native raster surface
+  (CmdView/kwin path, oshun/koruos ui_probe idiom) — path (b).
+
+- koru-native raster surface MILESTONE-0 census: oshun/canvas/
+  index.koru-native.kz EXISTS (1062 lines, freestanding software
+  raster into koruos/surface backing, u32 0x00RRGGBB src-over).
+  HAS: window.*/frames/input.*/draw.rect/roundrect/panel/
+  clip.push(.round)/pop/draw.mesh/mesh.*/text.*/release.frame.
+  MISSING for koru-rive replay: path.open/move/line/cubic/quad/
+  close/reset (7 verbs), draw.path, draw.clip.push.path,
+  draw.image, image.decode.data/width/height, transform.push/pop
+  (verify). mesh.* already consumes kr/rive Tri soup — the
+  tessellator path is LIVE on koru-native. Next: implement path
+  verbs (flatten->scanline fill) + draw.path -> first pixel gate.

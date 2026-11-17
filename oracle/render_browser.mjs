@@ -42,6 +42,20 @@ const AB = abArg || 'Main';
 const SM = smArg === undefined ? 'State Machine 1' : smArg;
 const VMNAME = process.env.RIVE_VM || '';
 const VMINST = process.env.RIVE_VM_INST || '';
+// SM input schedule: RIVE_INPUTS="Hover:true@5;Row@10;Speed:2.5@3"
+//   name:value@tick -> set input.value at pump step tick
+//   name@tick       -> fire() a trigger input at pump step tick
+const INPUTS = (process.env.RIVE_INPUTS || '').split(';').map(s => s.trim()).filter(Boolean).map(s => {
+  const m = s.match(/^([^:@]+)(?::([^@]*))?@(-?\d+)$/);
+  if (!m) throw new Error(`RIVE_INPUTS bad entry: ${s}`);
+  const raw = m[2];
+  let value = raw;
+  if (raw !== undefined) {
+    if (raw === 'true') value = true; else if (raw === 'false') value = false;
+    else if (raw !== '' && !isNaN(Number(raw))) value = Number(raw);
+  }
+  return { name: m[1], value, fire: raw === undefined, tick: parseInt(m[3], 10) };
+}).sort((a, b) => a.tick - b.tick);
 const SMPROP = SM ? `stateMachines: ${JSON.stringify(SM)},` : '';
 const ABPROP = AB ? `artboard: ${JSON.stringify(AB)},` : '';
 const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:transparent">
@@ -103,7 +117,43 @@ const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:trans
             else window.__bound = 'no-instance(vm=' + !!vm + ')';
           } catch (e) { window.__bound = 'err:' + e.message; }
         }
-        window.__pump(tick); r.draw(); window.__redraw = () => r.draw(); res('ok');
+        // Staged pump: apply SM inputs at their scheduled ticks so listener
+        // -> boolean/trigger paths are exercised deterministically.
+        const sched = ${JSON.stringify(INPUTS)};
+        window.__smLog = [];
+        const smInputs = () => {
+          const out = [];
+          try {
+            const names = r.stateMachineNames || [];
+            for (const n of names) { try { out.push(...(r.stateMachineInputs(n) || [])); } catch (e) {} }
+          } catch (e) {}
+          if (!out.length) {
+            try { const v = r.stateMachineInputs; if (typeof v === 'function') out.push(...(v.call(r, '') || [])); } catch (e) {}
+          }
+          return out;
+        };
+        let cur = 0;
+        window.__pump(1); cur = 1; // SM inputs populate on first advance
+        if (sched.length) {
+          const diag = {};
+          for (const k of ['stateMachineInputs','stateMachines','stateMachine','artboard']) {
+            try { const v = r[k]; diag[k] = typeof v === 'function' ? 'fn' : (Array.isArray(v) ? 'arr['+v.length+']' : (v && typeof v === 'object' ? 'obj{'+Object.keys(v).slice(0,12).join(',')+'}' : String(v))); } catch (e) { diag[k] = 'ERR'; }
+          }
+          try { const smi = smInputs(); window.__smLog.push('AVAIL:' + smi.map(i => i.name).join(',') + ' | DIAG:' + JSON.stringify(diag)); }
+          catch (e) { window.__smLog.push('AVAIL-ERR:' + e.message); }
+        }
+        for (const ev of sched) {
+          if (ev.tick > tick) break;
+          if (ev.tick > cur) { window.__pump(ev.tick - cur); cur = ev.tick; }
+          const inp = smInputs().find(i => i.name === ev.name);
+          if (!inp) { window.__smLog.push('MISSING:' + ev.name + ' avail=' + smInputs().map(i => i.name).join(',')); continue; }
+          try {
+            if (ev.fire) inp.fire(); else inp.value = ev.value;
+            window.__smLog.push(ev.name + '@' + ev.tick + '=' + (ev.fire ? 'fire' : String(ev.value)));
+          } catch (e) { window.__smLog.push('ERR:' + ev.name + ':' + e.message); }
+        }
+        if (tick > cur) window.__pump(tick - cur);
+        r.draw(); window.__redraw = () => r.draw(); res('ok');
       },
       onLoadError: (e) => rej(new Error(JSON.stringify(e))),
     });
@@ -190,7 +240,8 @@ if (stats.maxA === 0 || stats.nonEmpty === 0) {
 }
 fs.writeFileSync(out, buf);
 const bound = await page.evaluate(() => window.__bound || false);
-console.log(JSON.stringify({ mod, version: versions[mod], tick, size, out, ab: AB, sm: SM, bound, viaScreenshot: viaShot, alphaMax: stats.maxA, nonEmptyPx: stats.nonEmpty, errors: errors.slice(0, 2) }));
+const smLog = await page.evaluate(() => window.__smLog || []).catch(() => []);
+console.log(JSON.stringify({ mod, version: versions[mod], tick, size, out, ab: AB, sm: SM, bound, viaScreenshot: viaShot, alphaMax: stats.maxA, nonEmptyPx: stats.nonEmpty, smLog, errors: errors.slice(0, 2) }));
 await browser.close();
 server.close();
 process.exit(0);
