@@ -848,3 +848,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   tri soup anyway). Clear+draw+readback all live on
   --build=koru-native. NEXT: tessellate paths->tris -> ops
   replay -> image texture path (codec resurfaces).
+
+- Metal arm M3: metal.pathfill LIVE — flatten->earClip->
+  tri soup->MTLBuffer->draw->getBytes->CPU clip-composite.
+  Rect probe: 2304 red px exact (48x48 @8,8). v1 deltas:
+  per-call texture (slow), evenodd holes named, CPU clip
+  composite. NEXT: frame-persistent encoder, stroke tris,
+  stencil path clips, ops replay gate, image texture path.
