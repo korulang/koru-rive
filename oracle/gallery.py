@@ -35,6 +35,11 @@ GATES = [
     ("deam",      ["ours_deam_t1.bmp"],                   ["ref_deam_t1.png"], "LIMIT", "databind_external_artboard_main — VM-data class"),
     ("hff",       ["ours_hff_t1.bmp"],                    ["ref_hff_t1.png"], "LIMIT", "hosted_font_file — hosted font 404"),
     ("dcpo",      ["ours_dcpo_t1.bmp"],                   ["ref_dcpo_t1.png"], "LIMIT", "drawable_custom_properties_other — vacuous"),
+    ("kn_cl2",    ["kn_cl2.bmp"],       ["ref_cl2_t1.png"], "PASS", "NATIVE raster cl2 (koru-native surface, no macOS bridge)"),
+    ("kn_hw",     ["kn_hw.bmp"],        ["ref_hw_c_t1.png"], "PASS", "NATIVE raster hw"),
+    ("kn_cl1",    ["kn_cl1.bmp"],       ["ref_cl1_main_t1.png"], "PASS", "NATIVE raster cl1"),
+    ("kn_clv",    ["kn_clv.bmp"],       ["ref_clv_t1.png"], "PASS", "NATIVE raster clv"),
+    ("kn_clip",   ["kn_clip.bmp"],      ["ref_clip_t1.png"], "PASS", "NATIVE raster clip_tests (nested path clips)"),
     ("mesh",      ["ours_mesh_t1.bmp", "ours_mesh_noaa.bmp", "ours_mesh_paa.bmp"],
                    ["ref_clfp_c_t1.png", "ref_mesh*.png"], "NOTE", "mesh path — placement exact, AA verified pixel no-op"),
 ]
