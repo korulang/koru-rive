@@ -3457,7 +3457,16 @@ fn isLayoutParent(t: u64) bool {
     return t == 409 or t == 1;
 }
 
+var g_trace: ?bool = null;
+fn tracing() bool {
+    if (g_trace) |t| return t;
+    const t = std.posix.getenv("RIVE_TRACE") != null;
+    g_trace = t;
+    return t;
+}
+
 fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold: bool) void {
+    if (!tracing()) return;
     const alloc = std.heap.page_allocator;
     if (scoped and scaffold) {
         std.debug.print("save\n", .{});
@@ -3648,7 +3657,7 @@ fn dumpFont(r: *Riv) void {
         if (o.type_key != 0 and o.type_name == null) {}
         for (o.props) |p| {
             if (p.key == 212) {
-                if (p.value == .bytes) {
+                if (p.value == .bytes and tracing()) {
                     const b = p.value.bytes;
                     const f = std.fs.cwd().createFile("/tmp/rive_font.bin", .{}) catch return;
                     f.writeAll(b) catch {};
@@ -3989,7 +3998,7 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                         // cl2 labels render to_string(rowIdx).
                         if (vo.type_key == 566 and g_rowIdx >= 0) scalar = .{ .symbol = @intCast(g_rowIdx) };
                         const res = vmScalarToString(r, conv, scalar, alloc) orelse return null;
-                        if (g_rowInstOrd >= 0) std.debug.print("rowbind ord={d} vmid={d} -> '{s}'\n", .{ g_rowInstOrd, g_rowVmid, res });
+                        if (g_rowInstOrd >= 0 and tracing()) std.debug.print("rowbind ord={d} vmid={d} -> '{s}'\n", .{ g_rowInstOrd, g_rowVmid, res });
                         return res;
                     }
                 }
