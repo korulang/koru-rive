@@ -840,10 +840,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   kn_cdo = PASS.
   Gallery: 23 gates.
 
-- Metal arm M1: MTLDevice+lib+pipeline+clear+readback PROVEN
-  on --build=koru-native (metal.tri verb, kn_metal_probe).
-  Clear color renders correct blue through GPU->getBytes->px.
-  Vertex-stage triangle draw not yet rasterizing (descriptor/
-  stepFunction iterated; buffer->setVertexBytes switched).
-  Remaining: vertex fetch fix -> triangle proof -> tessellate
-  paths->tris -> ops replay -> image texture path.
+- Metal arm M2: TRIANGLE PROOF COMPLETE — vertex_id+buffer(0)
+  fetch path draws fullscreen tri (red 4096px verified). Key
+  fixes: float4 needs 16B alignment in Metal address space
+  (V struct padded to 32B stride); vertex-descriptor attribute
+  path abandoned for buffer-fetch idiom (better for dynamic
+  tri soup anyway). Clear+draw+readback all live on
+  --build=koru-native. NEXT: tessellate paths->tris -> ops
+  replay -> image texture path (codec resurfaces).
