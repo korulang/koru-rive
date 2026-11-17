@@ -238,3 +238,74 @@ the live-garble root cause), `oshun@97cab7e` (path-handle leak),
 `koru-rive@f372fd8` (animated color/opacity + diagnostics). The gallery
 component lives in `omni/rough/` (`rive_card.kz`, `gallery_live.k`,
 `lantern_card.kz` — `libs/metal` renamed `libs/canvas`).
+
+
+---
+
+## 11. Native raster arc — koru-native + Metal (end-state)
+
+Two freestanding raster surfaces now exist under `--build=koru-native`,
+both consuming the same OpRec stream via `kr/probe:step`, both verified
+against the browser oracle. **No oshun canvas bridge** — the host-link
+census (`opsdump_clip.k`) proved the runtime core links clean with zero
+`_koruos_*`/`_koru_kbd_*` undefined symbols; the only host ABI is the
+11-symbol `koruos-darwin/shim.c` (surface map, kbd poll, frame timing).
+
+### 11.1 Software scanline surface (`oshun/canvas/index.koru-native.kz`)
+
+`window.*`/`frames`/`draw.*`/`path.*`/`transform.*`/`clip.*` verbs over a
+u32 pixel backing. Path fills = flatten→supersampled scanline; strokes =
+quads+joint discs; path clips = binary coverage masks; images = loud-err
+(no codec in kernel ABI — superseded on darwin, see 11.2).
+**5/5 pixel gates PASS**: cl2, hw, cl1, clv, clip_tests (nested path
+clips). Root causes fixed en route: `fillContours` bypassed `clipCov`
+(routed through `pxBlend`), clip_tests artboard bg `(26,26,38)`, shim
+ABI conventions (map nonzero=ok, kbd_poll −1=empty).
+
+### 11.2 Metal surface (same file, `metal.*` verbs)
+
+`metal.paths(on:1)` routes `draw.path` fills+strokes through Metal;
+`draw.image` is always- Metal. Architecture:
+
+- ObjC-runtime message sends (`mtlSend*`) — no bridge, no canvas verbs.
+- Buffer-fetch vertex path (`vertex_id` + `[[buffer(0)]]`), 32B-stride
+  `MVtx` (pos + premul col, 16B-aligned float4).
+- Fills: flatten→earClip (winding-aware, `vbase` global indices)→tri
+  soup→`drawPrimitives`→`getBytes`→CPU `clipCov`/`blendInto` composite.
+- evenodd: two-pass stencil parity (invert mask → test-equal-1 →
+  fullscreen emit). Fixed by `loadAction DontCare→Load`.
+- Strokes: quad-per-segment + 8-seg round joint/cap fans (miter/bevel
+  named delta).
+- Images: `image.decode.data` = CFData→CGImageSource→CGImage→
+  CGBitmapContext (bitmapInfo `2|(2<<12)`)→RGBA registry→RGBA8
+  `MTLTexture`+linear sampler→textured-quad pipeline. cin renders ink;
+  residual = shared cross-arm rect-semantics class (intrinsic 15×15 vs
+  browser ~8×8 + alpha composite), NOT a Metal defect.
+- Frame batch: consecutive unclipped draws record into
+  `g_mbatch`/`g_msegs`; flush = ONE texture + ONE command buffer + ONE
+  readback, ordered seg draws, per-eo-seg stencil sub-passes. Ordering
+  contract: every px-writer/clip-verb/snap flushes first.
+
+**5/5 pixel gates PASS, all-GPU for fills/strokes/eo**: cl2, cl1, clv,
+clip_tests, hw. Per-call (unbatched) remainders: clipped draws, images.
+
+### 11.3 Named deltas (honest, standing)
+
+- Clip masks stay CPU-side (`clipCov` composite) — stencil path clips
+  not yet implemented.
+- Stroke joins/caps: round-only approximation (miter/bevel delta).
+- evenodd batching: per-eo-seg stencil sub-passes (correct, not merged).
+- cin image rect semantics: shared macOS+native residual (not Metal).
+- lwti/type-544, VM-data, hosted-404 fixtures: unchanged oracle-limitation
+  classes from §6.
+
+### 11.4 Verification commands
+
+```
+KORU_BACKEND_LIBPATH=~/src/oshun/canvas/koruos-darwin   ~/src/koru/zig-out/bin/koruc build render_knm_<gate>.k   --build=koru-native -o /tmp/render_knm_<gate>
+KN_TAG=knm_<gate> /tmp/render_knm_<gate>
+uv run --with numpy --with pillow python oracle/pixel_oracle.py   --ref <ref> --ours /tmp/kn_surface_knm_<gate>.bmp   --bg <r>,<g>,<b> --comp <r>,<g>,<b> --allow-missing-time
+```
+
+Gallery: `oracle/gallery.html` carries `kn_*` (software) and `knm_*`
+(Metal) pairs — 33 gates, regenerated per visual change.
