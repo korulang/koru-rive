@@ -4292,18 +4292,20 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         }
         pen += @as(f64, hmtxAdvance(font, gid)) * scale;
     }
-    var vp: usize = 0;
-    for (verbs.items) |v| {
-        const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-        var s = std.ArrayList(u8).empty;
-        defer s.deinit(alloc);
-        s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
-        var k: usize = 0;
-        while (k < np and vp < pts.items.len) : (k += 1) {
-            s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
-            vp += 1;
+    if (tracing()) {
+        var vp: usize = 0;
+        for (verbs.items) |v| {
+            const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+            var s = std.ArrayList(u8).empty;
+            defer s.deinit(alloc);
+            s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+            var k: usize = 0;
+            while (k < np and vp < pts.items.len) : (k += 1) {
+                s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+                vp += 1;
+            }
+            std.debug.print("  {s}\n", .{s.items});
         }
-        std.debug.print("  {s}\n", .{s.items});
     }
     return true;
 }
@@ -4974,8 +4976,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             _ = fi;
         }
-        const bytes = blob orelse { std.debug.print("imgemit: no blob for obj {d}\n", .{ii}); continue; };
-        std.debug.print("imgemit: obj {d} blob {d}B\n", .{ ii, bytes.len });
+        const bytes = blob orelse { if (tracing()) std.debug.print("imgemit: no blob for obj {d}\n", .{ii}); continue; };
+        if (tracing()) std.debug.print("imgemit: obj {d} blob {d}B\n", .{ ii, bytes.len });
         imgBlobs.append(alloc, bytes) catch {};
         const bidx: i64 = @intCast(imgBlobs.items.len - 1);
         out.append(alloc, op0(6)) catch {};
