@@ -723,3 +723,9 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   clip-heavy fixtures -> clip.push.path mask suspect (mask
   coverage or clip_aux indexing). Next: instrument clipCov
   mask branch on clip_tests.
+
+- koru-native gates M2 (clip fix: fillContours->pxBlend):
+  cl2 PASS, hw PASS, cl1 PASS (mass 1.002), clv PASS.
+  clip FAIL residual: backdrop (26,26,38) vs white +
+  mass 0.49 + gap 33.76% — mask polarity/coverage residual
+  on nested path clips (not the bypass bug — that was fixed).
