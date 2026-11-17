@@ -662,3 +662,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   evaluator — real machinery, but zero observable pixels depend on it
   here. Building it is unjustified until a fixture has an active
   DataConverterFormula + a non-blank oracle.
+
+- layout residuals milestone: layoutOffsetOf now applies the full 3x3
+  alignment grid (632 row-major: 0-2 top, 3-5 center, 6-8 bottom;
+  4==center preserved); layoutContentSize recurses into nested
+  intrinsicallySized 409 children (cycle-safe — tree descent only, no
+  parent lookup). All 5 gates re-verified PASS (cl1/clv/clfpItem/
+  cl2t1/cl2t10), dsm ops identical.
