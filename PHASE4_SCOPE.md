@@ -855,3 +855,9 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   per-call texture (slow), evenodd holes named, CPU clip
   composite. NEXT: frame-persistent encoder, stroke tris,
   stencil path clips, ops replay gate, image texture path.
+
+- Metal hw residual bisect: winding-aware earClip landed
+  (correct regardless) but hw UNCHANGED (mass 0.67, xmax
+  129 vs 340) — missing right-side ink is NOT winding.
+  Next bisect: which op kind owns x>129 region (dump ops,
+  check kind distribution in that bbox).
