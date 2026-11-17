@@ -646,7 +646,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   render_browser.mjs has no click/input injection -> listener->boolean
   (pk=634) paths have no pixel oracle. Not built; named gap until an
   input-injection oracle exists. cl2's animation is autoplay so t10
-  gate is unaffected.
+  gate is unaffected. Backend parity note: rive_webgl accepts
+  the input set (smLog clean) but produces ZERO visual diff at
+  any tick — input->SM propagation gap in rive_webgl 2.37.0,
+  named oracle limitation; rive_canvas is the canonical ref
+  backend so gates unaffected.
 
 - lwti/type-544 VERDICT (standing commission item 1): formula eval is
   OUT-OF-SCOPE for this fixture — recon falsified the LIMIT premise.
