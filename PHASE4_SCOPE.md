@@ -888,3 +888,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   backdrop now white PASS. Residual: image ink=0 — neither
   textured draw nor magenta err-arm visible at (0,0).
   Next: decode-handle vs draw.image composite bisect.
+
+- Metal image path COMPLETE: bisect found 3 bugs — TVtx
+  stride 40B vs shader 32B, stray setFragmentTexture:
+  selector crash, CGBitmapContextCreate bitmapInfo 0x2000
+  -> 0x2002 (premultipliedLast|byteOrder32Little). cin now
+  renders image ink (0,0,14,14 mass 60 vs ref 19) — SAME
+  named residual class as macOS arm (intrinsic-size vs
+  browser half-size + alpha composite), NOT a Metal defect.
+  Codec delta fully closed on darwin: kind-11 -> CGImageSource
+  -> MTLTexture -> pixels. 5/5 knm gates re-verified.
