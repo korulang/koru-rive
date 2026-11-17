@@ -133,7 +133,7 @@ const PAGE = (m) => `<!doctype html><html><body style="margin:0;background:trans
           return out;
         };
         let cur = 0;
-        window.__pump(1); cur = 1; // SM inputs populate on first advance
+        if (sched.length) { window.__pump(1); cur = 1; } // SM inputs populate on first advance; no schedule -> identical to old single pump
         if (sched.length) {
           const diag = {};
           for (const k of ['stateMachineInputs','stateMachines','stateMachine','artboard']) {
