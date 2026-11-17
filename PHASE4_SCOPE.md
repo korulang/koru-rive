@@ -777,3 +777,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   Regression sweep: cl1/clv/clfpItem/cl2/cl2t10 all PASS, dsm ops=12.
   Gallery: 20 gates 0 missing; pair_clfp_hover.png added
   (ours_clfp_item_hover.bmp / ref_clfp_item_hover.png).
+
+- Input-coverage recon (t42 next-leg): census across component_list
+  family — StateMachineNumber(56): dsm declares 3 (a/b/level) but ZERO
+  condition objects consume them (no TransitionNumberCondition
+  anywhere) -> declared-but-unused, no observable path. Trigger(58):
+  ZERO in family -> no fire() oracle. Bool(59): clfp Hover only
+  consumed input (done). VERDICT: number+trigger input paths have no
+  gateable surface in this fixture family — scoped out with census
+  evidence, same class as earlier listener scope-out.
+  Item 3 LIVE: clfp carries KeyFrame.frame=60 records (6+) — real
+  frame-spaced keyframes exist (vs cl2's degenerate frame-0 holds).
+  Intermediate-frame interpolation is implemented (keyframedValue/
+  keyframedColor lerp); gateable iff a clfp Main/Item ref renders
+  mid-animation. Next: check clfp frame-60 kf targets + ref ticks.
