@@ -880,3 +880,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   driver built; kind-11 emits (imgemit obj4 245B). GATE
   FAIL named: backdrop (26,26,38) full-frame + ink=0 —
   decode-or-draw bisect pending (err arm vs texture path).
+
+- cin bisect progress: backdrop bug ROOT-CAUSED+FIXED —
+  window.clear.color only set win.clear for NEXT frames
+  iteration; mid-frame clears left default dark backing.
+  Now repaints win.px immediately (real canvas fix). cin
+  backdrop now white PASS. Residual: image ink=0 — neither
+  textured draw nor magenta err-arm visible at (0,0).
+  Next: decode-handle vs draw.image composite bisect.
