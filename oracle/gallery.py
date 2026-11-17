@@ -32,6 +32,8 @@ def load_gates():
             sys.exit("gallery: verdict for gate %s is missing or was computed on different files "
                      "-- re-run oracle/run_gates.py" % g["gate"])
         note = g["note"] if v["verdict"] == "PASS" else "%s  [failed: %s]" % (g["note"], ", ".join(v["failed"]))
+        if v.get("vacuous"):
+            note += "  [VACUOUS: both sides ~empty]"
         out.append((g["gate"], os.path.join(IMG, g["ours"]), os.path.join(IMG, g["ref"]), g["comp"], v["verdict"], note))
     return out
 

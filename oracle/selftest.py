@@ -183,6 +183,22 @@ def build_fidelity(ref, outdir, bg, prefix, filled):
         m[y0:y0 + bh, x0:x0 + bw, :3] = dom
         m[y0:y0 + bh, x0 + 14:x0 + 14 + bw] = blk
         add("bad_element_displaced_14px", m, "fail", ["local-fidelity"], aimed=("local-fidelity", "local_max"))
+    # notch: backdrop-coloured holes inside ink -- the class anti-aliasing's
+    # blended-px count cannot see (kn_hw). 15% of strong-ink pixels.
+    ink = ink_mask(rgba, bgf, 100)
+    ys, xs = np.nonzero(ink)
+    if len(ys):
+        rng = np.random.default_rng(23)
+        pick = rng.choice(len(ys), size=max(1, int(0.15 * len(ys))), replace=False)
+        m = rgba.copy()
+        m[ys[pick], xs[pick], :3] = bgf
+        add("bad_notches_15pct", m, "fail", ["ink-coverage"],
+            aimed=("ink-coverage", "ink_coverage_notch_pct"))
+    # empty-vs-content: a blank ours must still fail the ink checks.
+    blank = rgba.copy()
+    blank[:, :, :3] = bgf
+    blank[:, :, 3] = 255
+    add("bad_ours_empty", blank, "fail", ["ink-bbox", "ink-mass"])
     return cases
 
 
@@ -274,6 +290,21 @@ def main():
         if not ok:
             failures.append("bad_stale_duplicate")
 
+    # vacuous agreement: blank vs blank passes AND is flagged vacuous --
+    # the flag is what keeps an empty PASS honest in gate_verdicts.json.
+    im0 = Image.open(a.ref)
+    blank = np.zeros((im0.size[1], im0.size[0], 4))
+    blank[:, :, :3] = bg
+    blank[:, :, 3] = 255
+    blankp = os.path.join(tmpdir, "blank_vacuous.png")
+    save(blank, blankp)
+    res = po.evaluate(blankp, blankp, bg=bg, inset=a.inset, allow_missing_time=True)
+    vac_ok = res["pass"] and res["report"].get("vacuous") == 1
+    rows.append(("ok_empty_both_vacuous", "pass", "pass" if res["pass"] else "fail",
+                 vac_ok, "vacuous=%s" % res["report"].get("vacuous")))
+    if not vac_ok:
+        failures.append("ok_empty_both_vacuous")
+
     # --- pairing guard: an unnamed pair must be refused, a mismatched time too
     import shutil
     ref_tagged = os.path.join(tmpdir, "ref_t33.png")
@@ -311,7 +342,8 @@ def main():
            "registration_dx": ("registration", dflt["reg_tol"]),
            "registration_dy": ("registration", dflt["reg_tol"]),
            "frame_unexplained_pct": ("frame-diff", 100.0 * dflt["frame_max"]),
-           "local_max": ("local-fidelity", dflt["local_tol"])}
+           "local_max": ("local-fidelity", dflt["local_tol"]),
+           "ink_coverage_notch_pct": ("ink-coverage", 100.0 * dflt["notch_max"])}
     worst_ok = {k: (0.0, "-") for k in TOL}
     aa_seen = []
     aimed_vals = {}

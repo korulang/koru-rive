@@ -47,6 +47,7 @@ def run_gate(g):
     failed = [c["check"] for c in res["checks"] if not c["pass"]]
     return {"gate": g["gate"], "verdict": "PASS" if res["pass"] else "FAIL", "failed": failed,
             "hand_label": g["hand_label"], "ours": g["ours"], "ref": g["ref"],
+            "vacuous": bool(res["report"].get("vacuous")),
             "ours_sha": sha(ours), "ref_sha": sha(ref), "checks": res["checks"], "report": res["report"]}
 
 

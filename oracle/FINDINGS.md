@@ -432,3 +432,13 @@ Oracle-growth candidates from this pass: a vacuous/empty-frame verdict
 class; an ink-coverage check that would have caught kn_hw's 139 px of
 backdrop notches (it passed because blended-edge COUNT stayed ≥0.5×ref —
 count, not coverage).
+
+
+Both audit candidates landed as checks: `ink-coverage` (notch_max=3%;
+worst legit control 2.54% on the node-canvas selftest ref, aimed mutant
+9.18%) and the vacuous class (vacuous_px=200; cin/lwti/dcpo now PASS
+vacuous, iba/deam/hff still FAIL on backdrop). kn_hw flipped PASS->FAIL
+on ink-coverage -- the first gate the eyeball audit caused to change
+verdict. Remaining named gap: softer-than-reference edges still
+unasserted; vacuous floor 200 px could hide a sub-visible-content
+mismatch (accepted: <200 px is below perceptual relevance).

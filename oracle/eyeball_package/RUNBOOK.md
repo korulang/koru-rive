@@ -7,7 +7,10 @@ eyeball_package/
   README.md        — audit protocol + verdict contract (give this to the model)
   RUNBOOK.md       — this file
   gates.json       — 33 gates: name, oracle verdict, failed checks, pair path
-  images/          — pair_<gate>.png composites (ref | ours), self-contained
+  images/          — pair_<gate>.png composites (ours | ref), self-contained
+  extras/          — 5 superseded intermediate tick pairs, NOT part of the audit
+  ../verdicts_swe2_ascii.jsonl — baseline verdicts from an ASCII-grid pass
+                     (SWE-2, no image input); diff your verdicts against it
 ```
 
 ## How to run
@@ -23,13 +26,16 @@ eyeball_package/
 `verdicts.jsonl` is the tightening-pass input: every MINOR/MISMATCH line
 names a gate + diff_kind + region. Triage order: MISMATCH first, then
 MINOR clustered by diff_kind (a systematic `edge-aa` across gates = one
-rasterizer fix; scattered = per-fixture bugs).
+rasterizer fix; scattered = per-fixture bugs). Diff against
+`verdicts_swe2_ascii.jsonl` (same schema, ASCII-instrumented baseline):
+agreement = high confidence; disagreement = look again carefully.
 
 ## Regenerating
 
 Pairs regenerate from `../gallery.py` (`uv run --with pillow --with numpy
 python gallery.py`) — re-copy `images/pair_*.png` here after any gate
-update, and refresh `gates.json` verdicts from the GATES table.
+update, and regenerate `gates.json` from `../gate_verdicts.json` +
+`../gates.json` (verdicts are computed by `../run_gates.py`, never typed).
 
 ## What this is NOT
 

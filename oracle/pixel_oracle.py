@@ -48,6 +48,15 @@ what was drawn agrees with the reference. Every allowed difference is named:
                     invisible to every other check. One-sided on purpose:
                     softer-than-reference is indistinguishable from legitimate
                     sub-pixel phase and is NOT asserted (named gap).
+    ink-coverage   ref ink signal inside the shared ink zone that ours
+                    paints as backdrop is at most --notch-max of the
+                    signal. The hole check anti-aliasing misses: the
+                    blended-px COUNT can stay >= --aa-min while backdrop
+                    notches open inside glyphs (kn_hw).
+
+Vacuous agreement: when both sides carry < --vacuous-px ink, ink-dependent
+checks pass as vacuous (empty-vs-empty fixtures); backdrop, size, pairing
+and alpha still assert, so a white-vs-dark empty pair still fails.
     local-fidelity  the signed ours-minus-ref delta averaged over any
                     --local-window square may not exceed --local-tol levels.
                     The only check that notices a small element displaced
@@ -263,7 +272,7 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
              backdrop_px_tol=2, backdrop_px_frac=0.005,
              ink_hue_tol=0.008, ink_core_mean=3.0, ink_core_p95=8, ink_core_min=64,
              reg_tol=0.75, frame_px_tol=16, frame_max=0.001, aa_min=0.5, aa_floor=64,
-             local_window=33, local_tol=10.0):
+             local_window=33, local_tol=10.0, vacuous_px=200, notch_max=0.03):
     """Run every check. Returns {'pass': bool, 'checks': [...], 'report': {...}}.
     Never exits, never prints: callers decide what to do with the verdict."""
     ref_rgb, ref_alpha, ref_size = load_rgb(ref_path)
@@ -340,8 +349,17 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
     our_bgc = modal_colour(our_rgb)[0]
     our_ink = coverage(our_rgb, our_bgc) > 0.15
 
+    # Vacuous agreement: both sides carry ~no ink (empty-vs-empty fixtures
+    # like cin/lwti/dcpo). Ink-dependent checks pass as vacuous; backdrop,
+    # size, pairing and alpha still assert -- a white-vs-dark empty pair
+    # (iba/deam/hff) still fails on those.
+    ink_ref_n, ink_our_n = int(ref_ink.sum()), int(our_ink.sum())
+    vacuous = ink_ref_n < vacuous_px and ink_our_n < vacuous_px
+
     rb, ob = bbox(ref_ink), bbox(our_ink)
-    if rb is None or ob is None:
+    if vacuous:
+        check("ink-bbox", True, "vacuous: both sides ~empty (ref=%d our=%d ink px)" % (ink_ref_n, ink_our_n))
+    elif rb is None or ob is None:
         check("ink-bbox", False, "ref=%s ours=%s" % (rb, ob))
     else:
         axes = {"x": (0, 2), "y": (1, 3)}
@@ -364,9 +382,12 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
     cour = coverage(our_rgb, our_bgc)
     mass_ref, mass_our = float(cref.sum()), float(cour.sum())
     ratio = mass_our / max(mass_ref, 1e-9)
-    check("ink-mass", mass_min <= ratio <= mass_max,
-          "ref=%.0f ours=%.0f ratio=%.2f (need %.2f..%.2f)"
-          % (mass_ref, mass_our, ratio, mass_min, mass_max))
+    if vacuous:
+        check("ink-mass", True, "vacuous: both sides ~empty (ref=%.0f ours=%.0f)" % (mass_ref, mass_our))
+    else:
+        check("ink-mass", mass_min <= ratio <= mass_max,
+              "ref=%.0f ours=%.0f ratio=%.2f (need %.2f..%.2f)"
+              % (mass_ref, mass_our, ratio, mass_min, mass_max))
 
     # --- uncovered reference ink: content the reference draws and we do not.
     # SYMMETRIC unmatched coverage. Two renders that agree to meanAbsDiff
@@ -385,15 +406,37 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
         return n
 
     denom = float(cref_b.sum() + cour_b.sum())
-    if denom > 0:
+    if vacuous:
+        check("coverage-gap", True, "vacuous: both sides ~empty")
+    elif denom > 0:
         unmatched = float((np.maximum(0.0, cref_b - _near(cour_b)).sum()
                            + np.maximum(0.0, cour_b - _near(cref_b)).sum()) / denom)
         check("coverage-gap", unmatched <= gap_max,
               "%.2f%% of coverage unmatched either way within %dpx (max %.1f%%)"
               % (100 * unmatched, gap_px, 100 * gap_max))
 
-    # ------------------------------------------------------- fidelity tier
     fid = {}
+    # --- ink-coverage: ref ink signal inside the shared ink zone where ours
+    # shows backdrop. anti-aliasing counts blended px; this catches holes --
+    # ours painting backdrop where the reference still carries signal
+    # (kn_hw: 139 such px passed every other check).
+    if vacuous:
+        check("ink-coverage", True, "vacuous: both sides ~empty")
+    else:
+        zone = dilate(ref_ink | our_ink, 2)
+        ref_sig = zone & (cref > 0.10)
+        nden = int(ref_sig.sum())
+        if nden:
+            notch = int((ref_sig & (cour < 0.05)).sum())
+            nfrac = notch / nden
+            fid["ink_coverage_notch_pct"] = round(100 * nfrac, 3)
+            check("ink-coverage", nfrac <= notch_max,
+                  "%.2f%% of %d ref-signal px inside shared ink zone are backdrop on ours (max %.1f%%)"
+                  % (100 * nfrac, nden, 100 * notch_max))
+        else:
+            check("ink-coverage", True, "no shared ink zone -- vacuous")
+
+    # ------------------------------------------------------- fidelity tier
     rf, of = ref_rgb.astype(np.float64), our_rgb.astype(np.float64)
     sd = of - rf                                  # signed, per channel
     d = np.abs(sd).max(axis=2)                    # per-pixel worst channel
@@ -444,27 +487,31 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
     check("ink-colour", colour_ok, "; ".join(parts))
 
     # --- registration: the translation that best aligns ours to the reference.
-    if mass_ref > 0 and mass_our > 0:
+    if not vacuous and mass_ref > 0 and mass_our > 0:
         dx, dy = best_shift(cref, cour)
         fid["registration_dx"], fid["registration_dy"] = dx, dy
         check("registration", max(abs(dx), abs(dy)) <= reg_tol,
               "ours best aligns to ref when displaced dx=%+.2f dy=%+.2f px (max %.2f per axis)"
               % (dx, dy, reg_tol))
     else:
-        check("registration", True, "no ink on at least one side -- vacuous")
+        check("registration", True, "vacuous: %s" % ("both sides ~empty" if vacuous else "no ink on at least one side"))
 
     # --- frame-diff: disagreement that edge phase cannot explain.
-    explained = dilate(edge_r, 1) & dilate(edge_o, 1)
-    disagree = d > frame_px_tol
-    unexplained = disagree & ~explained
-    ufrac = float(unexplained.sum() / npx)
-    fid["frame_disagree_pct"] = round(100 * float(disagree.sum() / npx), 3)
-    fid["frame_unexplained_pct"] = round(100 * ufrac, 3)
-    check("frame-diff", ufrac <= frame_max,
-          "%.3f%% of frame differs by >%d levels off shared colour edges (max %.2f%%); "
-          "total disagreeing %.3f%%, excused edge band %.2f%% of frame"
-          % (100 * ufrac, frame_px_tol, 100 * frame_max,
-             100 * float(disagree.sum() / npx), 100 * float(explained.sum() / npx)))
+    if vacuous:
+        check("frame-diff", True, "vacuous: both sides ~empty")
+        fid["frame_disagree_pct"] = fid["frame_unexplained_pct"] = 0.0
+    else:
+        explained = dilate(edge_r, 1) & dilate(edge_o, 1)
+        disagree = d > frame_px_tol
+        unexplained = disagree & ~explained
+        ufrac = float(unexplained.sum() / npx)
+        fid["frame_disagree_pct"] = round(100 * float(disagree.sum() / npx), 3)
+        fid["frame_unexplained_pct"] = round(100 * ufrac, 3)
+        check("frame-diff", ufrac <= frame_max,
+              "%.3f%% of frame differs by >%d levels off shared colour edges (max %.2f%%); "
+              "total disagreeing %.3f%%, excused edge band %.2f%% of frame"
+              % (100 * ufrac, frame_px_tol, 100 * frame_max,
+                 100 * float(disagree.sum() / npx), 100 * float(explained.sum() / npx)))
 
     # --- anti-aliasing: a hard-edged raster has no blended edge pixels.
     aa_r, aa_o = blended_px(ref_rgb), blended_px(our_rgb)
@@ -477,7 +524,9 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
         check("anti-aliasing", True, "reference has %d blended edge px < %d -- vacuous" % (aa_r, aa_floor))
 
     # --- local-fidelity: signed mean delta over a sliding window.
-    if local_window:
+    if vacuous:
+        check("local-fidelity", True, "vacuous: both sides ~empty")
+    elif local_window:
         loc = np.abs(box_mean(sd, local_window // 2)).max(axis=2)
         ly, lx = np.unravel_index(int(loc.argmax()), loc.shape)
         lmax = float(loc.max())
@@ -508,6 +557,7 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
         report["our_ink_within_%dpx" % k] = round(
             100.0 * (our_ink & dilate(ref_ink, k)).sum() / max(1, our_ink.sum()), 1)
     report["ink_mass_ratio"] = round(ratio, 3)
+    report["vacuous"] = 1 if vacuous else 0
     report.update(fid)
     union = ref_ink | our_ink
     if union.any():

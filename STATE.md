@@ -358,3 +358,18 @@ Eyeball audit (ASCII-instrumented, `verdicts_swe2_ascii.jsonl`): no oracle
 PASS hides a visible mismatch; 15 FAILs confirmed; 5 FAILs are vacuous or
 AA-only (cin/lwti/dcpo empty-vs-empty, kn_clip/knm_clip AA staircase).
 Candidates for oracle growth: vacuous verdict class, ink-coverage check.
+
+
+Oracle growth by audit (2026-11-17, second landing): two checks added from
+the eyeball audit's candidates. `ink-coverage` asserts ref ink signal
+inside the shared ink zone that ours paints as backdrop <= 3% (kn_hw's
+139-px notch defect, invisible to anti-aliasing's blended-px count).
+Vacuous agreement: both sides <200 ink px -> ink checks pass vacuous,
+flagged `vacuous` in gate_verdicts.json and gallery notes; backdrop/size/
+pairing/alpha still assert (iba/deam/hff still FAIL on backdrop).
+Re-run: 13 PASS / 20 FAIL. Flips vs prior run: cin/lwti/dcpo FAIL->PASS
+(vacuous), kn_hw PASS->FAIL (ink-coverage). Selftest: notch mutant +
+empty-vs-content mutant + blank-vs-blank vacuous flag case; calibration
+worst-ok 2.54% vs tol 3.0%, mutant 9.18%. Eyeball package re-synced:
+33 post-fix composites, extras/ holds 5 superseded tick pairs, gates.json
+regenerated from gate_verdicts.json, RUNBOOK updated.

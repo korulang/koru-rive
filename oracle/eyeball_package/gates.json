@@ -3,6 +3,7 @@
   "gate": "hw",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "hello_world bind pose",
   "pair": "images/pair_hw.png"
  },
@@ -10,6 +11,7 @@
   "gate": "cdo",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "cdo child artboard",
   "pair": "images/pair_cdo.png"
  },
@@ -20,17 +22,20 @@
    "ink-bbox",
    "ink-mass",
    "coverage-gap",
+   "ink-coverage",
    "registration",
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "dsm bind pose (SM-name artifact resolved)",
+  "vacuous": false,
+  "note": "dsm bind pose (SM-name artifact resolved)  [failed: ink-bbox, ink-mass, coverage-gap, ink-coverage, registration, frame-diff, local-fidelity]",
   "pair": "images/pair_dsm.png"
  },
  {
   "gate": "dsm_row",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "dsm bound row",
   "pair": "images/pair_dsm_row.png"
  },
@@ -38,6 +43,7 @@
   "gate": "clfp",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "clfp Main t1",
   "pair": "images/pair_clfp.png"
  },
@@ -45,10 +51,12 @@
   "gate": "clfp_item",
   "verdict": "FAIL",
   "failed_checks": [
+   "ink-coverage",
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "clfp Item VM-bound",
+  "vacuous": false,
+  "note": "clfp Item VM-bound  [failed: ink-coverage, frame-diff, local-fidelity]",
   "pair": "images/pair_clfp_item.png"
  },
  {
@@ -58,13 +66,15 @@
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "cl1 Item per-row VM",
+  "vacuous": false,
+  "note": "cl1 Item per-row VM  [failed: frame-diff, local-fidelity]",
   "pair": "images/pair_cl1_item.png"
  },
  {
   "gate": "cl1_main",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "cl1 Main scroll+layout",
   "pair": "images/pair_cl1_main.png"
  },
@@ -72,6 +82,7 @@
   "gate": "clv",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "clv clipped viewport absolute layout",
   "pair": "images/pair_clv.png"
  },
@@ -81,7 +92,8 @@
   "failed_checks": [
    "frame-diff"
   ],
-  "note": "cl2 NumberToList synthetic grid + flexWrap",
+  "vacuous": false,
+  "note": "cl2 NumberToList synthetic grid + flexWrap  [failed: frame-diff]",
   "pair": "images/pair_cl2.png"
  },
  {
@@ -91,37 +103,44 @@
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "cl2 color keyframes animate item fill at t10",
+  "vacuous": false,
+  "note": "cl2 color keyframes animate item fill at t10  [failed: frame-diff, local-fidelity]",
   "pair": "images/pair_cl2_t10.png"
  },
  {
   "gate": "clfp_hover",
   "verdict": "FAIL",
   "failed_checks": [
+   "ink-coverage",
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "clfp Item SM listener Hover:true@5 -> transition crossfade",
+  "vacuous": false,
+  "note": "clfp Item SM listener Hover:true@5 -> transition crossfade  [failed: ink-coverage, frame-diff, local-fidelity]",
   "pair": "images/pair_clfp_hover.png"
  },
  {
   "gate": "kn_sm_input",
   "verdict": "FAIL",
   "failed_checks": [
+   "ink-coverage",
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "NATIVE raster SM-input class: clfp Item Hover:true@5 (render_kn_sm_input.k)",
+  "vacuous": false,
+  "note": "NATIVE raster SM-input class: clfp Item Hover:true@5 (render_kn_sm_input.k)  [failed: ink-coverage, frame-diff, local-fidelity]",
   "pair": "images/pair_kn_sm_input.png"
  },
  {
   "gate": "kn_clfp_item",
   "verdict": "FAIL",
   "failed_checks": [
+   "ink-coverage",
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "NATIVE clfp Item VM-bound list",
+  "vacuous": false,
+  "note": "NATIVE clfp Item VM-bound list  [failed: ink-coverage, frame-diff, local-fidelity]",
   "pair": "images/pair_kn_clfp_item.png"
  },
  {
@@ -131,27 +150,24 @@
    "frame-diff",
    "local-fidelity"
   ],
-  "note": "NATIVE cl2 animated keyframes t10",
+  "vacuous": false,
+  "note": "NATIVE cl2 animated keyframes t10  [failed: frame-diff, local-fidelity]",
   "pair": "images/pair_kn_cl2_t10.png"
  },
  {
   "gate": "clip",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "clip_tests Hidden-Path-Visible-Path",
   "pair": "images/pair_clip.png"
  },
  {
   "gate": "cin",
-  "verdict": "FAIL",
-  "failed_checks": [
-   "ink-bbox",
-   "ink-mass",
-   "coverage-gap",
-   "registration",
-   "local-fidelity"
-  ],
-  "note": "custom_image_name \u2014 image decode LIVE, browser drops alpha (spec-correct)",
+  "verdict": "PASS",
+  "failed_checks": [],
+  "vacuous": true,
+  "note": "custom_image_name \u2014 image decode LIVE, browser drops alpha (spec-correct)  [VACUOUS]",
   "pair": "images/pair_cin.png"
  },
  {
@@ -159,23 +175,18 @@
   "verdict": "FAIL",
   "failed_checks": [
    "backdrop",
-   "ink-bbox",
-   "ink-mass",
-   "backdrop-px",
-   "frame-diff",
-   "local-fidelity"
+   "backdrop-px"
   ],
-  "note": "in_band_asset \u2014 1x1 grayscale PNG, vacuous both sides",
+  "vacuous": true,
+  "note": "in_band_asset \u2014 1x1 grayscale PNG, vacuous both sides  [VACUOUS]",
   "pair": "images/pair_iba.png"
  },
  {
   "gate": "lwti",
-  "verdict": "FAIL",
-  "failed_checks": [
-   "ink-bbox",
-   "ink-mass"
-  ],
-  "note": "library_with_text_and_image \u2014 type-544 formula token, out-of-scope",
+  "verdict": "PASS",
+  "failed_checks": [],
+  "vacuous": true,
+  "note": "library_with_text_and_image \u2014 type-544 formula token, out-of-scope  [VACUOUS]",
   "pair": "images/pair_lwti.png"
  },
  {
@@ -183,13 +194,10 @@
   "verdict": "FAIL",
   "failed_checks": [
    "backdrop",
-   "ink-bbox",
-   "ink-mass",
-   "backdrop-px",
-   "frame-diff",
-   "local-fidelity"
+   "backdrop-px"
   ],
-  "note": "databind_external_artboard_main \u2014 VM-data class",
+  "vacuous": true,
+  "note": "databind_external_artboard_main \u2014 VM-data class  [VACUOUS]",
   "pair": "images/pair_deam.png"
  },
  {
@@ -197,23 +205,18 @@
   "verdict": "FAIL",
   "failed_checks": [
    "backdrop",
-   "ink-bbox",
-   "ink-mass",
-   "backdrop-px",
-   "frame-diff",
-   "local-fidelity"
+   "backdrop-px"
   ],
-  "note": "hosted_font_file \u2014 hosted font 404",
+  "vacuous": true,
+  "note": "hosted_font_file \u2014 hosted font 404  [VACUOUS]",
   "pair": "images/pair_hff.png"
  },
  {
   "gate": "dcpo",
-  "verdict": "FAIL",
-  "failed_checks": [
-   "ink-bbox",
-   "ink-mass"
-  ],
-  "note": "drawable_custom_properties_other \u2014 vacuous",
+  "verdict": "PASS",
+  "failed_checks": [],
+  "vacuous": true,
+  "note": "drawable_custom_properties_other \u2014 vacuous  [VACUOUS]",
   "pair": "images/pair_dcpo.png"
  },
  {
@@ -222,20 +225,25 @@
   "failed_checks": [
    "frame-diff"
   ],
-  "note": "NATIVE raster cl2 (koru-native surface, no macOS bridge)",
+  "vacuous": false,
+  "note": "NATIVE raster cl2 (koru-native surface, no macOS bridge)  [failed: frame-diff]",
   "pair": "images/pair_kn_cl2.png"
  },
  {
   "gate": "kn_hw",
-  "verdict": "PASS",
-  "failed_checks": [],
-  "note": "NATIVE raster hw",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-coverage"
+  ],
+  "vacuous": false,
+  "note": "NATIVE raster hw  [failed: ink-coverage]",
   "pair": "images/pair_kn_hw.png"
  },
  {
   "gate": "kn_cl1",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "NATIVE raster cl1",
   "pair": "images/pair_kn_cl1.png"
  },
@@ -243,6 +251,7 @@
   "gate": "kn_clv",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "NATIVE raster clv",
   "pair": "images/pair_kn_clv.png"
  },
@@ -252,7 +261,8 @@
   "failed_checks": [
    "anti-aliasing"
   ],
-  "note": "NATIVE raster clip_tests (nested path clips)",
+  "vacuous": false,
+  "note": "NATIVE raster clip_tests (nested path clips)  [failed: anti-aliasing]",
   "pair": "images/pair_kn_clip.png"
  },
  {
@@ -263,7 +273,8 @@
    "anti-aliasing",
    "local-fidelity"
   ],
-  "note": "METAL raster cl2 (GPU path)",
+  "vacuous": false,
+  "note": "METAL raster cl2 (GPU path)  [failed: frame-diff, anti-aliasing, local-fidelity]",
   "pair": "images/pair_knm_cl2.png"
  },
  {
@@ -275,13 +286,15 @@
    "anti-aliasing",
    "local-fidelity"
   ],
-  "note": "METAL raster cl1",
+  "vacuous": false,
+  "note": "METAL raster cl1  [failed: ink-colour, frame-diff, anti-aliasing, local-fidelity]",
   "pair": "images/pair_knm_cl1.png"
  },
  {
   "gate": "knm_clv",
   "verdict": "PASS",
   "failed_checks": [],
+  "vacuous": false,
   "note": "METAL raster clv",
   "pair": "images/pair_knm_clv.png"
  },
@@ -291,16 +304,19 @@
   "failed_checks": [
    "anti-aliasing"
   ],
-  "note": "METAL raster clip_tests",
+  "vacuous": false,
+  "note": "METAL raster clip_tests  [failed: anti-aliasing]",
   "pair": "images/pair_knm_clip.png"
  },
  {
   "gate": "knm_hw",
   "verdict": "FAIL",
   "failed_checks": [
+   "ink-coverage",
    "anti-aliasing"
   ],
-  "note": "METAL raster hw (stencil-parity eo)",
+  "vacuous": false,
+  "note": "METAL raster hw (stencil-parity eo)  [failed: ink-coverage, anti-aliasing]",
   "pair": "images/pair_knm_hw.png"
  },
  {
@@ -309,9 +325,11 @@
   "failed_checks": [
    "ink-mass",
    "coverage-gap",
+   "ink-coverage",
    "anti-aliasing"
   ],
-  "note": "mesh path \u2014 placement exact, AA verified pixel no-op",
+  "vacuous": false,
+  "note": "mesh path \u2014 placement exact, AA verified pixel no-op  [failed: ink-mass, coverage-gap, ink-coverage, anti-aliasing]",
   "pair": "images/pair_mesh.png"
  }
 ]
