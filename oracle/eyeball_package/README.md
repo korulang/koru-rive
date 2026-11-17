@@ -17,6 +17,8 @@ ships on pixel-honest gates. Your verdicts feed a tightening pass where
 MINOR/MISMATCH findings become new gate criteria or bug reports. Full
 charter: `SCENE.md` in the repo root.
 
+**Sequencing:** this audit runs AFTER the fidelity-tier oracle lands (`../FIDELITY_BRIEF.md`) — verdicts triage against hardened gates, and every confirmed visual mismatch the metrics still miss becomes a candidate new oracle check. The oracle grows by audit.
+
 ## The audit task
 
 You are auditing rendered output from a Koru-native Rive runtime against
