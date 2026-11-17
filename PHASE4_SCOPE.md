@@ -741,3 +741,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (stream order); animationId = index into artboard's animations
   (stream order); TransitionBoolCondition inputId+opValue semantics
   still being pinned (opValue=1 vs absent polarity).
+
+- SM-listener milestone (b)+(c) PARTIAL: input schedule (RIVE_INPUTS
+  env -> g_smInputs, name:val@frame, bool holds latest<=frame) +
+  smActiveAnimIdx eval landed. Verified resolving: clfp Item ab=74
+  + Hover:true@5@frame10 -> animId=0 -> obj90 'Timeline 2' (dark
+  hold anim). animArtboard = nearest preceding type-1 (slots are
+  artboard-scoped, objectId can't resolve globally). stateToId =
+  layer m_States stream index; animationId = artboard anim stream
+  index; bool condition opValue 0/absent->require true, nonzero->
+  require false. RESIDUAL: render still shows idle green — the
+  keyframe target's slot/paint path isn't hitting propColorAnim
+  (item fill SolidColor slot vs objectId=11 unverified; possibly
+  the layout-box pass resolves a different SolidColor). Debug
+  prints reverted; machinery compiles clean, gates unchanged.

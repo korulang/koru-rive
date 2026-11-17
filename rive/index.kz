@@ -2088,6 +2088,184 @@ fn kfOwnerOk(r: *const Riv, keyedObjIdx: i64) bool {
     return g_activeAnim < 0 or animOwnerOf(r, @intCast(keyedObjIdx)) == g_activeAnim;
 }
 
+// ---- SM listener eval: input schedule + active-animation resolution ----
+// RIVE_INPUTS="Hover:true@5;Speed:2.5@3" — name:val@frame events; a bool
+// input holds its latest value at-or-before the render frame (default
+// false), mirroring render_browser.mjs's schedule.
+const SmInputEvent = struct { name: []const u8, val: bool, frame: i64 };
+var g_smInputsInit = false;
+var g_smInputs = std.ArrayList(SmInputEvent).empty;
+
+fn ensureSmInputs() void {
+    if (g_smInputsInit) return;
+    g_smInputsInit = true;
+    const s = std.posix.getenv("RIVE_INPUTS") orelse return;
+    var it = std.mem.splitScalar(u8, s, ';');
+    while (it.next()) |ent| {
+        const e = std.mem.trim(u8, ent, " ");
+        if (e.len == 0) continue;
+        const at = std.mem.indexOfScalar(u8, e, '@');
+        const colon = std.mem.indexOfScalar(u8, e, ':');
+        if (at == null or colon == null or colon.? > at.?) continue;
+        const valStr = e[colon.? + 1 .. at.?];
+        const fr = std.fmt.parseInt(i64, e[at.? + 1 ..], 10) catch 0;
+        const val = std.mem.eql(u8, valStr, "true") or std.mem.eql(u8, valStr, "1");
+        g_smInputs.append(std.heap.page_allocator, .{ .name = e[0..colon.?], .val = val, .frame = fr }) catch {};
+    }
+}
+
+fn smInputBoolAt(name: []const u8, frame: i64) bool {
+    ensureSmInputs();
+    var v = false;
+    for (g_smInputs.items) |ev| {
+        if (ev.frame <= frame and std.mem.eql(u8, ev.name, name)) v = ev.val;
+    }
+    return v;
+}
+
+// slot -> owning artboard, via the object that carries the slot.
+fn slotArtboard(r: *const Riv, slot: i64) i64 {
+    for (r.objects, 0..) |o, i| {
+        if (o.slot == slot) return @intCast(owningArtboard(r, i));
+    }
+    return -1;
+}
+
+// Artboard a LinearAnimation belongs to: exporter groups
+// [artboard content][animations][SM], so the nearest preceding
+// type-1 artboard owns it (slots are artboard-scoped — objectId
+// can't resolve globally).
+fn animArtboard(r: *const Riv, animIdx: usize) i64 {
+    var i = animIdx;
+    while (i > 0) : (i -= 1) {
+        if (r.objects[i].type_key == 1) return @intCast(i);
+    }
+    return -1;
+}
+
+// Nth LinearAnimation (stream order) belonging to abIdx — animationId
+// indexes the artboard's animation list.
+fn artboardAnimAt(r: *const Riv, abIdx: usize, animId: i64) i64 {
+    var n: i64 = 0;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key != 31) continue;
+        if (animArtboard(r, i) == @as(i64, @intCast(abIdx))) {
+            if (n == animId) return @intCast(i);
+            n += 1;
+        }
+    }
+    return -1;
+}
+
+// SM's artboard: the LinearAnimations between the previous StateMachine
+// and this one belong to it (exporter groups [content][anims][SM]).
+fn smArtboard(r: *const Riv, smIdx: usize) i64 {
+    var prevSm: i64 = -1;
+    var pi: usize = 0;
+    while (pi < smIdx) : (pi += 1) {
+        if (r.objects[pi].type_key == 53) prevSm = @intCast(pi);
+    }
+    var i = @as(usize, @intCast(prevSm + 1));
+    while (i < smIdx) : (i += 1) {
+        if (r.objects[i].type_key == 31) return animArtboard(r, i);
+    }
+    return -1;
+}
+
+fn smSectionEnd(r: *const Riv, smIdx: usize) usize {
+    var i = smIdx + 1;
+    while (i < r.objects.len) : (i += 1) {
+        if (r.objects[i].type_key == 53) return i;
+    }
+    return r.objects.len;
+}
+
+fn isLayerStateType(t: u64) bool {
+    return t == 61 or t == 62 or t == 63 or t == 64;
+}
+
+// Active LinearAnimation object index for abIdx at frame, or -1.
+// Steady-state eval: first stream-order transition whose bool conditions
+// all pass and whose target is an AnimationState wins; absent a match,
+// the first AnimationState is the resting state. opValue 0/absent on a
+// bool condition requires input==true, nonzero requires false (clfp
+// Item: obj105 opValue=1 -> idle green when Hover off; obj107 absent ->
+// hover dark when Hover on).
+fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
+    for (r.objects, 0..) |o, smi| {
+        if (o.type_key != 53) continue;
+        if (smArtboard(r, smi) != @as(i64, @intCast(abIdx))) continue;
+        const end = smSectionEnd(r, smi);
+        // input names: StateMachineBool(59) objects in section order
+        var inputNames = std.ArrayList([]const u8).empty;
+        defer inputNames.deinit(std.heap.page_allocator);
+        // states: LayerState objects in stream order -> stateToId index
+        var stateAnimId = std.ArrayList(i64).empty;
+        defer stateAnimId.deinit(std.heap.page_allocator);
+        var stateIsAnim = std.ArrayList(bool).empty;
+        defer stateIsAnim.deinit(std.heap.page_allocator);
+        // transitions: stateToId + following bool conditions
+        const Trans = struct { to: i64, ok: bool };
+        var trans = std.ArrayList(Trans).empty;
+        defer trans.deinit(std.heap.page_allocator);
+        var curTo: i64 = -1;
+        var curOk = true;
+        var haveTrans = false;
+        var si = smi + 1;
+        while (si < end) : (si += 1) {
+            const so = &r.objects[si];
+            if (so.type_key == 59) {
+                if (propByKey(so.props, 138)) |v| switch (v) {
+                    .bytes => |s| inputNames.append(std.heap.page_allocator, s) catch {},
+                    else => {},
+                };
+                continue;
+            }
+            if (isLayerStateType(so.type_key)) {
+                stateAnimId.append(std.heap.page_allocator, if (so.type_key == 61) propU(so.props, 149, -1) else -1) catch {};
+                stateIsAnim.append(std.heap.page_allocator, so.type_key == 61) catch {};
+                continue;
+            }
+            if (so.type_key == 65) {
+                if (haveTrans) trans.append(std.heap.page_allocator, .{ .to = curTo, .ok = curOk }) catch {};
+                curTo = propU(so.props, 151, -1);
+                curOk = true;
+                haveTrans = true;
+                continue;
+            }
+            if (so.type_key == 71 and haveTrans) {
+                const iid = propU(so.props, 155, -1);
+                const op = propU(so.props, 156, 0);
+                var pass = false;
+                if (iid >= 0 and iid < @as(i64, @intCast(inputNames.items.len))) {
+                    const val = smInputBoolAt(inputNames.items[@intCast(iid)], frame);
+                    pass = if (op == 0) val else !val;
+                }
+                if (!pass) curOk = false;
+            }
+        }
+        if (haveTrans) trans.append(std.heap.page_allocator, .{ .to = curTo, .ok = curOk }) catch {};
+        // resolve: first passing transition to an AnimationState
+        var animId: i64 = -1;
+        for (trans.items) |t| {
+            if (!t.ok or t.to < 0 or t.to >= @as(i64, @intCast(stateIsAnim.items.len))) continue;
+            const ti: usize = @intCast(t.to);
+            if (!stateIsAnim.items[ti]) continue;
+            animId = stateAnimId.items[ti];
+            break;
+        }
+        if (animId < 0) {
+            // resting state: first AnimationState in the SM
+            for (stateIsAnim.items, 0..) |isA, i| {
+                if (isA) { animId = stateAnimId.items[i]; break; }
+            }
+        }
+        if (animId >= 0) return artboardAnimAt(r, abIdx, animId);
+        return -1;
+    }
+    return -1;
+}
+
 fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
     var inGroup = false;
     var curObjIdx: i64 = -1;
@@ -4912,6 +5090,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
 
 
 fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
+    g_activeAnim = smActiveAnimIdx(r, abIdx, frame);
     var out = std.ArrayList(OpRec).empty;
     errdefer out.deinit(alloc);
     collectArtboardOps(r, abIdx, frame, alloc, &out);
@@ -4989,6 +5168,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         }
         if (clipLc >= 0) out.append(alloc, op0(10)) catch {};
     }
+    g_activeAnim = -1;
     return out.items;
 }
 ~pub tor ops { r: *Riv<loaded>, ab: i64, frame: i64 }
