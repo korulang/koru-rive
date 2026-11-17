@@ -1,0 +1,33 @@
+{"gate":"hw","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"grids identical; same cyan text both sides"}
+{"gate":"cdo","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"identical red circle pair"}
+{"gate":"dsm","verdict":"MISMATCH","diff_kind":"scale","region":"whole frame","confidence":"high","note":"ours: small blue rect at top-left; ref: large blue rect filling upper half -- render scale mismatch"}
+{"gate":"dsm_row","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"identical blue bar, same position and size"}
+{"gate":"clfp","verdict":"MATCH","diff_kind":"none","region":"sparse corner marks","confidence":"med","note":"near-identical; tiny mark differences within AA range"}
+{"gate":"clfp_item","verdict":"MISMATCH","diff_kind":"transform","region":"card interior","confidence":"high","note":"ours '0' glyph sits at the card's top-left edge; ref centres it inside the card"}
+{"gate":"cl1_item","verdict":"MISMATCH","diff_kind":"text","region":"row card text line","confidence":"high","note":"ours and ref draw different strings in the same card"}
+{"gate":"cl1_main","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"med","note":"same card layout and mark rows; sub-glyph raster differences only"}
+{"gate":"clv","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"identical green panel and bottom bar"}
+{"gate":"cl2","verdict":"MISMATCH","diff_kind":"text","region":"grid cell digits","confidence":"med","note":"cell digit interiors differ from ref; consistent with the ~19px placement offset measured numerically"}
+{"gate":"cl2_t10","verdict":"MISMATCH","diff_kind":"text","region":"grid cells at t10","confidence":"med","note":"digit/fill rows differ markedly from ref at t10"}
+{"gate":"clfp_hover","verdict":"MISMATCH","diff_kind":"transform","region":"card interior","confidence":"high","note":"same displaced glyph as clfp_item (hover frame)"}
+{"gate":"kn_sm_input","verdict":"MISMATCH","diff_kind":"transform","region":"card interior","confidence":"high","note":"ours is byte-identical to the clfp_hover render; same displaced glyph vs ref"}
+{"gate":"kn_clfp_item","verdict":"MISMATCH","diff_kind":"transform","region":"card interior","confidence":"high","note":"same displaced glyph as clfp_item"}
+{"gate":"kn_cl2_t10","verdict":"MISMATCH","diff_kind":"text","region":"grid cells at t10","confidence":"med","note":"same digit defect as cl2_t10"}
+{"gate":"clip","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"identical red circle; 1px edge variance only"}
+{"gate":"cin","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"low","note":"both sides effectively blank; oracle ink checks fail vacuously -- no visible difference"}
+{"gate":"iba","verdict":"MISMATCH","diff_kind":"backdrop","region":"whole frame","confidence":"high","note":"ours is a uniform white frame; ref is dark grey; no content on either side"}
+{"gate":"lwti","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"med","note":"both sides blank dark; oracle ink checks fail vacuously"}
+{"gate":"deam","verdict":"MISMATCH","diff_kind":"backdrop","region":"whole frame","confidence":"high","note":"ours white frame vs ref dark (bg 40,40,40); no content either side"}
+{"gate":"hff","verdict":"MISMATCH","diff_kind":"backdrop","region":"whole frame","confidence":"high","note":"ours white frame vs ref dark grey; no content either side"}
+{"gate":"dcpo","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"med","note":"both sides blank; oracle ink checks fail vacuously"}
+{"gate":"kn_cl2","verdict":"MISMATCH","diff_kind":"text","region":"grid cell digits","confidence":"med","note":"same digit defect as cl2"}
+{"gate":"kn_hw","verdict":"MINOR","diff_kind":"edge-aa","region":"text glyph edges","confidence":"med","note":"139 px of backdrop-coloured notches inside glyph edges vs ref (missing AA coverage); text content identical"}
+{"gate":"kn_cl1","verdict":"MINOR","diff_kind":"text","region":"card text column","confidence":"low","note":"text marks rasterize on slightly different rows than ref; within oracle tolerance"}
+{"gate":"kn_clv","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"identical panel and bar"}
+{"gate":"kn_clip","verdict":"MATCH","diff_kind":"edge-aa","region":"clip boundary","confidence":"low","note":"grids identical at this resolution; oracle reports 0 vs 394 blended edge px -- staircase not resolvable in ASCII"}
+{"gate":"knm_cl2","verdict":"MISMATCH","diff_kind":"text","region":"grid cell digits","confidence":"med","note":"same digit displacement as cl2 plus heavier Metal fills"}
+{"gate":"knm_cl1","verdict":"MISMATCH","diff_kind":"fill-color","region":"card text rows","confidence":"med","note":"Metal text renders as filled blobs with extra mark rows vs ref's lighter text"}
+{"gate":"knm_clv","verdict":"MATCH","diff_kind":"none","region":"-","confidence":"high","note":"identical panel and bar"}
+{"gate":"knm_clip","verdict":"MATCH","diff_kind":"edge-aa","region":"clip boundary","confidence":"low","note":"same as kn_clip -- ours file is byte-identical to kn_clip"}
+{"gate":"knm_hw","verdict":"MINOR","diff_kind":"edge-aa","region":"text glyph edges","confidence":"med","note":"497 px of missing edge coverage (3.5x kn_hw) plus no AA; text content identical"}
+{"gate":"mesh","verdict":"MINOR","diff_kind":"stroke","region":"whole frame","confidence":"low","note":"same layout and bbox; ours ~41% of ref ink mass -- strokes render thinner; ASCII too coarse for detail"}

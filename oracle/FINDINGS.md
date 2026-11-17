@@ -399,3 +399,36 @@ Supporting tools:
 - `band.py` FLOORS are hand-chosen, but they only ever LOOSEN the criterion;
   the oracle-vs-oracle band supplies the tolerance when the oracles agree
   closely, which is the case that matters.
+
+---
+
+## Eyeball audit — ASCII-instrumented pass (2026-11-17, SWE-2, no image input)
+
+The DeepSeek vision audit could not run (budget). Substitute instrument:
+`oracle/eyeball_package/verdicts_swe2_ascii.jsonl` — 33 verdicts produced by
+rendering each gate's ours/ref pair to a 72-col hue/luminance ASCII grid
+(`/tmp/fidelity_probe/ascii_gates.py`, regenerable), then numerically
+spot-checking every disagreement candidate. Confidence is honestly low on
+thin-stroke and AA-only differences the grid cannot resolve.
+
+Result vs `gate_verdicts.json`:
+
+- **No oracle PASS hides a visible MISMATCH.** 9 PASS→MATCH, 2 PASS→MINOR
+  (`kn_hw`, `kn_cl1` — edge-coverage/text-row differences inside tolerance).
+- **15 oracle FAILs confirmed MISMATCH** by eye-equivalent: dsm scale,
+  the displaced "0"/"THREE"/digit-placement family (9 gates), cl1_item
+  wrong string, knm_cl1 blob text, mesh thin strokes, iba/deam/hff
+  white-vs-dark backdrop.
+- **5 oracle FAILs show no visible difference** at this resolution:
+  `cin`, `lwti`, `dcpo` are empty-vs-empty (ink checks fail vacuously —
+  candidate for a VACUOUS verdict class, not FAIL), and `kn_clip`,
+  `knm_clip` differ only in anti-aliasing (0 vs 394 blended px), which
+  ASCII cannot resolve.
+- `kn_sm_input`'s ours file is byte-identical to `clfp_hover`'s — the
+  "native software" SM-input gate is the same render, not independent
+  evidence (already suspected; now confirmed at artifact level).
+
+Oracle-growth candidates from this pass: a vacuous/empty-frame verdict
+class; an ink-coverage check that would have caught kn_hw's 139 px of
+backdrop notches (it passed because blended-edge COUNT stayed ≥0.5×ref —
+count, not coverage).

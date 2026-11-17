@@ -353,3 +353,8 @@ ink-mass, anti-aliasing >= 0.5x ref); softer-than-reference edges are NOT
 asserted; `band.py` is unchanged (its `pixdiff`/`mean_abs` already compare
 ours to both oracles); cdo's gate artifact is `ours_cdo_child_r2_t1.bmp`
 (the older `ours_cdo_child_t1.bmp` is an unscaled render and fails).
+
+Eyeball audit (ASCII-instrumented, `verdicts_swe2_ascii.jsonl`): no oracle
+PASS hides a visible mismatch; 15 FAILs confirmed; 5 FAILs are vacuous or
+AA-only (cin/lwti/dcpo empty-vs-empty, kn_clip/knm_clip AA staircase).
+Candidates for oracle growth: vacuous verdict class, ink-coverage check.
