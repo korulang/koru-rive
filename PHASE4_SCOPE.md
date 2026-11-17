@@ -839,3 +839,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (49,49,49 vs the fixture's actual clear), not an emit gap.
   kn_cdo = PASS.
   Gallery: 23 gates.
+
+- Metal arm M1: MTLDevice+lib+pipeline+clear+readback PROVEN
+  on --build=koru-native (metal.tri verb, kn_metal_probe).
+  Clear color renders correct blue through GPU->getBytes->px.
+  Vertex-stage triangle draw not yet rasterizing (descriptor/
+  stepFunction iterated; buffer->setVertexBytes switched).
+  Remaining: vertex fetch fix -> triangle proof -> tessellate
+  paths->tris -> ops replay -> image texture path.
