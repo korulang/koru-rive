@@ -729,3 +729,59 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   clip FAIL residual: backdrop (26,26,38) vs white +
   mass 0.49 + gap 33.76% — mask polarity/coverage residual
   on nested path clips (not the bypass bug — that was fixed).
+
+- koru-native raster arc COMPLETE (46c9fb5 + oshun 64df1a8):
+  5/5 native gates pixel-PASS incl. clip_tests nested path
+  clips. clip_tests residual resolved: artboard bg (26,26,38)
+  not white + mask polarity on nested clips. Gallery 24 gates
+  incl. kn_* native-vs-ref pairs. Named deltas: image decode
+  loud-err (no codec in kernel ABI), stroke joins/caps
+  approximated, rotated-rect bbox, binary clip masks.
+
+- SM-listener recon (clfp Item Hover:true@5): ref regenerated via
+  RIVE_INPUTS — smLog confirms "Hover@5=true", nonEmptyPx 33242.
+  Visual diff vs idle = 31,324px in item box (0,107)-(157,327):
+  fill 0x12A100 -> 0x0C6C00 (dark green hover state).
+  Structure: Item SM obj98 has TWO single-keyframe hold animations —
+  obj90/obj93 kf=0xff063700 (hover dark) and obj94/obj97
+  kf=0xff12a100 (idle green), both KeyedObject.objectId=11 +
+  KeyedProperty.propKey=37. obj110 StateMachineListenerSingle fires
+  on pointer; obj105/107 StateTransitions gate on
+  TransitionBoolCondition(inputId=0=Hover, opValue=1).
+  BLOCKER for impl: keyframedColor/hasKeyframed scan ALL keyframes
+  globally by slot+prop — both hold animations merge into one
+  degenerate list, last-wins=idle green. Needs per-animation
+  membership (which KeyedObject/KeyedProperty/KeyFrame belongs to
+  which LinearAnimation) + SM current-state eval + input schedule
+  plumbing before colors can select the hover kf. Decomposed:
+  (a) animation-membership decode, (b) SM state/transition eval,
+  (c) g_inputs schedule into frame eval, (d) per-animation kf scope.
+
+- SM-listener milestone (a)+(d): animation membership decoded —
+  exporter writes keyed objects right after their LinearAnimation
+  (linear_animation.cpp:177); animOwnerOf maps each KeyedObject to
+  its owning animation via contiguous kf-cluster stream order.
+  g_activeAnim + kfOwnerOk now scope hasKeyframed/keyframedValue/
+  keyframedColor per-animation (-1 = unscoped, all prior gates
+  unchanged: ops identical). clfp Item structure verified: obj90
+  'Timeline 2' owns kf 0xff063700 (hover dark), obj94 'Timeline 1'
+  owns kf 0xff12a100 (idle green), both slot11+prop37.
+  REMAINING (b)+(c): SM state/transition eval + RIVE_INPUTS schedule
+  to set g_activeAnim. stateToId = index into layer's m_States
+  (stream order); animationId = index into artboard's animations
+  (stream order); TransitionBoolCondition inputId+opValue semantics
+  still being pinned (opValue=1 vs absent polarity).
+
+- SM-listener milestone (b)+(c) PARTIAL: input schedule (RIVE_INPUTS
+  env -> g_smInputs, name:val@frame, bool holds latest<=frame) +
+  smActiveAnimIdx eval landed. Verified resolving: clfp Item ab=74
+  + Hover:true@5@frame10 -> animId=0 -> obj90 'Timeline 2' (dark
+  hold anim). animArtboard = nearest preceding type-1 (slots are
+  artboard-scoped, objectId can't resolve globally). stateToId =
+  layer m_States stream index; animationId = artboard anim stream
+  index; bool condition opValue 0/absent->require true, nonzero->
+  require false. RESIDUAL: render still shows idle green — the
+  keyframe target's slot/paint path isn't hitting propColorAnim
+  (item fill SolidColor slot vs objectId=11 unverified; possibly
+  the layout-box pass resolves a different SolidColor). Debug
+  prints reverted; machinery compiles clean, gates unchanged.
