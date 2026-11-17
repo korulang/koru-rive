@@ -1,0 +1,516 @@
+[
+ {
+  "gate": "hw",
+  "ours": "ours_hw_t1.bmp",
+  "ref": "ref_hw_c_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "hello_world bind pose"
+ },
+ {
+  "gate": "cdo",
+  "ours": "ours_cdo_child_r2_t1.bmp",
+  "ref": "ref_cdo_child_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour (white in the r2 render; the older ours_cdo_child_t1.bmp is a 137px unscaled render on magenta and is not the gate artifact)",
+  "hand_label": "PASS",
+  "note": "cdo child artboard"
+ },
+ {
+  "gate": "dsm",
+  "ours": "ours_dsm_c_t1.bmp",
+  "ref": "ref_dsm_c_t1.png",
+  "comp": [
+   255,
+   0,
+   255
+  ],
+  "bg": [
+   255,
+   0,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "dsm bind pose (SM-name artifact resolved)"
+ },
+ {
+  "gate": "dsm_row",
+  "ours": "ours_dsm_row_bind.bmp",
+  "ref": "ref_dsm_row_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "dsm bound row"
+ },
+ {
+  "gate": "clfp",
+  "ours": "ours_clfp_c_t1.bmp",
+  "ref": "ref_clfp_c_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "clfp Main t1"
+ },
+ {
+  "gate": "clfp_item",
+  "ours": "ours_clfp_item_t1.bmp",
+  "ref": "ref_clfp_item_vm_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "clfp Item VM-bound"
+ },
+ {
+  "gate": "cl1_item",
+  "ours": "ours_cl1_item.bmp",
+  "ref": "ref_cl1_item_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "cl1 Item per-row VM"
+ },
+ {
+  "gate": "cl1_main",
+  "ours": "ours_cl1_main_t1.bmp",
+  "ref": "ref_cl1_main_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "cl1 Main scroll+layout"
+ },
+ {
+  "gate": "clv",
+  "ours": "ours_clv_t1.bmp",
+  "ref": "ref_clv_t1.png",
+  "comp": null,
+  "bg": [
+   16,
+   16,
+   16
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "clv clipped viewport absolute layout"
+ },
+ {
+  "gate": "cl2",
+  "ours": "ours_cl2_t1.bmp",
+  "ref": "ref_cl2_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "cl2 NumberToList synthetic grid + flexWrap"
+ },
+ {
+  "gate": "cl2_t10",
+  "ours": "ours_cl2_t10.bmp",
+  "ref": "ref_cl2_t10.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "cl2 color keyframes animate item fill at t10"
+ },
+ {
+  "gate": "clfp_hover",
+  "ours": "ours_clfp_item_hover.bmp",
+  "ref": "ref_clfp_item_hover.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "clfp Item SM listener Hover:true@5 -> transition crossfade"
+ },
+ {
+  "gate": "kn_sm_input",
+  "ours": "ours_kn_sm_hover.bmp",
+  "ref": "ref_clfp_item_hover.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "NATIVE raster SM-input class: clfp Item Hover:true@5 (render_kn_sm_input.k)"
+ },
+ {
+  "gate": "kn_clfp_item",
+  "ours": "ours_kn_clfp_item.bmp",
+  "ref": "ref_clfp_item_vm_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "NATIVE clfp Item VM-bound list"
+ },
+ {
+  "gate": "kn_cl2_t10",
+  "ours": "ours_kn_cl2_t10.bmp",
+  "ref": "ref_cl2_t10.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "NATIVE cl2 animated keyframes t10"
+ },
+ {
+  "gate": "clip",
+  "ours": "ours_clip_t1.bmp",
+  "ref": "ref_clip_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "clip_tests Hidden-Path-Visible-Path"
+ },
+ {
+  "gate": "cin",
+  "ours": "ours_cin_t1.bmp",
+  "ref": "ref_cin_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "LIMIT",
+  "note": "custom_image_name \u2014 image decode LIVE, browser drops alpha (spec-correct)"
+ },
+ {
+  "gate": "iba",
+  "ours": "ours_iba_t1.bmp",
+  "ref": "ref_iba_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "LIMIT",
+  "note": "in_band_asset \u2014 1x1 grayscale PNG, vacuous both sides"
+ },
+ {
+  "gate": "lwti",
+  "ours": "ours_lwti_t1.bmp",
+  "ref": "ref_lwti_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "LIMIT",
+  "note": "library_with_text_and_image \u2014 type-544 formula token, out-of-scope"
+ },
+ {
+  "gate": "deam",
+  "ours": "ours_deam_t1.bmp",
+  "ref": "ref_deam_t1.png",
+  "comp": null,
+  "bg": [
+   40,
+   40,
+   40
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "LIMIT",
+  "note": "databind_external_artboard_main \u2014 VM-data class"
+ },
+ {
+  "gate": "hff",
+  "ours": "ours_hff_t1.bmp",
+  "ref": "ref_hff_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "LIMIT",
+  "note": "hosted_font_file \u2014 hosted font 404"
+ },
+ {
+  "gate": "dcpo",
+  "ours": "ours_dcpo_t1.bmp",
+  "ref": "ref_dcpo_t1.png",
+  "comp": [
+   255,
+   255,
+   255
+  ],
+  "bg": [
+   255,
+   255,
+   255
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "LIMIT",
+  "note": "drawable_custom_properties_other \u2014 vacuous"
+ },
+ {
+  "gate": "kn_cl2",
+  "ours": "kn_cl2.bmp",
+  "ref": "ref_cl2_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "NATIVE raster cl2 (koru-native surface, no macOS bridge)"
+ },
+ {
+  "gate": "kn_hw",
+  "ours": "kn_hw.bmp",
+  "ref": "ref_hw_c_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "NATIVE raster hw"
+ },
+ {
+  "gate": "kn_cl1",
+  "ours": "kn_cl1.bmp",
+  "ref": "ref_cl1_main_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "NATIVE raster cl1"
+ },
+ {
+  "gate": "kn_clv",
+  "ours": "kn_clv.bmp",
+  "ref": "ref_clv_t1.png",
+  "comp": null,
+  "bg": [
+   16,
+   16,
+   16
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "NATIVE raster clv"
+ },
+ {
+  "gate": "kn_clip",
+  "ours": "kn_clip.bmp",
+  "ref": "ref_clip_t1.png",
+  "comp": [
+   26,
+   26,
+   38
+  ],
+  "bg": [
+   26,
+   26,
+   38
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "NATIVE raster clip_tests (nested path clips)"
+ },
+ {
+  "gate": "knm_cl2",
+  "ours": "knm_cl2.bmp",
+  "ref": "ref_cl2_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "METAL raster cl2 (GPU path)"
+ },
+ {
+  "gate": "knm_cl1",
+  "ours": "knm_cl1.bmp",
+  "ref": "ref_cl1_main_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "METAL raster cl1"
+ },
+ {
+  "gate": "knm_clv",
+  "ours": "knm_clv.bmp",
+  "ref": "ref_clv_t1.png",
+  "comp": null,
+  "bg": [
+   16,
+   16,
+   16
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "METAL raster clv"
+ },
+ {
+  "gate": "knm_clip",
+  "ours": "knm_clip.bmp",
+  "ref": "ref_clip_t1.png",
+  "comp": [
+   26,
+   26,
+   38
+  ],
+  "bg": [
+   26,
+   26,
+   38
+  ],
+  "bg_source": "reference is transparent: both sides composited over ours' clear colour",
+  "hand_label": "PASS",
+  "note": "METAL raster clip_tests"
+ },
+ {
+  "gate": "knm_hw",
+  "ours": "knm_hw.bmp",
+  "ref": "ref_hw_c_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "PASS",
+  "note": "METAL raster hw (stencil-parity eo)"
+ },
+ {
+  "gate": "mesh",
+  "ours": "ours_mesh_t1.bmp",
+  "ref": "ref_clfp_c_t1.png",
+  "comp": null,
+  "bg": [
+   49,
+   49,
+   49
+  ],
+  "bg_source": "reference backdrop",
+  "hand_label": "NOTE",
+  "note": "mesh path \u2014 placement exact, AA verified pixel no-op"
+ }
+]

@@ -6,7 +6,7 @@
 eyeball_package/
   README.md        — audit protocol + verdict contract (give this to the model)
   RUNBOOK.md       — this file
-  gates.json       — 38 gates: name, metric verdict, known caveat, pair path
+  gates.json       — 33 gates: name, oracle verdict, failed checks, pair path
   images/          — pair_<gate>.png composites (ref | ours), self-contained
 ```
 

@@ -23,21 +23,21 @@ charter: `SCENE.md` in the repo root.
 
 You are auditing rendered output from a Koru-native Rive runtime against
 browser-rendered references. Each image in `images/` is a side-by-side
-composite: **left = reference (real Rive runtime in a browser), right =
-ours (Koru renderer output)**. `gates.json` lists every gate with its
+composite: **left = ours (Koru renderer output), right = reference (real
+Rive runtime in a browser)** — each half is labelled in the image itself. `gates.json` lists every gate with its
 metric verdict and known caveats.
 
 ## Why this exists
 
-Every gate carries a numeric verdict (PASS/LIMIT/NOTE) computed from ink
-mass, bounding box, and pixel-diff thresholds. Those metrics are blind to
+Every gate carries an oracle verdict (PASS/FAIL, with the failed checks
+named) computed by `../run_gates.py`. Those metrics are blind to
 some visual differences — antialiasing quality, stroke joins, subtle
 color shifts, misplaced small elements, texture scaling. Human-grade eyes
 catch what the metrics miss. Your job is to find where the metrics lied.
 
 ## Task — per image, produce one verdict line
 
-For EVERY `pair_*.png` in `images/` (38 total), look at both halves and
+For EVERY `pair_*.png` in `images/` (33 total), look at both halves and
 emit one JSONL line to `verdicts.jsonl`:
 
 ```json
@@ -56,12 +56,12 @@ Rules:
 - UNREADABLE = image broken/blank/corrupt on either side.
 - `region` should name the location concretely — "bottom row, third cell"
   not "throughout".
-- LIMIT/NOTE gates: audit them too — a LIMIT verdict may hide a real bug,
+- FAIL gates: audit them too — an oracle FAIL may hide a second bug,
   or confirm the named caveat.
 
 ## Deliverable
 
-`verdicts.jsonl` — exactly 38 lines, one per gate, valid JSON each.
+`verdicts.jsonl` — exactly 33 lines, one per gate, valid JSON each.
 This feeds a tightening pass: MISMATCH/MINOR verdicts become new gate
 criteria or bug reports.
 
@@ -73,7 +73,7 @@ criteria or bug reports.
 - Backgrounds differ by fixture; dark/colored regions are intentional.
 - Small text may legitimately differ if font rasterization differs —
   note it as `text` diff_kind rather than MISMATCH unless content differs.
-- Pair images are composites — left half is always the reference.
+- Pair images are composites — left half is always ours, right half the reference.
 
 Runbook for the harness: `RUNBOOK.md`.
 Source repo: `/Users/larsde/src/koru-rive` — `oracle/gallery.py` generates

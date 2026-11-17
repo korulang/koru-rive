@@ -309,3 +309,47 @@ uv run --with numpy --with pillow python oracle/pixel_oracle.py   --ref <ref> --
 
 Gallery: `oracle/gallery.html` carries `kn_*` (software) and `knm_*`
 (Metal) pairs — 33 gates, regenerated per visual change.
+
+
+---
+
+## 12. Fidelity tier — the oracle now certifies agreement, not only feature classes (2026-11-17)
+
+`oracle/pixel_oracle.py` asserts six new checks, all ours-vs-reference:
+`backdrop-px`, `ink-colour`, `registration`, `frame-diff`, `anti-aliasing`,
+`local-fidelity` (definitions in the module docstring). `oracle/selftest.py`
+carries one mutant aimed at each, on a thin-stroke and a filled reference, and
+prints a calibration table (worst legitimate control / tolerance / aimed
+mutant); a control above a tolerance or a mutant below it fails the selftest.
+
+Gates are no longer hand-labelled. `oracle/gates.json` names both files of
+every gate (in `oracle/images/` only — no `/tmp`, no newest-mtime-wins);
+`oracle/run_gates.py` computes verdicts into `oracle/gate_verdicts.json`;
+`oracle/gallery.py` reads both.
+
+**Re-run: 11 PASS, 22 FAIL of 33.** Sixteen gates previously hand-labelled
+PASS now FAIL:
+
+| gates | failed checks | what is wrong |
+|---|---|---|
+| dsm | bbox, mass, gap, registration, frame-diff, local | ours 100x40 on magenta vs ref 250x100: render scale mismatch |
+| clfp_item, clfp_hover, kn_sm_input, kn_clfp_item | frame-diff, local-fidelity | the "0" glyph is at the card's top-left; ref centres it |
+| cl1_item | frame-diff, local-fidelity | ours draws "THREE" where ref draws "text" |
+| cl2, kn_cl2 | frame-diff | grid-cell digits drawn in a different font/shape than ref |
+| cl2_t10, kn_cl2_t10 | frame-diff, local-fidelity | same digits, at t10 |
+| knm_cl1 | ink-colour, frame-diff, anti-aliasing, local | Metal: row text is an illegible filled blob |
+| knm_cl2 | frame-diff, anti-aliasing, local | Metal: digits + no anti-aliasing |
+| knm_hw, knm_clip, kn_clip | anti-aliasing | zero blended edge pixels (ref 1097 / 394 / 394) |
+
+kn_clip.bmp and knm_clip.bmp are byte-identical files. The six LIMIT gates
+and the mesh NOTE gate FAIL as their notes already said they would; lwti and
+dcpo fail only because both sides are empty (vacuous, not a mismatch).
+PASS: hw, cdo, dsm_row, clfp, cl1_main, clv, clip, kn_hw, kn_cl1, kn_clv,
+knm_clv.
+
+Named, bounded residuals the tier still allows: edge-phase disagreement on
+colour edges present on both sides (bounded by registration <= 0.75 px,
+ink-mass, anti-aliasing >= 0.5x ref); softer-than-reference edges are NOT
+asserted; `band.py` is unchanged (its `pixdiff`/`mean_abs` already compare
+ours to both oracles); cdo's gate artifact is `ours_cdo_child_r2_t1.bmp`
+(the older `ours_cdo_child_t1.bmp` is an unscaled render and fails).

@@ -2,229 +2,316 @@
  {
   "gate": "hw",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "hello_world bind pose",
   "pair": "images/pair_hw.png"
  },
  {
   "gate": "cdo",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "cdo child artboard",
   "pair": "images/pair_cdo.png"
  },
  {
   "gate": "dsm",
-  "verdict": "PASS",
-  "note": "dsm bind pose",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-bbox",
+   "ink-mass",
+   "coverage-gap",
+   "registration",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "note": "dsm bind pose (SM-name artifact resolved)",
   "pair": "images/pair_dsm.png"
  },
  {
   "gate": "dsm_row",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "dsm bound row",
   "pair": "images/pair_dsm_row.png"
  },
  {
   "gate": "clfp",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "clfp Main t1",
   "pair": "images/pair_clfp.png"
  },
  {
   "gate": "clfp_item",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
   "note": "clfp Item VM-bound",
   "pair": "images/pair_clfp_item.png"
  },
  {
   "gate": "cl1_item",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
   "note": "cl1 Item per-row VM",
   "pair": "images/pair_cl1_item.png"
  },
  {
   "gate": "cl1_main",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "cl1 Main scroll+layout",
   "pair": "images/pair_cl1_main.png"
  },
  {
   "gate": "clv",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "clv clipped viewport absolute layout",
   "pair": "images/pair_clv.png"
  },
  {
   "gate": "cl2",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff"
+  ],
   "note": "cl2 NumberToList synthetic grid + flexWrap",
   "pair": "images/pair_cl2.png"
  },
  {
   "gate": "cl2_t10",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
   "note": "cl2 color keyframes animate item fill at t10",
   "pair": "images/pair_cl2_t10.png"
  },
  {
   "gate": "clfp_hover",
-  "verdict": "PASS",
-  "note": "clfp Item SM listener Hover:true@5 crossfade",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "note": "clfp Item SM listener Hover:true@5 -> transition crossfade",
   "pair": "images/pair_clfp_hover.png"
  },
  {
   "gate": "kn_sm_input",
-  "verdict": "PASS",
-  "note": "NATIVE raster SM-input (software)",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "note": "NATIVE raster SM-input class: clfp Item Hover:true@5 (render_kn_sm_input.k)",
   "pair": "images/pair_kn_sm_input.png"
  },
  {
   "gate": "kn_clfp_item",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
   "note": "NATIVE clfp Item VM-bound list",
   "pair": "images/pair_kn_clfp_item.png"
  },
  {
   "gate": "kn_cl2_t10",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "local-fidelity"
+  ],
   "note": "NATIVE cl2 animated keyframes t10",
   "pair": "images/pair_kn_cl2_t10.png"
  },
  {
   "gate": "clip",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "clip_tests Hidden-Path-Visible-Path",
   "pair": "images/pair_clip.png"
  },
  {
   "gate": "cin",
-  "verdict": "LIMIT",
-  "note": "image decode LIVE, browser drops alpha",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-bbox",
+   "ink-mass",
+   "coverage-gap",
+   "registration",
+   "local-fidelity"
+  ],
+  "note": "custom_image_name \u2014 image decode LIVE, browser drops alpha (spec-correct)",
   "pair": "images/pair_cin.png"
  },
  {
   "gate": "iba",
-  "verdict": "LIMIT",
-  "note": "in_band_asset 1x1 grayscale vacuous",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "backdrop",
+   "ink-bbox",
+   "ink-mass",
+   "backdrop-px",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "note": "in_band_asset \u2014 1x1 grayscale PNG, vacuous both sides",
   "pair": "images/pair_iba.png"
  },
  {
   "gate": "lwti",
-  "verdict": "LIMIT",
-  "note": "library_with_text_and_image type-544 out-of-scope",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-bbox",
+   "ink-mass"
+  ],
+  "note": "library_with_text_and_image \u2014 type-544 formula token, out-of-scope",
   "pair": "images/pair_lwti.png"
  },
  {
   "gate": "deam",
-  "verdict": "LIMIT",
-  "note": "databind_external_artboard_main VM-data class",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "backdrop",
+   "ink-bbox",
+   "ink-mass",
+   "backdrop-px",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "note": "databind_external_artboard_main \u2014 VM-data class",
   "pair": "images/pair_deam.png"
  },
  {
   "gate": "hff",
-  "verdict": "LIMIT",
-  "note": "hosted_font_file hosted font 404",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "backdrop",
+   "ink-bbox",
+   "ink-mass",
+   "backdrop-px",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "note": "hosted_font_file \u2014 hosted font 404",
   "pair": "images/pair_hff.png"
  },
  {
   "gate": "dcpo",
-  "verdict": "LIMIT",
-  "note": "drawable_custom_properties_other vacuous",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-bbox",
+   "ink-mass"
+  ],
+  "note": "drawable_custom_properties_other \u2014 vacuous",
   "pair": "images/pair_dcpo.png"
  },
  {
   "gate": "kn_cl2",
-  "verdict": "PASS",
-  "note": "NATIVE raster cl2 (software, no macOS bridge)",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff"
+  ],
+  "note": "NATIVE raster cl2 (koru-native surface, no macOS bridge)",
   "pair": "images/pair_kn_cl2.png"
  },
  {
   "gate": "kn_hw",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "NATIVE raster hw",
   "pair": "images/pair_kn_hw.png"
  },
  {
   "gate": "kn_cl1",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "NATIVE raster cl1",
   "pair": "images/pair_kn_cl1.png"
  },
  {
   "gate": "kn_clv",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "NATIVE raster clv",
   "pair": "images/pair_kn_clv.png"
  },
  {
   "gate": "kn_clip",
-  "verdict": "PASS",
-  "note": "NATIVE raster clip_tests nested clips",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "anti-aliasing"
+  ],
+  "note": "NATIVE raster clip_tests (nested path clips)",
   "pair": "images/pair_kn_clip.png"
  },
  {
   "gate": "knm_cl2",
-  "verdict": "PASS",
-  "note": "METAL raster cl2 (GPU)",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "frame-diff",
+   "anti-aliasing",
+   "local-fidelity"
+  ],
+  "note": "METAL raster cl2 (GPU path)",
   "pair": "images/pair_knm_cl2.png"
  },
  {
   "gate": "knm_cl1",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-colour",
+   "frame-diff",
+   "anti-aliasing",
+   "local-fidelity"
+  ],
   "note": "METAL raster cl1",
   "pair": "images/pair_knm_cl1.png"
  },
  {
   "gate": "knm_clv",
   "verdict": "PASS",
+  "failed_checks": [],
   "note": "METAL raster clv",
   "pair": "images/pair_knm_clv.png"
  },
  {
   "gate": "knm_clip",
-  "verdict": "PASS",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "anti-aliasing"
+  ],
   "note": "METAL raster clip_tests",
   "pair": "images/pair_knm_clip.png"
  },
  {
   "gate": "knm_hw",
-  "verdict": "PASS",
-  "note": "METAL raster hw stencil-parity eo",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "anti-aliasing"
+  ],
+  "note": "METAL raster hw (stencil-parity eo)",
   "pair": "images/pair_knm_hw.png"
  },
  {
   "gate": "mesh",
-  "verdict": "NOTE",
-  "note": "mesh path placement exact, AA pixel no-op",
+  "verdict": "FAIL",
+  "failed_checks": [
+   "ink-mass",
+   "coverage-gap",
+   "anti-aliasing"
+  ],
+  "note": "mesh path \u2014 placement exact, AA verified pixel no-op",
   "pair": "images/pair_mesh.png"
- },
- {
-  "gate": "clfp_t1",
-  "verdict": "NOTE",
-  "note": "clfp Main intermediate frame t1 (tick variant)",
-  "pair": "images/pair_clfp_t1.png"
- },
- {
-  "gate": "clfp_t5",
-  "verdict": "NOTE",
-  "note": "clfp Main intermediate frame t5 (tick variant)",
-  "pair": "images/pair_clfp_t5.png"
- },
- {
-  "gate": "clfp_t10",
-  "verdict": "NOTE",
-  "note": "clfp Main intermediate frame t10 (tick variant)",
-  "pair": "images/pair_clfp_t10.png"
- },
- {
-  "gate": "dsm_t1",
-  "verdict": "NOTE",
-  "note": "dsm intermediate frame t1 (tick variant)",
-  "pair": "images/pair_dsm_t1.png"
- },
- {
-  "gate": "hw_t1",
-  "verdict": "NOTE",
-  "note": "hw intermediate frame t1 (tick variant)",
-  "pair": "images/pair_hw_t1.png"
  }
 ]

@@ -1,0 +1,3396 @@
+[
+ {
+  "gate": "hw",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_hw_t1.bmp",
+  "ref": "ref_hw_c_t1.png",
+  "ours_sha": "691ddfb4ea3aa4d5",
+  "ref_sha": "433097812796da83",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (98.6% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(78, 192, 340, 234) ours=(78, 192, 340, 234) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=2749 ours=2768 ratio=1.01 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.07% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 243028 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0007 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.284%, excused edge band 2.79% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=905 ref=1097 ratio 0.82 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 2.3 levels at x=158 y=219 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.007,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0007,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.284,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1097,
+   "aa_px_ours": 905,
+   "aa_ratio": 0.825,
+   "local_max": 2.26,
+   "rmse_ink_union": 10.99,
+   "rmse_backdrop": 0.37
+  }
+ },
+ {
+  "gate": "cdo",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_cdo_child_r2_t1.bmp",
+  "ref": "ref_cdo_child_t1.png",
+  "ours_sha": "cd2d154e984b868d",
+  "ref_sha": "7723f743a21ed3c2",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(786, 786) ours=(786, 786)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (52.2% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 0, 611, 611) ours=(0, 0, 611, 611) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=147560 ours=147604 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 318460 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0040 (max 0.008); flat ink 288398 px: mean 1.00 (max 3.0) p95 1 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.088%, excused edge band 1.79% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=1011 ref=1348 ratio 0.75 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.0 levels at x=435 y=559 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.004,
+   "ink_core_px": 288398,
+   "ink_core_mean": 1.0,
+   "ink_core_p95": 1.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.088,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1348,
+   "aa_px_ours": 1011,
+   "aa_ratio": 0.75,
+   "local_max": 1.0,
+   "rmse_ink_union": 1.0,
+   "rmse_backdrop": 0.38
+  }
+ },
+ {
+  "gate": "dsm",
+  "verdict": "FAIL",
+  "failed": [
+   "ink-bbox",
+   "ink-mass",
+   "coverage-gap",
+   "registration",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_dsm_c_t1.bmp",
+  "ref": "ref_dsm_c_t1.png",
+  "ours_sha": "9d37554a74104531",
+  "ref_sha": "b13b46266cb9ccdb",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 0, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 0, 255) expected=(255, 0, 255) dist=0 tol=8 (98.4% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=(0, 0, 249, 99) ours=(0, 0, 99, 39) asserted=x,y deltas={'xmin': 0, 'xmax': 150, 'ymin': 0, 'ymax': 60} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=24706 ours=3953 ratio=0.16 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": false,
+    "detail": "71.92% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 223584 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 4000 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": false,
+    "detail": "ours best aligns to ref when displaced dx=-1.75 dy=-2.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "8.400% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 8.400%, excused edge band 0.00% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 168.0 levels at x=116 y=16 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 16.6,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 17.1,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 17.7,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 0.16,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 4000,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": -1.75,
+   "registration_dy": -2.0,
+   "frame_disagree_pct": 8.4,
+   "frame_unexplained_pct": 8.4,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 168.0,
+   "rmse_ink_union": 125.68,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "dsm_row",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_dsm_row_bind.bmp",
+  "ref": "ref_dsm_row_t1.png",
+  "ours_sha": "be3a091736805483",
+  "ref_sha": "d62abee1d307efae",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (90.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 200, 249, 299) ours=(0, 200, 249, 299) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=16471 ours=16471 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 223584 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 23808 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 0.96% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 23808,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 0.0,
+   "rmse_ink_union": 0.0,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "clfp",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_clfp_c_t1.bmp",
+  "ref": "ref_clfp_c_t1.png",
+  "ours_sha": "724318ccbb2ce9ea",
+  "ref_sha": "927ad568bf6e1353",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (99.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(24, 89, 471, 452) ours=(24, 89, 471, 452) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=1206 ours=1192 ratio=0.99 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.98% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 241526 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.651%, excused edge band 3.34% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=1085 ref=1447 ratio 0.75 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.7 levels at x=238 y=106 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 0.988,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.651,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1447,
+   "aa_px_ours": 1085,
+   "aa_ratio": 0.75,
+   "local_max": 0.7,
+   "rmse_ink_union": 32.87,
+   "rmse_backdrop": 0.57
+  }
+ },
+ {
+  "gate": "clfp_item",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_clfp_item_t1.bmp",
+  "ref": "ref_clfp_item_vm_t1.png",
+  "ours_sha": "533da081c8e5d462",
+  "ref_sha": "366c1d4833691c7f",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (87.3% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 107, 157, 327) ours=(0, 107, 157, 327) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=31186 ours=31213 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 96.0,
+   "our_ink_within_1px": 96.1,
+   "ref_ink_within_2px": 97.6,
+   "our_ink_within_2px": 97.6,
+   "ref_ink_within_3px": 99.1,
+   "our_ink_within_3px": 99.1,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 27042,
+   "ink_core_mean": 1.17,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.706,
+   "frame_unexplained_pct": 1.555,
+   "aa_px_ref": 615,
+   "aa_px_ours": 477,
+   "aa_ratio": 0.776,
+   "local_max": 103.58,
+   "rmse_ink_union": 68.25,
+   "rmse_backdrop": 0.26
+  }
+ },
+ {
+  "gate": "cl1_item",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_cl1_item.bmp",
+  "ref": "ref_cl1_item_t1.png",
+  "ours_sha": "a80d31e9418677e8",
+  "ref_sha": "eb32819a7d63f3b6",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (75.5% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 187, 499, 312) ours=(0, 187, 499, 312) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=61009 ours=60184 ratio=0.99 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.81% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 185392 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 55996 px: mean 0.77 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=-0.50 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.680% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.119%, excused edge band 2.75% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=1334 ref=1350 ratio 0.99 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 76.2 levels at x=193 y=248 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 99.1,
+   "our_ink_within_1px": 99.7,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 0.986,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 55996,
+   "ink_core_mean": 0.77,
+   "ink_core_p95": 0.0,
+   "registration_dx": -0.5,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.119,
+   "frame_unexplained_pct": 0.68,
+   "aa_px_ref": 1350,
+   "aa_px_ours": 1334,
+   "aa_ratio": 0.988,
+   "local_max": 76.22,
+   "rmse_ink_union": 36.24,
+   "rmse_backdrop": 0.26
+  }
+ },
+ {
+  "gate": "cl1_main",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_cl1_main_t1.bmp",
+  "ref": "ref_cl1_main_t1.png",
+  "ours_sha": "166fe0e820f83470",
+  "ref_sha": "b4dbc2f02a4bd90c",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (80.1% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 0, 199, 289) ours=(0, 0, 199, 289) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=33112 ours=33144 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 195260 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0006 (max 0.008); flat ink 39957 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.298%, excused edge band 5.60% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=1079 ref=1299 ratio 0.83 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.7 levels at x=95 y=16 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0006,
+   "ink_core_px": 39957,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.298,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1299,
+   "aa_px_ours": 1079,
+   "aa_ratio": 0.831,
+   "local_max": 1.7,
+   "rmse_ink_union": 4.99,
+   "rmse_backdrop": 0.02
+  }
+ },
+ {
+  "gate": "clv",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_clv_t1.bmp",
+  "ref": "ref_clv_t1.png",
+  "ours_sha": "3ff8bb2d9b5ad491",
+  "ref_sha": "5f9f37023731a916",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(400, 400) ours=(400, 400)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(16, 16, 16) expected=(16, 16, 16) dist=0 tol=8 (68.8% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 100, 399, 399) ours=(0, 100, 399, 399) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=50000 ours=50000 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 104456 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 45384 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 5.85% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 45384,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 0.0,
+   "rmse_ink_union": 0.0,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "cl2",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_cl2_t1.bmp",
+  "ref": "ref_cl2_t1.png",
+  "ours_sha": "bf6eae24f41e8e6a",
+  "ref_sha": "18a409b9fc4965d8",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (52.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(10, 10, 439, 329) ours=(10, 10, 439, 329) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=95841 ours=95849 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.17% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 120208 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.35 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.620% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.640%, excused edge band 13.58% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=1813 ref=2414 ratio 0.75 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 3.2 levels at x=258 y=305 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 92947,
+   "ink_core_mean": 0.35,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.64,
+   "frame_unexplained_pct": 0.62,
+   "aa_px_ref": 2414,
+   "aa_px_ours": 1813,
+   "aa_ratio": 0.751,
+   "local_max": 3.2,
+   "rmse_ink_union": 4.87,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "cl2_t10",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_cl2_t10.bmp",
+  "ref": "ref_cl2_t10.png",
+  "ours_sha": "27774feb35a5bfb8",
+  "ref_sha": "44928ffc0c79377b",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=10 ours t=10 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (52.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(10, 10, 439, 329) ours=(10, 10, 439, 329) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=45076 ours=45054 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.80% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 120208 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92747 px: mean 1.68 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.759% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.369%, excused edge band 13.62% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=2010 ref=2415 ratio 0.83 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 16.1 levels at x=258 y=303 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 0.999,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 92747,
+   "ink_core_mean": 1.68,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.369,
+   "frame_unexplained_pct": 0.759,
+   "aa_px_ref": 2415,
+   "aa_px_ours": 2010,
+   "aa_ratio": 0.832,
+   "local_max": 16.05,
+   "rmse_ink_union": 24.27,
+   "rmse_backdrop": 0.85
+  }
+ },
+ {
+  "gate": "clfp_hover",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_clfp_item_hover.bmp",
+  "ref": "ref_clfp_item_hover.png",
+  "ours_sha": "712e1a1338a4c2f9",
+  "ref_sha": "94e232dfad314e91",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=None ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (87.3% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 107, 157, 327) ours=(0, 107, 157, 327) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=31186 ours=31213 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 96.0,
+   "our_ink_within_1px": 96.1,
+   "ref_ink_within_2px": 97.6,
+   "our_ink_within_2px": 97.6,
+   "ref_ink_within_3px": 99.1,
+   "our_ink_within_3px": 99.1,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 27042,
+   "ink_core_mean": 1.17,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.706,
+   "frame_unexplained_pct": 1.555,
+   "aa_px_ref": 615,
+   "aa_px_ours": 477,
+   "aa_ratio": 0.776,
+   "local_max": 103.58,
+   "rmse_ink_union": 72.24,
+   "rmse_backdrop": 0.28
+  }
+ },
+ {
+  "gate": "kn_sm_input",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_kn_sm_hover.bmp",
+  "ref": "ref_clfp_item_hover.png",
+  "ours_sha": "712e1a1338a4c2f9",
+  "ref_sha": "94e232dfad314e91",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=None ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (87.3% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 107, 157, 327) ours=(0, 107, 157, 327) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=31186 ours=31213 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 96.0,
+   "our_ink_within_1px": 96.1,
+   "ref_ink_within_2px": 97.6,
+   "our_ink_within_2px": 97.6,
+   "ref_ink_within_3px": 99.1,
+   "our_ink_within_3px": 99.1,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 27042,
+   "ink_core_mean": 1.17,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.706,
+   "frame_unexplained_pct": 1.555,
+   "aa_px_ref": 615,
+   "aa_px_ours": 477,
+   "aa_ratio": 0.776,
+   "local_max": 103.58,
+   "rmse_ink_union": 72.24,
+   "rmse_backdrop": 0.28
+  }
+ },
+ {
+  "gate": "kn_clfp_item",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_kn_clfp_item.bmp",
+  "ref": "ref_clfp_item_vm_t1.png",
+  "ours_sha": "533da081c8e5d462",
+  "ref_sha": "366c1d4833691c7f",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (87.3% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 107, 157, 327) ours=(0, 107, 157, 327) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=31186 ours=31213 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 96.0,
+   "our_ink_within_1px": 96.1,
+   "ref_ink_within_2px": 97.6,
+   "our_ink_within_2px": 97.6,
+   "ref_ink_within_3px": 99.1,
+   "our_ink_within_3px": 99.1,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 27042,
+   "ink_core_mean": 1.17,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.706,
+   "frame_unexplained_pct": 1.555,
+   "aa_px_ref": 615,
+   "aa_px_ours": 477,
+   "aa_ratio": 0.776,
+   "local_max": 103.58,
+   "rmse_ink_union": 68.25,
+   "rmse_backdrop": 0.26
+  }
+ },
+ {
+  "gate": "kn_cl2_t10",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "ours_kn_cl2_t10.bmp",
+  "ref": "ref_cl2_t10.png",
+  "ours_sha": "27774feb35a5bfb8",
+  "ref_sha": "44928ffc0c79377b",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=10 ours t=10 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (52.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(10, 10, 439, 329) ours=(10, 10, 439, 329) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=45076 ours=45054 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.80% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 120208 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92747 px: mean 1.68 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.759% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.369%, excused edge band 13.62% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=2010 ref=2415 ratio 0.83 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 16.1 levels at x=258 y=303 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 0.999,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 92747,
+   "ink_core_mean": 1.68,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.369,
+   "frame_unexplained_pct": 0.759,
+   "aa_px_ref": 2415,
+   "aa_px_ours": 2010,
+   "aa_ratio": 0.832,
+   "local_max": 16.05,
+   "rmse_ink_union": 24.27,
+   "rmse_backdrop": 0.85
+  }
+ },
+ {
+  "gate": "clip",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "ours_clip_t1.bmp",
+  "ref": "ref_clip_t1.png",
+  "ours_sha": "fb664ed67faa6b0a",
+  "ref_sha": "43feb82ccb774397",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (90.6% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(274, 146, 445, 317) ours=(274, 146, 445, 317) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=23075 ours=23103 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 225320 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0007 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.188%, excused edge band 1.25% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=299 ref=394 ratio 0.76 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.2 levels at x=301 y=173 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0007,
+   "ink_core_px": 21529,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.188,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 394,
+   "aa_px_ours": 299,
+   "aa_ratio": 0.759,
+   "local_max": 1.25,
+   "rmse_ink_union": 4.61,
+   "rmse_backdrop": 0.4
+  }
+ },
+ {
+  "gate": "cin",
+  "verdict": "FAIL",
+  "failed": [
+   "ink-bbox",
+   "ink-mass",
+   "coverage-gap",
+   "registration",
+   "local-fidelity"
+  ],
+  "hand_label": "LIMIT",
+  "ours": "ours_cin_t1.bmp",
+  "ref": "ref_cin_t1.png",
+  "ours_sha": "b7849aa2b6d5c629",
+  "ref_sha": "2e4406cd083c9257",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (100.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=(0, 0, 7, 7) ours=(0, 0, 14, 14) asserted=x,y deltas={'xmin': 0, 'xmax': 7, 'ymin': 0, 'ymax': 7} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=19 ours=60 ratio=3.09 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": false,
+    "detail": "59.46% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 249745 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": false,
+    "detail": "ours best aligns to ref when displaced dx=+0.75 dy=+1.75 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.020% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.036%, excused edge band 0.04% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 21 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 10.6 levels at x=21 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 66.7,
+   "our_ink_within_1px": 31.0,
+   "ref_ink_within_2px": 87.9,
+   "our_ink_within_2px": 38.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 49.3,
+   "ink_mass_ratio": 3.092,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "registration_dx": 0.75,
+   "registration_dy": 1.75,
+   "frame_disagree_pct": 0.036,
+   "frame_unexplained_pct": 0.02,
+   "aa_px_ref": 21,
+   "aa_px_ours": 18,
+   "local_max": 10.57,
+   "rmse_ink_union": 191.87,
+   "rmse_backdrop": 0.16
+  }
+ },
+ {
+  "gate": "iba",
+  "verdict": "FAIL",
+  "failed": [
+   "backdrop",
+   "ink-bbox",
+   "ink-mass",
+   "backdrop-px",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "LIMIT",
+  "ours": "ours_iba_t1.bmp",
+  "ref": "ref_iba_t1.png",
+  "ours_sha": "3466292340624ecb",
+  "ref_sha": "2749a582b7e6066f",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": false,
+    "detail": "ours=(255, 255, 255) expected=(49, 49, 49) dist=206 tol=8 (100.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=None ours=None"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=0 ours=0 ratio=0.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": false,
+    "detail": "100.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 206.00, worst 206"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "no ink on either side -- hue vacuous; flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "no ink on at least one side -- vacuous"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "100.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 100.000%, excused edge band 0.00% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 206.0 levels at x=16 y=16 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 0.0,
+   "our_ink_within_1px": 0.0,
+   "ref_ink_within_2px": 0.0,
+   "our_ink_within_2px": 0.0,
+   "ref_ink_within_3px": 0.0,
+   "our_ink_within_3px": 0.0,
+   "ink_mass_ratio": 0.0,
+   "backdrop_px_pct_over_tol": 100.0,
+   "backdrop_px_mean": 206.0,
+   "backdrop_px_max": 206,
+   "frame_disagree_pct": 100.0,
+   "frame_unexplained_pct": 100.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 206.0,
+   "rmse_backdrop": 206.0
+  }
+ },
+ {
+  "gate": "lwti",
+  "verdict": "FAIL",
+  "failed": [
+   "ink-bbox",
+   "ink-mass"
+  ],
+  "hand_label": "LIMIT",
+  "ours": "ours_lwti_t1.bmp",
+  "ref": "ref_lwti_t1.png",
+  "ours_sha": "979ae9ec67c3796a",
+  "ref_sha": "2749a582b7e6066f",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (100.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=None ours=None"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=0 ours=0 ratio=0.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "no ink on either side -- hue vacuous; flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "no ink on at least one side -- vacuous"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 0.00% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 0.0,
+   "our_ink_within_1px": 0.0,
+   "ref_ink_within_2px": 0.0,
+   "our_ink_within_2px": 0.0,
+   "ref_ink_within_3px": 0.0,
+   "our_ink_within_3px": 0.0,
+   "ink_mass_ratio": 0.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 0.0,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "deam",
+  "verdict": "FAIL",
+  "failed": [
+   "backdrop",
+   "ink-bbox",
+   "ink-mass",
+   "backdrop-px",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "LIMIT",
+  "ours": "ours_deam_t1.bmp",
+  "ref": "ref_deam_t1.png",
+  "ours_sha": "3466292340624ecb",
+  "ref_sha": "cf81c4e60c19cd3d",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": false,
+    "detail": "ours=(255, 255, 255) expected=(40, 40, 40) dist=215 tol=8 (100.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=None ours=None"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=0 ours=0 ratio=0.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": false,
+    "detail": "100.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 215.00, worst 215"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "no ink on either side -- hue vacuous; flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "no ink on at least one side -- vacuous"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "100.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 100.000%, excused edge band 0.00% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 215.0 levels at x=16 y=16 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 0.0,
+   "our_ink_within_1px": 0.0,
+   "ref_ink_within_2px": 0.0,
+   "our_ink_within_2px": 0.0,
+   "ref_ink_within_3px": 0.0,
+   "our_ink_within_3px": 0.0,
+   "ink_mass_ratio": 0.0,
+   "backdrop_px_pct_over_tol": 100.0,
+   "backdrop_px_mean": 215.0,
+   "backdrop_px_max": 215,
+   "frame_disagree_pct": 100.0,
+   "frame_unexplained_pct": 100.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 215.0,
+   "rmse_backdrop": 215.0
+  }
+ },
+ {
+  "gate": "hff",
+  "verdict": "FAIL",
+  "failed": [
+   "backdrop",
+   "ink-bbox",
+   "ink-mass",
+   "backdrop-px",
+   "frame-diff",
+   "local-fidelity"
+  ],
+  "hand_label": "LIMIT",
+  "ours": "ours_hff_t1.bmp",
+  "ref": "ref_hff_t1.png",
+  "ours_sha": "3466292340624ecb",
+  "ref_sha": "2749a582b7e6066f",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": false,
+    "detail": "ours=(255, 255, 255) expected=(49, 49, 49) dist=206 tol=8 (100.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=None ours=None"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=0 ours=0 ratio=0.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": false,
+    "detail": "100.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 206.00, worst 206"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "no ink on either side -- hue vacuous; flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "no ink on at least one side -- vacuous"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "100.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 100.000%, excused edge band 0.00% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 206.0 levels at x=16 y=16 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 0.0,
+   "our_ink_within_1px": 0.0,
+   "ref_ink_within_2px": 0.0,
+   "our_ink_within_2px": 0.0,
+   "ref_ink_within_3px": 0.0,
+   "our_ink_within_3px": 0.0,
+   "ink_mass_ratio": 0.0,
+   "backdrop_px_pct_over_tol": 100.0,
+   "backdrop_px_mean": 206.0,
+   "backdrop_px_max": 206,
+   "frame_disagree_pct": 100.0,
+   "frame_unexplained_pct": 100.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 206.0,
+   "rmse_backdrop": 206.0
+  }
+ },
+ {
+  "gate": "dcpo",
+  "verdict": "FAIL",
+  "failed": [
+   "ink-bbox",
+   "ink-mass"
+  ],
+  "hand_label": "LIMIT",
+  "ours": "ours_dcpo_t1.bmp",
+  "ref": "ref_dcpo_t1.png",
+  "ours_sha": "dbc7c8c657016d39",
+  "ref_sha": "d9b0b4cf71062eed",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(64, 64) ours=(64, 64)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (255, 255, 255) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (100.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": false,
+    "detail": "ref=None ours=None"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=0 ours=0 ratio=0.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 4096 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "no ink on either side -- hue vacuous; flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "no ink on at least one side -- vacuous"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 0.00% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 0.0,
+   "our_ink_within_1px": 0.0,
+   "ref_ink_within_2px": 0.0,
+   "our_ink_within_2px": 0.0,
+   "ref_ink_within_3px": 0.0,
+   "our_ink_within_3px": 0.0,
+   "ink_mass_ratio": 0.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 0.0,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "kn_cl2",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff"
+  ],
+  "hand_label": "PASS",
+  "ours": "kn_cl2.bmp",
+  "ref": "ref_cl2_t1.png",
+  "ours_sha": "2cd866fdf07880d0",
+  "ref_sha": "18a409b9fc4965d8",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (52.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(10, 10, 439, 329) ours=(10, 10, 439, 329) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=95841 ours=95860 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.17% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 120208 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.35 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.613% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.632%, excused edge band 13.54% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=2072 ref=2414 ratio 0.86 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 3.1 levels at x=291 y=306 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 92947,
+   "ink_core_mean": 0.35,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.632,
+   "frame_unexplained_pct": 0.613,
+   "aa_px_ref": 2414,
+   "aa_px_ours": 2072,
+   "aa_ratio": 0.858,
+   "local_max": 3.12,
+   "rmse_ink_union": 4.96,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "kn_hw",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "kn_hw.bmp",
+  "ref": "ref_hw_c_t1.png",
+  "ours_sha": "c2853513de5c26e6",
+  "ref_sha": "433097812796da83",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (98.7% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(78, 192, 340, 234) ours=(78, 192, 340, 234) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=2749 ours=2762 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.08% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 243023 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0008 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.260%, excused edge band 2.73% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=853 ref=1097 ratio 0.78 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 4.1 levels at x=264 y=218 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.005,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0008,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.26,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1097,
+   "aa_px_ours": 853,
+   "aa_ratio": 0.778,
+   "local_max": 4.15,
+   "rmse_ink_union": 18.6,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "kn_cl1",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "kn_cl1.bmp",
+  "ref": "ref_cl1_main_t1.png",
+  "ours_sha": "9054a7b8deaff126",
+  "ref_sha": "b4dbc2f02a4bd90c",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (80.1% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 0, 199, 289) ours=(0, 0, 199, 289) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=33112 ours=33187 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.02% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 195260 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0039 (max 0.008); flat ink 39957 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.506%, excused edge band 5.53% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "blended edge px ours=1026 ref=1299 ratio 0.79 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 6.1 levels at x=113 y=136 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.002,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0039,
+   "ink_core_px": 39957,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.506,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1299,
+   "aa_px_ours": 1026,
+   "aa_ratio": 0.79,
+   "local_max": 6.06,
+   "rmse_ink_union": 8.36,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "kn_clv",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "kn_clv.bmp",
+  "ref": "ref_clv_t1.png",
+  "ours_sha": "6271d611b35ae3bd",
+  "ref_sha": "5f9f37023731a916",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(400, 400) ours=(400, 400)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(16, 16, 16) expected=(16, 16, 16) dist=0 tol=8 (68.8% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 100, 399, 399) ours=(0, 100, 399, 399) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=50000 ours=50000 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 104456 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 45384 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 5.85% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 45384,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 0.0,
+   "rmse_ink_union": 0.0,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "kn_clip",
+  "verdict": "FAIL",
+  "failed": [
+   "anti-aliasing"
+  ],
+  "hand_label": "PASS",
+  "ours": "kn_clip.bmp",
+  "ref": "ref_clip_t1.png",
+  "ours_sha": "dd9214d6d53dcf1b",
+  "ref_sha": "43feb82ccb774397",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (26, 26, 38) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(26, 26, 38) expected=(26, 26, 38) dist=0 tol=8 (90.8% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(274, 146, 445, 317) ours=(274, 146, 445, 317) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=11280 ours=11290 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 225447 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0001 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=-0.25 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.158%, excused edge band 1.10% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": false,
+    "detail": "blended edge px ours=0 ref=394 ratio 0.00 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.5 levels at x=432 y=179 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0001,
+   "ink_core_px": 21529,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": -0.25,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.158,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 394,
+   "aa_px_ours": 0,
+   "aa_ratio": 0.0,
+   "local_max": 0.55,
+   "rmse_ink_union": 3.23,
+   "rmse_backdrop": 0.38
+  }
+ },
+ {
+  "gate": "knm_cl2",
+  "verdict": "FAIL",
+  "failed": [
+   "frame-diff",
+   "anti-aliasing",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "knm_cl2.bmp",
+  "ref": "ref_cl2_t1.png",
+  "ours_sha": "e3511b2af559fbb4",
+  "ref_sha": "18a409b9fc4965d8",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (52.0% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(10, 10, 439, 329) ours=(10, 10, 439, 329) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=95841 ours=95971 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.21% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 120208 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.54 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.712% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.036%, excused edge band 12.94% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": false,
+    "detail": "blended edge px ours=0 ref=2414 ratio 0.00 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 10.6 levels at x=258 y=300 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 92947,
+   "ink_core_mean": 0.54,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.036,
+   "frame_unexplained_pct": 0.712,
+   "aa_px_ref": 2414,
+   "aa_px_ours": 0,
+   "aa_ratio": 0.0,
+   "local_max": 10.56,
+   "rmse_ink_union": 6.27,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "knm_cl1",
+  "verdict": "FAIL",
+  "failed": [
+   "ink-colour",
+   "frame-diff",
+   "anti-aliasing",
+   "local-fidelity"
+  ],
+  "hand_label": "PASS",
+  "ours": "knm_cl1.bmp",
+  "ref": "ref_cl1_main_t1.png",
+  "ours_sha": "6eae705a91e10bfd",
+  "ref_sha": "b4dbc2f02a4bd90c",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (80.2% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 0, 199, 289) ours=(0, 0, 199, 289) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=33112 ours=33350 ratio=1.01 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.67% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 195280 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": false,
+    "detail": "hue delta 0.0217 (max 0.008); flat ink 39957 px: mean 1.23 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": false,
+    "detail": "0.636% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.085%, excused edge band 4.23% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": false,
+    "detail": "blended edge px ours=0 ref=1299 ratio 0.00 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 65.8 levels at x=100 y=94 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.007,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0217,
+   "ink_core_px": 39957,
+   "ink_core_mean": 1.23,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 1.085,
+   "frame_unexplained_pct": 0.636,
+   "aa_px_ref": 1299,
+   "aa_px_ours": 0,
+   "aa_ratio": 0.0,
+   "local_max": 65.81,
+   "rmse_ink_union": 36.17,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "knm_clv",
+  "verdict": "PASS",
+  "failed": [],
+  "hand_label": "PASS",
+  "ours": "knm_clv.bmp",
+  "ref": "ref_clv_t1.png",
+  "ours_sha": "6271d611b35ae3bd",
+  "ref_sha": "5f9f37023731a916",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(400, 400) ours=(400, 400)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(16, 16, 16) expected=(16, 16, 16) dist=0 tol=8 (68.8% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(0, 100, 399, 399) ours=(0, 100, 399, 399) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=50000 ours=50000 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 104456 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 45384 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 5.85% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": true,
+    "detail": "reference has 0 blended edge px < 64 -- vacuous"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.0,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "ink_core_px": 45384,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 0,
+   "aa_px_ours": 0,
+   "local_max": 0.0,
+   "rmse_ink_union": 0.0,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "knm_clip",
+  "verdict": "FAIL",
+  "failed": [
+   "anti-aliasing"
+  ],
+  "hand_label": "PASS",
+  "ours": "knm_clip.bmp",
+  "ref": "ref_clip_t1.png",
+  "ours_sha": "dd9214d6d53dcf1b",
+  "ref_sha": "43feb82ccb774397",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "composited over (26, 26, 38) \u2014 alpha vacuous"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(26, 26, 38) expected=(26, 26, 38) dist=0 tol=8 (90.8% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(274, 146, 445, 317) ours=(274, 146, 445, 317) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=11280 ours=11290 ratio=1.00 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 225447 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0001 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=-0.25 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.158%, excused edge band 1.10% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": false,
+    "detail": "blended edge px ours=0 ref=394 ratio 0.00 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.5 levels at x=432 y=179 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.001,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0001,
+   "ink_core_px": 21529,
+   "ink_core_mean": 0.0,
+   "ink_core_p95": 0.0,
+   "registration_dx": -0.25,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.158,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 394,
+   "aa_px_ours": 0,
+   "aa_ratio": 0.0,
+   "local_max": 0.55,
+   "rmse_ink_union": 3.23,
+   "rmse_backdrop": 0.38
+  }
+ },
+ {
+  "gate": "knm_hw",
+  "verdict": "FAIL",
+  "failed": [
+   "anti-aliasing"
+  ],
+  "hand_label": "PASS",
+  "ours": "knm_hw.bmp",
+  "ref": "ref_hw_c_t1.png",
+  "ours_sha": "236f781f8bd17d12",
+  "ref_sha": "433097812796da83",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "no time token (allowed): ref=1.0 ours=None"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (98.9% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(78, 192, 340, 234) ours=(78, 193, 339, 234) asserted=x,y deltas={'xmin': 0, 'xmax': 1, 'ymin': 1, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": true,
+    "detail": "ref=2749 ours=2819 ratio=1.03 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": true,
+    "detail": "0.15% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 243036 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0004 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.25 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.440%, excused edge band 2.58% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": false,
+    "detail": "blended edge px ours=0 ref=1097 ratio 0.00 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 6.8 levels at x=167 y=212 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 1.026,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0004,
+   "registration_dx": 0.0,
+   "registration_dy": 0.25,
+   "frame_disagree_pct": 0.44,
+   "frame_unexplained_pct": 0.0,
+   "aa_px_ref": 1097,
+   "aa_px_ours": 0,
+   "aa_ratio": 0.0,
+   "local_max": 6.8,
+   "rmse_ink_union": 35.57,
+   "rmse_backdrop": 0.0
+  }
+ },
+ {
+  "gate": "mesh",
+  "verdict": "FAIL",
+  "failed": [
+   "ink-mass",
+   "coverage-gap",
+   "anti-aliasing"
+  ],
+  "hand_label": "NOTE",
+  "ours": "ours_mesh_t1.bmp",
+  "ref": "ref_clfp_c_t1.png",
+  "ours_sha": "47e01846b3cf8533",
+  "ref_sha": "927ad568bf6e1353",
+  "checks": [
+   {
+    "check": "pairing",
+    "pass": true,
+    "detail": "ref t=1 ours t=1 match"
+   },
+   {
+    "check": "size",
+    "pass": true,
+    "detail": "ref=(500, 500) ours=(500, 500)"
+   },
+   {
+    "check": "alpha",
+    "pass": true,
+    "detail": "both fully opaque"
+   },
+   {
+    "check": "backdrop",
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (99.7% of frame)"
+   },
+   {
+    "check": "ink-bbox",
+    "pass": true,
+    "detail": "ref=(24, 89, 471, 452) ours=(23, 89, 470, 452) asserted=x,y deltas={'xmin': 1, 'xmax': 1, 'ymin': 0, 'ymax': 0} tol=6"
+   },
+   {
+    "check": "ink-mass",
+    "pass": false,
+    "detail": "ref=1206 ours=853 ratio=0.71 (need 0.85..1.15)"
+   },
+   {
+    "check": "coverage-gap",
+    "pass": false,
+    "detail": "11.36% of coverage unmatched either way within 1px (max 5.0%)"
+   },
+   {
+    "check": "backdrop-px",
+    "pass": true,
+    "detail": "0.00% of 241466 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+   },
+   {
+    "check": "ink-colour",
+    "pass": true,
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+   },
+   {
+    "check": "registration",
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=-0.50 dy=+0.00 px (max 0.75 per axis)"
+   },
+   {
+    "check": "frame-diff",
+    "pass": true,
+    "detail": "0.030% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.806%, excused edge band 2.66% of frame"
+   },
+   {
+    "check": "anti-aliasing",
+    "pass": false,
+    "detail": "blended edge px ours=0 ref=1447 ratio 0.00 (min 0.50)"
+   },
+   {
+    "check": "local-fidelity",
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 6.2 levels at x=188 y=147 (max 10.0)"
+   }
+  ],
+  "report": {
+   "ref_ink_within_1px": 87.1,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 96.4,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 98.4,
+   "our_ink_within_3px": 100.0,
+   "ink_mass_ratio": 0.707,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
+   "ink_hue_delta": 0.0,
+   "registration_dx": -0.5,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.806,
+   "frame_unexplained_pct": 0.03,
+   "aa_px_ref": 1447,
+   "aa_px_ours": 0,
+   "aa_ratio": 0.0,
+   "local_max": 6.25,
+   "rmse_ink_union": 116.11,
+   "rmse_backdrop": 0.0
+  }
+ }
+]
