@@ -716,3 +716,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   no macOS bridge). cl1 FAIL (ink-mass 1.603, coverage — partial
   raster delta, likely clip-mask/transform edge). clv/clip
   pending verdict. Shim: KN_TAG env names surface dumps.
+
+- koru-native gates M1 verdicts: cl2 PASS, hw PASS, cl1 FAIL
+  (mass 1.603), clv FAIL (mass 1.2), clip FAIL (mass 2.43,
+  coverage 100% — clips not applying). PATTERN: all FAILs are
+  clip-heavy fixtures -> clip.push.path mask suspect (mask
+  coverage or clip_aux indexing). Next: instrument clipCov
+  mask branch on clip_tests.
