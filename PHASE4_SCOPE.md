@@ -872,3 +872,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   round joint/cap fans (8-seg) -> g_mbatch when unclipped,
   software fallback when clipped. miter/bevel = named delta.
   All 5 knm gates re-verified PASS.
+
+- Metal image path M-image: image.decode.data LIVE on darwin
+  (CFData->CGImageSource->CGImage->CGBitmapContext->RGBA
+  registry), image.width/height, draw.image textured quad
+  (RGBA8 tex + linear sampler + premul composite). cin
+  driver built; kind-11 emits (imgemit obj4 245B). GATE
+  FAIL named: backdrop (26,26,38) full-frame + ink=0 —
+  decode-or-draw bisect pending (err arm vs texture path).
