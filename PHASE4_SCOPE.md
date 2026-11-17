@@ -867,3 +867,8 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   per flush. Flush hooks at every px-writer + clip verb +
   snap (ordering contract). eo + clipped draws stay per-call.
   All 5 knm gates re-verified PASS post-batch.
+
+- Metal strokes on GPU: metalStrokeTris — segment quads +
+  round joint/cap fans (8-seg) -> g_mbatch when unclipped,
+  software fallback when clipped. miter/bevel = named delta.
+  All 5 knm gates re-verified PASS.
