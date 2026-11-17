@@ -1,0 +1,4467 @@
+FILE artboards=1
+ARTBOARD 0 name=banner
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9726 -0.2326 -0.2326 -0.9726 54.3385 301.8112
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9726 -0.2326 -0.2326 -0.9726 54.3385 301.8112
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9344 -0.3562 -0.3562 -0.9344 132.2696 280.8800
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5146
+    V 1 33.4086 -0.6532
+    V 1 -30.8045 -0.6532
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9344 -0.3562 -0.3562 -0.9344 132.2696 280.8800
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5146
+    V 1 33.4086 -0.6532
+    V 1 -30.8045 -0.6532
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9310 -0.3650 -0.3650 -0.9310 236.6257 251.9529
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9310 -0.3650 -0.3650 -0.9310 236.6257 251.9529
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9042 -0.4271 -0.4271 -0.9042 327.4881 220.4081
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9042 -0.4271 -0.4271 -0.9042 327.4881 220.4081
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8166 -0.5772 -0.5772 -0.8166 425.8664 163.5185
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1756 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8166 -0.5772 -0.5772 -0.8166 425.8664 163.5185
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1756 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6661 -0.7459 -0.7459 -0.6661 501.3556 107.5702
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8876 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6661 -0.7459 -0.7459 -0.6661 501.3556 107.5702
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8876 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5506 -0.8348 -0.8348 -0.5506 563.9821 23.9744
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0002 -78.0499
+    V 1 32.1063 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5506 -0.8348 -0.8348 -0.5506 563.9821 23.9744
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0002 -78.0499
+    V 1 32.1063 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.8501 319.3932
+    V 4 -22.8501 319.3932 -26.2096 323.3546 50.0803 320.8436
+    V 4 126.3701 318.3327 101.5870 321.8773 151.1912 311.5122
+    V 4 200.7954 301.1472 211.7337 293.1664 237.7392 282.4598
+    V 4 263.7447 271.7531 317.8180 245.5533 338.8238 232.8430
+    V 4 359.8296 220.1326 398.2402 190.3130 418.2540 174.5845
+    V 4 438.2676 158.8560 479.6735 122.8248 496.0246 108.8095
+    V 4 512.3758 94.7942 546.0457 66.8731 558.0081 55.0473
+    V 4 569.9706 43.2214 599.8515 7.4341
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.8751 0.4840 0.4840 -0.8751 -23.8258 -169.6852
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8751 0.4840 0.4840 -0.8751 -23.8258 -169.6852
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9506 0.3105 0.3105 -0.9506 56.8114 -172.6045
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9506 0.3105 0.3105 -0.9506 56.8114 -172.6045
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9008 0.4342 0.4342 -0.9008 164.9377 -175.0363
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9008 0.4342 0.4342 -0.9008 164.9377 -175.0363
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9579 0.2872 0.2872 -0.9579 260.7047 -177.3903
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9579 0.2872 0.2872 -0.9579 260.7047 -177.3903
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9082 0.4185 0.4185 -0.9082 373.0157 -181.7480
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9082 0.4185 0.4185 -0.9082 373.0157 -181.7480
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8921 0.4519 0.4519 -0.8921 463.2227 -163.0835
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8921 0.4519 0.4519 -0.8921 463.2227 -163.0835
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5850 0.8110 0.8110 -0.5850 556.1599 -123.7407
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5850 0.8110 0.8110 -0.5850 556.1599 -123.7407
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -91.4006 301.4726
+    V 4 -91.4006 301.4726 -88.3602 305.6839 -72.5084 231.0169
+    V 4 -56.6565 156.3499 -71.1662 179.0428 -56.8926 130.5188
+    V 4 -42.6190 81.9949 -33.7064 71.0905 -19.7338 46.7829
+    V 4 -5.7612 22.4752 31.4132 -24.9874 45.8920 -44.9298
+    V 4 60.3709 -64.8721 89.1415 -103.8703 104.0701 -124.5070
+    V 4 118.9987 -145.1437 150.7519 -189.8999 163.3532 -207.3646
+    V 4 175.9545 -224.8293 202.6751 -259.4745 211.6834 -273.6805
+    V 4 220.6917 -287.8864 241.8067 -329.4520
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.8794 0.4761 0.4761 -0.8794 -25.9543 -161.8625
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8794 0.4761 0.4761 -0.8794 -25.9543 -161.8625
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9531 0.3025 0.3025 -0.9531 54.6791 -164.9210
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9531 0.3025 0.3025 -0.9531 54.6791 -164.9210
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9054 0.4246 0.4246 -0.9054 162.8031 -167.6039
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9054 0.4246 0.4246 -0.9054 162.8031 -167.6039
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9607 0.2777 0.2777 -0.9607 258.5693 -170.3105
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9607 0.2777 0.2777 -0.9607 258.5693 -170.3105
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9146 0.4044 0.4044 -0.9146 370.8717 -175.4927
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9146 0.4044 0.4044 -0.9146 370.8717 -175.4927
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9015 0.4329 0.4329 -0.9015 461.3714 -158.1345
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9015 0.4329 0.4329 -0.9015 461.3714 -158.1345
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6114 0.7913 0.7913 -0.6114 555.2999 -121.0330
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6114 0.7913 0.7913 -0.6114 555.2999 -121.0330
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -90.2930 301.7552
+    V 4 -90.2930 301.7552 -87.3549 306.0385 -69.7081 231.7753
+    V 4 -52.0613 157.5120 -66.8938 179.9556 -51.6837 131.6823
+    V 4 -36.4737 83.4091 -27.5818 72.6562 -13.3430 48.4923
+    V 4 0.8957 24.3285 38.3770 -22.8643 52.9657 -42.7266
+    V 4 67.5544 -62.5888 96.4398 -101.4997 111.4301 -122.0915
+    V 4 126.4203 -142.6833 158.2681 -187.3718 170.9048 -204.8108
+    V 4 183.5415 -222.2499 210.3191 -256.8509 219.3505 -271.0421
+    V 4 228.3819 -285.2332 249.5586 -326.7677
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.8924 0.4513 0.4513 -0.8924 -31.8429 -137.2200
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8924 0.4513 0.4513 -0.8924 -31.8429 -137.2200
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9606 0.2779 0.2779 -0.9606 48.7775 -140.6948
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9606 0.2779 0.2779 -0.9606 48.7775 -140.6948
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9189 0.3944 0.3944 -0.9189 156.8916 -144.1347
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9189 0.3944 0.3944 -0.9189 156.8916 -144.1347
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9687 0.2484 0.2484 -0.9687 252.6477 -147.9196
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9687 0.2484 0.2484 -0.9687 252.6477 -147.9196
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9330 0.3598 0.3598 -0.9330 364.8860 -155.6597
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9330 0.3598 0.3598 -0.9330 364.8860 -155.6597
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9281 0.3723 0.3723 -0.9281 456.1803 -142.4100
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9281 0.3723 0.3723 -0.9281 456.1803 -142.4100
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6895 0.7243 0.7243 -0.6895 552.8619 -112.4813
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6895 0.7243 0.7243 -0.6895 552.8619 -112.4813
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -86.8202 302.6417
+    V 4 -86.8202 302.6417 -84.2137 307.1345 -61.0144 234.4143
+    V 4 -37.8150 161.6940 -53.6260 183.3286 -35.5176 135.9636
+    V 4 -17.4093 88.5986 -8.5946 78.2809 6.4632 54.5853
+    V 4 21.5210 30.8899 59.9421 -15.4580 74.8669 -35.0687
+    V 4 89.7917 -54.6793 119.0247 -93.3238 134.2016 -113.7781
+    V 4 149.3784 -134.2323 181.5090 -178.7164 194.2519 -196.0780
+    V 4 206.9949 -213.4397 233.9416 -247.9082 243.0424 -262.0546
+    V 4 252.1431 -276.2010 273.5060 -317.6411
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9128 0.4083 0.4083 -0.9128 -39.1411 -94.6253
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9128 0.4083 0.4083 -0.9128 -39.1411 -94.6253
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9718 0.2357 0.2357 -0.9718 41.4529 -98.7635
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9718 0.2357 0.2357 -0.9718 41.4529 -98.7635
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9396 0.3423 0.3423 -0.9396 149.5403 -103.4183
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9396 0.3423 0.3423 -0.9396 149.5403 -103.4183
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9802 0.1982 0.1982 -0.9802 245.2553 -108.9758
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9802 0.1982 0.1982 -0.9802 245.2553 -108.9758
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9594 0.2821 0.2821 -0.9594 357.2570 -121.0197
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9594 0.2821 0.2821 -0.9594 357.2570 -121.0197
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9642 0.2651 0.2651 -0.9642 449.4825 -114.8513
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9642 0.2651 0.2651 -0.9642 449.4825 -114.8513
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8060 0.5919 0.5919 -0.8060 549.6025 -97.6521
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8060 0.5919 0.5919 -0.8060 549.6025 -97.6521
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -80.8599 304.1656
+    V 4 -80.8599 304.1656 -78.8550 308.9573 -46.4631 239.8400
+    V 4 -14.0712 170.7226 -31.4420 190.8791 -8.5194 145.4949
+    V 4 14.4031 100.1107 23.0610 90.3999 39.4698 67.5685
+    V 4 55.8786 44.7371 95.8417 -0.1627 111.3170 -19.3389
+    V 4 126.7924 -38.5151 156.5873 -76.7247 172.0651 -96.9511
+    V 4 187.5429 -117.1774 220.1211 -161.3330 233.0328 -178.5696
+    V 4 245.9446 -195.8062 273.1573 -230.0637 282.3694 -244.1374
+    V 4 291.5815 -258.2111 313.2493 -299.4938
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9382 0.3460 0.3460 -0.9382 -43.3138 -35.0666
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9382 0.3460 0.3460 -0.9382 -43.3138 -35.0666
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9844 0.1759 0.1759 -0.9844 37.2330 -40.0901
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9844 0.1759 0.1759 -0.9844 37.2330 -40.0901
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9635 0.2678 0.2678 -0.9635 145.2637 -46.3442
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9635 0.2678 0.2678 -0.9635 145.2637 -46.3442
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9918 0.1279 0.1279 -0.9918 240.8739 -54.2687
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9918 0.1279 0.1279 -0.9918 240.8739 -54.2687
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9853 0.1709 0.1709 -0.9853 352.2899 -72.1656
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9853 0.1709 0.1709 -0.9853 352.2899 -72.1656
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9939 0.1105 0.1105 -0.9939 444.9120 -75.8703
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9939 0.1105 0.1105 -0.9939 444.9120 -75.8703
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9262 0.3771 0.3771 -0.9262 547.0284 -76.9285
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9262 0.3771 0.3771 -0.9262 547.0284 -76.9285
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -72.5585 306.2952
+    V 4 -72.5585 306.2952 -71.4436 311.3683 -27.2048 249.1640
+    V 4 17.0340 186.9597 -2.2511 204.8947 26.9462 163.1125
+    V 4 56.1434 121.3303 64.5954 112.1788 82.7711 90.6730
+    V 4 100.9469 69.1672 142.9366 26.2893 159.1349 7.7294
+    V 4 175.3330 -10.8304 205.8660 -48.4623 221.7380 -68.3786
+    V 4 237.6100 -88.2949 270.7682 -132.0162 283.9014 -149.0846
+    V 4 297.0346 -166.1531 324.5964 -200.1280 333.9595 -214.1014
+    V 4 343.3225 -228.0749 365.4198 -269.1301
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9645 0.2642 0.2642 -0.9645 -39.0106 36.5485
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9645 0.2642 0.2642 -0.9645 -39.0106 36.5485
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9951 0.0994 0.0994 -0.9951 41.4549 30.3752
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9951 0.0994 0.0994 -0.9951 41.4549 30.3752
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9851 0.1721 0.1721 -0.9851 149.3786 22.1518
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9851 0.1721 0.1721 -0.9851 149.3786 22.1518
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9992 0.0398 0.0398 -0.9992 244.7830 11.3849
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9992 0.0398 0.0398 -0.9992 244.7830 11.3849
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9995 0.0312 0.0312 -0.9995 355.0941 -13.4698
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9995 0.0312 0.0312 -0.9995 355.0941 -13.4698
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9967 -0.0817 -0.0817 -0.9967 446.8143 -29.0404
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9967 -0.0817 -0.0817 -0.9967 446.8143 -29.0404
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9964 0.0852 0.0852 -0.9964 546.9340 -52.2566
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9964 0.0852 0.0852 -0.9964 546.9340 -52.2566
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -62.5093 308.8889
+    V 4 -62.5093 308.8889 -62.5147 314.0831 -5.9019 262.8832
+    V 4 50.7110 211.6833 29.5174 226.7266 65.4579 190.5000
+    V 4 101.3984 154.2734 109.7470 145.3983 129.8842 125.6810
+    V 4 150.0214 105.9637 194.3316 65.5745 211.3594 47.7937
+    V 4 228.3872 30.0129 259.8033 -6.9182 276.1450 -26.4474
+    V 4 292.4867 -45.9765 326.3538 -89.1533 339.7627 -106.0059
+    V 4 353.1716 -122.8585 381.1832 -156.4604 390.7461 -170.2979
+    V 4 400.3091 -184.1355 423.0000 -224.8653
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9862 0.1656 0.1656 -0.9862 -23.3689 111.0578
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9862 0.1656 0.1656 -0.9862 -23.3689 111.0578
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0089 0.0089 -1.0000 56.9628 103.3986
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0089 0.0089 -1.0000 56.9628 103.3986
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9982 0.0596 0.0596 -0.9982 164.7025 92.8133
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9982 0.0596 0.0596 -0.9982 164.7025 92.8133
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9982 -0.0607 -0.0607 -0.9982 259.7665 78.8684
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9982 -0.0607 -0.0607 -0.9982 259.7665 78.8684
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9922 -0.1248 -0.1248 -0.9922 368.3968 46.6276
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9922 -0.1248 -0.1248 -0.9922 368.3968 46.6276
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9576 -0.2879 -0.2879 -0.9576 457.5127 18.6486
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9576 -0.2879 -0.2879 -0.9576 457.5127 18.6486
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9708 -0.2399 -0.2399 -0.9708 550.2856 -27.1717
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9708 -0.2399 -0.2399 -0.9708 550.2856 -27.1717
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -51.7921 311.6804
+    V 4 -51.7921 311.6804 -52.9886 316.7349 13.8576 279.8835
+    V 4 80.7038 243.0322 57.9699 254.8153 99.8420 225.7479
+    V 4 141.7142 196.6804 150.2838 187.7257 172.2967 170.1321
+    V 4 194.3096 152.5385 240.9964 114.9132 258.8806 98.0272
+    V 4 276.7647 81.1412 309.1815 45.0245 326.0521 25.9551
+    V 4 342.9228 6.8858 377.6433 -35.6131 391.3893 -52.1917
+    V 4 405.1353 -68.7703 433.7281 -101.8755 443.5510 -115.5303
+    V 4 453.3739 -129.1852 476.8565 -169.4621
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9983 0.0578 0.0578 -0.9983 1.2090 177.9945
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9983 0.0578 0.0578 -0.9983 1.2090 177.9945
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9961 -0.0882 -0.0882 -0.9961 81.3461 168.5842
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9961 -0.0882 -0.0882 -0.9961 81.3461 168.5842
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9982 -0.0603 -0.0603 -0.9982 188.8120 155.3725
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9982 -0.0603 -0.0603 -0.9982 188.8120 155.3725
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9864 -0.1645 -0.1645 -0.9864 283.4042 138.1714
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9864 -0.1645 -0.1645 -0.9864 283.4042 138.1714
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9602 -0.2793 -0.2793 -0.9602 389.9314 98.9313
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9602 -0.2793 -0.2793 -0.9602 389.9314 98.9313
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8784 -0.4778 -0.4778 -0.8784 475.0748 59.6623
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8784 -0.4778 -0.4778 -0.8784 475.0748 59.6623
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8471 -0.5314 -0.5314 -0.8471 556.3530 -5.4036
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8471 -0.5314 -0.5314 -0.8471 556.3530 -5.4036
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -41.7136 314.3343
+    V 4 -41.7136 314.3343 -43.9720 319.0117 29.2487 297.4438
+    V 4 102.4693 275.8758 78.7487 284.4899 124.8216 263.0727
+    V 4 170.8945 241.6555 180.0990 232.4213 203.6643 217.0231
+    V 4 227.2297 201.6249 276.0956 166.7652 294.7744 150.8036
+    V 4 313.4531 134.8420 346.9136 99.6116 364.3325 81.0468
+    V 4 381.7514 62.4820 417.4250 20.7729 431.5500 4.5161
+    V 4 445.6750 -11.7406 474.9527 -44.2382 485.0791 -57.6703
+    V 4 495.2055 -71.1024 519.6191 -110.8198
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9989 -0.0468 -0.0468 -0.9989 28.2185 230.1258
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9989 -0.0468 -0.0468 -0.9989 28.2185 230.1258
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9834 -0.1812 -0.1812 -0.9834 108.1235 218.9694
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9834 -0.1812 -0.1812 -0.9834 108.1235 218.9694
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9847 -0.1744 -0.1744 -0.9847 215.2595 203.2258
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9847 -0.1744 -0.1744 -0.9847 215.2595 203.2258
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9654 -0.2606 -0.2606 -0.9654 309.3171 183.0798
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9654 -0.2606 -0.2606 -0.9654 309.3171 183.0798
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9100 -0.4145 -0.4145 -0.9100 413.6777 137.9772
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9100 -0.4145 -0.4145 -0.9100 413.6777 137.9772
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7777 -0.6286 -0.6286 -0.7777 494.4336 89.7476
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7777 -0.6286 -0.6286 -0.7777 494.4336 89.7476
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6701 -0.7422 -0.7422 -0.6701 563.1961 10.8824
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6701 -0.7422 -0.7422 -0.6701 563.1961 10.8824
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -33.3673 316.5556
+    V 4 -33.3673 316.5556 -36.4264 320.7534 39.4721 312.6378
+    V 4 115.3706 304.5221 91.1660 310.4773 139.6057 295.8780
+    V 4 188.0455 281.2786 198.1362 271.7832 222.8215 258.3424
+    V 4 247.5067 244.9017 298.1432 212.4931 317.4751 197.3703
+    V 4 336.8071 182.2475 371.2225 147.8702 389.1396 129.7904
+    V 4 407.0569 111.7107 443.6483 70.7972 458.1382 54.8651
+    V 4 472.6282 38.9329 502.5846 7.0626 513.0089 -6.1405
+    V 4 523.4330 -19.3435 548.7594 -58.4832
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9906 -0.1365 -0.1365 -0.9906 51.0136 265.3012
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9906 -0.1365 -0.1365 -0.9906 51.0136 265.3012
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9656 -0.2600 -0.2600 -0.9656 130.7014 252.7212
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9656 -0.2600 -0.2600 -0.9656 130.7014 252.7212
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9627 -0.2707 -0.2707 -0.9627 237.5268 234.9479
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9627 -0.2707 -0.2707 -0.9627 237.5268 234.9479
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9405 -0.3397 -0.3397 -0.9405 331.1035 212.5356
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9405 -0.3397 -0.3397 -0.9405 331.1035 212.5356
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8546 -0.5193 -0.5193 -0.8546 433.6479 163.1807
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8546 -0.5193 -0.5193 -0.8546 433.6479 163.1807
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6803 -0.7329 -0.7329 -0.6803 510.6464 108.7801
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6803 -0.7329 -0.7329 -0.6803 510.6464 108.7801
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.4977 -0.8674 -0.8674 -0.4977 568.9543 21.4621
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.4977 -0.8674 -0.8674 -0.4977 568.9543 21.4621
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -27.3639 318.1673
+    V 4 -27.3639 318.1673 -30.9392 321.9351 45.3719 323.6843
+    V 4 121.6830 325.4334 97.3132 329.4752 146.7996 319.9533
+    V 4 196.2860 310.4315 207.2235 300.7921 232.6148 288.8328
+    V 4 258.0062 276.8735 309.8929 246.3325 329.6904 231.8580
+    V 4 349.4879 217.3836 384.6410 183.6966 402.9409 166.0079
+    V 4 421.2409 148.3192 458.5641 108.0665 473.3444 92.4035
+    V 4 488.1248 76.7405 518.6297 45.3967 529.2929 32.3853
+    V 4 539.9561 19.3738 566.0136 -19.2813
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9790 -0.2039 -0.2039 -0.9790 65.4895 284.7915
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9790 -0.2039 -0.2039 -0.9790 65.4895 284.7915
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9479 -0.3187 -0.3187 -0.9479 145.0281 271.3183
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9479 -0.3187 -0.3187 -0.9479 145.0281 271.3183
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9396 -0.3423 -0.3423 -0.9396 251.6396 252.2819
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9396 -0.3423 -0.3423 -0.9396 251.6396 252.2819
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9179 -0.3968 -0.3968 -0.9179 344.8943 228.4913
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9179 -0.3968 -0.3968 -0.9179 344.8943 228.4913
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8069 -0.5907 -0.5907 -0.8069 446.2747 176.6459
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8069 -0.5907 -0.5907 -0.8069 446.2747 176.6459
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6056 -0.7958 -0.7958 -0.6056 520.8547 118.7687
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6056 -0.7958 -0.7958 -0.6056 520.8547 118.7687
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.3696 -0.9292 -0.9292 -0.3696 572.5781 27.1574
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.3696 -0.9292 -0.9292 -0.3696 572.5781 27.1574
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -23.8623 319.1129
+    V 4 -23.8623 319.1129 -27.7116 322.6003 48.2500 330.1018
+    V 4 124.2116 337.6034 99.8147 340.5339 149.6524 334.0121
+    V 4 199.4901 327.4904 211.0012 317.8012 236.7638 306.7326
+    V 4 262.5264 295.6641 315.1310 266.2556 335.1975 252.1774
+    V 4 355.2640 238.0991 390.8656 204.8464 409.3974 187.4028
+    V 4 427.9292 169.9592 465.7050 130.1275 480.6647 114.6358
+    V 4 495.6245 99.1441 526.4708 68.1371 537.2821 55.2482
+    V 4 548.0934 42.3594 574.6038 4.0141
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9691 -0.2467 -0.2467 -0.9691 70.2799 290.8405
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9691 -0.2467 -0.2467 -0.9691 70.2799 290.8405
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9347 -0.3555 -0.3555 -0.9347 149.7670 277.0728
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9347 -0.3555 -0.3555 -0.9347 149.7670 277.0728
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9218 -0.3877 -0.3877 -0.9218 256.3049 257.6214
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9218 -0.3877 -0.3877 -0.9218 256.3049 257.6214
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9023 -0.4312 -0.4312 -0.9023 349.4499 233.3823
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9023 -0.4312 -0.4312 -0.9023 349.4499 233.3823
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7754 -0.6314 -0.6314 -0.7754 450.4422 180.7411
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7754 -0.6314 -0.6314 -0.7754 450.4422 180.7411
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5635 -0.8261 -0.8261 -0.5635 524.2156 121.7752
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5635 -0.8261 -0.8261 -0.5635 524.2156 121.7752
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.3025 -0.9531 -0.9531 -0.3025 573.7700 28.8981
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.3025 -0.9531 -0.9531 -0.3025 573.7700 28.8981
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.7449 319.4155
+    V 4 -22.7449 319.4155 -26.6772 322.8091 49.0816 332.1392
+    V 4 124.8404 341.4694 100.4455 344.0464 150.3548 338.4853
+    V 4 200.2641 332.9242 211.9702 323.2260 237.8448 312.4456
+    V 4 263.7194 301.6652 316.5510 272.6251 336.7028 258.6761
+    V 4 356.8545 244.7271 392.6019 211.6180 411.2090 194.2553
+    V 4 429.8159 176.8926 467.7400 137.2010 482.7584 121.7662
+    V 4 497.7767 106.3314 528.7350 75.4365 539.5949 62.5885
+    V 4 550.4548 49.7404 577.1135 11.4984
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9627 -0.2707 -0.2707 -0.9627 69.0843 290.3652
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9627 -0.2707 -0.2707 -0.9627 69.0843 290.3652
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9266 -0.3760 -0.3760 -0.9266 148.5506 276.4771
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9266 -0.3760 -0.3760 -0.9266 148.5506 276.4771
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9108 -0.4128 -0.4128 -0.9108 255.0605 256.8776
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9108 -0.4128 -0.4128 -0.9108 255.0605 256.8776
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8934 -0.4493 -0.4493 -0.8934 348.1793 232.5484
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8934 -0.4493 -0.4493 -0.8934 348.1793 232.5484
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7594 -0.6506 -0.6506 -0.7594 449.1801 179.9426
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7594 -0.6506 -0.6506 -0.7594 449.1801 179.9426
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5477 -0.8367 -0.8367 -0.5477 523.1204 121.2128
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5477 -0.8367 -0.8367 -0.5477 523.1204 121.2128
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.2830 -0.9591 -0.9591 -0.2830 573.3085 28.7074
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.2830 -0.9591 -0.9591 -0.2830 573.3085 28.7074
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.7496 319.4142
+    V 4 -22.7496 319.4142 -26.6578 322.8355 49.1651 331.6292
+    V 4 124.9881 340.4228 100.5840 343.0758 150.4830 337.2611
+    V 4 200.3820 331.4465 212.0345 321.7844 237.8946 310.9594
+    V 4 263.7547 300.1343 316.5770 271.0946 336.7346 257.1511
+    V 4 356.8922 243.2076 392.6772 210.1450 411.3050 192.8042
+    V 4 429.9327 175.4634 467.9147 135.8276 482.9555 120.4147
+    V 4 497.9963 105.0018 529.0024 74.1547 539.8817 61.3231
+    V 4 550.7610 48.4914 577.4770 10.2894
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9593 -0.2825 -0.2825 -0.9593 65.3687 288.8438
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9593 -0.2825 -0.2825 -0.9593 65.3687 288.8438
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9222 -0.3866 -0.3866 -0.9222 144.7670 274.5707
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9222 -0.3866 -0.3866 -0.9222 144.7670 274.5707
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9054 -0.4245 -0.4245 -0.9054 251.1862 254.4978
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9054 -0.4245 -0.4245 -0.9054 251.1862 254.4978
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8892 -0.4576 -0.4576 -0.8892 344.2204 229.8796
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8892 -0.4576 -0.4576 -0.8892 344.2204 229.8796
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7548 -0.6560 -0.6560 -0.7548 445.2454 177.3803
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7548 -0.6560 -0.6560 -0.7548 445.2454 177.3803
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5496 -0.8354 -0.8354 -0.5496 519.7037 119.3946
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5496 -0.8354 -0.8354 -0.5496 519.7037 119.3946
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.2959 -0.9552 -0.9552 -0.2959 571.8663 28.0865
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.2959 -0.9552 -0.9552 -0.2959 571.8663 28.0865
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.7644 319.4101
+    V 4 -22.7644 319.4101 -26.5955 322.9175 49.4043 330.0219
+    V 4 125.4041 337.1263 100.9728 340.0181 150.8298 333.4070
+    V 4 200.6869 326.7958 212.1761 317.2488 237.9904 306.2845
+    V 4 263.8046 295.3202 316.5992 266.2846 336.7759 252.3594
+    V 4 356.9527 238.4341 392.8583 205.5204 411.5522 188.2500
+    V 4 430.2461 170.9796 468.4126 131.5230 483.5249 116.1802
+    V 4 498.6372 100.8373 529.7956 70.1438 540.7367 57.3649
+    V 4 551.6778 44.5859 578.5769 6.5125
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9588 -0.2842 -0.2842 -0.9588 59.2108 286.1905
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9588 -0.2842 -0.2842 -0.9588 59.2108 286.1905
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9212 -0.3890 -0.3890 -0.9212 138.4840 271.2357
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9212 -0.3890 -0.3890 -0.9212 138.4840 271.2357
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9053 -0.4248 -0.4248 -0.9053 244.7369 250.3231
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9053 -0.4248 -0.4248 -0.9053 244.7369 250.3231
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8891 -0.4577 -0.4577 -0.8891 337.6173 225.1860
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8891 -0.4577 -0.4577 -0.8891 337.6173 225.1860
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7606 -0.6492 -0.6492 -0.7606 438.6711 172.8455
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7606 -0.6492 -0.6492 -0.7606 438.6711 172.8455
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5680 -0.8230 -0.8230 -0.5680 513.9877 116.1286
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5680 -0.8230 -0.8230 -0.5680 513.9877 116.1286
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.3393 -0.9407 -0.9407 -0.3393 569.4456 26.9568
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.3393 -0.9407 -0.9407 -0.3393 569.4456 26.9568
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.7899 319.4039
+    V 4 -22.7899 319.4039 -26.4855 323.0538 49.7288 327.2762
+    V 4 125.9431 331.4985 101.4703 334.7973 151.2228 326.8343
+    V 4 200.9754 318.8712 212.2069 309.5268 237.9424 298.3307
+    V 4 263.6780 287.1346 316.4344 258.1175 336.6471 244.2289
+    V 4 356.8598 230.3402 392.9799 197.6919 411.7911 180.5477
+    V 4 430.6024 163.4035 469.0940 124.2668 484.3324 109.0490
+    V 4 499.5708 93.8313 530.9971 63.4118 542.0473 50.7270
+    V 4 553.0973 38.0422 580.3198 0.1991
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9613 -0.2756 -0.2756 -0.9613 51.2594 282.5322
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9613 -0.2756 -0.2756 -0.9613 51.2594 282.5322
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9237 -0.3832 -0.3832 -0.9237 130.3416 266.5956
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9237 -0.3832 -0.3832 -0.9237 130.3416 266.5956
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9104 -0.4136 -0.4136 -0.9104 236.3423 244.4698
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9104 -0.4136 -0.4136 -0.9104 236.3423 244.4698
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8933 -0.4495 -0.4495 -0.8933 328.9918 218.5682
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8933 -0.4495 -0.4495 -0.8933 328.9918 218.5682
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7763 -0.6303 -0.6303 -0.7763 430.0543 166.3876
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7763 -0.6303 -0.6303 -0.7763 430.0543 166.3876
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6013 -0.7991 -0.7991 -0.6013 506.4804 111.3837
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6013 -0.7991 -0.7991 -0.6013 506.4804 111.3837
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.4099 -0.9121 -0.9121 -0.4099 566.2491 25.2882
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.4099 -0.9121 -0.9121 -0.4099 566.2491 25.2882
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.8246 319.3970
+    V 4 -22.8246 319.3970 -26.3289 323.2310 50.0016 323.5544
+    V 4 126.3320 323.8777 101.8127 327.7252 151.3589 317.9479
+    V 4 200.9050 308.1706 211.8295 299.1128 237.4586 287.6163
+    V 4 263.0876 276.1198 315.8130 247.1557 336.0825 233.3295
+    V 4 356.3521 219.5033 392.7831 187.2420 411.7639 170.2836
+    V 4 430.7448 153.3251 469.7016 114.6549 485.1203 99.6197
+    V 4 500.5391 84.5847 532.3477 54.5643 543.5536 42.0171
+    V 4 554.7596 29.4699 582.4454 -8.0356
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9668 -0.2556 -0.2556 -0.9668 42.8086 278.3854
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9668 -0.2556 -0.2556 -0.9668 42.8086 278.3854
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9299 -0.3679 -0.3679 -0.9299 121.6366 261.2324
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9299 -0.3679 -0.3679 -0.9299 121.6366 261.2324
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9209 -0.3897 -0.3897 -0.9209 227.3035 237.5963
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9209 -0.3897 -0.3897 -0.9209 227.3035 237.5963
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9017 -0.4324 -0.4324 -0.9017 319.6505 210.7185
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9017 -0.4324 -0.4324 -0.9017 319.6505 210.7185
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8009 -0.5988 -0.5988 -0.8009 420.6709 158.6236
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8009 -0.5988 -0.5988 -0.8009 420.6709 158.6236
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6460 -0.7633 -0.7633 -0.6460 498.2813 105.5505
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6460 -0.7633 -0.7633 -0.6460 498.2813 105.5505
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.4993 -0.8664 -0.8664 -0.4993 562.7337 23.2018
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.4993 -0.8664 -0.8664 -0.4993 562.7337 23.2018
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.8644 319.3914
+    V 4 -22.8644 319.3914 -26.1407 323.4219 50.0803 319.3243
+    V 4 126.3014 315.2267 101.7412 319.6924 150.9646 307.8797
+    V 4 200.1879 296.0669 210.8235 287.3516 236.3338 275.5359
+    V 4 261.8441 263.7201 314.5687 234.8662 334.9170 221.1334
+    V 4 355.2654 207.4006 392.0853 175.6275 411.2773 158.9059
+    V 4 430.4693 142.1843 469.9973 104.1020 485.6376 89.2974
+    V 4 501.2779 74.4927 533.5537 44.9745 544.9510 32.6009
+    V 4 556.3484 20.2273 584.6042 -16.8508
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9745 -0.2242 -0.2242 -0.9745 35.3731 274.6178
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9745 -0.2242 -0.2242 -0.9745 35.3731 274.6178
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9392 -0.3432 -0.3432 -0.9392 113.9064 256.1585
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9392 -0.3432 -0.3432 -0.9392 113.9064 256.1585
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9354 -0.3535 -0.3535 -0.9354 219.1875 230.8891
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9354 -0.3535 -0.3535 -0.9354 219.1875 230.8891
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9136 -0.4067 -0.4067 -0.9136 311.1870 202.9235
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9136 -0.4067 -0.4067 -0.9136 311.1870 202.9235
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8311 -0.5561 -0.5561 -0.8311 412.0938 150.7741
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8311 -0.5561 -0.5561 -0.8311 412.0938 150.7741
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6960 -0.7180 -0.7180 -0.6960 490.7552 99.5202
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6960 -0.7180 -0.7180 -0.6960 490.7552 99.5202
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5937 -0.8047 -0.8047 -0.5937 559.4811 21.0127
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5937 -0.8047 -0.8047 -0.5937 559.4811 21.0127
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9027 319.3883
+    V 4 -22.9027 319.3883 -25.9501 323.5945 49.9257 315.2695
+    V 4 125.8015 306.9446 101.2114 311.9936 150.0402 298.2604
+    V 4 198.8690 284.5273 209.2903 276.1606 234.6934 264.0682
+    V 4 260.0964 251.9758 312.8665 223.2999 333.3106 209.6885
+    V 4 353.7546 196.0772 390.9971 164.8413 410.4177 148.3831
+    V 4 429.8382 131.9250 469.9740 94.4874 485.8499 79.9356
+    V 4 501.7258 65.3838 534.4957 36.4141 546.0961 24.2308
+    V 4 557.6965 12.0475 586.5585 -24.5610
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9827 -0.1853 -0.1853 -0.9827 29.9932 272.0832
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9827 -0.1853 -0.1853 -0.9827 29.9932 272.0832
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9501 -0.3119 -0.3119 -0.9501 108.2292 252.3972
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9501 -0.3119 -0.3119 -0.9501 108.2292 252.3972
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9510 -0.3091 -0.3091 -0.9510 213.1203 225.5783
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9510 -0.3091 -0.3091 -0.9510 213.1203 225.5783
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9268 -0.3756 -0.3756 -0.9268 304.7675 196.5423
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9268 -0.3756 -0.3756 -0.9268 304.7675 196.5423
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8619 -0.5072 -0.5072 -0.8619 405.4888 144.1744
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8619 -0.5072 -0.5072 -0.8619 405.4888 144.1744
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7435 -0.6687 -0.6687 -0.7435 484.9192 94.3332
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7435 -0.6687 -0.6687 -0.7435 484.9192 94.3332
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6785 -0.7346 -0.7346 -0.6785 556.9383 19.1089
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6785 -0.7346 -0.7346 -0.6785 556.9383 19.1089
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9339 319.3873
+    V 4 -22.9339 319.3873 -25.7889 323.7263 49.6353 311.9948
+    V 4 125.0596 300.2632 100.4473 305.7671 148.9014 290.5147
+    V 4 197.3555 275.2624 207.6539 267.2019 232.9830 254.9220
+    V 4 258.3122 242.6420 311.1749 214.2044 331.7216 200.7315
+    V 4 352.2683 187.2585 389.9151 156.5435 409.5530 140.3434
+    V 4 429.1909 124.1432 469.8934 87.3255 485.9887 73.0168
+    V 4 502.0841 58.7080 535.3107 30.2622 547.0993 18.2611
+    V 4 558.8881 6.2600 588.3123 -29.8985
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9893 -0.1457 -0.1457 -0.9893 26.9684 271.2614
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9893 -0.1457 -0.1457 -0.9893 26.9684 271.2614
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9601 -0.2798 -0.2798 -0.9601 104.9412 250.5519
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9601 -0.2798 -0.2798 -0.9601 104.9412 250.5519
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9644 -0.2643 -0.2643 -0.9644 209.4842 222.4204
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9644 -0.2643 -0.2643 -0.9644 209.4842 222.4204
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9388 -0.3446 -0.3446 -0.9388 300.8111 192.4350
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9388 -0.3446 -0.3446 -0.9388 300.8111 192.4350
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8879 -0.4600 -0.4600 -0.8879 401.2902 139.7024
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8879 -0.4600 -0.4600 -0.8879 401.2902 139.7024
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7820 -0.6232 -0.6232 -0.7820 481.1547 90.7132
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7820 -0.6232 -0.6232 -0.7820 481.1547 90.7132
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7435 -0.6687 -0.6687 -0.7435 555.2853 17.7714
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7435 -0.6687 -0.6687 -0.7435 555.2853 17.7714
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9547 319.3874
+    V 4 -22.9547 319.3874 -25.6777 323.8105 49.3587 309.8116
+    V 4 124.3952 295.8126 99.7610 301.5937 147.9458 285.3628
+    V 4 196.1306 269.1319 206.3813 261.3083 231.6812 248.9478
+    V 4 256.9811 236.5873 309.9713 208.4295 330.6181 195.0988
+    V 4 351.2648 181.7681 389.2590 151.5058 409.0824 135.5319
+    V 4 428.9058 119.5579 470.0804 83.2707 486.3580 69.1695
+    V 4 502.6355 55.0684 536.2373 27.0662 548.1810 15.2193
+    V 4 560.1246 3.3726 590.0106 -32.4056
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9937 -0.1125 -0.1125 -0.9937 26.1160 272.2055
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9937 -0.1125 -0.1125 -0.9937 26.1160 272.2055
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9676 -0.2526 -0.2526 -0.9676 103.8847 250.7350
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9676 -0.2526 -0.2526 -0.9676 103.8847 250.7350
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9739 -0.2271 -0.2271 -0.9739 208.1521 221.6031
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9739 -0.2271 -0.2271 -0.9739 208.1521 221.6031
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9477 -0.3192 -0.3192 -0.9477 299.2150 190.8468
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9477 -0.3192 -0.3192 -0.9477 299.2150 190.8468
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9064 -0.4224 -0.4224 -0.9064 399.4157 137.6415
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9064 -0.4224 -0.4224 -0.9064 399.4157 137.6415
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8083 -0.5888 -0.5888 -0.8083 479.3935 88.9243
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8083 -0.5888 -0.5888 -0.8083 479.3935 88.9243
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7854 -0.6190 -0.6190 -0.7854 554.5043 17.1102
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7854 -0.6190 -0.6190 -0.7854 554.5043 17.1102
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9648 319.3876
+    V 4 -22.9648 319.3876 -25.6233 323.8499 49.2022 308.7641
+    V 4 124.0278 293.6783 99.3669 299.5523 147.4320 282.8953
+    V 4 195.4971 266.2382 205.7500 258.5765 231.0655 246.2379
+    V 4 256.3811 233.8993 309.5189 206.0417 330.2563 192.8462
+    V 4 350.9938 179.6507 389.2598 149.7448 409.2271 133.9503
+    V 4 429.1944 118.1559 470.7225 82.2749 487.1358 68.3320
+    V 4 503.5492 54.3891 537.4265 26.7201 549.4837 14.9891
+    V 4 561.5409 3.2581 591.7632 -32.2370
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9959 -0.0900 -0.0900 -0.9959 26.9774 274.5878
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9959 -0.0900 -0.0900 -0.9959 26.9774 274.5878
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9721 -0.2344 -0.2344 -0.9721 104.6069 252.6112
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9721 -0.2344 -0.2344 -0.9721 104.6069 252.6112
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9793 -0.2022 -0.2022 -0.9793 208.6790 222.7863
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9793 -0.2022 -0.2022 -0.9793 208.6790 222.7863
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9530 -0.3028 -0.3028 -0.9530 299.5406 191.4445
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9530 -0.3028 -0.3028 -0.9530 299.5406 191.4445
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9170 -0.3989 -0.3989 -0.9170 399.4470 137.7040
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9170 -0.3989 -0.3989 -0.9170 399.4470 137.7040
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8223 -0.5691 -0.5691 -0.8223 479.2766 88.7728
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8223 -0.5691 -0.5691 -0.8223 479.2766 88.7728
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8066 -0.5911 -0.5911 -0.8066 554.4442 17.0585
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8066 -0.5911 -0.5911 -0.8066 554.4442 17.0585
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9656 319.3877
+    V 4 -22.9656 319.3877 -25.6191 323.8528 49.1895 308.6831
+    V 4 123.9980 293.5134 99.3057 299.3246 147.3927 282.7065
+    V 4 195.4797 266.0884 205.7644 258.5225 231.1316 246.2874
+    V 4 256.4990 234.0522 309.7911 206.4971 330.6069 193.4237
+    V 4 351.4227 180.3503 389.8863 150.7021 409.9566 135.0387
+    V 4 430.0269 119.3753 471.7954 83.7748 488.3003 69.9403
+    V 4 504.8051 56.1059 538.8636 28.6597 550.9950 17.0058
+    V 4 563.1264 5.3519 593.5655 -29.9582
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9967 -0.0807 -0.0807 -0.9967 28.5895 277.5427
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9967 -0.0807 -0.0807 -0.9967 28.5895 277.5427
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9739 -0.2271 -0.2271 -0.9739 106.1157 255.1963
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9739 -0.2271 -0.2271 -0.9739 106.1157 255.1963
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9814 -0.1920 -0.1920 -0.9814 210.0376 224.8459
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9814 -0.1920 -0.1920 -0.9814 210.0376 224.8459
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9549 -0.2970 -0.2970 -0.9549 300.7341 193.0258
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9549 -0.2970 -0.2970 -0.9549 300.7341 193.0258
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9208 -0.3901 -0.3901 -0.9208 400.3477 138.7421
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9208 -0.3901 -0.3901 -0.9208 400.3477 138.7421
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8266 -0.5628 -0.5628 -0.8266 479.9129 89.3827
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8266 -0.5628 -0.5628 -0.8266 479.9129 89.3827
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8132 -0.5820 -0.5820 -0.8132 554.7151 17.2906
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8132 -0.5820 -0.5820 -0.8132 554.7151 17.2906
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9620 319.3875
+    V 4 -22.9620 319.3875 -25.6381 323.8392 49.2462 309.0479
+    V 4 124.1304 294.2565 99.4060 299.9355 147.5796 283.5683
+    V 4 195.7533 267.2010 206.0802 259.6978 231.5134 247.6001
+    V 4 256.9466 235.5024 310.3894 208.2402 331.2747 195.2785
+    V 4 352.1601 182.3168 390.7794 152.8713 410.9302 137.3117
+    V 4 431.0810 121.7520 473.0291 86.3632 489.6017 72.6100
+    V 4 506.1743 58.8568 540.3639 31.5739 552.5487 19.9761
+    V 4 564.7335 8.3783 595.3260 -26.7995
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9966 -0.0824 -0.0824 -0.9966 30.8212 280.8689
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9966 -0.0824 -0.0824 -0.9966 30.8212 280.8689
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9734 -0.2292 -0.2292 -0.9734 108.2844 258.2969
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9734 -0.2292 -0.2292 -0.9734 108.2844 258.2969
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9809 -0.1943 -0.1943 -0.9809 212.1074 227.6008
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9809 -0.1943 -0.1943 -0.9809 212.1074 227.6008
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9539 -0.3000 -0.3000 -0.9539 302.6821 195.4242
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9539 -0.3000 -0.3000 -0.9539 302.6821 195.4242
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9191 -0.3940 -0.3940 -0.9191 402.0187 140.6162
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9191 -0.3940 -0.3940 -0.9191 402.0187 140.6162
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8229 -0.5682 -0.5682 -0.8229 481.2217 90.6535
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8229 -0.5682 -0.5682 -0.8229 481.2217 90.6535
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8076 -0.5897 -0.5897 -0.8076 555.2812 17.7681
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8076 -0.5897 -0.5897 -0.8076 555.2812 17.7681
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9548 319.3873
+    V 4 -22.9548 319.3873 -25.6774 323.8107 49.3580 309.8062
+    V 4 124.3934 295.8016 99.6388 301.2908 147.9515 285.3582
+    V 4 196.2643 269.4256 206.6416 261.9521 232.1499 250.0166
+    V 4 257.6583 238.0811 311.2414 211.0888 332.1849 198.2236
+    V 4 353.1284 185.3583 391.8584 156.0543 412.0651 140.5678
+    V 4 432.2719 125.0813 474.3355 89.8294 490.9510 76.1281
+    V 4 507.5664 62.4267 541.8353 35.2431 554.0518 23.6789
+    V 4 566.2683 12.1148 596.9491 -22.9869
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9960 -0.0895 -0.0895 -0.9960 33.6721 284.4673
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9960 -0.0895 -0.0895 -0.9960 33.6721 284.4673
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9718 -0.2357 -0.2357 -0.9718 111.1195 261.8336
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9718 -0.2357 -0.2357 -0.9718 111.1195 261.8336
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9792 -0.2029 -0.2029 -0.9792 214.9048 230.9988
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9792 -0.2029 -0.2029 -0.9792 214.9048 230.9988
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9516 -0.3074 -0.3074 -0.9516 305.4103 198.6096
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9516 -0.3074 -0.3074 -0.9516 305.4103 198.6096
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9143 -0.4051 -0.4051 -0.9143 404.4968 143.3149
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9143 -0.4051 -0.4051 -0.9143 404.4968 143.3149
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8139 -0.5810 -0.5810 -0.8139 483.2399 92.5804
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8139 -0.5810 -0.5810 -0.8139 483.2399 92.5804
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7933 -0.6088 -0.6088 -0.7933 556.1575 18.4875
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7933 -0.6088 -0.6088 -0.7933 556.1575 18.4875
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9437 319.3873
+    V 4 -22.9437 319.3873 -25.7370 323.7662 49.5137 310.9692
+    V 4 124.7645 298.1722 99.9841 303.4152 148.4832 288.1044
+    V 4 196.9823 272.7936 207.4192 265.3126 233.0100 253.5611
+    V 4 258.6007 241.8097 312.3086 215.0530 333.2963 202.2643
+    V 4 354.2839 189.4756 393.0725 160.2408 413.3071 144.7914
+    V 4 433.5417 129.3420 475.6480 94.1404 492.2781 80.4568
+    V 4 508.9082 66.7733 543.1976 39.6156 555.4215 28.0595
+    V 4 567.6454 16.5034 598.3409 -18.5861
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9948 -0.1015 -0.1015 -0.9948 37.1007 288.2104
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9948 -0.1015 -0.1015 -0.9948 37.1007 288.2104
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9692 -0.2462 -0.2462 -0.9692 114.5804 265.6803
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9692 -0.2462 -0.2462 -0.9692 114.5804 265.6803
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9761 -0.2172 -0.2172 -0.9761 218.3912 234.9176
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9761 -0.2172 -0.2172 -0.9761 218.3912 234.9176
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9478 -0.3188 -0.3188 -0.9478 308.8834 202.4657
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9478 -0.3188 -0.3188 -0.9478 308.8834 202.4657
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9063 -0.4227 -0.4227 -0.9063 407.7541 146.7347
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9063 -0.4227 -0.4227 -0.9063 407.7541 146.7347
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7996 -0.6005 -0.6005 -0.7996 485.9469 95.0825
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7996 -0.6005 -0.6005 -0.7996 485.9469 95.0825
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7700 -0.6381 -0.6381 -0.7700 557.3332 19.4164
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7700 -0.6381 -0.6381 -0.7700 557.3332 19.4164
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9289 319.3873
+    V 4 -22.9289 319.3873 -25.8147 323.7061 49.6909 312.5098
+    V 4 125.1964 301.3136 100.3971 306.2611 149.1173 291.7451
+    V 4 197.8375 277.2292 208.3455 269.7033 234.0231 258.1530
+    V 4 259.7006 246.6027 313.5155 220.0403 334.5322 207.3060
+    V 4 355.5489 194.5716 394.3427 165.3315 414.5764 149.8819
+    V 4 434.8103 134.4323 476.8854 99.1924 493.5016 85.4920
+    V 4 510.1177 71.7916 544.3689 44.5855 556.5757 33.0115
+    V 4 568.7825 21.4376 599.4191 -13.7039
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9929 -0.1191 -0.1191 -0.9929 40.9820 291.9248
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9929 -0.1191 -0.1191 -0.9929 40.9820 291.9248
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9653 -0.2611 -0.2611 -0.9653 118.5348 269.6420
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9653 -0.2611 -0.2611 -0.9653 118.5348 269.6420
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9713 -0.2377 -0.2377 -0.9713 222.4261 239.1368
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9713 -0.2377 -0.2377 -0.9713 222.4261 239.1368
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9424 -0.3344 -0.3344 -0.9424 312.9555 206.7578
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9424 -0.3344 -0.3344 -0.9424 312.9555 206.7578
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8947 -0.4466 -0.4466 -0.8947 411.6485 150.6493
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8947 -0.4466 -0.4466 -0.8947 411.6485 150.6493
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7799 -0.6259 -0.6259 -0.7799 489.2228 97.9806
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7799 -0.6259 -0.6259 -0.7799 489.2228 97.9806
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7371 -0.6757 -0.6757 -0.7371 558.7535 20.4861
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7371 -0.6757 -0.6757 -0.7371 558.7535 20.4861
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.9115 319.3878
+    V 4 -22.9115 319.3878 -25.9051 323.6325 49.8585 314.3423
+    V 4 125.6222 305.0522 100.8126 309.6701 149.7687 296.0811
+    V 4 198.7249 282.4920 209.3172 274.8882 235.0820 263.5484
+    V 4 260.8468 252.2086 314.7505 225.7966 335.7818 213.0950
+    V 4 356.8132 200.3934 395.5647 171.0815 415.7722 155.5984
+    V 4 435.9795 140.1154 477.9587 104.7597 494.5359 91.0123
+    V 4 511.1130 77.2648 545.2745 49.9464 557.4429 38.3322
+    V 4 569.6113 26.7181 600.1257 -8.5299
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9899 -0.1420 -0.1420 -0.9899 45.0751 295.3926
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9899 -0.1420 -0.1420 -0.9899 45.0751 295.3926
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9599 -0.2804 -0.2804 -0.9599 122.7281 273.4573
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9599 -0.2804 -0.2804 -0.9599 122.7281 273.4573
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9645 -0.2641 -0.2641 -0.9645 226.7379 243.3425
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9645 -0.2641 -0.2641 -0.9645 226.7379 243.3425
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9352 -0.3540 -0.3540 -0.9352 317.3419 211.1395
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9352 -0.3540 -0.3540 -0.9352 317.3419 211.1395
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8794 -0.4762 -0.4762 -0.8794 415.8964 154.7184
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8794 -0.4762 -0.4762 -0.8794 415.8964 154.7184
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7550 -0.6558 -0.6558 -0.7550 492.8239 101.0080
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7550 -0.6558 -0.6558 -0.7550 492.8239 101.0080
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6954 -0.7186 -0.7186 -0.6954 560.3106 21.5962
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6954 -0.7186 -0.7186 -0.6954 560.3106 21.5962
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.8928 319.3889
+    V 4 -22.8928 319.3889 -26.0003 323.5509 49.9873 316.3173
+    V 4 125.9749 309.0838 101.1641 313.3622 150.3470 300.7608
+    V 4 199.5299 288.1593 210.2180 280.4549 236.0656 269.3228
+    V 4 261.9130 258.1906 315.8873 231.8869 336.9214 219.1995
+    V 4 357.9554 206.5120 396.6293 177.0796 416.7914 161.5388
+    V 4 436.9534 145.9981 478.7899 110.4720 495.3104 96.6565
+    V 4 511.8308 82.8409 545.8663 55.3660 557.9815 43.6966
+    V 4 570.0967 32.0271 600.4454 -3.3641
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9855 -0.1695 -0.1695 -0.9855 49.0448 298.3892
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9855 -0.1695 -0.1695 -0.9855 49.0448 298.3892
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9529 -0.3034 -0.3034 -0.9529 126.8086 276.8468
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9529 -0.3034 -0.3034 -0.9529 126.8086 276.8468
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9554 -0.2953 -0.2953 -0.9554 230.9539 247.1888
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9554 -0.2953 -0.2953 -0.9554 230.9539 247.1888
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9263 -0.3768 -0.3768 -0.9263 321.6535 215.2231
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9263 -0.3768 -0.3768 -0.9263 321.6535 215.2231
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8605 -0.5094 -0.5094 -0.8605 420.1087 158.5602
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8605 -0.5094 -0.5094 -0.8605 420.1087 158.5602
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7260 -0.6877 -0.6877 -0.7260 496.4148 103.8704
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.7260 -0.6877 -0.6877 -0.7260 496.4148 103.8704
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6471 -0.7624 -0.7624 -0.6471 561.8588 22.6386
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6471 -0.7624 -0.7624 -0.6471 561.8588 22.6386
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.8745 319.3904
+    V 4 -22.8745 319.3904 -26.0911 323.4687 50.0613 318.2476
+    V 4 126.2136 313.0265 101.4097 316.9844 150.7888 305.3414
+    V 4 200.1678 293.6983 210.9572 285.8838 236.8773 274.9416
+    V 4 262.7974 263.9995 316.8245 237.7647 337.8523 225.0769
+    V 4 358.8802 212.3891 397.4565 182.8103 417.5629 167.1988
+    V 4 437.6693 151.5873 479.3400 115.8651 495.7950 101.9717
+    V 4 512.2499 88.0783 546.1428 60.4277 558.1980 48.6965
+    V 4 570.2534 36.9653 600.4175 1.4165
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 0.9799 -0.1994 -0.1994 -0.9799 52.5442 300.7359
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9799 -0.1994 -0.1994 -0.9799 52.5442 300.7359
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -4.1398 -72.8761
+    V 1 27.9667 0.9853
+    V 1 -36.2463 0.9853
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9445 -0.3284 -0.3284 -0.9445 130.4152 279.5828
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9445 -0.3284 -0.3284 -0.9445 130.4152 279.5828
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3021 -74.5147
+    V 1 33.4086 -0.6533
+    V 1 -30.8045 -0.6533
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9444 -0.3288 -0.3288 -0.9444 234.6948 250.3876
+    drawPath style=1 color=ffffbd00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9444 -0.3288 -0.3288 -0.9444 234.6948 250.3876
+    drawPath style=0 color=ffffbd00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.9288 -74.1086
+    V 1 31.1777 -0.2472
+    V 1 -33.0353 -0.2472
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9161 -0.4011 -0.4011 -0.9161 325.4962 218.6828
+    drawPath style=1 color=ff40d3a5 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9161 -0.4011 -0.4011 -0.9161 325.4962 218.6828
+    drawPath style=0 color=ff40d3a5 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 1.3183 -73.5215
+    V 1 33.4249 0.3399
+    V 1 -30.7882 0.3399
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8394 -0.5435 -0.5435 -0.8394 423.8917 161.8549
+    drawPath style=1 color=ffff8700 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.8394 -0.5435 -0.5435 -0.8394 423.8917 161.8549
+    drawPath style=0 color=ffff8700 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -1.1757 -74.6553
+    V 1 30.9309 -0.7939
+    V 1 -33.2822 -0.7939
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6953 -0.7187 -0.7187 -0.6953 499.6558 106.3272
+    drawPath style=1 color=ffc82d00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.6953 -0.7187 -0.7187 -0.6953 499.6558 106.3272
+    drawPath style=0 color=ffc82d00 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.7811 -73.4953
+    V 1 31.3254 0.3661
+    V 1 -32.8877 0.3661
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5960 -0.8030 -0.8030 -0.5960 563.2524 23.5272
+    drawPath style=1 color=ff05a2d8 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform 0.5960 -0.8030 -0.8030 -0.5960 563.2524 23.5272
+    drawPath style=0 color=ff05a2d8 thick=11.484 join=1 cap=0 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0003 -78.0499
+    V 1 32.1062 -4.1885
+    V 1 -32.1068 -4.1885
+    V 1
+    V 5
+  restore
+  save
+    transform -0.5634 0.8262 0.8262 0.5634 323.1199 -197.7882
+    drawPath style=0 color=ffffffff thick=6.000 join=0 cap=0 blend=3 shader=0() fillRule=2 verbs=9 pts=24
+    V 0 -22.8584 319.3921
+    V 4 -22.8584 319.3921 -26.1696 323.3941 50.0842 319.9580
+    V 4 126.3379 316.5220 101.5461 320.2050 151.0785 309.4057
+    V 4 200.6111 298.6065 211.4969 290.6854 237.4751 279.9017
+    V 4 263.4532 269.1180 317.5148 242.9153 338.5303 230.2162
+    V 4 359.5458 217.5171 398.0185 187.7867 418.0667 172.1016
+    V 4 438.1149 156.4165 479.6179 120.4980 496.0069 106.5270
+    V 4 512.3960 92.5561 546.1469 64.7329 558.1431 52.9412
+    V 4 570.1392 41.1495 600.1225 5.4479
+  restore
+restore

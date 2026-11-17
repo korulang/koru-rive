@@ -1,0 +1,16 @@
+FILE artboards=1
+ARTBOARD 0 name=New Artboard
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+    drawPath style=1 color=ff5a0782 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0000 -0.0000
+    V 1 500.0000 -0.0000
+    V 1 500.0000 500.0000
+    V 1
+    V 5
+  restore
+restore

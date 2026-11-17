@@ -1,0 +1,78 @@
+FILE artboards=1
+ARTBOARD 0 name=Main
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 208.0000 160.0000
+    drawPath style=1 color=ffffffff thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -48.0000 -48.0000
+    V 1 48.0000 -48.0000
+    V 1 48.0000 48.0000
+    V 1 -48.0000 48.0000
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 208.0000 160.0000
+    drawPath style=1 color=ffffffff thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -24.0000
+    V 4 13.2548 -24.0000 24.0000 -13.2548 24.0000 0.0000
+    V 4 24.0000 13.2548 13.2548 24.0000 0.0000 24.0000
+    V 4 -13.2548 24.0000 -24.0000 13.2548 -24.0000 0.0000
+    V 4 -24.0000 -13.2548 -13.2548 -24.0000
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 128.0000 128.0000
+    drawPath style=1 color=ff00ffff thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -32.0000 -32.0000
+    V 1 32.0000 -32.0000
+    V 1 32.0000 32.0000
+    V 1 -32.0000 32.0000
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 48.0000 128.0000
+    drawPath style=1 color=00000000 thick=0.000 join=-1 cap=-1 blend=3 shader=1(shader) fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -32.0000
+    V 4 17.6731 -32.0000 32.0000 -17.6731 32.0000 0.0000
+    V 4 32.0000 17.6731 17.6731 32.0000 0.0000 32.0000
+    V 4 -17.6731 32.0000 -32.0000 17.6731 -32.0000 0.0000
+    V 4 -32.0000 -17.6731 -17.6731 -32.0000
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 208.0000 48.0000
+    drawPath style=1 color=ffffff00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -32.0000 -32.0000
+    V 1 32.0000 -32.0000
+    V 1 32.0000 32.0000
+    V 1 -32.0000 32.0000
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 128.0000 48.0000
+    drawPath style=1 color=00000000 thick=0.000 join=-1 cap=-1 blend=3 shader=1(shader) fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -32.0000
+    V 4 17.6731 -32.0000 32.0000 -17.6731 32.0000 0.0000
+    V 4 32.0000 17.6731 17.6731 32.0000 0.0000 32.0000
+    V 4 -17.6731 32.0000 -32.0000 17.6731 -32.0000 0.0000
+    V 4 -32.0000 -17.6731 -17.6731 -32.0000
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 48.0000 48.0000
+    drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -32.0000 -32.0000
+    V 1 32.0000 -32.0000
+    V 1 32.0000 32.0000
+    V 1 -32.0000 32.0000
+    V 1
+    V 5
+  restore
+restore

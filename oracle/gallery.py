@@ -44,6 +44,11 @@ GATES = [
     ("kn_cl1",    ["kn_cl1.bmp"],       ["ref_cl1_main_t1.png"], "PASS", "NATIVE raster cl1"),
     ("kn_clv",    ["kn_clv.bmp"],       ["ref_clv_t1.png"], "PASS", "NATIVE raster clv"),
     ("kn_clip",   ["kn_clip.bmp"],      ["ref_clip_t1.png"], "PASS", "NATIVE raster clip_tests (nested path clips)"),
+    ("knm_cl2",   ["knm_cl2.bmp"],      ["ref_cl2_t1.png"], "PASS", "METAL raster cl2 (GPU path)"),
+    ("knm_cl1",   ["knm_cl1.bmp"],      ["ref_cl1_main_t1.png"], "PASS", "METAL raster cl1"),
+    ("knm_clv",   ["knm_clv.bmp"],      ["ref_clv_t1.png"], "PASS", "METAL raster clv"),
+    ("knm_clip",  ["knm_clip.bmp"],     ["ref_clip_t1.png"], "PASS", "METAL raster clip_tests"),
+    ("knm_hw",    ["knm_hw.bmp"],       ["ref_hw_c_t1.png"], "FAIL", "METAL raster hw — earClip concave/evenodd delta"),
     ("mesh",      ["ours_mesh_t1.bmp", "ours_mesh_noaa.bmp", "ours_mesh_paa.bmp"],
                    ["ref_clfp_c_t1.png", "ref_mesh*.png"], "NOTE", "mesh path — placement exact, AA verified pixel no-op"),
 ]

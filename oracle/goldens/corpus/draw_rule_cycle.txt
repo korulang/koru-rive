@@ -1,0 +1,56 @@
+FILE artboards=1
+ARTBOARD 0 name=New Artboard
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+    drawPath style=1 color=ff454545 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0000 -0.0000
+    V 1 525.6367 -0.0000
+    V 1 525.6367 507.4141
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 53.7012 87.7207
+    drawPath style=1 color=ff920303 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 0.0000 0.0000
+    V 1 104.6211 0.0000
+    V 1 104.6211 147.2109
+    V 1 0.0000 147.2109
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 47.2109 32.8867
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 0.0000 0.0000
+    V 1 167.7969 0.0000
+    V 1 167.7969 109.6680
+    V 1 0.0000 109.6680
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 96.3320 42.6016
+    drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 69.9414 0.0000
+    V 4 108.5690 0.0000 139.8828 25.1175 139.8828 56.1016
+    V 4 139.8828 87.0856 108.5690 112.2031 69.9414 112.2031
+    V 4 31.3138 112.2031 0.0000 87.0856 0.0000 56.1016
+    V 4 0.0000 25.1175 31.3138 0.0000
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 145.0664 79.2422
+    drawPath style=1 color=ff0022ff thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 69.9414 0.0000
+    V 4 108.5690 0.0000 139.8828 25.1175 139.8828 56.1016
+    V 4 139.8828 87.0856 108.5690 112.2031 69.9414 112.2031
+    V 4 31.3138 112.2031 0.0000 87.0856 0.0000 56.1016
+    V 4 0.0000 25.1175 31.3138 0.0000
+    V 5
+  restore
+restore

@@ -1,0 +1,4122 @@
+FILE artboards=10
+ARTBOARD 0 name=test-1-shape-with-shape-and-path
+ARTBOARD 1 name=test-2-clip-with-shape-and-path
+ARTBOARD 2 name=test-9-animated-path
+ARTBOARD 3 name=test-7-clip-with-only-paths
+ARTBOARD 4 name=test-4-clip-with-group-and-path
+ARTBOARD 5 name=test-8-clip-with-only-shapes
+ARTBOARD 6 name=test-10-shape-with-constraints
+ARTBOARD 7 name=test-6-clip-with-nested-solos
+ARTBOARD 8 name=test-3-clip-with-shape-and-group
+ARTBOARD 9 name=test-5-clip-with-group-and-path-and-shape
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 97.2305 205.3654
+    drawPath style=1 color=ffa10101 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -62.3514 -59.1118
+    V 1 62.3514 -59.1118
+    V 1 62.3514 59.1118
+    V 1 -62.3514 59.1118
+    V 1
+    V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=0 pts=0
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 252.8887 335.2715
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+    V 0 90.5631 -42.0450
+    V 1 104.0022 -44.5777
+    V 1 107.1307 -13.7428
+    V 1 112.3081 15.5267
+    V 1 100.8024 32.0510
+    V 1 90.5631 52.6733
+    V 1 80.3238 32.0510
+    V 1 68.8182 15.5267
+    V 1 73.9956 -13.7428
+    V 1 77.1240 -44.5776
+    V 1
+    V 5
+  restore
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=12 pts=10
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa30000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff001da1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff85a300 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 369.0206 405.4539
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 0.0000 -59.4919
+    V 1 59.4919 59.4919
+    V 1 -59.4919 59.4919
+    V 1
+    V 5
+  restore
+  save
+    clipPath verbs=5 pts=3
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 241.4456 253.6977
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -59.5597
+    V 4 32.8939 -59.5597 59.5597 -32.8939 59.5597 0.0000
+    V 4 59.5597 32.8939 32.8939 59.5597 0.0000 59.5597
+    V 4 -32.8939 59.5597 -59.5597 32.8939 -59.5597 0.0000
+    V 4 -59.5597 -32.8939 -32.8939 -59.5597
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=12
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff6e00a1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=5 pts=3
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa10000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 148.2803 398.0961
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -28.3515 -67.1253
+    V 1 137.6373 -67.1253
+    V 1 137.6373 60.0093
+    V 1 -28.3515 60.0093
+    V 1
+    V 5
+  restore
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff009ca1 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ffa35a00 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+restore
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- sm0 ---
+--- frame 0 t=0.0333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 1 t=0.0667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 2 t=0.1000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 3 t=0.1333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 4 t=0.1667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 5 t=0.2000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 6 t=0.2333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 7 t=0.2667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 8 t=0.3000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 9 t=0.3333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 10 t=0.3667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 11 t=0.4000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 12 t=0.4333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 13 t=0.4667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 14 t=0.5000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 15 t=0.5333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 16 t=0.5667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 17 t=0.6000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 18 t=0.6333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 19 t=0.6667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 20 t=0.7000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 21 t=0.7333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 22 t=0.7667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 23 t=0.8000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 24 t=0.8333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 25 t=0.8667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 26 t=0.9000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 27 t=0.9333 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 28 t=0.9667 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore
+--- frame 29 t=1.0000 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    clipPath verbs=6 pts=4
+    transform 1.0000 0.0000 0.0000 1.0000 250.8354 304.1265
+    drawPath style=1 color=ff18a100 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=4
+    V 0 -246.3540 -191.8478
+    V 1 246.3540 -191.8478
+    V 1 246.3540 191.8478
+    V 1 -246.3540 191.8478
+    V 1
+    V 5
+  restore
+restore

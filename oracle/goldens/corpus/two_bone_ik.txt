@@ -1,0 +1,36 @@
+FILE artboards=1
+ARTBOARD 0 name=New Artboard
+--- static t=0 ---
+save
+  transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+  clipPath verbs=5 pts=3
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+    drawPath style=1 color=ff313131 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=5 pts=3
+    V 0 -0.0000 -0.0000
+    V 1 500.0000 -0.0000
+    V 1 500.0000 500.0000
+    V 1
+    V 5
+  restore
+  save
+    transform 0.9954 -0.0955 0.0955 0.9954 126.6688 369.5429
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -63.2581
+    V 4 34.9365 -63.2581 63.2581 -34.9365 63.2581 -0.0000
+    V 4 63.2581 34.9365 34.9365 63.2581 0.0000 63.2581
+    V 4 -34.9365 63.2581 -63.2580 34.9365 -63.2580 0.0000
+    V 4 -63.2580 -34.9365 -34.9365 -63.2581
+    V 5
+  restore
+  save
+    transform 0.7941 0.5771 -0.5879 0.8089 169.3697 221.6302
+    drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
+    V 0 0.0000 -31.2729
+    V 4 17.2716 -31.2729 31.2729 -17.2716 31.2729 0.0000
+    V 4 31.2729 17.2716 17.2716 31.2730 -0.0000 31.2730
+    V 4 -17.2716 31.2730 -31.2729 17.2716 -31.2729 0.0000
+    V 4 -31.2729 -17.2716 -17.2716 -31.2729
+    V 5
+  restore
+restore
