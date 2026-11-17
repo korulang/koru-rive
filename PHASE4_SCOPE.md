@@ -764,3 +764,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   painted by a DIFFERENT pass/object than the obj75 layout-box fill
   (shape-fill pass or a second Fill), OR layout-box pass resolves a
   different SolidColor. Next: trace which op emits the green rect.
+
+- SM-listener HOVER GATE PASS: clfp Item RIVE_INPUTS='Hover:true@5'
+  frame=8 -> transition crossfade lands exactly on ref's 0x0C6C00
+  (12,108,0) = 50% lerp of idle green 0x12A100 / hover dark 0x063700
+  (duration=200ms, input@5, frame8 -> 3 ticks=100ms -> t=0.5).
+  Mechanism: smActiveAnimIdx resolves active LinearAnimation per
+  artboard; g_activeAnim scopes keyframes; g_blendFrom/g_blendT drive
+  propColorAnim lerpColor during mid-transition. Per-row SM scoping
+  added (embedded artboard's own SM, not host's) — fixed cl2_t10
+  regression where host SM scoped out Item row keyframes.
+  Regression sweep: cl1/clv/clfpItem/cl2/cl2t10 all PASS, dsm ops=12.
+  Gallery: 20 gates 0 missing; pair_clfp_hover.png added
+  (ours_clfp_item_hover.bmp / ref_clfp_item_hover.png).

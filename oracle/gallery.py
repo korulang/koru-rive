@@ -28,6 +28,7 @@ GATES = [
     ("clv",       ["ours_clv*.bmp", "ours_clv*.png", "clv_ours.bmp"], ["ref_clv_t1.png", "ref_clv_t15.png"], "PASS", "clv clipped viewport absolute layout"),
     ("cl2",       ["ours_cl2_t1.bmp", "cl2_ours.bmp"], ["ref_cl2_t1.png"], "PASS", "cl2 NumberToList synthetic grid + flexWrap"),
     ("cl2_t10",   ["ours_cl2_t10.bmp"], ["ref_cl2_t10.png"], "PASS", "cl2 color keyframes animate item fill at t10"),
+    ("clfp_hover",["ours_clfp_item_hover.bmp"], ["ref_clfp_item_hover.png"], "PASS", "clfp Item SM listener Hover:true@5 -> transition crossfade"),
     ("clip",      ["ours_clip_t1.bmp"],                   ["ref_clip_t1.png"], "PASS", "clip_tests Hidden-Path-Visible-Path"),
     ("cin",       ["ours_cin_t1.bmp"],                    ["ref_cin_t1.png"], "LIMIT", "custom_image_name — image decode LIVE, browser drops alpha (spec-correct)"),
     ("iba",       ["ours_iba_t1.bmp"],                    ["ref_iba_t1.png"], "LIMIT", "in_band_asset — 1x1 grayscale PNG, vacuous both sides"),

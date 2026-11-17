@@ -2064,6 +2064,10 @@ fn dumpKeyed(r: *Riv) void {
 // eval lands; clfp Item hover needs it to pick the dark-green hold
 // animation over the idle one on the same slot+prop.
 var g_activeAnim: i64 = -1;
+// Transition crossfade: when an SM transition is mid-flight, colors
+// blend from->to by progress (single-keyframe holds => exact lerp).
+var g_blendFrom: i64 = -1;
+var g_blendT: f32 = 0;
 
 fn isKfClusterObj(o: *const RivObj) bool {
     if (o.type_key == 25 or o.type_key == 26) return true;
@@ -2076,9 +2080,11 @@ fn isKfClusterObj(o: *const RivObj) bool {
 // LinearAnimation(31) owns the contiguous kf-cluster that follows.
 fn animOwnerOf(r: *const Riv, objIdx: usize) i64 {
     var cur: i64 = -1;
-    for (r.objects, 0..objIdx + 1) |*o, i| {
+    var i: usize = 0;
+    while (i <= objIdx and i < r.objects.len) : (i += 1) {
+        const o = &r.objects[i];
         if (o.type_key == 31) { cur = @intCast(i); continue; }
-        if (@as(usize, @intCast(i)) == objIdx) return cur;
+        if (i == objIdx) return cur;
         if (!isKfClusterObj(o)) cur = -1;
     }
     return -1;
@@ -2121,6 +2127,16 @@ fn smInputBoolAt(name: []const u8, frame: i64) bool {
         if (ev.frame <= frame and std.mem.eql(u8, ev.name, name)) v = ev.val;
     }
     return v;
+}
+
+// Frame at which the input's current value was set (latest event<=frame).
+fn smInputEventFrame(name: []const u8, frame: i64) i64 {
+    ensureSmInputs();
+    var f: i64 = -1;
+    for (g_smInputs.items) |ev| {
+        if (ev.frame <= frame and std.mem.eql(u8, ev.name, name)) f = ev.frame;
+    }
+    return f;
 }
 
 // slot -> owning artboard, via the object that carries the slot.
@@ -2192,6 +2208,8 @@ fn isLayerStateType(t: u64) bool {
 // Item: obj105 opValue=1 -> idle green when Hover off; obj107 absent ->
 // hover dark when Hover on).
 fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
+    g_blendFrom = -1;
+    g_blendT = 0;
     for (r.objects, 0..) |o, smi| {
         if (o.type_key != 53) continue;
         if (smArtboard(r, smi) != @as(i64, @intCast(abIdx))) continue;
@@ -2205,10 +2223,12 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
         var stateIsAnim = std.ArrayList(bool).empty;
         defer stateIsAnim.deinit(std.heap.page_allocator);
         // transitions: stateToId + following bool conditions
-        const Trans = struct { to: i64, ok: bool };
+        const Trans = struct { to: i64, ok: bool, dur: i64, trigFrame: i64 };
         var trans = std.ArrayList(Trans).empty;
         defer trans.deinit(std.heap.page_allocator);
         var curTo: i64 = -1;
+        var curDur: i64 = 0;
+        var curTrig: i64 = -1;
         var curOk = true;
         var haveTrans = false;
         var si = smi + 1;
@@ -2227,8 +2247,10 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
                 continue;
             }
             if (so.type_key == 65) {
-                if (haveTrans) trans.append(std.heap.page_allocator, .{ .to = curTo, .ok = curOk }) catch {};
+                if (haveTrans) trans.append(std.heap.page_allocator, .{ .to = curTo, .ok = curOk, .dur = curDur, .trigFrame = curTrig }) catch {};
                 curTo = propU(so.props, 151, -1);
+                curDur = propU(so.props, 158, 0);
+                curTrig = -1;
                 curOk = true;
                 haveTrans = true;
                 continue;
@@ -2238,22 +2260,38 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
                 const op = propU(so.props, 156, 0);
                 var pass = false;
                 if (iid >= 0 and iid < @as(i64, @intCast(inputNames.items.len))) {
-                    const val = smInputBoolAt(inputNames.items[@intCast(iid)], frame);
+                    const nm = inputNames.items[@intCast(iid)];
+                    const val = smInputBoolAt(nm, frame);
                     pass = if (op == 0) val else !val;
+                    if (pass and curTrig < 0) curTrig = smInputEventFrame(nm, frame);
                 }
                 if (!pass) curOk = false;
             }
         }
-        if (haveTrans) trans.append(std.heap.page_allocator, .{ .to = curTo, .ok = curOk }) catch {};
+        if (haveTrans) trans.append(std.heap.page_allocator, .{ .to = curTo, .ok = curOk, .dur = curDur, .trigFrame = curTrig }) catch {};
         // resolve: first passing transition to an AnimationState
         var animId: i64 = -1;
+        var blendFromAnim: i64 = -1;
+        var blendT: f32 = 1;
         for (trans.items) |t| {
             if (!t.ok or t.to < 0 or t.to >= @as(i64, @intCast(stateIsAnim.items.len))) continue;
             const ti: usize = @intCast(t.to);
             if (!stateIsAnim.items[ti]) continue;
             animId = stateAnimId.items[ti];
+            // crossfade: progress = elapsed since trigger / duration.
+            // duration is ms; our frame ticks are 1/30 s.
+            if (t.dur > 0 and t.trigFrame >= 0) {
+                const elapsedMs = @as(f32, @floatFromInt(frame - t.trigFrame)) * (1000.0 / 30.0);
+                blendT = @min(@max(elapsedMs / @as(f32, @floatFromInt(t.dur)), 0), 1);
+                // from-state = first AnimationState that isn't the target
+                for (stateIsAnim.items, 0..) |isA, fi2| {
+                    if (isA and fi2 != ti) { blendFromAnim = artboardAnimAt(r, abIdx, stateAnimId.items[fi2]); break; }
+                }
+            }
             break;
         }
+        g_blendFrom = blendFromAnim;
+        g_blendT = blendT;
         if (animId < 0) {
             // resting state: first AnimationState in the SM
             for (stateIsAnim.items, 0..) |isA, i| {
@@ -2384,8 +2422,34 @@ fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
     return v0;
 }
 
+fn lerpChan(x: f32, y: f32, t: f32) u32 {
+    return @intFromFloat(@round(x + (y - x) * t));
+}
+
+fn lerpColor(c0: u32, c1: u32, t: f32) u32 {
+    const a0 = @as(f32, @floatFromInt((c0 >> 24) & 0xFF));
+    const r0 = @as(f32, @floatFromInt((c0 >> 16) & 0xFF));
+    const g0 = @as(f32, @floatFromInt((c0 >> 8) & 0xFF));
+    const b0 = @as(f32, @floatFromInt(c0 & 0xFF));
+    const a1 = @as(f32, @floatFromInt((c1 >> 24) & 0xFF));
+    const r1 = @as(f32, @floatFromInt((c1 >> 16) & 0xFF));
+    const g1 = @as(f32, @floatFromInt((c1 >> 8) & 0xFF));
+    const b1 = @as(f32, @floatFromInt(c1 & 0xFF));
+    return (lerpChan(a0, a1, t) << 24) | (lerpChan(r0, r1, t) << 16) | (lerpChan(g0, g1, t) << 8) | lerpChan(b0, b1, t);
+}
+
 fn propColorAnim(r: *const Riv, v: *const RivObj, key: u16, frame: i64) u32 {
-    if (frame >= 0 and hasKeyframed(r, v.slot, key)) return keyframedColor(r, v.slot, key, frame);
+    if (frame >= 0 and hasKeyframed(r, v.slot, key)) {
+        if (g_blendT > 0 and g_blendT < 1 and g_blendFrom >= 0) {
+            const save = g_activeAnim;
+            g_activeAnim = g_blendFrom;
+            const c0 = keyframedColor(r, v.slot, key, frame);
+            g_activeAnim = save;
+            const c1 = keyframedColor(r, v.slot, key, frame);
+            return lerpColor(c0, c1, g_blendT);
+        }
+        return keyframedColor(r, v.slot, key, frame);
+    }
     return propColor(v.props, key);
 }
 
@@ -5156,7 +5220,17 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     const slot = listRowSlot(r, li, ai2, rowIdx);
                     var so = op0(6); so.a = slot[0]; so.b = slot[1]; so.c = slot[2]; so.d = slot[3]; so.e = slot[4]; so.g = slot[5];
                     out.append(alloc, so) catch {};
+                    // Per-row SM scope: the embedded artboard's own state
+                    // machine selects its active animation (cl2 Item rows
+                    // keyframe their fill; host SM would scope them out).
+                    const hostAnim = g_activeAnim;
+                    const hostFrom = g_blendFrom;
+                    const hostT = g_blendT;
+                    g_activeAnim = smActiveAnimIdx(r, ai2, frame);
                     collectArtboardOps(r, ai2, -1, alloc, &out);
+                    g_activeAnim = hostAnim;
+                    g_blendFrom = hostFrom;
+                    g_blendT = hostT;
                     out.append(alloc, op0(7)) catch {};
                 }
             }
@@ -5169,6 +5243,8 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         if (clipLc >= 0) out.append(alloc, op0(10)) catch {};
     }
     g_activeAnim = -1;
+    g_blendFrom = -1;
+    g_blendT = 0;
     return out.items;
 }
 ~pub tor ops { r: *Riv<loaded>, ab: i64, frame: i64 }
