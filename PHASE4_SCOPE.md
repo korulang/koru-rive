@@ -711,3 +711,8 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (verify). mesh.* already consumes kr/rive Tri soup — the
   tessellator path is LIVE on koru-native. Next: implement path
   verbs (flatten->scanline fill) + draw.path -> first pixel gate.
+
+- koru-native raster gates M1: cl2 PASS + hw PASS (native,
+  no macOS bridge). cl1 FAIL (ink-mass 1.603, coverage — partial
+  raster delta, likely clip-mask/transform edge). clv/clip
+  pending verdict. Shim: KN_TAG env names surface dumps.
