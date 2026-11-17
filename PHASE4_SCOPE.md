@@ -791,3 +791,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   Intermediate-frame interpolation is implemented (keyframedValue/
   keyframedColor lerp); gateable iff a clfp Main/Item ref renders
   mid-animation. Next: check clfp frame-60 kf targets + ref ticks.
+
+- NATIVE gate coverage (t42 lane): render_kn_sm_input.k — software
+  offscreen raster (no Metal) drives clfp Item ab=74 frame=8 with
+  RIVE_INPUTS='Hover:true@5' -> 0x0C6C00 blend, oracle PASS vs
+  ref_clfp_item_hover.png (ink-bbox exact, coverage-gap 4.44%).
+  dsm_row native drivers already exist (render_dsm_row.k/_b.k ops=10,
+  render_dsm_main.k ops=12) — bound-row text path covered natively.
+  Gallery: 21 gates 0 missing; pair_kn_sm_input.png added
+  (ours_kn_sm_hover.bmp / ref_clfp_item_hover.png).
