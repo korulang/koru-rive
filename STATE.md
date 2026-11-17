@@ -327,15 +327,15 @@ every gate (in `oracle/images/` only — no `/tmp`, no newest-mtime-wins);
 `oracle/run_gates.py` computes verdicts into `oracle/gate_verdicts.json`;
 `oracle/gallery.py` reads both.
 
-**Re-run: 11 PASS, 22 FAIL of 33.** Sixteen gates previously hand-labelled
-PASS now FAIL:
+**Re-run: 11 PASS, 22 FAIL of 33.** Fifteen gates previously hand-labelled
+PASS now FAIL (the commit message of 062030f says sixteen; fifteen is the count):
 
 | gates | failed checks | what is wrong |
 |---|---|---|
 | dsm | bbox, mass, gap, registration, frame-diff, local | ours 100x40 on magenta vs ref 250x100: render scale mismatch |
 | clfp_item, clfp_hover, kn_sm_input, kn_clfp_item | frame-diff, local-fidelity | the "0" glyph is at the card's top-left; ref centres it |
 | cl1_item | frame-diff, local-fidelity | ours draws "THREE" where ref draws "text" |
-| cl2, kn_cl2 | frame-diff | grid-cell digits drawn in a different font/shape than ref |
+| cl2, kn_cl2 | frame-diff | grid-cell digits sit ~19 px left of where ref centres them (same text-placement family as the list-item glyph) |
 | cl2_t10, kn_cl2_t10 | frame-diff, local-fidelity | same digits, at t10 |
 | knm_cl1 | ink-colour, frame-diff, anti-aliasing, local | Metal: row text is an illegible filled blob |
 | knm_cl2 | frame-diff, anti-aliasing, local | Metal: digits + no anti-aliasing |
