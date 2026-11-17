@@ -642,11 +642,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   no clicks in refs) — named residual. Regression: cl1/clv/clfpItem
   PASS, dsm ops identical.
 
-- SM listeners SCOPED OUT (t42 ruling): browser refs are tick-driven,
-  render_browser.mjs has no click/input injection -> listener->boolean
-  (pk=634) paths have no pixel oracle. Not built; named gap until an
-  input-injection oracle exists. cl2's animation is autoplay so t10
-  gate is unaffected.
+- SM listeners UNBLOCKED (ebd588c): render_browser.mjs gained
+  RIVE_INPUTS="Name:value@tick;Trig@tick" schedule -> stateMachineInputs
+  at pump ticks. Proven: clfp Item Hover:true@5 -> 56,580 px diff vs
+  no-input ref (listener->bool->visual path measurable). Remaining
+  gap is OUR side: listener->boolean (pk=634) eval + input schedule in
+  ops emission — t4f lane. cl2 autoplay unaffected.
 
 - koru-native arm link attempt: --build=koru-native flag works
   (part gates exclude macos parts correctly) BUT render drivers
