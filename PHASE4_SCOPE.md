@@ -830,3 +830,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   render_dsm_main.k ops=12) — bound-row text path covered natively.
   Gallery: 21 gates 0 missing; pair_kn_sm_input.png added
   (ours_kn_sm_hover.bmp / ref_clfp_item_hover.png).
+
+- Native coverage milestone 2: render_kn_clfp_item.k (ab74 f-1) +
+  render_kn_cl2_t10.k (ab15 f10) both oracle PASS natively. kn_cdo
+  RESIDUAL: render_kn_cdo.k (clipping_and_draw_order ab84 f0 786px)
+  renders mostly-empty magenta (ink-mass 0.08 vs ref) — the child-
+  artboard params don't reproduce the full cdo frame; needs correct
+  ab/transform recon before it can gate. Named, not hidden.
+  Gallery: 23 gates.
