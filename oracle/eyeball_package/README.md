@@ -1,5 +1,24 @@
 # Koru-Rive eyeball audit — DeepSeek vision pass
 
+## What this project is (context that matters for your verdicts)
+
+This is a **Koru-native Rive runtime** — a from-scratch renderer for
+`.riv` animation files, built as a forcing function for the Koru
+language's GPU pipeline. Rive files decode into object graphs, evaluate
+animations/state-machines/view-models, and emit renderer-neutral draw
+ops that replay through Koru's own Metal GPU backend (plus a software
+scanline arm for verification). The `kn_*` pairs are the software arm,
+`knm_*` are Metal, unprefixed pairs are the macOS canvas path.
+
+The stakes: these renders exercise Koru's realization and variant
+systems — every visual defect you find is either a renderer bug or a
+missing realization surface. "Close enough" is not the bar; the project
+ships on pixel-honest gates. Your verdicts feed a tightening pass where
+MINOR/MISMATCH findings become new gate criteria or bug reports. Full
+charter: `SCENE.md` in the repo root.
+
+## The audit task
+
 You are auditing rendered output from a Koru-native Rive runtime against
 browser-rendered references. Each image in `images/` is a side-by-side
 composite: **left = reference (real Rive runtime in a browser), right =
