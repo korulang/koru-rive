@@ -933,3 +933,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (component_list rows), compute per-item arc offset,
   compose path position+tangent into each item's world.
   clfp rows currently emit x~0 (list at origin).
+
+- constrainList impl state: graphdump(clfp) dumped to
+  /tmp (G 128 objects); O-line grep pending — need type-625
+  object's parent_obj (the ConstrainableList) + target slot
+  + distance/distanceEnd/distanceOffset props, and how list
+  items enumerate (row artboard instances under the list).
+  Hook point: effectiveWorld/constrainedWorld per-item, or
+  collectOps row-emission arm — per-item ordinal -> offset =
+  distanceOffset+distance + i*(distanceEnd-distance)/(n-1)
+  -> pathMeasureAt(targetPath, offset) -> compose pos+tangent
+  into item world (mirror constrainedWorld 165 machinery).
+  Env guards from 2676acf still in tree (uncommitted? check
+  git status — they were committed in 2676acf).
