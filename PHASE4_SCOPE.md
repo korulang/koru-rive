@@ -1401,3 +1401,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   either verbs tail isn't [...,4,5] as printed, or
   pathPrintedPoints counts a different array. Next probe:
   dump raw verbs tail indices + isTailSegment verdicts.
+
+- +1 PT RESOLUTION ATTEMPT: emitTextDraw (4752) prints RAW
+  pts.items.len + unfiltered points — the diverging paths are
+  TEXT glyph runs, not shape paths (printPathGolden was already
+  correct). Applying isTailSegment suppression there
+  OVER-suppressed (-74 pts): golden suppresses ~1 pt/path,
+  meaning text-path pts= is closer to RAW count — the +1 is
+  likely ONE REAL duplicate vertex in textDrawPath glyph
+  contour emission (e.g., duplicated on-curve join point),
+  not a print convention. Both experiments reverted; tree =
+  HEAD + clean. NEXT: diff textDrawPath's verbs/pts tail vs
+  golden V-lines point-by-point to find the duplicate vertex.
