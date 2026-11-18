@@ -1658,3 +1658,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   text.cpp height-cap site (where lines beyond box are
   dropped/ellipsized — search 'ellipsisLine' usage in layout)
   -> implement exact cap -> re-diff.
+
+- ELLIPSIS MECHANICS MAP (for next session): wantEllipsis gate
+  at text.cpp:2618 (overflow==ellipsis && overflowAsFixed);
+  ellipsisLine selection ~379-449 (last line that fits height);
+  ellipsis RUN shaped separately ~899-944, 1084 — golden's
+  2569 drawPath likely contains a shaped "…" run's contours.
+  computeLineMetrics at line_breaker.cpp:27. Cap = per-line
+  bottom vs box_h, NOT floor(h/lh). Implementation remains
+  feature-sized: needs line records (top/baseline/bottom),
+  per-line glyph x-reset, height-cap line drop, ellipsis run
+  emission. WIP pre-pass at index.kz ~4706-4740 is the
+  scaffold — replace maxLines floor() with per-line bottom
+  check and add ellipsis-run emission.
