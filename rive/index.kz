@@ -3655,7 +3655,8 @@ fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
     // the main axis — each item offsets by the sum of preceding siblings'
     // main-axis extents + gaps. Guarded: only engages when the flex props
     // are actually present (t4f spec — db_health e36->e755 target).
-    if (po.type_key == 409) {
+    const noFlex = std.posix.getenv("RIVE_NO_FLEX") != null;
+    if (!noFlex and po.type_key == 409) {
         if (layoutStyleOf(r, @intCast(p))) |fsi| {
             const fst = &r.objects[fsi];
             const hasFlex = propByKey(fst.props, 598) != null or propByKey(fst.props, 498) != null or propByKey(fst.props, 499) != null;

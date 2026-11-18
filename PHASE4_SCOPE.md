@@ -1291,3 +1291,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   nested-artboard/list transforms compounding. Verify by
   A/B: RIVE_NO_ flex env or check which op6 e-values trace to
   flex parents vs other mechanisms before more flex work.
+
+- FLEX A/B ATTRIBUTION VERDICT: RIVE_NO_FLEX diff — >1500
+  e-values IDENTICAL (306 both arms) => the 0->9917 spread is
+  NOT flex-driven; it comes from listRowSlot/nested-artboard
+  transform compounding (component-list row pitch over many
+  rows). Flex contributes real but mid-range deltas (~50-770,
+  ~7 net histogram lines). e36->e755 target therefore lives in
+  the LIST/nested path, not layoutOffsetOf flex — flex work was
+  correct-but-not-the-metric. NEXT: trace which op6 e>1500
+  parents are (559 list rows vs nested 92/451) via gdump_dbh
+  parent census.
