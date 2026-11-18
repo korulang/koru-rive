@@ -1080,3 +1080,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   ff12a100 source. Next: identify which shape under 75 carries
   paint->88 and why it should be invisible (opacity/clip/SM
   state) in ref.
+
+- green source narrowed: row draws emit via layout-managed
+  branch (~5253, FLD/box path) NOT the traced main-shape loop
+  — that's why RIVE_TRACE_DRAW missed them. lcolor = SolidColor
+  child of the paint (same propColorAnimOr). Green spots ~2
+  positions = likely FLD boxes or layout-child shapes picking
+  up ff12a100 paint. Mass decomposition: green ~600px of the
+  ~1191 excess; rest = positional/shape mismatch of row
+  content (rows verified at path pos but content shape/size
+  vs ref unverified — next: dump one row's emitted path bbox
+  in LOCAL coords vs ref row extent).
