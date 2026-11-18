@@ -1371,3 +1371,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   drawPaths), diff verbs/pts vs ours per drawable -> specimens
   where divergence IS flattening. Alternative per t42: craft
   circle.cubic fixture with known ref tessellation.
+
+- TESS SPECIMEN FOUND (text_follow_path_shape_length f0):
+  drawPath count matches (22/22), straight paths verb-exact
+  (5,3 / 4,9), but EVERY curved path is +1 pt: golden
+  (1337,2945)->ours(1337,2946), (2691,6019)->(2691,6020),
+  (1601,3547)->(1601,3548), (566,1179)->(566,1180),
+  (778,1746)->(778,1747), (3257,7369)->(3257,7370). Uniform
+  +1 vertex per curved contour = off-by-one emission (likely
+  duplicated contour-close point in flattenPath/buildPath).
+  Draw ORDER also permutes vs golden (z-order question,
+  separate). This is THE vertex-exact frontier specimen —
+  smallest possible delta, uniform signature.
