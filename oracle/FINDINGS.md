@@ -459,3 +459,39 @@ notch_max widened 3%->4% per arbiter ruling (worst legit control 2.54%,
 headroom for subpixel phase; hole-class defects sit at 15-66%).
 run_gates.py gained per-gate "opts" passthrough so ring/stale/clear/
 alpha stay asserted-but-opt-in rather than deleted.
+
+## Ruling: iba / deam / hff backdrop FAILs — RENDERER BUG (verb/raster layer)
+
+Adjudicated 2026-11-18 per arbiter commission. The oracle's expected
+backdrop is CORRECT — it equals the colour the .riv artboard itself
+specifies:
+
+| gate | .riv spec (oracle/dump) | ref backdrop | ours |
+|---|---|---|---|
+| iba  | full-frame fill `ff313131` | (49,49,49) opaque | 100% probe-clear white |
+| deam | full-frame fill `ff282828` | (40,40,40) opaque | 100% probe-clear white |
+| hff  | full-frame fill `ff313131` | (49,49,49) opaque | 100% probe-clear white |
+
+First-divergence walk (iba, verified at op layer):
+1. Scene/ops: **MATCH** — `opsdump_iba.k` emits the background fill:
+   `OP k=8 style=1 color=ff313131` inside the artboard's path group,
+   500x500 verts present. The command stream carries the spec.
+2. Verb/raster: **DIVERGES** — framebuffer is 100% the probe's white
+   clear; the emitted fill never reaches a pixel.
+3. Oracle: expected bg = spec colour; not wrong-expected.
+
+Missing surface: whatever realizes `style=1` fill ops for these
+fixtures drops or misplaces the full-frame background — suspects:
+fill realization gated on content ops, clip/transform state eating
+the first path group, or the kind-11 image op aborting the frame
+before/at the fill (iba is the in-band-image fixture; deam=VM-data,
+hff=hosted-font — all three share "auxiliary asset" class, which is
+the pattern worth checking first: does the fill emit *before* the
+asset op in stream order, and does asset failure skip pending draws?).
+
+deam/hff: same pixel signature + spec-verified colours; op-layer
+walk not yet run for them (inferred same class, marked unverified
+at that seam).
+
+Fix is a separate commission (renderer side). Oracle stands as-is:
+these three FAILs are real renderer deltas, correctly asserted.
