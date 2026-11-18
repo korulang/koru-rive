@@ -782,3 +782,17 @@ nested targets; secondary. For renderer owner: ClippingShape semantics
 = clip path drawable masking siblings/parent contents (rive-cpp
 clipping_shape.cpp) — needs traversal arm emitting clippush/clippop
 (k=9/10) around the masked subtree.
+
+## collapsing_elements underdraw — all-layout file, nested+SM compound
+
+156 objects, 3 artboards, ZERO Shape/Path/Text drawables — every fill
+(20) parents to LayoutComponent(17) or Artboard(3): all content is
+layout-box paint (class-2 mechanism). 4 NestedArtboard instances in
+main(ab1) reach ab26 (5 fills + 3 NestedStateMachine + nested
+instances) and ab65 (14 fills). Heavy SM presence: 3 StateMachine +
+6 NestedStateMachine on a 156-obj file — "collapsing" is SM-driven.
+Missing 32 draws ranked: (1) nested targets expand but LC fills emit
+degenerate/zero rects without the layout solver -> silent drop;
+(2) NestedStateMachine state selects collapsed variant -> fewer
+instances visible than ref frame-0. Discriminator: opsdump ab:1 with
+RIVE_NO_NESTED=1 diff + NestedSM default-state inspect.
