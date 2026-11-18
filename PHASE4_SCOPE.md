@@ -1312,3 +1312,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   under a 30fps-vs-authored-fps time-base bug, now corrected.
   e36->e755 divergence likely resolves via that fix; re-measure
   opsdump_dbh e-cluster vs gold ~755 once their edits commit.
+
+- DB_HEALTH RE-MEASURE under t4j fps claim: e-spread STILL
+  0->9917 IDENTICAL. t4j's fps-proper commit is NOT in this
+  checkout (HEAD=e3b994c; pull --rebase did not advance —
+  dirty-tree refusal likely). Earlier max-e=73 reading was a
+  transient working-tree state (concurrent uncommitted edits
+  since evolved). e36->e755 remains OPEN pending t4j's actual
+  landed commit; re-measure then. Flex/layout hunt stays parked.
