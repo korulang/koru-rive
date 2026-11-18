@@ -198,3 +198,15 @@ child at the LC's whole box**. Three residual gaps vs ref:
 Fill/Stroke; blocker = layout solver for per-item rects (feature-sized,
 same family as class-1 instance sizing). Cheap sub-fix available now:
 emit LC-parented Stroke(24) in the layout-box pass.
+
+## emptybind NestedArtboard gap — RESOLVED: probe artifact, not emit gap
+
+CLI-injected branding nests DIFFERENTLY than data_viz but same type
+keys: EmptyBind(11) has ZERO NestedArtboard children — branding is
+SIBLING artboards. Watermark(935) holds 2 NestedArtboardLeaf
+(artboardId 1,2 = ORDINALS -> Wordmark 28 / Brandmark 642) +
+NestedStateMachine children. t42's "ab:9 ~1 draw" was a wrong-index
+probe: obj[9] is a ViewModelInstanceNumber, not an artboard — same
+ab-object-index confusion class as the original ours=0 bug. Correct
+indices: 11/28/642/935. opsdump_eb.k on all four: 22 draw ops total —
+expansion reaches RML nesting fine (t4f's fix covers it).
