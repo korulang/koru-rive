@@ -1340,3 +1340,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   question narrows to: does ref treat absent end(115) as 0
   (empty) rather than 1 (full)? Check trim_path.riv (the
   animated fixture) for keyed 114/115 to confirm defaults.
+
+- TRIM_PATH_LINEAR VERDICT: fixture has REAL keyed trim —
+  114=0.366, 115=0.685, mode=1 sequential. DrawPath COUNT
+  matches golden (3/section). Stroke pathops=9 vs golden
+  verbs=12 — trim FIRES but we emit flattened line segments;
+  ref preserves native cubic verbs via de Casteljau split.
+  Residual = verb-level fidelity, not correctness of region:
+  same 0.25 tol strokeVerbs consumes, but golden diff flags
+  verb structure. NEXT if pursued: cubic-preserving trim
+  (split cubics at arc-length boundaries, keep verb 2/3/4).
