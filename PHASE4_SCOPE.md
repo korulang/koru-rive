@@ -1848,3 +1848,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   offsets. NEXT: dump our per-char advance list for ti125's
   string + golden's implied per-line char counts -> solve
   for the per-char advance model directly.
+
+- ADVANCE DUMP: upem=2816 (unusual), scale=0.00284, fs=8.0.
+  Glyph coords match golden to 0.001 -> scale CORRECT, so
+  per-glyph advances are correct too -> k~1.047 is NOT a
+  scale bug. Effective golden wrap width ~= 157.31/1.047 =
+  ~150.2 — suspiciously close to round 150. HYPOTHESES:
+  (a) golden wrap width = box_w minus inset/padding (~7px),
+  (b) positive kern pairs add ~4.7% (kern CAN be positive;
+  avg +40u*0.00284*124pairs ~ +14px/line-group — plausible),
+  (c) wrap width comes from a different prop. NEXT: check
+  kern table format-0 presence + measure actual kern delta
+  on this string in python (extract font via fontdump->file);
+  also test RIVE_WRAP_W env override at 150.0 — if verb-exact,
+  width-source is the answer not advances.
