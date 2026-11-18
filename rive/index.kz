@@ -5030,7 +5030,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             const lx = lwm[4];
             const ly = lwm[5];
             for (r.objects, 0..) |c, pi| {
-                if (c.type_key != 20) continue;
+                if (c.type_key != 20 and c.type_key != 24) continue;
                 if (c.parent_obj != @as(i64, @intCast(lci))) continue;
                 var lcolor: u32 = 0;
                 for (r.objects) |*g| {
@@ -5071,7 +5071,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 }
                 out.append(alloc, op0(5)) catch {};
                 var bpm = op0(6); bpm.a = 1; bpm.b = 0; bpm.c = 0; bpm.d = 1; bpm.e = @floatCast(lx); bpm.g = @floatCast(ly); out.append(alloc, bpm) catch {};
-                var bdr = op0(8); bdr.style = 1; bdr.color = lcolor; bdr.join = -1; bdr.cap = -1; out.append(alloc, bdr) catch {};
+                const isStroke = c.type_key == 24;
+                var bdr = op0(8); bdr.style = if (isStroke) @as(i64, 0) else @as(i64, 1); bdr.color = lcolor; bdr.thick = if (isStroke) propF(c.props, 47, 1) else 0; bdr.join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1); bdr.cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
+                if (isStroke) { const dd = dashOf(r, pi); if (dd.len > 0) { bdr.dash = dd.len; bdr.dashOff = dd.off; } }
+                out.append(alloc, bdr) catch {};
                 out.append(alloc, op0(7)) catch {};
             }
         }
