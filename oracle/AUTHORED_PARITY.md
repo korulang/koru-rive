@@ -361,6 +361,19 @@ own style — and the class tags make it verifiable in one run.
 - Probes need fresh koruc; `import kr/rive` builds fail if
   `rive/rivgen_hello.kz` (t4f riv2k artifact) reappears — KORU022.
 
+### Batch-2 distribution (30 fresh files, 2026-11-18)
+- Raw: 4 identical / 4 divergent / 19 ours-unavailable / 3
+  ref-unavailable. CAUTION: the 19 ours-unavailable are ~all
+  "artboard name not decoded" = PROBE BUILD/TIMEOUT FLAKES under
+  batch load, NOT decode gaps — spot re-run of 3 (shapetest,
+  ik_anim_test, feather_render_test) produced real verdicts
+  (1 identical, 2 divergent: paint-layer colour, clip-layer).
+  Harness gap: koruc build failure parses as empty arts ->
+  misclassified; should surface build errors as own status.
+  True batch-2 signal pending full re-run on quiet machine.
+- ref-unavailable x3: oracle-side (missing frame-0 block; two
+  file_asset_importer assertions on scripted-VM files).
+
 ### Batch distribution (stratified ~40, post class-1/2/5 fixes)
 - 13/40 op-identical · 24 divergent · 1 ours-unavailable
   (layout_text_match SIGABRT — FIXED, composite-glyph endPts
