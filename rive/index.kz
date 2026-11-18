@@ -3622,7 +3622,7 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
                 for (r.objects, 0..) |ao, ai2| {
                     if (ao.type_key != 1) continue;
                     if (propU(ao.props, 583, -1) == row.vmId) {
-                        const slot = listRowSlot(r, li, ai2, rowIdx);
+                        const slot = listRowSlot(r, li, ai2, rowIdx, rowCountOf(items), frame);
                         std.debug.print("save\n", .{});
                         std.debug.print("  transform {d:.4} {d:.4} {d:.4} {d:.4} {d:.4} {d:.4}\n", .{ slot[0], slot[1], slot[2], slot[3], slot[4], slot[5] });
                         emitOps(r, frame, ai2, true, false, false);
@@ -4118,11 +4118,70 @@ fn listRowItems(r: *const Riv, loIdx: usize, alloc: std.mem.Allocator) []ListRow
     return &.{};
 }
 
+
+fn rowCountOf(items: []const ListRow) usize {
+    var n: usize = 0;
+    for (items) |it| {
+        if (it.vmId >= 0) n += 1;
+    }
+    return n;
+}
+
+// ListFollowPathConstraint(625): per-item arc-offset along target path.
+// offsets are FRACTIONS [0,1] (rive-cpp atPercentage): item i of count
+// sits at startOffset + i*(distanceEnd-distance)/(count-1).
+// Returns the row's world transform, or null when no 625 constrains loIdx.
+fn listFollowPathWorld(r: *const Riv, loIdx: usize, rowIdx: usize, count: usize, frame: i64) ?Mat2 {
+    var cIdx: usize = 0; var found = false;
+    for (r.objects, 0..) |c, ci| {
+        if (c.type_key == 625 and c.parent_obj == @as(i64, @intCast(loIdx))) { cIdx = ci; found = true; break; }
+    }
+    if (!found) return null;
+    const c = &r.objects[cIdx];
+    const tgtSlot = propU(c.props, 173, -1);
+    if (tgtSlot < 0) return null;
+    const tgtIdx = findBySlot(r, cIdx, tgtSlot) orelse return null;
+    const alloc = std.heap.page_allocator;
+    const streams = pathStreamsFor(r, tgtIdx, alloc) orelse return null;
+    defer { alloc.free(streams.verbs); alloc.free(streams.pts); }
+    var wpts = std.ArrayList(V2).empty;
+    defer wpts.deinit(alloc);
+    const tgtWorld = effectiveWorld(r, tgtIdx, frame);
+    for (streams.pts) |p| wpts.append(alloc, matApply(tgtWorld, p)) catch {};
+    var total: f32 = 0;
+    for (wpts.items, 0..) |p, i| {
+        if (i > 0) total += @sqrt(@as(f32, @floatCast(v2dist2(p, wpts.items[i - 1]))));
+    }
+    if (total <= 0) return null;
+    const distance = keyframedValue(r, c.slot, 363, frame);
+    const dEnd = propF(c.props, 888, 1.0);
+    const dOff = propF(c.props, 889, 0.0);
+    const startOffset = dOff + distance;
+    const span = dEnd - distance;
+    const frac = if (count <= 1) startOffset else startOffset + @as(f32, @floatFromInt(rowIdx)) * span / @as(f32, @floatFromInt(count - 1));
+    const pm = pathMeasureAt(streams.verbs, wpts.items, frac * total);
+    const orient = if (propByKey(c.props, 364)) |v| switch (v) { .boolean => |b| b, else => true } else true;
+    var tB = tgtWorld;
+    if (orient) {
+        const tangentRot = std.math.atan2(pm.tan.y, pm.tan.x);
+        const angleB = wrapPi(decompRot(tgtWorld));
+        var diff = tangentRot - angleB;
+        const pi: f32 = std.math.pi;
+        while (diff > pi) diff -= 2 * pi;
+        while (diff < -pi) diff += 2 * pi;
+        tB = trsCompose(angleB + diff, 1, 1, 0, 0);
+    }
+    tB[4] = pm.pos.x;
+    tB[5] = pm.pos.y;
+    return tB;
+}
+
 // Slot transform for list row `rowIdx`: the 559's world transform
 // composed with a main-axis offset of rowIdx * (item size + gap).
 // cl1 measured: Item 200x50 + gapV 10 = pitch 60, column direction,
 // rows at canvas y = 0,60,120,180,240 (5 visible of 8, scroll-clipped).
-fn listRowSlot(r: *const Riv, loIdx: usize, itemArtIdx: usize, rowIdx: usize) Mat2 {
+fn listRowSlot(r: *const Riv, loIdx: usize, itemArtIdx: usize, rowIdx: usize, rowCount: usize, frame: i64) Mat2 {
+    if (listFollowPathWorld(r, loIdx, rowIdx, rowCount, frame)) |fw| return fw;
     const lo = &r.objects[loIdx];
     const p = lo.parent_obj;
     var dir: i64 = 0;
@@ -4283,6 +4342,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
             var offFx: f64 = 0; var offFy: f64 = 0;
             while (guard < cn * 3 + 8) : (guard += 1) {
                 const ni = if (curIdx + 1 >= cend) cstart else curIdx + 1;
+                if (ni >= gp.len) { std.debug.print("LTMOOB ti={d} ch={d} gid={d} gp={d} cstart={d} cend={d} ni={d}\n", .{ textIdx, ch, gid, gp.len, cstart, cend, ni }); break; }
                 const np = gp[@as(usize, @intCast(ni))];
                 if (ni == m0) {
                     const mpt = gp[@as(usize, @intCast(m0))];
@@ -4531,7 +4591,7 @@ fn dumpGraph(r: *Riv) void {
             std.debug.print("=== frame {d} ===\n", .{fr});
             const recs = $mod.collectOps(r, @intCast(ab), fr, std.heap.page_allocator);
             for (recs) |rec| {
-                std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
+                std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1} dash={d:.1} dashOff={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g, rec.dash, rec.dashOff });
             }
             std.heap.page_allocator.free(recs);
         }
@@ -4539,7 +4599,7 @@ fn dumpGraph(r: *Riv) void {
     }
     const recs = $mod.collectOps(r, @intCast(ab), frame, std.heap.page_allocator);
     for (recs) |rec| {
-        std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g });
+        std.debug.print("OP k={d} x1={d:.1} y1={d:.1} x2={d:.2} y2={d:.1} x3={d:.1} y3={d:.1} style={d} color={x} thick={d:.1} eo={d} a={d:.3} b={d:.3} c={d:.3} d={d:.3} e={d:.1} g={d:.1} dash={d:.1} dashOff={d:.1}\n", .{ rec.kind, rec.x1, rec.y1, rec.x2, rec.y2, rec.x3, rec.y3, rec.style, rec.color, rec.thick, rec.eo, rec.a, rec.b, rec.c, rec.d, rec.e, rec.g, rec.dash, rec.dashOff });
     }
     std.debug.print("OPSDUMP total={d}\n", .{recs.len});
 }
@@ -4679,11 +4739,12 @@ fn materializeGraph(spec: []const u8) ?*Riv {
         o.type_name = typeName(o.type_key);
         const props = alloc.alloc(Prop, @intCast(nprops)) catch return null;
         for (props) |*p| {
+            if (!std.mem.eql(u8, specTok(spec, &pos), "P")) return null;
             p.key = @intCast(@max(specInt(spec, &pos), 0));
             p.field = @intCast(specInt(spec, &pos));
             const kind = specTok(spec, &pos);
             if (std.mem.eql(u8, kind, "u")) {
-                p.value = .{ .uint = @intCast(@max(specInt(spec, &pos), 0)) };
+                p.value = .{ .uint = std.fmt.parseInt(u64, specTok(spec, &pos), 10) catch return null };
             } else if (std.mem.eql(u8, kind, "d")) {
                 p.value = .{ .dbl = @bitCast(specU32(spec, &pos)) };
             } else if (std.mem.eql(u8, kind, "c")) {
@@ -4715,6 +4776,20 @@ fn materializeGraph(spec: []const u8) ?*Riv {
 
 ~proc fromgraph|zig {
     const r = materializeGraph(spec) orelse return .{ .failed = "bad spec" };
+    return .{ .loaded = r };
+}
+
+// fromfile: dev/verification surface — load a graphdump spec from disk
+// (parity probes, emitter bring-up). The shipped path is fromgraph with
+// the spec embedded in the generated module.
+~pub tor fromfile { path: string }
+| loaded *Riv<loaded!>
+| failed string
+
+~proc fromfile|zig {
+    const bytes = std.fs.cwd().readFileAlloc(std.heap.page_allocator, path, 1 << 28) catch return .{ .failed = "cannot read spec" };
+    defer std.heap.page_allocator.free(bytes);
+    const r = materializeGraph(bytes) orelse return .{ .failed = "bad spec" };
     return .{ .loaded = r };
 }
 
@@ -5520,7 +5595,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     // list, while passing the host frame through drew 150x40.
                     // Static (-1) reproduces the observed 100x40 exactly.
                     // Colors still animate via g_cframe (cl2 item fill).
-                    const slot = listRowSlot(r, li, ai2, rowIdx);
+                    const slot = listRowSlot(r, li, ai2, rowIdx, rowCountOf(items), frame);
                     var so = op0(6); so.a = slot[0]; so.b = slot[1]; so.c = slot[2]; so.d = slot[3]; so.e = slot[4]; so.g = slot[5];
                     out.append(alloc, so) catch {};
                     // Per-row SM scope: the embedded artboard's own state
