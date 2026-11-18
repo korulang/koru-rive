@@ -1219,3 +1219,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (timeout kills, zero OP output). NEEDS: per-path cycle guard
   (visited artboard set) or expansion budget. CS clips in 5840
   unreachable until bounded.
+
+- CYCLE GUARD + panic chain FIXED: g_abStack[24] per-path
+  visited set (seeded root in collectOps, push/pop in arm) +
+  propU u64->i64 saturating cast + keyframedColor sh u5->usize
+  overflow + channel clamps. opsdump_hx26 COMPLETES: 8487 ops,
+  534 draws, 6 clip pushes (k=9), exit clean.
+- Clip count 6 vs ref 130: residual = (a) 49 CS structurally
+  untargeted (aid census), (b) 5840's 31 CS — did expansion
+  reach it? per-shape clip emission should yield MORE than 6
+  if all matched -> CS ancestor-match may under-fire. NEXT:
+  RIVE_TRACE_NEST confirm 5840 reached + count CS matches.
