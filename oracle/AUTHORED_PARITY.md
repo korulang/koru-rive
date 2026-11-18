@@ -117,133 +117,48 @@ emits (`ff0000` ×50, `350000` ×36, `1f1717` ×16) with 80 default `747474` and
 50 fewer `000000`. Not yet attributed; the class-3 finding (gradient paints)
 covers the colour half, and the over-draw is a separate culling question.
 
-## Per-artboard attribution (`--all-artboards`, re-measured 2026-11-18 21:10)
+## Per-artboard attribution — resolved: ancestor opacity (2026-11-18)
 
-car_widgets_v01, frame 0, after nested expansion and with a working toolchain:
+The car_widgets over-draw was **ancestor opacity**. `WorldTransformComponent
+.opacity`(18) multiplies down the transform tree and 0 hides the subtree; we
+only read opacity on the Shape itself. TIRE PRESSURE's red band sits under a
+Node with `opacity = 0.000`, so we drew every element of a hidden branch — and
+that branch is why our palette was red where the reference's is green.
 
-| artboard | ref draws | ours | delta | Shapes | ref clips |
-|---|---:|---:|---:|---:|---:|
-| Main_Artboard | 612 | 809 | +197 | 74 | 7 |
-| TIRE PRESSURE | 68 | 254 | **+186** | 226 | 0 |
-| COMPASS | 413 | 417 | +4 | 369 | 0 |
-| G_Meter | 69 | 66 | −3 | 61 | 0 |
+Per artboard, frame 0, before → after (`rive/index.kz`, commit "propagate
+ancestor opacity"):
 
-COMPASS and G_Meter are essentially exact — traversal and paint resolution are
-sound. **TIRE PRESSURE is the outlier**, and Main's +197 is that same content
-propagated through the nested instance (186 + neighbours).
-
-Measured facts about the delta:
-
-- The reference draws **68 even in its `static t=0` block**, before any advance,
-  with the same colours as frame 0. So this is the **base pose**: not a state
-  machine transition, not an animation, not time.
-- 226 Shapes, **all** have a Fill/Stroke child.
-- 116 objects carry `WorldTransformComponent.opacity` (key 18); **none is 0**.
-- Exactly **one** `ShapePaint.isVisible` (key 41) exists, and it is `false`.
-- **Zero** `KeyedProperty` objects in the file key opacity (18).
-- No `Solo`(147) components in any artboard.
-- 226/226 shapes' parent chains reach the artboard — no orphans.
-- 27 path objects carry `pathFlags`; hidden contours cannot explain 158.
-- Only **12** of the 210 extra draws fall entirely outside the artboard rect,
-  so a cull rect is not the rule either.
-- car_widgets has just **4** `LayoutComponent`s — one per artboard — so the
-  earlier "layout" reading of this delta was wrong; layout is data_viz's
-  problem (`ForegroundLayoutDrawable`), not car_widgets'.
-
-Identity comparison settles the shape of it: matching each draw by
-(transform matrix, colour, style) instead of by bbox, **52 of the reference's
-68 draws match ours exactly**, 16 are reference-only, and 202 are ours-only. So
-the reference's set is mostly a subset of ours — an over-draw of ~3x, not a
-different scene.
-
-**A correction worth recording:** an earlier reading said the extra draws
-"cluster at the origin" and inferred un-laid-out content. That was wrong —
-the bbox coordinates in the digest are the drawable's **local path** bounds, not
-its world position. Reading the matrices instead shows every draw at a real
-gauge position (728,655 / 984,1051 / 617,564 …), with **zero** draws near the
-origin. Both the layout reading and the cull-rect reading were artifacts of
-reading local coordinates as world ones.
-
-What the 202 extras share is still unidentified. Colour does not separate them
-(the artboard's base `SolidColor`s are red-dominant, its keyframe palette is
-red-dominant, and the reference's 68 are greens — so colour selection differs
-independently of membership), and no shape property we decode splits 68 from
-226.
-
-**Cull-rule sweep (run, then scaffolding removed).** A temporary
-`RIVE_CULL_RULE` switch skipped shapes by candidate property and counted the
-resulting draws, against the reference's 53 fills + 15 strokes:
-
-| rule | fills | strokes | total |
+| artboard | ref | before | after |
 |---|---:|---:|---:|
-| none | 199 | 55 | 254 |
-| skip shapes that set `blendModeValue`(23) | 97 | **16** | 113 |
-| skip shapes without it | 137 | 39 | 176 |
-| skip shapes with `rotation`(15) | 163 | 55 | 218 |
-| skip shapes with `scaleX/scaleY`(16/17) | 126 | 38 | 164 |
+| Main_Artboard | 612 | 809 | **628** (+16) |
+| TIRE PRESSURE | 68 | 254 | **73** (+5) |
+| COMPASS | 413 | 417 | 417 (+4) |
+| G_Meter | 69 | 66 | 66 (−3) |
 
-No single shape-level property reproduces the reference. The near-miss is
-informative: filtering on `blendModeValue` leaves **16 strokes against a target
-of 15**, while fills only fall to 97 against 53. That asymmetry says the
-remaining rule is **per paint, not per shape** — one shape can carry both a fill
-and a stroke, and the reference's stroke set is nearly explained while its fill
-set is not. Next probe: apply the candidate predicates to the *paint* child
-(`Fill`/`Stroke`, its gradient vs solid kind, and its keyed colour during the
-static pose) rather than to the shape.
+TIRE PRESSURE's strokes are now exact (15/15) and its colour histogram matches
+the reference's greens draw for draw. `joystick_databound_keyframe_test`
+remains op-identical, so the fix introduced no regression there.
 
-Note for reproducibility: the first sweep used wrong property keys (rotation is
-15, not 14; `blendModeValue` is 23, not 26) and its numbers were discarded.
+## How that was found (worth keeping)
 
-Per-**paint** predicates then landed it. Same harness, rules applied to the
-`Fill`/`Stroke` child instead of the shape (target: 53 fills + 15 strokes):
+Five rounds of predicate-sweeping produced a confident, wrong answer: "the
+drawn set is the paints whose colour is keyframed" reproduced 54 of 53 fills,
+and it was an artifact — the hidden branch happened to be the keyframed one.
+What broke the false lead was testing it against the artboards that already
+matched (COMPASS, G_Meter): a rule that requires a global cull would have
+under-drawn them, so the rule had to be wrong. A correlation that reproduces
+one file's number is not a rule until it survives the files that already work.
 
-| rule (keep only…) | fills | strokes | total |
-|---|---:|---:|---:|
-| paints whose colour is **keyframed** | **54** | 10 | 64 |
-| paints whose colour is *not* keyframed | 180 | 45 | 225 |
-| gradient paints | 45 | 27 | 72 |
-| keyframed **or** gradient | 64 | 37 | 101 |
-| keyframed **or** stroke | 54 | 55 | 109 |
-| keyframed **and** gradient | 35 | 0 | 35 |
+## Remaining deltas
 
-**The drawn set is the keyframed-colour paints.** That rule reproduces 54 of
-the reference's 53 fills — off by one — where no shape-level rule came within
-a factor of two. Strokes come out 10 against 15, and the likely reason is
-`hasKeyframed`: it matches keyframe groups by *slot*, which is exactly the kind
-of lookup that under-matches on stroke paints. So the rule is probably right
-and the detection is slightly narrow.
+- Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
+  paints (14 in TIRE PRESSURE) that the reference either does not draw or draws
+  with a colour we resolve as the default. Next class to chase.
+- COMPASS +4 / G_Meter −3: small, same colour-default family.
+- data_viz −29: `ForegroundLayoutDrawable`(513), blocked on layout solving.
+- car_widgets' clips: feather path-effects, not `ClippingShape`.
+- jellyfish: mesh file (243 mesh verts, 121 tendons).
 
-Interpretation: at the static pose the artboard draws the elements that
-participate in its active animation; paints with no animation participation are
-not drawn. For a gauge whose every visible element is animated, that is a
-coherent authoring style rather than a Rive-wide rule — **so this must be
-validated on the other artboards and files before it becomes a decoder cull.**
-
-**And it probably is not a cull rule at all.** COMPASS (417 vs 413) and G_Meter
-(66 vs 69) already match without any cull; applying a keyed-only rule to them
-would under-draw by a wide margin. So "keyframed paints draw, the rest do not"
-is a *correlation specific to TIRE PRESSURE*, not a global rule — and since the
-same artboard also shows a colour mismatch (its base and keyframe palettes are
-red-dominant, the reference draws greens), the likelier frame is **which
-animation/state is active**, not membership of the drawable set. The count and
-the palette disagree together, which points at one cause, not two.
-
-That reframes the probe: instrument the chosen animation id for the artboard
-(`smActiveAnimIdx`'s result) and compare against what the reference's palette
-implies, instead of searching for a membership predicate.
-
-
-Related, and needed for nested instances specifically: each carries a
-`NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
-instance's state comes from the *instance*, not from the target artboard's
-default state machine. Expansion currently calls `smActiveAnimIdx(target, …)`,
-which asks the artboard, not the instance.
-
-Related, and needed for the nested instances specifically: each carries a
-`NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
-instance's state comes from the *instance*, not from the target artboard's
-default state machine. Expansion currently calls `smActiveAnimIdx(target, …)`,
-which asks the artboard, not the instance.
 
 ## Recommended order (revised after the fix)
 
