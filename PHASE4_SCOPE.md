@@ -946,3 +946,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   into item world (mirror constrainedWorld 165 machinery).
   Env guards from 2676acf still in tree (uncommitted? check
   git status — they were committed in 2676acf).
+
+- constrainList next-step correction: graphdump O-line fields
+  are "O type_key slot parent parent_obj style_obj nprops" —
+  grep '^O 625 ' directly (field 1 = type_key). /tmp/gdump
+  binary exists; rerun: /tmp/gdump 2>/dev/null | grep '^O 625'
+  plus '^O 165' for comparison. Then find list items: rows are
+  NestedArtboard(92)/artboard instances whose ancestor chain
+  reaches the constraint's parent (ConstrainableList).
