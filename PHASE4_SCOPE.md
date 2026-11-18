@@ -1785,3 +1785,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   where paragraph maxWidth derives from follow-path
   (text.cpp ~840 resetTextFollowPath junction) then feed it
   into t_box_w in the wrap pre-pass.
+
+- text.cpp WIDTH CHECK: follow-path does NOT feed layout
+  width — modifiers run post-layout (computeCoverage +
+  resetTextFollowPath at ~835, AFTER shaping). Paragraph
+  maxWidth = effectiveWidth() = box width for fixed sizing.
+  So golden's narrower wrap is NOT path-length-derived via
+  layout. Reopened: (a) shaped/kerned advances still the
+  advance-gap candidate; (b) glyph culling may live in the
+  DRAW stage (~940-1090 curX/advances loop) where follow-path
+  glyphs beyond path end skip path emission — contour count
+  drops without layout change. NEXT: read text.cpp ~940-1090
+  for a path-length/coverage check around glyph path emission.
