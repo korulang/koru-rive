@@ -2011,6 +2011,15 @@ fn propColor(props: []const Prop, key: u16) u32 {
     return 0;
 }
 
+// A colour-valued property that is absent from the file is NOT transparent:
+// rive-cpp initialises SolidColorBase::m_ColorValue to 0xFF747474 and draws
+// with it. Reading the absence as 0 makes the paint alpha-0, and the alpha-0
+// cull then drops the whole drawable — the shape vanishes from the op stream.
+fn propColorAnimOr(r: *const Riv, v: *const RivObj, key: u16, frame: i64, dflt: u32) u32 {
+    if (!(frame >= 0 and hasKeyframed(r, v.slot, key)) and propByKey(v.props, key) == null) return dflt;
+    return propColorAnim(r, v, key, frame);
+}
+
 // Emit one drawPath op per ShapePaint child of each Shape, with the
 // shape's composed path geometry — golden drawPath format.
 
@@ -4775,7 +4784,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             };
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, cf); _ = gi; }
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnimOr(r, g, 37, cf, 0xFF747474); _ = gi; }
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
@@ -4872,7 +4881,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         };
         var color: u32 = 0;
         for (r.objects) |*g| {
-            if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColorAnim(r, g, 37, cf);
+            if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = propColorAnimOr(r, g, 37, cf, 0xFF747474);
         }
         if (((color >> 24) & 0xFF) == 0) continue;
         var rtl: f32 = 0; var rtr: f32 = 0; var rbr: f32 = 0; var rbl: f32 = 0;
@@ -4968,7 +4977,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 if (c.parent_obj != @as(i64, @intCast(lci))) continue;
                 var lcolor: u32 = 0;
                 for (r.objects) |*g| {
-                    if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) lcolor = propColorAnim(r, g, 37, cf);
+                    if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) lcolor = propColorAnimOr(r, g, 37, cf, 0xFF747474);
                 }
                 if (((lcolor >> 24) & 0xFF) == 0) continue;
                 // Rounded-rect when the component's style carries corner
@@ -5064,6 +5073,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             for (pathVs.items[pvStart..]) |*pv| xformPV(cm, pv);
         }
         if (pathVs.items.len < 2) continue;
+        if (tracing()) std.debug.print("shape si={d} slot={d} ab={d} pts={d} closed={}\n", .{ si, so.slot, owningArtboard(r, si), pathVs.items.len, closed });
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
         if (verbs.items.len == 0) continue;
         const w = effectiveWorld(r, si, frame);
@@ -5143,7 +5153,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             };
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
-                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnim(r, g, 37, cf); _ = gi; }
+                if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnimOr(r, g, 37, cf, 0xFF747474); _ = gi; }
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
@@ -5154,6 +5164,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             // Alpha-0 paint: draw.path would rasterize invisible pixels —
             // skip the op stream entirely (same pixels, fewer ops).
             if (((color >> 24) & 0xFF) == 0) continue;
+            if (tracing()) std.debug.print("  paint si={d} obj={d} type={d} color={x} frame={d}\n", .{ si, pi, c.type_key, color, frame });
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
             const thick = if (isStroke) propF(c.props, 47, 1) else 0;
