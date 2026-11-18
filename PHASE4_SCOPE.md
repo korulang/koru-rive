@@ -1521,3 +1521,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   advance vs pathMeasure length of the follow-path shape,
   truncate at budget. Find where textDrawPath learns its
   follow-path target (TextOnPath/constraint object props).
+
+- PATH-LENGTH PROBE RESULT: TextModifierGroup.transform only
+  repositions glyphs (transformGlyph per modifier) — NO culling
+  anywhere in modifier path. Glyph-count delta must originate
+  in the STRING or shaping, not path budget. RE-OPENED
+  candidates: (a) the 148-char run variants ("...about a cat
+  and a dog.") vs 125-char — maybe golden's 2569s ARE the
+  148-char texts where OUR runOverride=-1 picks run0 but the
+  object has 2 runs and golden draws run1 (or vice versa);
+  (b) per-run string genuinely differs. NEXT: count TextValueRun
+  (135) children per divergent text object — if any family
+  member has >1 run, runOverride=-1 first-run-only is the bug
+  (golden draws ALL runs = separate drawPaths, shifting the
+  multiset). Check run counts for the 15 text objects.
