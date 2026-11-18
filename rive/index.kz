@@ -2853,12 +2853,14 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
     }
     var p = o.parent_obj;
     var depth: usize = 0;
+    var rootAb: i64 = -1;
     while (p >= 0 and depth < 32) : (depth += 1) {
         const po = &r.objects[@intCast(p)];
         if (isNodeType(po.type_key)) {
             if (hasConstraintChild(r, @intCast(p))) {
                 return matMul(constrainedWorld(r, @intCast(p), frame), acc);
             }
+            if (po.type_key == 1) rootAb = p;
             // Artboard (type_key 1) is the coordinate root for its
             // content — its own Node.x/y applies only in the PARENT's
             // instantiation space, not internally. Do NOT bake the
@@ -5030,7 +5032,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             const lx = lwm[4];
             const ly = lwm[5];
             for (r.objects, 0..) |c, pi| {
-                if (c.type_key != 20 and c.type_key != 24) continue;
+                const noLstroke = std.posix.getenv("RIVE_NO_LSTROKE") != null and c.type_key == 24;
+                if (c.type_key != 20 and (c.type_key != 24 or noLstroke)) continue;
                 if (c.parent_obj != @as(i64, @intCast(lci))) continue;
                 var lcolor: u32 = 0;
                 for (r.objects) |*g| {
@@ -5109,7 +5112,9 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
     // ForegroundLayoutDrawable(513) draws a rect from its parent LayoutComponent
     // box, painted black. Layout solving is not implemented, so the box is the
     // parent's stored width/height — enough for the chart artboards' bars.
+        const noFld = std.posix.getenv("RIVE_NO_FLD") != null;
         for (r.objects, 0..) |*fo, fi| {
+            if (noFld) break;
             if (fo.type_key != 513) continue;
             if (owningArtboard(r, fi) != abIdx) continue;
             const pl = &r.objects[@intCast(fo.parent_obj)];
@@ -5456,7 +5461,9 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     // File::artboard(size_t index)), NOT a ViewModel id: matching on
     // 583/Artboard.viewModelId matches by coincidence and expands the wrong
     // subtree.
+    const noNested = std.posix.getenv("RIVE_NO_NESTED") != null;
     for (r.objects, 0..) |no, ni| {
+        if (noNested) break;
         if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
         if (owningArtboard(r, ni) != abIdx) continue;
         if (g_abDepth >= 8) continue;
@@ -6237,9 +6244,11 @@ const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap:
             },
             8 => {
                 if (verbs.items.len > 0) {
+                    var rec2 = rec;
+                    if (std.posix.getenv("RIVE_NO_EO") != null) rec2.eo = 0;
                     var tris: []$mod.Tri = &.{};
-                    if (rec.style == 0) {
-                        const rings = $mod.strokeVerbs(verbs.items, pts.items, @floatCast(rec.thick), rec.join, rec.cap, rec.eo, @floatCast(rec.dash), @floatCast(rec.dashOff), alloc);
+                    if (rec2.style == 0) {
+                        const rings = $mod.strokeVerbs(verbs.items, pts.items, @floatCast(rec2.thick), rec2.join, rec2.cap, rec2.eo, @floatCast(rec2.dash), @floatCast(rec2.dashOff), alloc);
                         var acc = std.ArrayList($mod.Tri).empty;
                         for (rings) |ring| {
                             const ct = $mod.earClip(ring, alloc);
@@ -6249,10 +6258,10 @@ const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap:
                         alloc.free(rings);
                         tris = acc.toOwnedSlice(alloc) catch &.{};
                     } else {
-                        tris = $mod.tessellate(verbs.items, pts.items, rec.eo, 0.25, alloc);
+                        tris = $mod.tessellate(verbs.items, pts.items, rec2.eo, 0.25, alloc);
                     }
                     if (tris.len > 0) {
-                        const hdr: $mod.MeshDrawHdr = .{ .style = rec.style, .color = rec.color, .thick = rec.thick, .join = rec.join, .cap = rec.cap, .eo = rec.eo, .ntris = tris.len };
+                        const hdr: $mod.MeshDrawHdr = .{ .style = rec2.style, .color = rec2.color, .thick = rec2.thick, .join = rec2.join, .cap = rec2.cap, .eo = rec2.eo, .ntris = tris.len };
                         mdraw(hdr);
                         // composed CTM: acc = ctmMul(acc, m) fold, identity start
                         var ctm = [6]f64{ 1, 0, 0, 1, 0, 0 };
