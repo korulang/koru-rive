@@ -4996,6 +4996,9 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             if (op <= 0) continue;
             const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
             color = (color & 0x00FFFFFF) | (oa << 24);
+            if (((color >> 24) & 0xFF) == 0) {
+                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=alpha0 t={d:.1},{d:.1}\n", .{ si, pi, w[4], w[5] });
+            }
             // Alpha-0 paint: draw.path would rasterize invisible pixels —
             // skip the op stream entirely (same pixels, fewer ops).
             if (((color >> 24) & 0xFF) == 0) continue;
@@ -5299,7 +5302,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 if (faop <= 0) break;
                 fanc = fao.parent_obj;
             }
-            if (faop <= 0) continue;
+            if (faop <= 0) {
+                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP fld={d} why=ancestor_opacity\n", .{fi});
+                continue;
+            }
             // No paint source, nothing to draw: the FLD's fill is a *sibling*
             // Fill under the same LayoutComponent. LineBars' six FLDs have none
             // and the reference draws none of them (that was the +6 overshoot).
@@ -5308,7 +5314,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 if (fpb.parent_obj != fo.parent_obj) continue;
                 if (fpb.type_key == 20 or fpb.type_key == 24) { fpaint = true; break; }
             }
-            if (!fpaint) continue;
+            if (!fpaint) {
+                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP fld={d} why=no_paint\n", .{fi});
+                continue;
+            }
             const fwm = effectiveWorld(r, fi, frame);
             out.append(alloc, op0(0)) catch {};
             var f0 = op0(1); f0.x1 = 0; f0.y1 = 0; out.append(alloc, f0) catch {};
@@ -5460,7 +5469,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             if (aop <= 0) continue;
             const op: f32 = opSelf * aop;
-            if (op <= 0) continue;
+            if (op <= 0) {
+                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=opacity color={x} t={d:.1},{d:.1}\n", .{ si, pi, color, w[4], w[5] });
+                continue;
+            }
             const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
             color = (color & 0x00FFFFFF) | (oa << 24);
             // Alpha-0 paint: draw.path would rasterize invisible pixels —

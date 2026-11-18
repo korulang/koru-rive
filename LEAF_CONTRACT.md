@@ -110,11 +110,16 @@ verbs already consume:
 | 8 | draw — style/color/thick/join/cap/eo + path verbs in stream |
 | 9 | clipPush — path clip geometry |
 | 10 | clipPop |
+| 11 | image — embedded asset blob draw (FileAssetContents bytes) |
 
-`OpRec` fields: `kind, x1,y1,x2,y2,x3,y3: f64; style, color:u32,
-thick,join,cap,eo: i64/f64; a,b,c,d,e,g: f64` (mat stack + paint
-params — exact per-kind usage is the canvas-verb contract's business,
-not redefined here).
+`OpRec` fields as of HEAD: `kind, x1,y1,x2,y2,x3,y3: f64; style,
+color:u32, thick: f64, join,cap,eo: i64, a,b,c,d,e,g: f64,
+dash,dashOff: f64` (mat stack + paint params + stroke dash pattern —
+renderer-lane additions; `opsdump` prints all of them). World-bbox
+fields (`wx0..wy1`) were named for t4f but are NOT present in `OpRec`
+at this revision — recorded as absent, not assumed. Exact per-kind
+field usage is the canvas-verb contract's business, not redefined
+here.
 
 **Determinism rule (the conformance test):** identical
 (file, artboard, frame, VM values, input schedule) → byte-identical
