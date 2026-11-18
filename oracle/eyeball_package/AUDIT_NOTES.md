@@ -291,3 +291,9 @@ by template text unless a row scope or explicit `vm.bind` is active.
 Full gate table: **26 PASS / 7 FAIL**. Remaining: `iba`/`deam`/`hff`
 vacuous backdrops, `knm_cl1`/`knm_cl2`/`knm_hw` Metal text/AA, and
 `mesh` (NOTE, dashed stroke).
+
+**Correction (2026-11-18):** the `iba`/`deam`/`hff` backdrop verdicts
+were against stale `ours_*` artifacts (100% white). Fresh renders match
+the reference spec colours and all three now PASS; the current table is
+**29 PASS / 4 FAIL**. The audit's vacuous-backdrop call was right about
+the old image, but the image was stale, not the renderer.

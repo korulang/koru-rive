@@ -495,3 +495,25 @@ at that seam).
 
 Fix is a separate commission (renderer side). Oracle stands as-is:
 these three FAILs are real renderer deltas, correctly asserted.
+
+## Correction: iba / deam / hff — stale gate artifacts, not a renderer bug (2026-11-18)
+
+The ruling above was based on the committed `ours_iba_t1.bmp`,
+`ours_deam_t1.bmp`, `ours_hff_t1.bmp`, all 100% probe-clear white.
+Fresh renders with the current code disagree with that artifact:
+`render_iba.k` → mean `(49,49,49)` (exactly the ref), `render_deam.k`
+→ `(40,40,40)`, `render_hff.k` → `(49,49,49)`. After refreshing those
+three artifacts, `iba`, `deam`, and `hff` **PASS** (backdrop,
+backdrop-px, and the vacuous ink checks). The op-layer walk was correct:
+the fill is emitted and realized.
+
+The macOS clip trace (`KORU_TRACE_CLIP` on `index.macos.kz`) shows the
+full-frame clip mask is present: 504×504, `inside=250000`, `mid=0`,
+bbox `[2,2,501,501]` — so the clip was not eating the fill either. The
+divergence was the **artifact**, not the renderer.
+
+No renderer fix is needed. Discipline note: a first-divergence report
+must name the artifact hash/mtime and be generated from a fresh render;
+otherwise a stale `ours_*` file is indistinguishable from a verb/raster
+bug. `oracle/trace_kn_clip.sh` already rebuilds its artifacts; the
+iba/deam/hff probes should be run through the same freshness rule.

@@ -455,3 +455,16 @@ with the explicit binding and re-verified.
 Full gate table: **26 PASS / 7 FAIL** (from 13/20 at the start of this
 arc). Remaining: `iba`/`deam`/`hff` vacuous backdrops, `knm_cl1`/
 `knm_cl2`/`knm_hw` Metal text/AA, and `mesh` (NOTE, dashed stroke).
+
+
+Stale-artifact correction (2026-11-18): the `iba`/`deam`/`hff`
+"renderer bug" ruling was a stale-artifact false positive. Fresh
+`render_iba.k`/`render_deam.k`/`render_hff.k` produce the spec backdrop
+((49,49,49), (40,40,40), (49,49,49)); the committed `ours_*_t1.bmp`
+files were 100% white. Refreshed artifacts make all three **PASS**; no
+renderer fix is needed. The macOS clip trace shows a full 504×504 mask
+(inside 250000, mid 0), so the clip was not eating the fill. Full gate
+table: **29 PASS / 4 FAIL**; remaining are `knm_cl1`/`knm_cl2`/`knm_hw`
+Metal text/AA and `mesh` (NOTE). `oracle/FINDINGS.md` carries the
+correction; the lesson is to refresh and hash the artifact before
+attributing a first-divergence layer.

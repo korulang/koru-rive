@@ -1871,16 +1871,13 @@
  },
  {
   "gate": "iba",
-  "verdict": "FAIL",
-  "failed": [
-   "backdrop",
-   "backdrop-px"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "LIMIT",
   "ours": "ours_iba_t1.bmp",
   "ref": "ref_iba_t1.png",
   "vacuous": true,
-  "ours_sha": "3466292340624ecb",
+  "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
    {
@@ -1900,8 +1897,8 @@
    },
    {
     "check": "backdrop",
-    "pass": false,
-    "detail": "ours=(255, 255, 255) expected=(49, 49, 49) dist=206 tol=8 (100.0% of frame)"
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (100.0% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -1925,8 +1922,8 @@
    },
    {
     "check": "backdrop-px",
-    "pass": false,
-    "detail": "100.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 206.00, worst 206"
+    "pass": true,
+    "detail": "0.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
@@ -1963,14 +1960,14 @@
    "our_ink_within_3px": 0.0,
    "ink_mass_ratio": 0.0,
    "vacuous": 1,
-   "backdrop_px_pct_over_tol": 100.0,
-   "backdrop_px_mean": 206.0,
-   "backdrop_px_max": 206,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
    "frame_disagree_pct": 0.0,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 0,
    "aa_px_ours": 0,
-   "rmse_backdrop": 206.0
+   "rmse_backdrop": 0.0
   }
  },
  {
@@ -2076,16 +2073,13 @@
  },
  {
   "gate": "deam",
-  "verdict": "FAIL",
-  "failed": [
-   "backdrop",
-   "backdrop-px"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "LIMIT",
   "ours": "ours_deam_t1.bmp",
   "ref": "ref_deam_t1.png",
   "vacuous": true,
-  "ours_sha": "3466292340624ecb",
+  "ours_sha": "994eae776f7d43ba",
   "ref_sha": "cf81c4e60c19cd3d",
   "checks": [
    {
@@ -2105,8 +2099,8 @@
    },
    {
     "check": "backdrop",
-    "pass": false,
-    "detail": "ours=(255, 255, 255) expected=(40, 40, 40) dist=215 tol=8 (100.0% of frame)"
+    "pass": true,
+    "detail": "ours=(40, 40, 40) expected=(40, 40, 40) dist=0 tol=8 (100.0% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -2130,8 +2124,8 @@
    },
    {
     "check": "backdrop-px",
-    "pass": false,
-    "detail": "100.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 215.00, worst 215"
+    "pass": true,
+    "detail": "0.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
@@ -2168,28 +2162,25 @@
    "our_ink_within_3px": 0.0,
    "ink_mass_ratio": 0.0,
    "vacuous": 1,
-   "backdrop_px_pct_over_tol": 100.0,
-   "backdrop_px_mean": 215.0,
-   "backdrop_px_max": 215,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
    "frame_disagree_pct": 0.0,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 0,
    "aa_px_ours": 0,
-   "rmse_backdrop": 215.0
+   "rmse_backdrop": 0.0
   }
  },
  {
   "gate": "hff",
-  "verdict": "FAIL",
-  "failed": [
-   "backdrop",
-   "backdrop-px"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "LIMIT",
   "ours": "ours_hff_t1.bmp",
   "ref": "ref_hff_t1.png",
   "vacuous": true,
-  "ours_sha": "3466292340624ecb",
+  "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
    {
@@ -2209,8 +2200,8 @@
    },
    {
     "check": "backdrop",
-    "pass": false,
-    "detail": "ours=(255, 255, 255) expected=(49, 49, 49) dist=206 tol=8 (100.0% of frame)"
+    "pass": true,
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (100.0% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -2234,8 +2225,8 @@
    },
    {
     "check": "backdrop-px",
-    "pass": false,
-    "detail": "100.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 206.00, worst 206"
+    "pass": true,
+    "detail": "0.00% of 250000 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
@@ -2272,14 +2263,14 @@
    "our_ink_within_3px": 0.0,
    "ink_mass_ratio": 0.0,
    "vacuous": 1,
-   "backdrop_px_pct_over_tol": 100.0,
-   "backdrop_px_mean": 206.0,
-   "backdrop_px_max": 206,
+   "backdrop_px_pct_over_tol": 0.0,
+   "backdrop_px_mean": 0.0,
+   "backdrop_px_max": 0,
    "frame_disagree_pct": 0.0,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 0,
    "aa_px_ours": 0,
-   "rmse_backdrop": 206.0
+   "rmse_backdrop": 0.0
   }
  },
  {

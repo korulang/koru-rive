@@ -150,3 +150,15 @@ tasks are the clean handoff boundary.
 - `oracle/first_divergence_kn_clip.md` — generated report
 - `opsdump_clip0.k` — command-plane probe for `clip_tests`
 - `oshun/canvas/index.koru-native.kz` — `KORU_TRACE_CLIP` clip-mask trace
+
+## Stale-artifact trap (2026-11-18)
+
+A first-divergence report is only as good as the artifact it reads. The
+`iba`/`deam`/`hff` ruling initially named a verb/raster bug because the
+committed `ours_*_t1.bmp` files were 100% white. Fresh renders produced
+the spec backdrop and all three gates passed; the macOS clip trace showed
+a full 504×504 mask, so the fill was realized. The divergence was the
+**artifact**, not the renderer. Rule: refresh the render, record its hash
+and mtime in the report, and only then attribute a layer. A stale
+`ours_*` file is indistinguishable from a real renderer bug in a
+first-divergence walk.
