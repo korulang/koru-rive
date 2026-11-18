@@ -370,7 +370,14 @@ own style — and the class tags make it verifiable in one run.
   (1 identical, 2 divergent: paint-layer colour, clip-layer).
   Harness gap: koruc build failure parses as empty arts ->
   misclassified; should surface build errors as own status.
-  True batch-2 signal pending full re-run on quiet machine.
+  RESOLVED: quiet serial re-run of all 19 -> 9 op-identical +
+  10 divergent, ZERO ours-unavailable — flake hypothesis confirmed.
+  TRUE batch-2 (30 files): 13 identical / 14 divergent / 3
+  ref-unavailable / 0 ours-unavailable — 43% identical, far better
+  than the raw log suggested. Notable identicals: recursive_lists
+  (45 artboards), multiple_state_machines, rotation_constraint_wrap,
+  scripted_as_path, pointer_button_nested, library_scope_edge,
+  later_layer_trigger, shapetest, databind_external_artboard_main.
 - ref-unavailable x3: oracle-side (missing frame-0 block; two
   file_asset_importer assertions on scripted-VM files).
 
