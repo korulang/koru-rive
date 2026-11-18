@@ -117,6 +117,33 @@ emits (`ff0000` ×50, `350000` ×36, `1f1717` ×16) with 80 default `747474` and
 50 fewer `000000`. Not yet attributed; the class-3 finding (gradient paints)
 covers the colour half, and the over-draw is a separate culling question.
 
+## Per-artboard attribution (`--all-artboards`)
+
+The harness now compares every artboard independently (`--all-artboards`), so a
+file-level delta can be attributed to a specific artboard.
+
+car_widgets_v01, frame 0:
+
+| artboard | ref draws | ours (standalone) |
+|---|---:|---:|
+| Main_Artboard | 612 | 809 (+197) |
+| TIRE PRESSURE | 68 | **0** |
+| COMPASS | 413 | **0** |
+| G_Meter | 69 | **0** |
+
+Two separate problems, and the second is the surprising one:
+
+1. Main over-draws by 197 with nested expansion on.
+2. **Every non-first artboard decodes to zero drawables when dumped directly.**
+   The reference draws 550 drawables across those three artboards. So
+   artboard-scoped traversal (`owningArtboard`) fails for artboards other than
+   the first — which also means the nested expansion cannot be correct yet: it
+   is emitting something (737 extra draws at Main) while the same artboards
+   emit nothing on their own.
+
+Until that is resolved, expansion's data_viz win (3 → 170) and car_widgets'
+over-draw are both suspect, and the number to trust is the per-artboard table.
+
 ## Recommended order (revised after the fix)
 
 1. **Save/restore grouping** — the remaining joystick divergence, and the same

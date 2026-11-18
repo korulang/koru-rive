@@ -142,6 +142,12 @@ def _bbox_close(a, b, tol):
     return all(abs(x - y) <= tol for x, y in zip(a, b))
 
 
+def frame0_block(blocks, pos):
+    """Find artboard `pos`'s frame-0 block. Markers carry the timestamp
+    ("--- frame 0 t=0.0083 ---"), so the name can only be prefix-matched."""
+    return next((blocks[k] for k in blocks if k[0] == pos and k[1].startswith("frame 0")), None)
+
+
 def ref_digest(lines):
     """Semantic digest of one reference block.
 
@@ -320,6 +326,8 @@ def main():
     ap.add_argument("--koruc", default=os.path.expanduser("~/src/koru/zig-out/bin/koruc"))
     ap.add_argument("--dump", default=os.path.join(HERE, "dump"))
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument("--all-artboards", action="store_true",
+                    help="compare every reference artboard, not just the first")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
@@ -334,9 +342,7 @@ def main():
             rec.update(status="ref-unavailable", detail=ref_err)
             results.append(rec)
             continue
-        block = blocks.get((0, "frame 0")) or next(
-            (blocks[k] for k in blocks if k[1].startswith("frame 0")), None
-        )
+        block = frame0_block(blocks, 0)
         if block is None:
             rec.update(status="ref-unavailable", detail="reference produced no 'frame 0' block")
             results.append(rec)
@@ -350,31 +356,75 @@ def main():
             rec.update(status="ours-unavailable", detail=ours_err)
             results.append(rec)
             continue
-        want = artboards[0] if artboards else None
-        match = [a for a in arts if a[1] == want] or arts
-        if not match:
-            rec.update(status="ours-unavailable", detail="no artboards decoded")
-            results.append(rec)
-            continue
-        ab_idx, ab_name = match[0]
-        rec["artboard"] = f"{ab_name} (idx {ab_idx})"
 
-        ours, ours_err = ours_digest(path, ab_idx, args.frame, args.koruc, ROOT, args.timeout)
-        if ours_err:
-            rec.update(status="ours-unavailable", detail=ours_err)
-            results.append(rec)
-            continue
-        rec["ours"] = ours
-
-        div = first_divergence(ref, ours)
-        if div is None:
-            rec.update(status="op-identical")
+        # Which reference artboards to compare. Default: the first one, by name.
+        if args.all_artboards:
+            targets = [(pos, nm) for pos, nm in enumerate(artboards)]
         else:
-            rec.update(status="divergent", layer=div[0], detail=div[1])
+            targets = [(0, artboards[0] if artboards else None)]
+
+        per_ab = []
+        for pos, want in targets:
+            blk = frame0_block(blocks, pos)
+            if blk is None:
+                per_ab.append({"artboard": want, "status": "ref-unavailable", "detail": "no frame-0 block"})
+                continue
+            r_dig = ref_digest(blk)
+            match = [a for a in arts if a[1] == want]
+            if not match:
+                per_ab.append({"artboard": want, "status": "ours-unavailable",
+                               "detail": "artboard name not decoded", "ref_draw": r_dig["draw"]})
+                continue
+            ab_idx, ab_name = match[0]
+            o_dig, o_err = ours_digest(path, ab_idx, args.frame, args.koruc, ROOT, args.timeout)
+            if o_err:
+                per_ab.append({"artboard": want, "status": "ours-unavailable", "detail": o_err,
+                               "ref_draw": r_dig["draw"]})
+                continue
+            div = first_divergence(r_dig, o_dig)
+            row = {"artboard": f"{ab_name} (idx {ab_idx})", "ref_draw": r_dig["draw"],
+                   "ours_draw": o_dig["draw"], "ref_clip": r_dig["clip"], "ours_clip": o_dig["clip"]}
+            if div is None:
+                row["status"] = "op-identical"
+            else:
+                row["status"] = "divergent"
+                row["layer"], row["detail"] = div
+            row["ref_digest"], row["ours_digest"] = r_dig, o_dig
+            per_ab.append(row)
+
+        if args.all_artboards:
+            rec["per_artboard"] = per_ab
+            compared = [r for r in per_ab if r["status"] in ("op-identical", "divergent")]
+            rec["status"] = "op-identical" if compared and all(r["status"] == "op-identical" for r in compared) else "divergent"
+            results.append(rec)
+            continue
+
+        # single-artboard path keeps the flat record shape
+        row = per_ab[0]
+        if row["status"] == "ours-unavailable":
+            rec.update(status="ours-unavailable", detail=row.get("detail", ""))
+        elif row["status"] == "op-identical":
+            rec.update(status="op-identical", artboard=row["artboard"])
+        else:
+            rec.update(status="divergent", layer=row.get("layer"), detail=row.get("detail"),
+                       artboard=row["artboard"])
+            rec["ours"] = row["ours_digest"]
         results.append(rec)
 
     if args.json:
         print(json.dumps(results, indent=2))
+    elif args.all_artboards:
+        for r in results:
+            print(f"{r['status']:<16} {r['file']}")
+            if r.get("detail") and "per_artboard" not in r:
+                print(f"                 {r['detail']}")
+            for row in r.get("per_artboard", []):
+                if row["status"] in ("op-identical",):
+                    print(f"  {row['artboard']:<28} {'op-identical':<14} draws {row['ref_draw']:>4}={row['ours_draw']:<4}")
+                elif row["status"] == "divergent" and row.get("layer") == "drawable-count":
+                    print(f"  {row['artboard']:<28} {'draws':<14} ref {row['ref_draw']:>4} ours {row['ours_draw']:>4}  ({row['ours_draw']-row['ref_draw']:+d})")
+                else:
+                    print(f"  {row['artboard']:<28} {row['status']:<14} {row.get('layer','')}: {row.get('detail','')}")
     else:
         for r in results:
             if r["status"] != "divergent":
