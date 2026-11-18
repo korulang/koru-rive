@@ -134,12 +134,23 @@ car_widgets_v01, frame 0:
 Two separate problems, and the second is the surprising one:
 
 1. Main over-draws by 197 with nested expansion on.
-2. **Every non-first artboard decodes to zero drawables when dumped directly.**
-   The reference draws 550 drawables across those three artboards. So
-   artboard-scoped traversal (`owningArtboard`) fails for artboards other than
-   the first — which also means the nested expansion cannot be correct yet: it
-   is emitting something (737 extra draws at Main) while the same artboards
-   emit nothing on their own.
+2. **Every non-first artboard decodes to zero drawables when dumped directly**
+   (TIRE PRESSURE 0/68, COMPASS 0/413, G_Meter 0/69), while the object census
+   says those artboards are not empty at all:
+
+   | artboard obj | Shapes | Fills | Strokes | Nodes |
+   |---|---:|---:|---:|---:|
+   | 90 Main_Artboard | 74 | 44 | 35 | 23 |
+   | 1259 TIRE PRESSURE | 226 | – | – | – |
+   | 6171 COMPASS | 369 | 159 | 261 | 296 |
+   | 10881 G_Meter | 61 | 64 | – | 49 |
+
+   So this is not missing content — it is a cull or state-resolution failure
+   (visibility/opacity, or the artboard's own state machine never selecting a
+   state) for artboards other than the first. `RIVE_TRACE` shape/paint traces
+   are in place for that diagnosis but the toolchain was mid-edit (below) when
+   it was needed. Until resolved, expansion's data_viz win and car_widgets'
+   over-draw are both suspect.
 
 Until that is resolved, expansion's data_viz win (3 → 170) and car_widgets'
 over-draw are both suspect, and the number to trust is the per-artboard table.
