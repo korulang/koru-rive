@@ -812,3 +812,23 @@ degenerate/zero-area fills -> silent drop. Named residual = class-2
 (layout solver) confirmed; NestedSM/Solo gating remains unmodeled
 and will surface later as an OVERDRAW class (we expand all variants,
 ref shows one) once counts converge. Parked with evidence.
+
+## Paint-default census (batch-2 retry, 6 paint-layer divergences)
+
+All six files paint with SolidColor ONLY — zero gradients, zero
+PaintImage, zero unbound paint types. The divergence is VALUE
+resolution, not paint class. Dynamic-color machinery per file:
+- component_stateful_vm_instance_2: ViewModelInstanceColor x2 —
+  VM-bound color unbound on our side (ours 747474 default vs ref
+  00ff12).
+- listener_action_inputs: KeyFrameColor x2 + listener SM — keyframed
+  color (ours 46a100 vs ref 9d0202).
+- ik_anim_test / follow_path_path / scripted_path_effect_clip:
+  LinearAnimation + KeyFrameDouble — color animated at frame 0; we
+  emit the static/default prop, ref evaluates the timeline
+  (ours ffffff/000000/003fff vs ref 40d3a5/747474/747474).
+- additive_blendmode_test: blend-mode compositing (ours 00ff00 vs
+  ref 6f00ff — additive blend not applied to paint color).
+NAMED CLASS: color-source dynamics — VM-color binds + keyframed
+color props + blend compositing, all evaluated at frame 0 by ref.
+NOT the gradient class (class-3 unaffected); NOT unbound-paint-type.
