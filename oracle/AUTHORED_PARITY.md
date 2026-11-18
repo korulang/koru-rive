@@ -323,3 +323,56 @@ This is the first time that sentence could be written with object ids behind it.
 5. Fill-rule agreement (`eo` vs `fillRule`), then state machines and the
    timeline.
 
+
+---
+
+## CAMPAIGN STATE (consolidated 2026-11-18 — durable map)
+
+### Oracle stack
+- `oracle/dump` — unbound reference op-dump; `oracle/dump_vmbound` —
+  BOUND-VM variant REQUIRED for list-family files (component_list_*,
+  clfp, follow_path, virtualized): unbound produces ref-draws-1
+  collapsed-list artifacts. List content lives in Item/Row artboards
+  (e.g. cl1 Item=38 draws, cl2 Item=132, virtualized ItemArtboard=52).
+- `oracle/authored_parity.py` — tier-1 opsdump + pixel harness.
+- Probes need fresh koruc; `import kr/rive` builds fail if
+  `rive/rivgen_hello.kz` (t4f riv2k artifact) reappears — KORU022.
+
+### Batch distribution (stratified ~40, post class-1/2/5 fixes)
+- 13/40 op-identical · 24 divergent · 1 ours-unavailable
+  (layout_text_match SIGABRT — FIXED, composite-glyph endPts
+  off-by-one) · 2 ref-unavailable.
+- First-divergence layers: drawable-count 15, paint 7, geometry 1,
+  clip 1 — clips nearly closed as first-divergence; paint is #2.
+
+### Divergence classes — status
+1. NestedArtboard expansion (92/451/452) — LANDED (t4f). Follow-ups:
+   frustum-cull vs expansion (db_health: expansion fires 6283 ops but
+   only 81 k=8 draws — cull rejects huge-coord nested content),
+   Solo/NestedSM gating unmodeled (post-solver overdraw flag).
+2. Layout solver — NAMED RESIDUAL. Census: 601 files, flex core ~95%;
+   design docs/layout-solver.md; evidence order flex->wrap->absolute
+   ->grid. Blocks: LC/FLD per-item rects, nested-artboard sizing,
+   collapsing_elements (-32 all-layout file).
+3. Gradients — feature-sized op pipeline pending; fixture armed
+   (fixtures/gradients: Linear/Radial/Angular, oracle-verified).
+4. Overdraw/cull — queued; db_health cull-vs-expansion is the live
+   instance.
+5. Clips — ClippingShape(42) untraversed = hunter_x's 80 objects /
+   ~130 clipPaths; fix spec'd (traversal arm -> clippush/clippop per
+   rive-cpp clipping_shape.cpp). car_widgets clips = Feather
+   path-effects (feature-sized, separate).
+
+### Underdraw sub-classes (authored files, post-fix)
+- db_health_tracker: 470v81 — expansion fires, draws culled
+  (emit-gate/cull class).
+- hunter_x_demo: 316v33 — ClippingShape(42) + underdraw.
+- collapsing_elements: 48v16 — solver-blocked LC fills in nested
+  targets; SM-selection proven count-invariant.
+- layout_text_match: clip-layer only (37/37 draws, colors identical).
+- list-family: use dump_vmbound; per-Item-artboard comparison.
+
+### Fixture corpus
+fixtures/: gradients, sm_conditions, scroll_view, vmlist, emptybind —
+all decode-clean + oracle-verified. RML->.riv via rive CLI pipeline
+(fixtures/PIPELINE.md).
