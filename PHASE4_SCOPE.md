@@ -1646,3 +1646,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   ~11-13px vs computed lh) + fix maxLines formula + stop
   ellipsis firing on non-overflowing texts; verify LAY
   trace fires.
+
+- LINEHEIGHT SOURCE: prop 370 (TextStyle.lineHeight) ABSENT
+  on all runs -> font-metric default. text.cpp/line_breaker:
+  lh = -asc + des where asc/des = computeLineMetrics(
+  font->lineMetrics(), run.lineHeight, run.size) — hhea
+  ascender/descender scaled by fontSize (my asc-desc+gap was
+  close but baseline/cap formula also differs: line.top=Y,
+  baseline=Y-asc, bottom=Y+des; cap likely on line.bottom vs
+  box_h not floor(h/lh)). NEXT: read computeLineMetrics +
+  text.cpp height-cap site (where lines beyond box are
+  dropped/ellipsized — search 'ellipsisLine' usage in layout)
+  -> implement exact cap -> re-diff.
