@@ -4836,6 +4836,7 @@ for (verbs.items, 0..) |v, vi| {
     if (np > 0) tailVi = vi;
 }
 const printedPts = pts.items.len -% @as(usize, if (tailVi < verbs.items.len) 1 else 0);
+if (std.posix.getenv("RIVE_TRACE_TEXT") != null) std.debug.print("TEXTIDX {d}\n", .{textIdx});
 std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, printedPts });
     var vp: usize = 0;
     for (verbs.items, 0..) |v, vi| {
@@ -6095,7 +6096,12 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
-            const opSelf: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            const kf18 = frame >= 0 and hasKeyframed(r, so.slot, 18);
+            if (std.posix.getenv("RIVE_TRACE_KF2") != null and (propByKey(so.props, 18) == null or kf18)) {
+                const kv = if (kf18) keyframedValue(r, so.slot, 18, frame) else @as(f32, -1);
+                std.debug.print("KF2 obj={d} slot={d} kf={} kv={d:.3} prop18={} anim={d}\n", .{ si, so.slot, kf18, kv, propByKey(so.props, 18) != null, g_activeAnim });
+            }
+            const opSelf: f32 = if (kf18) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
             // Ancestor opacity multiplies down the tree: rive-cpp hides a whole
             // subtree when a Node's opacity is 0 (car_widgets TIRE PRESSURE's
             // red band sits under a Node with opacity 0.000 and we drew it).
