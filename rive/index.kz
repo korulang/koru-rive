@@ -4703,7 +4703,41 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
     _ = frame;
     var pen: f64 = 0;
 
-    for (text) |ch| {
+    // Fixed box layout (text.cpp): wrap at box width, cap lines by box
+    // height, overflow=ellipsis(287==3) substitutes U+2026 for the tail.
+    // Pre-pass assigns each emitted char its line; chars past the height
+    // budget are dropped (their contours never emit).
+    const lineHeight: f64 = if (asc - desc + gap > 0) asc - desc + gap else @as(f64, fontSize);
+    var cps = std.ArrayList(u32).empty;
+    var cpsLine = std.ArrayList(i64).empty;
+    defer cps.deinit(alloc); defer cpsLine.deinit(alloc);
+    var droppedTail = false;
+    if (t_sizing == 2 and t_box_w > 0 and t_box_h > 0) {
+        const maxLines = @max(@as(i64, 1), @as(i64, @intFromFloat(@floor(t_box_h / lineHeight))));
+        var lx: f64 = 0;
+        var line: i64 = 0;
+        for (text) |b| {
+            if (b < 0x20) continue;
+            const a = @as(f64, hmtxAdvance(font, cmapGlyph(font, b))) * scale;
+            if (lx > 0 and lx + a > t_box_w) { line += 1; lx = 0; }
+            if (line >= maxLines) { droppedTail = true; break; }
+            cps.append(alloc, b) catch {};
+            cpsLine.append(alloc, line) catch {};
+            lx += a;
+        }
+        if (droppedTail and propU(tobj.props, 287, 0) == 3) {
+            cps.append(alloc, 0x2026) catch {};
+            cpsLine.append(alloc, @min(maxLines - 1, line)) catch {};
+        }
+    } else {
+        for (text) |b| { cps.append(alloc, b) catch {}; cpsLine.append(alloc, 0) catch {}; }
+    }
+
+    if (std.posix.getenv("RIVE_TRACE_TV") != null) std.debug.print("LAY ti={d} fs={d:.2} asc={d:.2} desc={d:.2} gap={d:.2} lh={d:.2} bw={d:.1} bh={d:.1} sz={d} ov={d} cps={d}\n", .{ textIdx, fontSize, asc, desc, gap, lineHeight, t_box_w, t_box_h, t_sizing, propU(tobj.props, 287, 0), cps.items.len });
+    var curLine: i64 = -1;
+    var baseY: f64 = asc;
+    for (cps.items, cpsLine.items) |ch, cl| {
+        if (cl != curLine) { curLine = cl; pen = 0; baseY = asc + @as(f64, @floatFromInt(cl)) * lineHeight; }
         if (ch < 0x20) continue;
         const gid = cmapGlyph(font, ch);
         var ends = std.ArrayList(u32).empty; defer ends.deinit(alloc);
@@ -4724,7 +4758,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
             if (scanned == cn) { cstart = cend; continue; } // all off: degenerate
             const m0 = firstOn;
             const sx = pen + @as(f64, @floatFromInt(gp[@as(usize, @intCast(m0))].x)) * scale;
-            const sy = -@as(f64, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + asc;
+            const sy = -@as(f64, @floatFromInt(gp[@as(usize, @intCast(m0))].y)) * scale + baseY;
             verbs.append(alloc, 0) catch {}; pts.append(alloc, .{ .x = @floatCast(sx), .y = @floatCast(sy) }) catch {};
             var curIdx = m0;
             // coordinate-based walk: cur = current on-curve point (font
@@ -4743,8 +4777,8 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
                     const alreadyThere = !pendingOff and curFx == @as(f32, @floatFromInt(mpt.x)) and curFy == @as(f32, @floatFromInt(mpt.y));
                     if (!alreadyThere) {
                         const ex = pen + @as(f64, @floatFromInt(mpt.x)) * scale;
-                        const ey = -@as(f64, @floatFromInt(mpt.y)) * scale + asc;
-                        emitQuadCubic(alloc, verbs, pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(mpt.x), @floatFromInt(mpt.y), ex, ey);
+                        const ey = -@as(f64, @floatFromInt(mpt.y)) * scale + baseY;
+                        emitQuadCubic(alloc, verbs, pts, pen, scale, baseY, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(mpt.x), @floatFromInt(mpt.y), ex, ey);
                     }
                     verbs.append(alloc, 5) catch {};
                     break;
@@ -4756,14 +4790,14 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
                         // with np as new pending control
                         const mx = (offFx + @as(f64, @floatFromInt(np.x))) / 2;
                         const my = (offFy + @as(f64, @floatFromInt(np.y))) / 2;
-                        emitQuadCubic(alloc, verbs, pts, pen, scale, asc, curFx, curFy, true, offFx, offFy, mx, my, pen + mx * scale, -my * scale + asc);
+                        emitQuadCubic(alloc, verbs, pts, pen, scale, baseY, curFx, curFy, true, offFx, offFy, mx, my, pen + mx * scale, -my * scale + baseY);
                         curFx = mx; curFy = my;
                         offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); // np stays pending
                     } else { offFx = @floatFromInt(np.x); offFy = @floatFromInt(np.y); pendingOff = true; }
                 } else {
                     const ex = pen + @as(f64, @floatFromInt(np.x)) * scale;
-                    const ey = -@as(f64, @floatFromInt(np.y)) * scale + asc;
-                    emitQuadCubic(alloc, verbs, pts, pen, scale, asc, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(np.x), @floatFromInt(np.y), ex, ey);
+                    const ey = -@as(f64, @floatFromInt(np.y)) * scale + baseY;
+                    emitQuadCubic(alloc, verbs, pts, pen, scale, baseY, curFx, curFy, pendingOff, offFx, offFy, @floatFromInt(np.x), @floatFromInt(np.y), ex, ey);
                     pendingOff = false;
                     curFx = @floatFromInt(np.x); curFy = @floatFromInt(np.y);
                 }
@@ -6204,7 +6238,11 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
     if (clipOn) out.append(alloc, op0(10)) catch {};
     // subtree.
     const noNested = std.posix.getenv("RIVE_NO_NESTED") != null;
-    for (r.objects, 0..) |no, ni| {
+    const revNest = std.posix.getenv("RIVE_REV_NEST") != null;
+    var nstep: usize = 0;
+    while (nstep < r.objects.len) : (nstep += 1) {
+        const ni = if (revNest) r.objects.len - 1 - nstep else nstep;
+        const no = &r.objects[ni];
         if (noNested) break;
         if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
         if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest cand ni={d} type={d} owner={d} ab={d}\n", .{ ni, no.type_key, owningArtboard(r, ni), abIdx });
