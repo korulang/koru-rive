@@ -4202,6 +4202,12 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
             }
         }
     }
+    // Glyph contours carry counters (O, e, 8). The Metal fill path
+    // ear-clips each contour independently and would fill the counter;
+    // forcing evenodd selects the stencil-parity path, which subtracts
+    // it. For glyph outlines evenodd and nonzero agree; the software
+    // point-in-contours fill is unchanged.
+    textFillRule.* = 2;
     var font: []const u8 = "";
     for (r.objects) |fc| {
         if (fc.type_key == 106) {
