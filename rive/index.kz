@@ -2074,6 +2074,8 @@ fn dumpKeyed(r: *Riv) void {
 // animation over the idle one on the same slot+prop.
 var g_activeAnim: i64 = -1;
 var g_abDepth: u8 = 0; // nested-artboard expansion depth guard
+var g_abStack: [24]usize = undefined; // expansion-path cycle guard
+var g_abStackLen: usize = 0;
 // Transition crossfade: when an SM transition is mid-flight, colors
 // blend from->to by progress (single-keyframe holds => exact lerp).
 var g_blendFrom: i64 = -1;
@@ -3952,29 +3954,6 @@ fn vmScalarToString(r: *const Riv, convIdx: i64, s: VmScalar, alloc: std.mem.All
     }
 }
 
-// True when the run's text is bound in the *name-based* form we cannot
-// resolve (no versioned manifest). Such a run renders nothing in rive — the
-// literal is a template placeholder, not content — so callers must skip it
-// rather than draw the raw string.
-fn runTextUnresolvable(r: *const Riv, targetIdx: usize) bool {
-    var lastBindable: i64 = -1;
-    for (r.objects, 0..) |o, i| {
-        if (o.type_key == 446 or o.type_key == 447) {
-            if (lastBindable == @as(i64, @intCast(targetIdx)) and o.type_key == 447) {
-                var pk: u64 = 0;
-                var flags: u64 = 0;
-                for (o.props) |p| {
-                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
-                    if (p.key == 587) flags = if (p.value == .uint) p.value.uint else 0;
-                }
-                if (pk == 268 and (flags & 16) != 0) return true;
-            }
-            lastBindable = @intCast(i);
-        }
-    }
-    return false;
-}
-
 // Resolve the DataBindContext targeting targetIdx with propertyKey==268
 // to the bound text, or null when unbound/unresolvable (literal stays).
 fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]const u8 {
@@ -5656,28 +5635,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         defer tverbs.deinit(alloc); defer tpts.deinit(alloc);
         var tcolor: u32 = 0xFF000000;
         var tfr: i64 = 2;
-        var runs = std.ArrayList(usize).empty;
-        defer runs.deinit(alloc);
-        for (r.objects, 0..) |rc, ri| {
-            if (rc.type_key == 135 and rc.parent_obj == @as(i64, @intCast(ti))) runs.append(alloc, ri) catch {};
-        }
-        const runCount: usize = if (runs.items.len == 0) 1 else runs.items.len;
-        var runIt: usize = 0;
-        while (runIt < runCount) : (runIt += 1) {
-        const runSel: i64 = if (runs.items.len == 0) -1 else @intCast(runs.items[runIt]);
-        if (runSel >= 0 and runTextUnresolvable(r, @intCast(runSel))) continue;
-        tverbs.clearRetainingCapacity();
-        tpts.clearRetainingCapacity();
-        const runOk = textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr, runSel);
-        if (std.posix.getenv("RIVE_TRACE_RUN") != null) {
-            var tlen: usize = 0;
-            if (runSel >= 0) {
-                const ro = &r.objects[@intCast(runSel)];
-                for (ro.props) |pp| { if (pp.key == 268 and pp.value == .bytes) tlen = pp.value.bytes.len; }
-            }
-            std.debug.print("RUN text={d} run={d} ok={} verbs={d} color={x}\n", .{ ti, runSel, runOk, tverbs.items.len, tcolor });
-        }
-        if (!runOk) continue;
+        if (!textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr, -1)) continue;
         const w = effectiveWorld(r, ti, frame);
         out.append(alloc, op0(0)) catch {};
         var vp: usize = 0;
@@ -5695,7 +5653,6 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("TXT obj={d} color={x}\n", .{ ti, tcolor });
         var dr = op0(8); dr.style = 1; dr.color = tcolor; dr.join = -1; dr.cap = -1; dr.eo = if (tfr == 1) 1 else 0; out.append(alloc, dr) catch {};
         out.append(alloc, op0(7)) catch {};
-        }
     }
     if (clipOn) out.append(alloc, op0(10)) catch {};
     // subtree.
@@ -5719,6 +5676,9 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest target ni={d} aid={d} -> {d}\n", .{ ni, aid, target });
         if (target < 0) continue;
         if (target == @as(i64, @intCast(abIdx))) continue; // self-reference guard
+        var onPath = false;
+        for (g_abStack[0..g_abStackLen]) |sa| { if (sa == @as(usize, @intCast(target))) { onPath = true; break; } }
+        if (onPath) continue; // cycle: target already on expansion path
         const w = effectiveWorld(r, ni, frame);
         var so = op0(6); so.a = w[0]; so.b = w[1]; so.c = w[2]; so.d = w[3]; so.e = w[4]; so.g = w[5];
         out.append(alloc, so) catch {};
@@ -5727,7 +5687,9 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         const hostT = g_blendT;
         g_activeAnim = smActiveAnimIdx(r, @intCast(target), frame);
         g_abDepth += 1;
+        if (g_abStackLen < g_abStack.len) { g_abStack[g_abStackLen] = @as(usize, @intCast(target)); g_abStackLen += 1; }
         collectArtboardOps(r, @intCast(target), frame, alloc, out);
+        g_abStackLen -%= 1;
         g_abDepth -= 1;
         g_activeAnim = hostAnim;
         g_blendFrom = hostFrom;
@@ -5740,6 +5702,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
 
 fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
     g_activeAnim = smActiveAnimIdx(r, abIdx, frame);
+    g_abStackLen = 0;
+    if (g_abStackLen < g_abStack.len) { g_abStack[g_abStackLen] = abIdx; g_abStackLen += 1; }
     var out = std.ArrayList(OpRec).empty;
     errdefer out.deinit(alloc);
     collectArtboardOps(r, abIdx, frame, alloc, &out);

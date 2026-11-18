@@ -322,6 +322,27 @@ per-run refactor inside that code would collide. The finding names the exact
 change — loop `TextValueRun` children and emit one draw per run, each with its
 own style — and the class tags make it verifiable in one run.
 
+## Per-run text: correct diagnosis, not-yet-viable change (2026-11-18)
+
+The HorizontalBars −6 was diagnosed exactly (one draw per `Text` where the
+reference draws one per `TextValueRun`; 12 + 12 + 16 = 40) and implemented:
+`textDrawPath` gained a run override and the text loop iterated run children.
+HorizontalBars went to **40 = 40 exact**.
+
+It was then reverted, because two failure modes appeared elsewhere:
+
+- **SIGABRT** rendering HorizontalBars through the harness (`exit -6`), i.e. a
+  crash in the glyph path for the second run.
+- **+6 over-draw** on six other data_viz artboards: their second runs draw for
+  us where the reference draws nothing. The likely rule is that those runs are
+  *name-bound* text (a binding form we cannot resolve without a versioned
+  manifest, so rive renders nothing); a skip predicate for it was written and
+  did not match them, so the rule is still unknown.
+
+Both live in text rendering, which another session is actively changing
+(composite-glyph `endPts` fix, same day). The diagnosis and the shape of the fix
+are recorded here; the change belongs to whoever owns that code next.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
