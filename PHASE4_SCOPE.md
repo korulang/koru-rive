@@ -991,3 +991,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   emitOps is debug-only (tracing-gated); real path = collectOps
   op6 CTM + recursion. DRAW trace prints object-hierarchy world
   NOT the CTM-composed transform — t=0,0 expected, not a bug.
+
+- constrainList row-bounds dump (frame-8 ops): row artboard
+  content = small ~40x40 rects (green ff12a100 fills + white
+  detail), NOT 200x50 — rows are compact. Naive CTM replay of
+  ops stream shows row bboxes scattered near origin-x — the
+  k=5/6/7 transform-op semantics need exact modeling (push/
+  absolute-vs-relative) before vertex-level bisect continues.
+  ink blobs (~1000px/60x40win) = MULTIPLE small rows overlapping
+  or row+stroke combos, not single big rects.
