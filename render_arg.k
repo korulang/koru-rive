@@ -1,4 +1,4 @@
-// Path-arg render probe: ./a.out <file.riv> <out.bmp> — ab 0, last SM frame.
+// Path-arg render probe: ./a.out <file.riv> <out.bmp> — ab = Artboard object index (set per fixture; sm_conditions=5), last SM frame.
 import libs/canvas
 import kr/probe
 import kr/rive
@@ -13,7 +13,7 @@ std/args:all(): av
         ! frame f
             |> kr/rive:open(path: av[1])
             | loaded r
-                |> kr/rive:ops(r, ab: 0, frame: -1)
+                |> kr/rive:ops(r, ab: 5, frame: -1)
                     ! op o |> kr/probe:step(o, f)
                     | done n |> std/io:print.ln("ops {{ n:d }}") |> kr/rive:free(r)
             | failed e |> std/io:print.ln("open failed")

@@ -65,6 +65,12 @@ Other never-seen, authoring-easy candidates for later fixtures:
 
 ## Known limits
 
+- **`ab` is the Artboard's OBJECT INDEX** in r.objects, not an ordinal —
+  find it via `./a.out <riv>` inspect (`obj[N] Artboard`, first hit is the
+  scene root for single-artboard fixtures). `ab:0` always yields the
+  empty 10-op skeleton — every earlier "ours=0" on CLI fixtures was this
+  probe bug, not feature-gap. CLI files carry several Artboard objects
+  (~4); the first is the scene root.
 - `band.py` is square-only (size→WxH equal); non-square artboards need
   the pixel census or a harness tweak.
 - `rive login` required for `--publish`; watch/screenshot stay in-memory.
