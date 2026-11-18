@@ -1302,3 +1302,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   correct-but-not-the-metric. NEXT: trace which op6 e>1500
   parents are (559 list rows vs nested 92/451) via gdump_dbh
   parent census.
+
+- BIG-E ATTRIBUTION REVISION: bige traces (RIVE_TRACE_BIGE,
+  uncommitted) show ZERO row-slot/nested op6 with |e|>1500 —
+  spread is neither flex nor listRowSlot/nested transforms.
+  AND: current working tree (concurrent lane's uncommitted
+  animFps keyframe-time fix + scrub removal) collapses max e
+  to ~73 — the 0->9917 spread was KEYFRAMED ANIMATION values
+  under a 30fps-vs-authored-fps time-base bug, now corrected.
+  e36->e755 divergence likely resolves via that fix; re-measure
+  opsdump_dbh e-cluster vs gold ~755 once their edits commit.
