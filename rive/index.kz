@@ -6285,10 +6285,13 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
     if (clipOn) out.append(alloc, op0(10)) catch {};
     // subtree.
     const noNested = std.posix.getenv("RIVE_NO_NESTED") != null;
-    const revNest = std.posix.getenv("RIVE_REV_NEST") != null;
+    // Nested siblings emit in REVERSE stream order — verified against
+    // component_stateful_vm_instance golden (frame-0 byte-exact) and
+    // clean on data_bind_artboard_input / nested_artboard_opacity /
+    // component_stateful_vm_instance_2 (op-stream identical).
     var nstep: usize = 0;
     while (nstep < r.objects.len) : (nstep += 1) {
-        const ni = if (revNest) r.objects.len - 1 - nstep else nstep;
+        const ni = r.objects.len - 1 - nstep;
         const no = &r.objects[ni];
         if (noNested) break;
         if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
