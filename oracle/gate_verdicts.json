@@ -48,7 +48,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -156,7 +156,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 294650 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 294650 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -267,7 +267,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 25000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 25000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -377,7 +377,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 25000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 25000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -487,7 +487,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "1.07% of 2062 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "1.07% of 2062 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -595,7 +595,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -706,7 +706,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.04% of 61689 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.04% of 61689 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -817,7 +817,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -928,7 +928,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 50000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 50000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1038,7 +1038,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 120000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 120000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1149,7 +1149,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.02% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.02% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1260,7 +1260,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1371,7 +1371,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1482,7 +1482,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1593,7 +1593,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.02% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.02% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1704,7 +1704,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -2432,7 +2432,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 120000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 120000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -2543,7 +2543,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "1.33% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "1.33% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -2651,7 +2651,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -2762,7 +2762,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 50000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 50000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -2872,7 +2872,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -2987,7 +2987,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 120000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 120000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -3103,7 +3103,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.12% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.12% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -3214,7 +3214,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 50000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 50000 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -3324,7 +3324,7 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -3438,7 +3438,7 @@
    {
     "check": "ink-coverage",
     "pass": false,
-    "detail": "14.99% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "14.99% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
@@ -3551,7 +3551,7 @@
    {
     "check": "ink-coverage",
     "pass": false,
-    "detail": "65.66% of 2062 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "65.66% of 2062 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",

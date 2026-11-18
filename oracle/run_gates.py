@@ -42,8 +42,16 @@ def run_gate(g):
     # The manifest IS the pairing declaration; the filename time token is
     # still enforced whenever both names carry one.
     untimed = po.time_token(ours) is None or po.time_token(ref) is None
+    # Per-gate opt-in oracle args (manifest schema): "opts" is merged into
+    # evaluate(). Asserted checks that no current gate exercises stay
+    # available here rather than deleted: ring (closed-shape completeness,
+    # e.g. oval fixtures), prev (stale-frame detection, needs a second
+    # render), clear (probe clear-colour coverage), inset, bbox_axes,
+    # bbox_tol, bg_tol, mass_min/max, gap_max, frame_max, aa_min,
+    # reg_tol, vacuous_px, notch_max and the rest of evaluate()'s kwargs.
+    opts = dict(g.get("opts", {}))
     res = po.evaluate(ref, ours, bg=tuple(g["bg"]), comp=tuple(g["comp"]) if g.get("comp") else None,
-                      bbox_axes="x,y", allow_missing_time=untimed)
+                      bbox_axes="x,y", allow_missing_time=untimed, **opts)
     failed = [c["check"] for c in res["checks"] if not c["pass"]]
     return {"gate": g["gate"], "verdict": "PASS" if res["pass"] else "FAIL", "failed": failed,
             "hand_label": g["hand_label"], "ours": g["ours"], "ref": g["ref"],

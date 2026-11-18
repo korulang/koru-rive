@@ -442,3 +442,20 @@ on ink-coverage -- the first gate the eyeball audit caused to change
 verdict. Remaining named gap: softer-than-reference edges still
 unasserted; vacuous floor 200 px could hide a sub-visible-content
 mismatch (accepted: <200 px is below perceptual relevance).
+
+Coverage-shape prototype (2026-11-18, arbiter-approved audit candidate):
+solid-ink fraction (coverage>0.8 / coverage>0.15 within dilated union)
+measured on all non-vacuous gates. Does NOT earn the asserted slot:
+- knm_cl1 text-blob: delta +0.011 (ref 0.026, ours 0.037) -- the Metal
+  blob is positional/morphological, not a coverage-shape defect; already
+  caught by frame-diff + local-fidelity + ink-colour.
+- The classes it does separate (mesh +0.83, knm_hw +0.33) are already
+  asserted by ink-mass / ink-coverage / anti-aliasing.
+- No demonstrated catch the existing checks miss -> not added. The
+  only residual class it could uniquely name (same-mass distribution-
+  only difference under 16 levels) is manufactured, not observed.
+
+notch_max widened 3%->4% per arbiter ruling (worst legit control 2.54%,
+headroom for subpixel phase; hole-class defects sit at 15-66%).
+run_gates.py gained per-gate "opts" passthrough so ring/stale/clear/
+alpha stay asserted-but-opt-in rather than deleted.

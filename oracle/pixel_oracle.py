@@ -272,7 +272,7 @@ def evaluate(ref_path, ours_path, bg=(49, 49, 49), clear=None, inset=0, ring=Non
              backdrop_px_tol=2, backdrop_px_frac=0.005,
              ink_hue_tol=0.008, ink_core_mean=3.0, ink_core_p95=8, ink_core_min=64,
              reg_tol=0.75, frame_px_tol=16, frame_max=0.001, aa_min=0.5, aa_floor=64,
-             local_window=33, local_tol=10.0, vacuous_px=200, notch_max=0.03):
+             local_window=33, local_tol=10.0, vacuous_px=200, notch_max=0.04):
     """Run every check. Returns {'pass': bool, 'checks': [...], 'report': {...}}.
     Never exits, never prints: callers decide what to do with the verdict."""
     ref_rgb, ref_alpha, ref_size = load_rgb(ref_path)
