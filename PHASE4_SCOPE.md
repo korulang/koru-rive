@@ -1535,3 +1535,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   member has >1 run, runOverride=-1 first-run-only is the bug
   (golden draws ALL runs = separate drawPaths, shifting the
   multiset). Check run counts for the 15 text objects.
+
+- RUN-COUNT VERDICT: all 15 family texts have EXACTLY ONE
+  run-135 child — runOverride hypothesis DEAD. Strings differ
+  (125/148/58/32-char variants confirmed). Remaining coherent
+  story: the two golden-2569 drawPaths = the two 148-char
+  texts, truncated by golden's ellipsis to fit some budget;
+  ours draws them full -> but ours emits same 2691v as the
+  125-char texts which is itself suspicious (148 chars should
+  emit MORE verbs unless our shaping caps). NEXT: verify ours'
+  per-text verb counts by textIdx (RIVE_TRACE_TEXT already
+  prints) — if the two 148-char texts emit 2691 same as
+  125-char, our glyph loop may be dropping tail chars
+  (pen/advance bug) masking the real delta; if they emit
+  distinct counts, multiset alignment was coincidental.
