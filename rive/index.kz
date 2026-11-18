@@ -1775,8 +1775,11 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16, frame: i64) ?f
                     // Keyframed VM value: Timeline-1 animates
                     // ViewModelInstanceNumber.propertyValue(575) — the
                     // bound size grows over frames (ParentArtboard).
-                    if (std.posix.getenv("RIVE_TRACE_BSP") != null) std.debug.print("bsp vo={d} slot={d} kf={}\n", .{ j, vo.slot, frame >= 0 and hasKeyframed(r, vo.slot, 575) });
-                    if (frame >= 0 and hasKeyframed(r, vo.slot, 575)) return @as(f32, keyframedValue(r, vo.slot, 575, frame));
+                    if (frame >= 0 and hasKeyframedScoped(r, vo.slot, 575, owningArtboard(r, j), frame)) {
+                        // owner already verified against the value's own
+                        // artboard SM — eval ignores ambient g_activeAnim
+                        return keyframedValueT(r, vo.slot, 575, @as(f32, @floatFromInt(frame)), true);
+                    }
                     const scalar = vmScalarOf(vo) orelse return null;
                     return switch (scalar) {
                         .num => |x| @as(f32, @floatCast(x)),
@@ -2469,6 +2472,44 @@ fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
             if (propByKey(o.props, 53)) |v| {
                 const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
                 if (k == @as(i64, propKey)) return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Scoped twin of hasKeyframed: the keyframe group's owner animation must be
+// active in abIdx's OWN state machine at frame — not whatever g_activeAnim
+// the current eval scope happens to hold. Needed for VM values living in a
+// parent artboard's slot space but read during nested component expansion
+// (component_stateful_vm_instance: Timeline-1 animates instance-B's prop1
+// value while g_activeAnim = the component's SM).
+fn hasKeyframedScoped(r: *const Riv, objSlot: i64, propKey: u16, abIdx: usize, frame: i64) bool {
+    for (g_scrubOverrides.items) |ov| {
+        if (ov.slot == objSlot and ov.key == propKey) return true;
+    }
+    const bf_save = g_blendFrom;
+    const bt_save = g_blendT;
+    const active = smActiveAnimIdx(r, abIdx, frame);
+    g_blendFrom = bf_save;
+    g_blendT = bt_save;
+    var inGroup = false;
+    var curObjIdx: i64 = -1;
+    for (r.objects, 0..) |o, oi| {
+        if (propByKey(o.props, 51)) |v| {
+            const s: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            inGroup = (s == objSlot);
+            curObjIdx = @intCast(oi);
+            continue;
+        }
+        if (inGroup) {
+            const owner = animOwnerOf(r, @as(usize, @intCast(curObjIdx)));
+            const ok = active < 0 or owner == active;
+            if (ok) {
+                if (propByKey(o.props, 53)) |v| {
+                    const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+                    if (k == @as(i64, propKey)) return true;
+                }
             }
         }
     }
