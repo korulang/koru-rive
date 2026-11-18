@@ -346,7 +346,9 @@ def first_divergence(ref, ours):
                 bits.append("extra " + ", ".join(f"{k}x{v}" for k, v in extra.most_common(4)))
             return "paint", "; ".join(bits)
         first = next(i for i, (a, b) in enumerate(zip(ref["colors"], ours["colors"])) if a != b)
-        return "draw-order", f"same {len(ref['colors'])} drawables, different order (first at {first})"
+        match = sum(1 for a, b in zip(ref["colors"], ours["colors"]) if a == b)
+        return "draw-order", (f"same {len(ref['colors'])} drawables, different order "
+                              f"(positional match {match}/{len(ref['colors'])}, first diff at {first})")
     if ref["styles"] != ours["styles"]:
         import collections as _c
         if _c.Counter(ref["styles"]) != _c.Counter(ours["styles"]):

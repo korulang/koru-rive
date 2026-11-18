@@ -470,6 +470,23 @@ draw is shape `876`, a **direct child of the artboard**, while our first is shap
 654 -> 653`). The reference emits in a **draw-tree walk**, not in the order
 objects happen to sit in the file.
 
+Per-artboard positional agreement is now reported (this is the number a DFS
+has to move):
+
+| artboard | draws | positional match |
+|---|---:|---:|
+| LineBars | 20 | **16/20** |
+| Circles | 44 | **30/44** |
+| ColorGuide | 38 | **9/38** |
+| Pie Chart | 16 | **2/16** |
+
+ColorGuide's mix is 32 shape draws + 6 text, so the ordering spans both passes —
+a DFS has to interleave them, not just sort each pass. A first attempt at
+rank-ordering the shape pass was abandoned before writing anything: the target
+loop pattern occurs twice in the file (collectDraws and collectArtboardOps) and
+the scaffolding referred to a rank array it had not built. Better to leave the
+file untouched than land a half-refactor in a file another session is editing.
+
 So the fix is a DFS over the artboard's children (objects already appear in
 creation order, so sibling order is free), emitting each node's draws as it is
 visited instead of the current pass order (artboard paint -> FLD -> shapes ->
