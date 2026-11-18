@@ -4196,7 +4196,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         }
     }
     // style paint: Fill child -> SolidColor.colorValue + fillRule
-    textColor.* = 0xFF313131; textFillRule.* = 2;
+    textColor.* = 0xFF000000; textFillRule.* = 2;
     if (haveStyle) {
         for (r.objects, 0..) |fc, fi| {
             if (fc.type_key == 20 and fc.parent_obj == @as(i64, @intCast(styleIdx))) {
@@ -5335,7 +5335,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var tverbs = std.ArrayList(u8).empty;
         var tpts = std.ArrayList(V2).empty;
         defer tverbs.deinit(alloc); defer tpts.deinit(alloc);
-        var tcolor: u32 = 0xFF313131;
+        var tcolor: u32 = 0xFF000000;
         var tfr: i64 = 2;
         if (!textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr)) continue;
         const w = effectiveWorld(r, ti, frame);

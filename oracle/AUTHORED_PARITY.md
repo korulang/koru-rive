@@ -250,6 +250,16 @@ HorizontalBars' twelve all do). With the guard:
 Total absolute error 18 → 12. LineBars' remaining divergence is a *paint*
 mismatch (reference white, ours black) at one drawable, not a count.
 
+**Text colour default was wrong (same day).** Texts with no explicit colour
+were drawn `0xFF313131` (a hardcoded dark grey); the reference draws them black.
+HorizontalBars' colour diff goes from 12 missing `000000` + 4 extra `313131` to
+8 missing `000000` + 2 extra `ffffff` — a strict improvement, counts unchanged.
+
+Consequence to keep in mind: any tuned fixture containing text renders slightly
+differently now, and the committed gate images were made with the old default.
+The gates are already `stale` by provenance, but a re-render is required before
+their verdicts mean anything again.
+
 Gradient paint colour remains open and is *not* stop-derived (see below).
 
 ## Remaining deltas
