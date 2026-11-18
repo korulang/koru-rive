@@ -1425,3 +1425,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   an extra contour emitted (or golden drops one). Plus one
   small path (12,9)g vs (10,8)o. New class: text contour
   over/under-emission, not point suppression.
+
+- CONTOUR VERDICT DATA: the two golden (2569,5745) drawPaths map
+  to TEXTIDX 51 and 57 (drawPath positions 8-9); ours emits
+  (2691,6019) for them = +122 verbs each ≈ several extra
+  contours per run. All other text paths now verb+pt exact.
+  Suspects: whitespace/empty-glyph contour emission, or
+  path-following text duplicating a glyph's contours. Probe:
+  dump verb5-contour count + per-contour verb spans for
+  TEXTIDX 51 vs a matching (2691) run; check textDrawPath's
+  glyph loop for runs golden culls (zero-width/space glyphs
+  still emitting contour geometry).
