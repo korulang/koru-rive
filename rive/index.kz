@@ -1797,6 +1797,68 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16, frame: i64) ?f
     return null;
 }
 
+// Color-valued twin of boundStaticProp: same 447-walk + instance-scope
+// selection, but reads the VM color value's carrier (prop555 on
+// ViewModelInstanceColor, type 426) as u32. Used for binds like
+// SolidColor.colorValue(37) — csvmi_2 obj60/61.
+fn boundColorProp(r: *const Riv, targetIdx: usize, propKey: u16) ?u32 {
+    var lastBindable: i64 = -1;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 446 or o.type_key == 447) {
+            if (lastBindable == @as(i64, @intCast(targetIdx)) and o.type_key == 447) {
+                var pk: u64 = 0;
+                var flags: u64 = 0;
+                var pb: ?[]const u8 = null;
+                for (o.props) |p| {
+                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 587) flags = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 588) { if (p.value == .bytes) pb = p.value.bytes; }
+                }
+                if (pk != propKey) continue;
+                if (flags & 16 != 0) return null;
+                const bytes = pb orelse continue;
+                var pos: usize = 0;
+                var path = std.ArrayList(u64).empty;
+                defer path.deinit(std.heap.page_allocator);
+                while (pos < bytes.len) {
+                    const v = readVarU64(bytes, &pos) orelse return null;
+                    path.append(std.heap.page_allocator, v) catch return null;
+                }
+                if (path.items.len != 2) return null;
+                const vmId = path.items[0];
+                const propId = path.items[1];
+                const ii: usize = if (g_instObj >= 0 and g_instVmid == @as(i64, @intCast(vmId)))
+                    @intCast(g_instObj)
+                else blk: {
+                    var wantOrd: i64 = -1;
+                    if (g_rowInstOrd >= 0) {
+                        if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                    } else if (g_vm_bound) {
+                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = g_vm_inst;
+                    } else return null;
+                    break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                };
+                var j = ii + 1;
+                while (j < r.objects.len) : (j += 1) {
+                    const vo = &r.objects[j];
+                    if (!isVmInstanceValueType(vo.type_key)) {
+                        if (vo.type_key == 446 or vo.type_key == 447) continue;
+                        break;
+                    }
+                    if (propU(vo.props, 554, -1) != @as(i64, @intCast(propId))) continue;
+                    if (propByKey(vo.props, 555) == null) return null;
+                    return propColor(vo.props, 555);
+                }
+                return null;
+            }
+            continue;
+        }
+        lastBindable = @as(i64, @intCast(i));
+    }
+    return null;
+}
+
 fn propFAnim(r: *const Riv, v: *const RivObj, key: u16, dflt: f32, frame: i64) f32 {
     if (frame >= 0 and hasKeyframed(r, v.slot, key)) return @as(f32, keyframedValue(r, v.slot, key, frame));
     const vidx: usize = @intCast(@divExact(@as(usize, @intCast(@intFromPtr(v) - @intFromPtr(r.objects.ptr))), @sizeOf(RivObj)));
@@ -2094,7 +2156,11 @@ fn propColor(props: []const Prop, key: u16) u32 {
 // with it. Reading the absence as 0 makes the paint alpha-0, and the alpha-0
 // cull then drops the whole drawable — the shape vanishes from the op stream.
 fn propColorAnimOr(r: *const Riv, v: *const RivObj, key: u16, frame: i64, dflt: u32) u32 {
-    if (!(frame >= 0 and hasKeyframed(r, v.slot, key)) and propByKey(v.props, key) == null) return dflt;
+    if (!(frame >= 0 and hasKeyframed(r, v.slot, key)) and propByKey(v.props, key) == null) {
+        const vidx: usize = @intCast(@divExact(@as(usize, @intCast(@intFromPtr(v) - @intFromPtr(r.objects.ptr))), @sizeOf(RivObj)));
+        if (boundColorProp(r, vidx, key)) |bc| return bc;
+        return dflt;
+    }
     return propColorAnim(r, v, key, frame);
 }
 
@@ -4754,6 +4820,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
     // Pre-pass assigns each emitted char its line; chars past the height
     // budget are dropped (their contours never emit).
     const lineHeight: f64 = if (asc - desc + gap > 0) asc - desc + gap else @as(f64, fontSize);
+    const advK: f64 = if (std.posix.getenv("RIVE_ADV_K")) |kv| std.fmt.parseFloat(f64, kv) catch 1.0 else 1.0;
     var cps = std.ArrayList(u32).empty;
     var cpsLine = std.ArrayList(i64).empty;
     defer cps.deinit(alloc); defer cpsLine.deinit(alloc);
@@ -4763,7 +4830,8 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         var line: i64 = 0;
         for (text) |b| {
             if (b < 0x20) continue;
-            const a = @as(f64, hmtxAdvance(font, cmapGlyph(font, b))) * scale;
+            var a = @as(f64, hmtxAdvance(font, cmapGlyph(font, b))) * scale;
+            if (advK != 1.0) a *= advK;
             if (lx > 0 and lx + a > t_box_w) { line += 1; lx = 0; }
             // per-line bottom vs box height (text.cpp ellipsis cap):
             // line L's bottom ~ (L+1)*lineHeight must fit t_box_h
