@@ -1745,3 +1745,19 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   follow-path modifier/constraint whose path is shorter than
   siblings' — if wrap width = path length, that's the whole
   mechanism and box_w is a red herring for this fixture.
+
+- FOLLOW-PATH MAP: only FIVE family texts carry
+  TextFollowPathModifier(547) via TextModifierGroup(159):
+  texts {63,73,90,131,159} — ti125 has NONE (breaks the
+  box-height pair theory: ti125's 2569 must come from a
+  different cause OR golden's pair is actually two of the
+  modifier texts). 547 props: P778 = u {6,1,13,84,112} —
+  likely path-target ref/mode. NEXT: resolve P778 target ->
+  path object -> pathMeasure length per text; the two
+  shortest paths = golden's 2569 pair. If ti125 truly emits
+  2569 in golden without a modifier, box-height ellipsis is
+  still live for it — re-verify WHICH texts golden truncates
+  by matching golden 2569 contour prefixes to specific
+  textIdx (block0 vs block1 earlier: block1 matched ti125
+  coords 1.4091/1.9318 — CHECK block0's first coords vs
+  ti131/others to assign both 2569s definitively).
