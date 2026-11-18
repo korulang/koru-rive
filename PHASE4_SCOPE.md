@@ -1694,3 +1694,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   exists). NEXT: check run-135/style props for letterSpacing
   key; add it to char advance; then cap+ellipsis per
   ellipsisLine rule.
+
+- LETTERSPACING DEAD: prop 390 absent file-wide. Golden wraps
+  tighter because it uses SHAPED advances (run->advances from
+  HarfBuzz text.cpp:958 — includes kerning/GPOS), ours uses
+  raw per-char hmtxAdvance -> systematically narrower -> fewer
+  wrap lines -> height cap never bites. Closing the gap needs
+  either GPOS kerning or measuring the effective advance delta
+  from golden's contour x-positions (golden contour xs ARE
+  the laid-out positions — diff ours vs golden per-contour x
+  to derive the advance model golden used, possibly
+  hmtx+constant or kern-pair table subset).
