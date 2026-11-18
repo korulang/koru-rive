@@ -1632,3 +1632,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   line's y exceeds t_box_h budget, emit U+2026 if overflow=3.
   Estimated scope: moderate — textDrawPath's glyph loop gains
   a line-break pass before emission.
+
+- WRAP IMPL ATTEMPT (uncommitted->committed WIP): line-wrap +
+  height-cap pre-pass landed in textDrawPath (cps/cpsLine,
+  baseY per line, U+2026 on droppedTail). MEASURED: WRONG —
+  ti125/131 still emit 2691 (maxLines too generous: lh from
+  asc-desc+gap too small -> floor(33.1/lh)>=4 lines, text
+  needs ~3-4 so nothing drops); two OTHER texts now emit
+  2696 (+5 = ellipsis fired wrongly). LAY/TV diagnostic
+  prints mysteriously silent on latest binary (drawPaths
+  still emit — possibly stale build or early-return path;
+  unresolved). NEXT: get real lineHeight (golden pitch
+  ~11-13px vs computed lh) + fix maxLines formula + stop
+  ellipsis firing on non-overflowing texts; verify LAY
+  trace fires.
