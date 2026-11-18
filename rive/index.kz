@@ -5116,6 +5116,19 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             const fw = propF(pl.props, 7, 0);
             const fh = propF(pl.props, 8, 0);
             if (fw <= 0 or fh <= 0) continue;
+            // Same ancestor-opacity rule the shapes use: a hidden subtree draws
+            // nothing. Without it the pass overshoots (LineBars +6).
+            var faop: f32 = 1;
+            var fanc: i64 = fo.parent_obj;
+            var fhop: usize = 0;
+            while (fanc >= 0 and fhop < 64) : (fhop += 1) {
+                const fao = &r.objects[@intCast(fanc)];
+                if (fao.type_key == 1) break;
+                faop *= propF(fao.props, 18, 1);
+                if (faop <= 0) break;
+                fanc = fao.parent_obj;
+            }
+            if (faop <= 0) continue;
             const fwm = effectiveWorld(r, fi, frame);
             out.append(alloc, op0(0)) catch {};
             var f0 = op0(1); f0.x1 = 0; f0.y1 = 0; out.append(alloc, f0) catch {};
