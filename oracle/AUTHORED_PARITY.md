@@ -726,6 +726,27 @@ typeinfo, so the available objects are not what produced the existing binary.
 Until the oracle's build is reproducible, the identity work is blocked — not by
 the patch, which is small, but by the toolchain that would consume it.
 
+## The oracle rebuild — the plan that would unblock identity (2026-11-18)
+
+Identity has now failed three ways without touching C++: composed transform +
+colour (works, but only tells us ColorGuide is ordered differently), geometry
+hash (convention mismatch), and `(verbs, pts, colour, style)` signatures (0/38 —
+our verbs/pts counts do not correspond to the reference's). The remaining route
+is the small C++ patch, which needs a rebuild.
+
+The working oracle must not be at risk, so the plan is to build in a copy:
+
+    rsync -a --exclude out --exclude '.git' rive-cpp/ /tmp/rive-build/
+    # patch Shape::draw to set a global shape name, record.hpp to print it
+    cd /tmp/rive-build && ./build/build_rive.sh        # ~700MB source, 12 cores
+    # relink oracle/dump from /tmp/rive-build/out/debug
+
+rive-cpp is 2.9GB total but 2.2GB of that is `out/`, so the copy is ~700MB and
+the existing binary stays untouched until the new one works.
+
+That is a deliberate maintenance task, not a round-sized edit — recorded with the
+commands so it can be run when the oracle can be offline for ~20 minutes.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
