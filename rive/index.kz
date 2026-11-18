@@ -2073,7 +2073,11 @@ fn dumpKeyed(r: *Riv) void {
 // eval lands; clfp Item hover needs it to pick the dark-green hold
 // animation over the idle one on the same slot+prop.
 var g_activeAnim: i64 = -1;
-var g_abDepth: u8 = 0; // nested-artboard expansion depth guard
+var g_abDepth: u8 = 0;
+// Artboard currently being collected: scopes keyframe-group matches, which are
+// keyed by per-artboard slot ids and would otherwise cross artboards (G_Meter
+// slot 63 matched a Main object's keyframed opacity and culled 3 shapes).
+var g_abScope: i64 = -1; // nested-artboard expansion depth guard
 var g_abStack: [24]usize = undefined; // expansion-path cycle guard
 var g_abStackLen: usize = 0;
 // Transition crossfade: when an SM transition is mid-flight, colors
@@ -2390,7 +2394,7 @@ fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
             const ook = inGroup and kfOwnerOk(r, curObjIdx);
             std.debug.print("  hk slot={d} key={d} inGroup={} curObj={} ownerOk={} activeAnim={}\n", .{ objSlot, propKey, inGroup, curObjIdx, ook, g_activeAnim });
         }
-        if (inGroup and kfOwnerOk(r, curObjIdx)) {
+        if (inGroup and kfOwnerOk(r, curObjIdx) and (g_abScope < 0 or animArtboard(r, @intCast(curObjIdx)) == g_abScope)) {
             if (propByKey(o.props, 53)) |v| {
                 const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
                 if (k == @as(i64, propKey)) return true;
@@ -4737,16 +4741,28 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
     var textColor: u32 = 0xFF313131;
     var textFillRule: i64 = 2;
     if (!textDrawPath(r, textIdx, frame, alloc, &verbs, &pts, &textColor, &textFillRule, -1)) return;
-std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
+// golden text convention: only the FINAL drawing segment of the whole
+// path drops its terminal point (closed contours keep theirs — the close
+// verb draws the return). Suppress exactly that one.
+var tailVi: usize = 0;
+for (verbs.items, 0..) |v, vi| {
+    const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
+    if (np > 0) tailVi = vi;
+}
+const printedPts = pts.items.len -% @as(usize, if (tailVi < verbs.items.len) 1 else 0);
+std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, printedPts });
     var vp: usize = 0;
-    for (verbs.items) |v| {
+    for (verbs.items, 0..) |v, vi| {
         const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
         var s = std.ArrayList(u8).empty;
         defer s.deinit(alloc);
         s.appendSlice(alloc, std.fmt.allocPrint(alloc, "V {d}", .{v}) catch "") catch {};
+        const isTail = vi == tailVi;
         var k: usize = 0;
         while (k < np and vp < pts.items.len) : (k += 1) {
-            s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+            if (!(isTail and k + 1 == np)) {
+                s.appendSlice(alloc, std.fmt.allocPrint(alloc, " {d:.4} {d:.4}", .{ pts.items[vp].x, pts.items[vp].y }) catch "") catch {};
+            }
             vp += 1;
         }
         std.debug.print("  {s}\n", .{s.items});
@@ -5547,6 +5563,8 @@ fn computeScrubOverrides(r: *const Riv, abIdx: i64, frame: i64) void {
 }
 
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
+    const prevAbScope = g_abScope;
+    g_abScope = @intCast(abIdx);
     const scrubBase = g_scrubOverrides.items.len;
     computeScrubOverrides(r, @as(i64, @intCast(abIdx)), frame);
     if (std.posix.getenv("RIVE_TRACE_ABIND") != null) {
@@ -6137,6 +6155,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         out.append(alloc, op0(7)) catch {};
     }
     g_scrubOverrides.items.len = scrubBase;
+    g_abScope = prevAbScope;
     return;
 }
 

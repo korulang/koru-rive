@@ -1413,3 +1413,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   not a print convention. Both experiments reverted; tree =
   HEAD + clean. NEXT: diff textDrawPath's verbs/pts tail vs
   golden V-lines point-by-point to find the duplicate vertex.
+
+- +1 PT FIXED: emitTextDraw now suppresses ONLY the final
+  drawing segment's terminal point (golden text convention —
+  closed contours keep theirs). Result on
+  text_follow_path_shape_length f0: pts counts MATCH golden on
+  every verb-matched path (1337/2945, 2691/6019, 3257/7369,
+  1601/3547, 778/1746, 566/1179 all exact). Residual renamed:
+  TWO drawPaths diverge in VERB count — golden (2569,5745)x2
+  vs ours (2691,6019): ours carries ~122 extra verbs = likely
+  an extra contour emitted (or golden drops one). Plus one
+  small path (12,9)g vs (10,8)o. New class: text contour
+  over/under-emission, not point suppression.
