@@ -2083,6 +2083,9 @@ var g_blendT: f32 = 0;
 
 fn isKfClusterObj(o: *const RivObj) bool {
     if (o.type_key == 25 or o.type_key == 26) return true;
+    // DataBind(446/447) objects sit inside keyframe clusters between
+    // the keyed values they override — they must not break animOwnerOf.
+    if (o.type_key == 446 or o.type_key == 447) return true;
     const tn = o.type_name orelse return false;
     return std.mem.startsWith(u8, tn, "KeyFrame");
 }
@@ -2369,7 +2372,35 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
     return -1;
 }
 
+// Artboard-scoped keyframe lookup. KeyedObject.objectId is a per-artboard local
+// id, so a bare slot match crosses artboards: G_Meter's slot 63 matched a Main
+// object's keyframed opacity, which culled three gauge shapes the reference
+// draws. With no active animation kfOwnerOk() accepts every group, so the scope
+// has to come from the artboard.
+fn hasKeyframedAb(r: *const Riv, abIdx: usize, objSlot: i64, propKey: u16) bool {
+    var inGroup = false;
+    var curObjIdx: i64 = -1;
+    for (r.objects, 0..) |o, oi| {
+        if (propByKey(o.props, 51)) |v| {
+            const sl: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+            inGroup = (sl == objSlot);
+            curObjIdx = @intCast(oi);
+            continue;
+        }
+        if (inGroup and kfOwnerOk(r, curObjIdx) and owningArtboard(r, @intCast(curObjIdx)) == abIdx) {
+            if (propByKey(o.props, 53)) |v| {
+                const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
+                if (k == @as(i64, propKey)) return true;
+            }
+        }
+    }
+    return false;
+}
+
 fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
+    for (g_scrubOverrides.items) |ov| {
+        if (ov.slot == objSlot and ov.key == propKey) return true;
+    }
     const trk = std.posix.getenv("RIVE_TRACE_KF") != null and objSlot == 2;
     var inGroup = false;
     var curObjIdx: i64 = -1;
@@ -3617,6 +3648,39 @@ fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
                 ay = pf.h - propF(st.props, 519, 0) - sz.h;
             }
             return .{ 1, 0, 0, 1, ax, ay };
+        }
+    }
+    // Flex flow: parent LayoutComponent(409) with a 420 style carrying
+    // flexDirection(598)/gap(498/499) lays children out sequentially on
+    // the main axis — each item offsets by the sum of preceding siblings'
+    // main-axis extents + gaps. Guarded: only engages when the flex props
+    // are actually present (t4f spec — db_health e36->e755 target).
+    if (po.type_key == 409) {
+        if (layoutStyleOf(r, @intCast(p))) |fsi| {
+            const fst = &r.objects[fsi];
+            const hasFlex = propByKey(fst.props, 598) != null or propByKey(fst.props, 498) != null or propByKey(fst.props, 499) != null;
+            if (hasFlex) {
+                const dir = propU(fst.props, 598, 2);
+                const gapH = propF(fst.props, 498, 0);
+                const gapV = propF(fst.props, 499, 0);
+                const horiz = dir == 2 or dir == 3;
+                const gap = if (horiz) gapH else gapV;
+                var mainOff: f32 = 0;
+                var seenSelf = false;
+                for (r.objects, 0..) |co, ci| {
+                    if (co.parent_obj != p) continue;
+                    if (ci == idx) { seenSelf = true; break; }
+                    const cs = layoutSizeOf(r, ci);
+                    mainOff += (if (horiz) cs.w else cs.h) + gap;
+                }
+                if (seenSelf) {
+                    var padL: f32 = 0; var padT: f32 = 0;
+                    padL = propF(fst.props, 512, 0);
+                    padT = propF(fst.props, 514, 0);
+                    if (horiz) return .{ 1, 0, 0, 1, padL + mainOff, padT };
+                    return .{ 1, 0, 0, 1, padL, padT + mainOff };
+                }
+            }
         }
     }
     const avail = layoutAvailOf(r, @intCast(p));
@@ -5399,18 +5463,19 @@ fn scrubAnimAxis(r: *const Riv, animIdx: i64, axis: f32) void {
             continue;
         }
         if (mo.type_key == 26) {
+            if (std.posix.getenv("RIVE_TRACE_SCRUB") != null) std.debug.print("  trk mi={d} pend={d} owner={d} want={d}\n", .{ mi, pendSlot, animOwnerOf(r, mi), animIdx });
             if (propByKey(mo.props, 53)) |v| {
-                const key = switch (v) { .uint => |u| @intCast(u), else => -1 };
+                const key: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
                 if (pendSlot >= 0 and key >= 0 and animOwnerOf(r, mi) == animIdx) {
                     const val = keyframedValueT(r, pendSlot, @as(u16, @intCast(key)), scrubT, true);
-                    g_scrubOverrides.append(std.heap.page_allocator, .{ .slot = pendSlot, .key = @intCast(key), .val = val }) catch {};
+                    g_scrubOverrides.append(std.heap.page_allocator, .{ .slot = pendSlot, .key = @as(u16, @intCast(key)), .val = val }) catch {};
                     if (std.posix.getenv("RIVE_TRACE_SCRUB") != null) std.debug.print("scrub anim={d} slot={d} key={d} t={d:.2} val={d:.3}\n", .{ animIdx, pendSlot, key, scrubT, val });
                 }
             }
             pendSlot = -1;
             continue;
         }
-        if (!isKfClusterObj(mo)) pendSlot = -1;
+        if (!isKfClusterObj(&mo)) pendSlot = -1;
     }
 }
 
@@ -5418,16 +5483,20 @@ fn computeScrubOverrides(r: *const Riv, abIdx: i64, frame: i64) void {
     var anims = std.ArrayList(i64).empty;
     defer anims.deinit(std.heap.page_allocator);
     for (r.objects, 0..) |ao, ai| {
-        if (ao.type_key == 31 and owningArtboard(r, ai) == abIdx) anims.append(std.heap.page_allocator, @intCast(ai)) catch {};
+        if (ao.type_key == 31 and animArtboard(r, ai) == abIdx) anims.append(std.heap.page_allocator, @intCast(ai)) catch {};
     }
+    const dbg = std.posix.getenv("RIVE_TRACE_SCRUB") != null;
+    if (dbg) std.debug.print("scrubscan ab={d} anims={d}\n", .{ abIdx, anims.items.len });
     for (r.objects, 0..) |jo, ji| {
         if (jo.type_key != 148) continue;
         if (owningArtboard(r, ji) != abIdx) continue;
+        if (dbg) std.debug.print("  joy ji={d} slot={d}\n", .{ ji, jo.slot });
         const flags = propU(jo.props, 312, 0);
         const y = keyframedValue(r, jo.slot, 300, frame);
         const x = keyframedValue(r, jo.slot, 299, frame);
         const yId = propU(jo.props, 302, -1);
         const xId = propU(jo.props, 301, -1);
+        if (dbg) std.debug.print("    yId={d} xId={d} flags={d} y={d:.3}\n", .{ yId, xId, flags, y });
         if (yId >= 0 and yId < @as(i64, @intCast(anims.items.len))) {
             const axis = if (flags & 2 != 0) -y else y;
             scrubAnimAxis(r, anims.items[@as(usize, @intCast(yId))], axis);
@@ -5441,7 +5510,7 @@ fn computeScrubOverrides(r: *const Riv, abIdx: i64, frame: i64) void {
 
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
     const scrubBase = g_scrubOverrides.items.len;
-    computeScrubOverrides(r, @intCast(abIdx), frame);
+    computeScrubOverrides(r, @as(i64, @intCast(abIdx)), frame);
     if (std.posix.getenv("RIVE_TRACE_ABIND") != null) {
         for (r.objects, 0..) |so, si| {
             if (so.type_key == 621 and owningArtboard(r, si) == @as(i64, @intCast(abIdx))) {
@@ -5886,7 +5955,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
-            const opSelf: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            const opSelf: f32 = if (frame >= 0 and hasKeyframedAb(r, abIdx, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
             // Ancestor opacity multiplies down the tree: rive-cpp hides a whole
             // subtree when a Node's opacity is 0 (car_widgets TIRE PRESSURE's
             // red band sits under a Node with opacity 0.000 and we drew it).
@@ -6015,15 +6084,14 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         g_blendT = hostT;
         out.append(alloc, op0(7)) catch {};
     }
-    g_scrubOverrides.items.len = scrubBase;    return;
+    g_scrubOverrides.items.len = scrubBase;
+    return;
 }
 
 
 fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
     g_activeAnim = smActiveAnimIdx(r, abIdx, frame);
     if (std.posix.getenv("RIVE_TRACE_SM") != null) std.debug.print("sm ab={d} frame={d} activeAnim={d}\n", .{ abIdx, frame, g_activeAnim });
-    const scrubBase = g_scrubOverrides.items.len;
-    computeScrubOverrides(r, @intCast(abIdx), frame);
     g_abStackLen = 0;
     if (g_abStackLen < g_abStack.len) { g_abStack[g_abStackLen] = abIdx; g_abStackLen += 1; }
     var out = std.ArrayList(OpRec).empty;
