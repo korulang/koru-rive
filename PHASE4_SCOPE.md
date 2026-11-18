@@ -1458,3 +1458,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   variant or run split). Probe: which two of the 2691-family
   differ in golden order positions 7-8; check their SM state
   / TextValueRun count vs siblings.
+
+- STATE SOURCE NAMED (strong): 15 type-134 Text objects form
+  the 2691v family; textDrawPath resolves boundRunText per
+  run — VM-bound text. Golden's two 2569v drawPaths are almost
+  certainly two instances whose BOUND text resolves shorter
+  (fewer glyphs -> -122 verbs) while ours emits template/
+  same-length text. The just-landed g_instVmid/g_rowVmid
+  scoping (concurrent lane) targets exactly this resolution.
+  VERIFY: check which family members carry DataBind props on
+  their run-135 children and whether boundRunText returns
+  different strings per instance scope; if the two golden-2569
+  objects are VM-bound to shorter values, the fix is already
+  in flight via inst-scope — re-diff after it settles.
