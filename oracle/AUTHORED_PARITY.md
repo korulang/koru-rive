@@ -219,6 +219,19 @@ not drawn. For a gauge whose every visible element is animated, that is a
 coherent authoring style rather than a Rive-wide rule — **so this must be
 validated on the other artboards and files before it becomes a decoder cull.**
 
+**And it probably is not a cull rule at all.** COMPASS (417 vs 413) and G_Meter
+(66 vs 69) already match without any cull; applying a keyed-only rule to them
+would under-draw by a wide margin. So "keyframed paints draw, the rest do not"
+is a *correlation specific to TIRE PRESSURE*, not a global rule — and since the
+same artboard also shows a colour mismatch (its base and keyframe palettes are
+red-dominant, the reference draws greens), the likelier frame is **which
+animation/state is active**, not membership of the drawable set. The count and
+the palette disagree together, which points at one cause, not two.
+
+That reframes the probe: instrument the chosen animation id for the artboard
+(`smActiveAnimIdx`'s result) and compare against what the reference's palette
+implies, instead of searching for a membership predicate.
+
 
 Related, and needed for nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
