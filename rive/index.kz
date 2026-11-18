@@ -1773,7 +1773,6 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16) ?f32 {
                     }
                     if (propU(vo.props, 554, -1) != @as(i64, @intCast(propId))) continue;
                     const scalar = vmScalarOf(vo) orelse return null;
-                    if (std.posix.getenv("RIVE_TRACE_BSP") != null) std.debug.print("bsp hit ii={d} j={d} p554={d} want={d}\n", .{ ii, j, propU(vo.props, 554, -1), propId });
                     return switch (scalar) {
                         .num => |x| @as(f32, @floatCast(x)),
                         .boolean => |b| @as(f32, if (b) 1.0 else 0.0),
@@ -4817,6 +4816,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
             std.debug.print("  {s}\n", .{s.items});
         }
     }
+    if (std.posix.getenv("RIVE_TRACE_TV") != null) std.debug.print("TV ti={d} verbs={d} pts={d}\n", .{ textIdx, verbs.items.len, pts.items.len });
     return true;
 }
 fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
