@@ -8,6 +8,8 @@ Harness status at time of writing: **`oracle/verify_harness.py` → 8/8 PASS**.
 
 ---
 
+Provenance: oracle/provenance.py stamps .prov.json sidecars {driver,commit,ts}; run_gates flags fresh|stale|unprovenanced per ours asset (all 33 currently unprovenanced -- render->stamp->freeze going forward). vacuous_px=200 boundary mutant-pinned in selftest.
+
 ## 1. One-paragraph summary
 
 We have a from-scratch Rive `.riv` runtime (decode → player → flat ops stream →

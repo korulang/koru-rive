@@ -532,3 +532,34 @@ more samples are not the lever. `knm_cl2`'s headless probe still dumps
 white; its artifact is stale. The other model's in-progress MSAA batch
 code was made to compile (setStoreAction arg type, print specifiers), but
 the text gates use the per-call EO path, not the batch MSAA path.
+
+## Provenance layer + vacuous floor boundary (2026-11-18)
+
+Trigger: the iba/deam/hff ruling was correct about the images but the
+images predated the bg-fill fix (d994bc9 confirmed: stale artifacts,
+not renderer bugs). A verdict about code requires evidence produced
+by that code.
+
+**provenance.py** — `stamp GATE --driver PATH` writes
+`images/<ours>.prov.json` {driver, commit, ts}; `check`/run_gates
+classify every ours asset fresh|stale|unprovenanced. Staleness =
+mtime heuristic: any dep newer than the render flags it. Deps =
+prov.driver + render_deps.json "shared" (kr/, ../oshun/canvas/).
+All 33 current assets are UNPROVENANCED — none were stamped at render
+time; retroactive stamping would repeat the original sin. Workflow:
+render -> stamp -> freeze. mtime caveat documented: checkout can
+refresh it, so stale means "re-render before trusting", not "wrong".
+
+**vacuous_px=200 floor calibration** — boundary mutants added to
+selftest: sub-floor miss (100px dot vs blank) passes vacuous=1
+(documented hole: <200 ink px = 0.08% of frame can be missed
+silently); super-floor miss (625px dot) fails all ink checks. Floor
+placement: largest vacuous cluster 71px (cin), smallest real 853px
+(mesh); 200 sits at 0.36x/4.3x margins, near the geometric mean 247.
+Hole is bounded and now mutant-pinned rather than prose-pinned.
+
+**Gate table moved to 31 PASS / 2 FAIL** — not by oracle change:
+parallel renderer commits landed (bg-fill refresh d994bc9, Metal
+evenodd text a0f159b + 48deacc supersampling). Remaining FAILs:
+knm_cl2 (frame-diff, anti-aliasing, local-fidelity) and mesh
+(ink-mass, coverage-gap, ink-coverage, anti-aliasing).

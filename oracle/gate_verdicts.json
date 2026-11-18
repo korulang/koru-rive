@@ -7,6 +7,8 @@
   "ours": "ours_hw_t1.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "691ddfb4ea3aa4d5",
   "ref_sha": "433097812796da83",
   "checks": [
@@ -115,6 +117,8 @@
   "ours": "ours_cdo_child_r2_t1.bmp",
   "ref": "ref_cdo_child_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "cd2d154e984b868d",
   "ref_sha": "7723f743a21ed3c2",
   "checks": [
@@ -226,6 +230,8 @@
   "ours": "ours_dsm_c_t1.bmp",
   "ref": "ref_dsm_c_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "2ed095eaae542e67",
   "ref_sha": "b13b46266cb9ccdb",
   "checks": [
@@ -336,6 +342,8 @@
   "ours": "ours_dsm_row_bind.bmp",
   "ref": "ref_dsm_row_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "be3a091736805483",
   "ref_sha": "d62abee1d307efae",
   "checks": [
@@ -446,6 +454,8 @@
   "ours": "ours_clfp_c_t1.bmp",
   "ref": "ref_clfp_c_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "724318ccbb2ce9ea",
   "ref_sha": "927ad568bf6e1353",
   "checks": [
@@ -554,6 +564,8 @@
   "ours": "ours_clfp_item_t1.bmp",
   "ref": "ref_clfp_item_vm_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "5029f52bfbfdce57",
   "ref_sha": "366c1d4833691c7f",
   "checks": [
@@ -665,6 +677,8 @@
   "ours": "ours_cl1_item.bmp",
   "ref": "ref_cl1_item_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "daf43e79fcc9bbe6",
   "ref_sha": "eb32819a7d63f3b6",
   "checks": [
@@ -776,6 +790,8 @@
   "ours": "ours_cl1_main_t1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "166fe0e820f83470",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
@@ -887,6 +903,8 @@
   "ours": "ours_clv_t1.bmp",
   "ref": "ref_clv_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "3ff8bb2d9b5ad491",
   "ref_sha": "5f9f37023731a916",
   "checks": [
@@ -997,6 +1015,8 @@
   "ours": "ours_cl2_t1.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "8a1e1d5d0a1c34a1",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -1108,6 +1128,8 @@
   "ours": "ours_cl2_t10.bmp",
   "ref": "ref_cl2_t10.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "60d966bd29e5795f",
   "ref_sha": "44928ffc0c79377b",
   "checks": [
@@ -1219,6 +1241,8 @@
   "ours": "ours_clfp_item_hover.bmp",
   "ref": "ref_clfp_item_hover.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "fbe8d9522ba0eb5f",
   "ref_sha": "94e232dfad314e91",
   "checks": [
@@ -1330,6 +1354,8 @@
   "ours": "ours_kn_sm_hover.bmp",
   "ref": "ref_clfp_item_hover.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "fbe8d9522ba0eb5f",
   "ref_sha": "94e232dfad314e91",
   "checks": [
@@ -1441,6 +1467,8 @@
   "ours": "ours_kn_clfp_item.bmp",
   "ref": "ref_clfp_item_vm_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "5029f52bfbfdce57",
   "ref_sha": "366c1d4833691c7f",
   "checks": [
@@ -1552,6 +1580,8 @@
   "ours": "ours_kn_cl2_t10.bmp",
   "ref": "ref_cl2_t10.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "60d966bd29e5795f",
   "ref_sha": "44928ffc0c79377b",
   "checks": [
@@ -1663,6 +1693,8 @@
   "ours": "ours_clip_t1.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "fb664ed67faa6b0a",
   "ref_sha": "43feb82ccb774397",
   "checks": [
@@ -1774,6 +1806,8 @@
   "ours": "ours_cin_t1.bmp",
   "ref": "ref_cin_t1.png",
   "vacuous": true,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "b7849aa2b6d5c629",
   "ref_sha": "2e4406cd083c9257",
   "checks": [
@@ -1877,6 +1911,8 @@
   "ours": "ours_iba_t1.bmp",
   "ref": "ref_iba_t1.png",
   "vacuous": true,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
@@ -1978,6 +2014,8 @@
   "ours": "ours_lwti_t1.bmp",
   "ref": "ref_lwti_t1.png",
   "vacuous": true,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
@@ -2079,6 +2117,8 @@
   "ours": "ours_deam_t1.bmp",
   "ref": "ref_deam_t1.png",
   "vacuous": true,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "994eae776f7d43ba",
   "ref_sha": "cf81c4e60c19cd3d",
   "checks": [
@@ -2180,6 +2220,8 @@
   "ours": "ours_hff_t1.bmp",
   "ref": "ref_hff_t1.png",
   "vacuous": true,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
@@ -2281,6 +2323,8 @@
   "ours": "ours_dcpo_t1.bmp",
   "ref": "ref_dcpo_t1.png",
   "vacuous": true,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "dbc7c8c657016d39",
   "ref_sha": "d9b0b4cf71062eed",
   "checks": [
@@ -2382,6 +2426,8 @@
   "ours": "kn_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "c2efb1a03ed4453a",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -2493,6 +2539,8 @@
   "ours": "kn_hw.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "29380a36d0448125",
   "ref_sha": "433097812796da83",
   "checks": [
@@ -2601,6 +2649,8 @@
   "ours": "kn_cl1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "9054a7b8deaff126",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
@@ -2712,6 +2762,8 @@
   "ours": "kn_clv.bmp",
   "ref": "ref_clv_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "6271d611b35ae3bd",
   "ref_sha": "5f9f37023731a916",
   "checks": [
@@ -2822,6 +2874,8 @@
   "ours": "kn_clip.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "e3ac52f4e5e13861",
   "ref_sha": "43feb82ccb774397",
   "checks": [
@@ -2937,6 +2991,8 @@
   "ours": "knm_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "e3511b2af559fbb4",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -3042,16 +3098,15 @@
  },
  {
   "gate": "knm_cl1",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-colour",
-   "anti-aliasing"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "knm_cl1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
-  "ours_sha": "8431a740396b7993",
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
+  "ours_sha": "96466fdfa558b021",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
    {
@@ -3082,12 +3137,12 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=33112 ours=32848 ratio=0.99 (need 0.85..1.15)"
+    "detail": "ref=33112 ours=33151 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.23% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
@@ -3101,8 +3156,8 @@
    },
    {
     "check": "ink-colour",
-    "pass": false,
-    "detail": "hue delta 0.0103 (max 0.008); flat ink 39957 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+    "pass": true,
+    "detail": "hue delta 0.0003 (max 0.008); flat ink 39957 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -3112,17 +3167,17 @@
    {
     "check": "frame-diff",
     "pass": true,
-    "detail": "0.002% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.646%, excused edge band 5.49% of frame"
+    "detail": "0.002% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.262%, excused edge band 5.49% of frame"
    },
    {
     "check": "anti-aliasing",
-    "pass": false,
-    "detail": "blended edge px ours=489 ref=1299 ratio 0.38 (min 0.50)"
+    "pass": true,
+    "detail": "blended edge px ours=972 ref=1299 ratio 0.75 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 8.1 levels at x=113 y=136 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 2.4 levels at x=91 y=16 (max 10.0)"
    }
   ],
   "report": {
@@ -3132,25 +3187,25 @@
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.992,
+   "ink_mass_ratio": 1.001,
    "vacuous": 0,
    "ink_coverage_notch_pct": 0.121,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
-   "ink_hue_delta": 0.0103,
+   "ink_hue_delta": 0.0003,
    "ink_core_px": 39957,
    "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.646,
+   "frame_disagree_pct": 0.262,
    "frame_unexplained_pct": 0.002,
    "aa_px_ref": 1299,
-   "aa_px_ours": 489,
-   "aa_ratio": 0.376,
-   "local_max": 8.15,
-   "rmse_ink_union": 9.54,
+   "aa_px_ours": 972,
+   "aa_ratio": 0.748,
+   "local_max": 2.42,
+   "rmse_ink_union": 5.54,
    "rmse_backdrop": 0.0
   }
  },
@@ -3162,6 +3217,8 @@
   "ours": "knm_clv.bmp",
   "ref": "ref_clv_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "6271d611b35ae3bd",
   "ref_sha": "5f9f37023731a916",
   "checks": [
@@ -3272,6 +3329,8 @@
   "ours": "knm_clip.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "e3ac52f4e5e13861",
   "ref_sha": "43feb82ccb774397",
   "checks": [
@@ -3377,16 +3436,15 @@
  },
  {
   "gate": "knm_hw",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-colour",
-   "anti-aliasing"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "knm_hw.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
-  "ours_sha": "292324951cf7952f",
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
+  "ours_sha": "9f293790e1b0f2ad",
   "ref_sha": "433097812796da83",
   "checks": [
    {
@@ -3412,32 +3470,32 @@
    {
     "check": "ink-bbox",
     "pass": true,
-    "detail": "ref=(78, 192, 340, 234) ours=(78, 192, 340, 234) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+    "detail": "ref=(78, 192, 340, 234) ours=(78, 192, 340, 235) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 1} tol=6"
    },
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=2749 ours=2480 ratio=0.90 (need 0.85..1.15)"
+    "detail": "ref=2749 ours=2758 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.09% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.02% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "2.65% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
+    "detail": "1.33% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 243036 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 242998 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
-    "pass": false,
-    "detail": "hue delta 0.0126 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+    "pass": true,
+    "detail": "hue delta 0.0010 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
    },
    {
     "check": "registration",
@@ -3447,17 +3505,17 @@
    {
     "check": "frame-diff",
     "pass": true,
-    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.445%, excused edge band 2.76% of frame"
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.193%, excused edge band 2.77% of frame"
    },
    {
     "check": "anti-aliasing",
-    "pass": false,
-    "detail": "blended edge px ours=428 ref=1097 ratio 0.39 (min 0.50)"
+    "pass": true,
+    "detail": "blended edge px ours=968 ref=1097 ratio 0.88 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 8.2 levels at x=222 y=218 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 2.2 levels at x=126 y=219 (max 10.0)"
    }
   ],
   "report": {
@@ -3467,23 +3525,23 @@
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.902,
+   "ink_mass_ratio": 1.003,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 2.654,
+   "ink_coverage_notch_pct": 1.327,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
-   "ink_hue_delta": 0.0126,
+   "ink_hue_delta": 0.001,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.445,
+   "frame_disagree_pct": 0.193,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 1097,
-   "aa_px_ours": 428,
-   "aa_ratio": 0.39,
-   "local_max": 8.2,
-   "rmse_ink_union": 27.28,
-   "rmse_backdrop": 0.1
+   "aa_px_ours": 968,
+   "aa_ratio": 0.882,
+   "local_max": 2.18,
+   "rmse_ink_union": 12.76,
+   "rmse_backdrop": 0.26
   }
  },
  {
@@ -3499,6 +3557,8 @@
   "ours": "ours_mesh_t1.bmp",
   "ref": "ref_clfp_c_t1.png",
   "vacuous": false,
+  "provenance": "unprovenanced",
+  "prov_detail": "no .prov.json sidecar",
   "ours_sha": "47e01846b3cf8533",
   "ref_sha": "927ad568bf6e1353",
   "checks": [

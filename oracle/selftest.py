@@ -305,6 +305,23 @@ def main():
     if not vac_ok:
         failures.append("ok_empty_both_vacuous")
 
+    # vacuous floor boundary: a sub-floor miss passes vacuous (the
+    # documented hole -- <200 ink px is 0.08% of a 500x500 frame), a
+    # super-floor miss must fail the ink checks.
+    for name, box, expect in (("vacuous_subfloor_miss_ok", (10, 10, 20, 20), "pass"),
+                              ("vacuous_superfloor_miss_fail", (10, 10, 35, 35), "fail")):
+        dot = blank.copy()
+        x0, y0, x1, y1 = box
+        dot[y0:y1, x0:x1, :3] = 200
+        dotp = os.path.join(tmpdir, name + ".png")
+        save(dot, dotp)
+        res = po.evaluate(dotp, blankp, bg=bg, inset=a.inset, allow_missing_time=True)
+        got = "pass" if res["pass"] else "fail"
+        ok = got == expect
+        rows.append((name, expect, got, ok, "vacuous=%s" % res["report"].get("vacuous")))
+        if not ok:
+            failures.append(name)
+
     # --- pairing guard: an unnamed pair must be refused, a mismatched time too
     import shutil
     ref_tagged = os.path.join(tmpdir, "ref_t33.png")

@@ -19,6 +19,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import pixel_oracle as po  # noqa: E402
+import provenance as prov  # noqa: E402
 
 IMG = os.path.join(HERE, "images")
 
@@ -53,9 +54,11 @@ def run_gate(g):
     res = po.evaluate(ref, ours, bg=tuple(g["bg"]), comp=tuple(g["comp"]) if g.get("comp") else None,
                       bbox_axes="x,y", allow_missing_time=untimed, **opts)
     failed = [c["check"] for c in res["checks"] if not c["pass"]]
+    prov_state, prov_detail = prov.classify(g)
     return {"gate": g["gate"], "verdict": "PASS" if res["pass"] else "FAIL", "failed": failed,
             "hand_label": g["hand_label"], "ours": g["ours"], "ref": g["ref"],
             "vacuous": bool(res["report"].get("vacuous")),
+            "provenance": prov_state, "prov_detail": prov_detail,
             "ours_sha": sha(ours), "ref_sha": sha(ref), "checks": res["checks"], "report": res["report"]}
 
 
@@ -72,8 +75,9 @@ def main():
         print(json.dumps(rows, indent=1, default=str))
     else:
         for r in rows:
-            print("%-13s %-4s (hand label %-5s) %s" % (r["gate"], r["verdict"], r["hand_label"],
-                                                      ", ".join(r["failed"]) or "-"))
+            prov_mark = "" if r["provenance"] == "fresh" else " [%s]" % r["provenance"].upper()
+            print("%-13s %-4s (hand label %-5s) %s%s" % (r["gate"], r["verdict"], r["hand_label"],
+                                                      ", ".join(r["failed"]) or "-", prov_mark))
             if a.only:
                 for c in r["checks"]:
                     print("    [%s] %-14s %s" % ("PASS" if c["pass"] else "FAIL", c["check"], c["detail"]))

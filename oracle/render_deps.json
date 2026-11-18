@@ -1,0 +1,4 @@
+{
+  "shared": ["kr/", "../oshun/canvas/"],
+  "note": "Paths whose mtime newer than an ours render marks it stale. kr/ is the runtime, ../oshun/canvas/ the raster surface. Refine per-gate via prov.driver when a gate needs a narrower set. mtime is a heuristic: a checkout can refresh it, so 'stale' means re-render before trusting the verdict."
+}
