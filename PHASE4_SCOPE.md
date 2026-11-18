@@ -1391,3 +1391,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   isTailSegment/pathPrintedPoints off-by-one (extra contour or
   verb-5 boundary miscount), NOT a geometry bug. Fix site =
   pathPrintedPoints/isTailSegment in index.kz (~1845).
+
+- +1 PT PINPOINTED: verb sequences IDENTICAL (1337=1337,
+  verb-for-verb equal). Diff isolated to LAST cubic before
+  close: golden prints 2pts (tail-suppressed), ours prints
+  3pts — isTailSegment SHOULD return true (verbs[vi+1]==5)
+  yet doesn't fire. Coordinate deltas (~0.001) are separate
+  transform-precision noise. Contradiction unresolved:
+  either verbs tail isn't [...,4,5] as printed, or
+  pathPrintedPoints counts a different array. Next probe:
+  dump raw verbs tail indices + isTailSegment verdicts.
