@@ -1102,3 +1102,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   exists; only boundRunText resolves VM props today — no
   bound-color path). If row color is VM-bound, base green
   shows instead of bound gray = exact symptom.
+
+- VM-bound-color hypothesis DEAD: zero ViewModelPropertyColor
+  (440) objects in clfp — VM props are numbers/lists only
+  (431x2, 566, 568x2) matching the numbered-list binding.
+  Green is AUTHORED color — shape must be legitimately
+  invisible in ref via opacity/hidden/z-order/clip, or our
+  paint picks wrong SolidColor child. Next: opacity/hidden
+  audit — find shape owning paint->SolidColor88, check its
+  ancestor opacity chain + whether a same-slot sibling paint
+  (white/gray) should win instead.
