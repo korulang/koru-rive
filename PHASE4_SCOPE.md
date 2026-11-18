@@ -1018,3 +1018,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   in the ctm fold detail (application order to verbs/pts, or
   pts transformed pre/post flattenPath) OR row content offset.
   Uncommitted: lfp-slot trace print in listRowSlot.
+
+- constrainList tri-trace miss: RIVE_TRACE_TRIS print landed
+  inside the style==0 (stroke) branch of kind-8 — row fills are
+  style==1 (tessellate branch) so it never fired. Move/duplicate
+  the bbox print into the fill branch (after tessellate() call)
+  to dump final tri world-bounds per draw. Everything upstream
+  verified: slot->ops->ctm fold all correct on paper.

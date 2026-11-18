@@ -6457,6 +6457,18 @@ const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap:
                                 ctm[1] * m[4] + ctm[3] * m[5] + ctm[5],
                             };
                         }
+                        if (std.posix.getenv("RIVE_TRACE_TRIS") != null) {
+                            var bx0: f64 = 1e18; var by0: f64 = 1e18; var bx1: f64 = -1e18; var by1: f64 = -1e18;
+                            for (tris) |t| {
+                                const vs = [6]f64{ t.x1, t.y1, t.x2, t.y2, t.x3, t.y3 };
+                                for (vs, 0..) |v, vi| {
+                                    const txv = if (vi % 2 == 0) v else v; _ = txv;
+                                }
+                                for ([_]f64{ t.x1, t.x2, t.x3 }) |vx| { const wx = ctm[0]*vx + ctm[4]; if (wx < bx0) bx0 = wx; if (wx > bx1) bx1 = wx; }
+                                for ([_]f64{ t.y1, t.y2, t.y3 }) |vy| { const wy = ctm[1]*vy + ctm[5]; if (wy < by0) by0 = wy; if (wy > by1) by1 = wy; }
+                            }
+                            std.debug.print("tris n={d} ctmdepth={d} bbox=({d:.0},{d:.0})-({d:.0},{d:.0})\n", .{ tris.len, ctm_depth, bx0, by0, bx1, by1 });
+                        }
                         for (tris) |t| {
                             const tx = [3]f64{ @floatCast(t.x1), @floatCast(t.x2), @floatCast(t.x3) };
                             const ty = [3]f64{ @floatCast(t.y1), @floatCast(t.y2), @floatCast(t.y3) };
