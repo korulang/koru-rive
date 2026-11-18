@@ -2073,6 +2073,7 @@ fn dumpKeyed(r: *Riv) void {
 // eval lands; clfp Item hover needs it to pick the dark-green hold
 // animation over the idle one on the same slot+prop.
 var g_activeAnim: i64 = -1;
+var g_abDepth: u8 = 0; // nested-artboard expansion depth guard
 // Transition crossfade: when an SM transition is mid-flight, colors
 // blend from->to by progress (single-keyframe holds => exact lerp).
 var g_blendFrom: i64 = -1;
@@ -5371,6 +5372,43 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             g_cframe = -1;
         }
         if (clipLc >= 0) out.append(alloc, op0(10)) catch {};
+    }
+    // Nested artboard instances: NestedArtboard(92) / NestedArtboardLeaf(451) /
+    // NestedArtboardLayout(452) compose a transform but were never expanded
+    // into the target artboard's drawables — the whole subtree was invisible.
+    // artboardId(197) is an INDEX into the file's artboard list (rive-cpp:
+    // File::artboard(size_t index)), NOT a ViewModel id: matching on
+    // 583/Artboard.viewModelId matches by coincidence and expands the wrong
+    // subtree.
+    for (r.objects, 0..) |no, ni| {
+        if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
+        if (owningArtboard(r, ni) != abIdx) continue;
+        if (g_abDepth >= 8) continue;
+        const aid = propU(no.props, 197, -1);
+        if (aid < 0) continue;
+        var seen: i64 = 0;
+        var target: i64 = -1;
+        for (r.objects, 0..) |abo, abi| {
+            if (abo.type_key != 1) continue;
+            if (seen == aid) { target = @intCast(abi); break; }
+            seen += 1;
+        }
+        if (target < 0) continue;
+        if (target == @as(i64, @intCast(abIdx))) continue; // self-reference guard
+        const w = effectiveWorld(r, ni, frame);
+        var so = op0(6); so.a = w[0]; so.b = w[1]; so.c = w[2]; so.d = w[3]; so.e = w[4]; so.g = w[5];
+        out.append(alloc, so) catch {};
+        const hostAnim = g_activeAnim;
+        const hostFrom = g_blendFrom;
+        const hostT = g_blendT;
+        g_activeAnim = smActiveAnimIdx(r, @intCast(target), frame);
+        g_abDepth += 1;
+        collectArtboardOps(r, @intCast(target), frame, alloc, &out);
+        g_abDepth -= 1;
+        g_activeAnim = hostAnim;
+        g_blendFrom = hostFrom;
+        g_blendT = hostT;
+        out.append(alloc, op0(7)) catch {};
     }
     g_activeAnim = -1;
     g_blendFrom = -1;
