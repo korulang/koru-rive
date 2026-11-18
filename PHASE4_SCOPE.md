@@ -1549,3 +1549,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   125-char, our glyph loop may be dropping tail chars
   (pen/advance bug) masking the real delta; if they emit
   distinct counts, multiset alignment was coincidental.
+
+- PER-OBJECT PROBE INCOMPLETE at context limit: TEXTIDX trace
+  pairing didn't extract (stream interleave). Banked state:
+  all 15 texts single-run; strings 125/148/58/32-char; ours
+  emits uniform 2691v on long texts; golden wants 2 at 2569v.
+  NEXT session: rerun RIVE_TRACE=1 RIVE_TRACE_TEXT=1, pair
+  TEXTIDX->verbs per object, correlate to string byte-length
+  (prop268 hex) -> confirms whether 148-char texts emit same
+  2691 (our tail-drop bug) or distinct count (golden-only
+  truncation). Then implement the named budget mechanism.
