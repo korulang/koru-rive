@@ -462,6 +462,16 @@ the first version reported zero classes for every artboard).
   frontier confirmed as the dominant residual.
 - Cumulative measured corpus: ~70 files, ~34 identical (~49%).
 
+### Batch-4 distribution (30 files, quiet serial)
+- 13 op-identical / 14 divergent / 2 ours-unavailable /
+  1 ref-unavailable. First-divergence: drawable-count 7, paint 5,
+  geometry 2 — drawable-count still dominates.
+- ours-unavailable x2 are REAL signals (harness fix held):
+  ik_over_distance_constraint SIGABRT exit 134 (new crash, logged
+  FINDINGS.md — constraint-family isolate queued); light_switch
+  empty op stream on ab 3844 (possible empty-emit).
+- Cumulative: ~100 files measured, ~47 identical (~47%).
+
 ### Batch distribution (stratified ~40, post class-1/2/5 fixes)
 - 13/40 op-identical · 24 divergent · 1 ours-unavailable
   (layout_text_match SIGABRT — FIXED, composite-glyph endPts

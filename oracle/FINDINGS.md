@@ -855,3 +855,11 @@ TrimPath eval, transform-scale eval, text metrics — NOT curve
 tessellation specimens. The vertex-exact frontier needs specimens
 from files whose divergence IS flattening (look to drawable-count
 files with matching transforms, or craft a curve-heavy fixture).
+
+## NEW SIGABRT — ik_over_distance_constraint.riv (batch-4)
+
+opsdump exit 134 signal 6, no op stream — same class as
+layout_text_match (now fixed). IKConstraint(81)/DistanceConstraint(82)
+family file; isolate crashing object next leg. Also
+light_switch.riv: opsdump exit 0 but EMPTY stream on ab idx 3844 —
+collectOps returned nothing (possible empty-emit or wrong-ab probe).
