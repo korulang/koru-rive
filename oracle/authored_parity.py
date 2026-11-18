@@ -234,6 +234,11 @@ def ours_abnames(path, koruc, root, timeout):
     if "OPENFAIL" in text:
         return None, text.strip().splitlines()[-1]
     arts = [(int(m.group(1)), m.group(2)) for m in re.finditer(r"AB idx=(\d+) name='(.*?)'", text)]
+    if not arts:
+        # A probe that fails to build or crashes prints no AB lines — that is
+        # NOT "no artboard names". Surface the failure like ours_digest does.
+        tail = [ln for ln in text.strip().splitlines() if ln.strip()][-1:]
+        return None, f"probe produced no AB lines (exit {code}): {tail[0] if tail else 'no output'}"
     return arts, None
 
 
