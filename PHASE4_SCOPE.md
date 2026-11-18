@@ -1594,3 +1594,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   t_box_w advance, cap visible lines at t_box_h/lineHeight,
   append U+2026 on the truncated last line when overflow=3 —
   verify ti125/ti131 emit ~2569v.
+
+- CONTOUR-LEVEL VERDICT: 2691-family texts all emit 157
+  contours; golden's 2569 pair shows ~151 -> golden drops
+  ~6 TAIL contours (~122 verbs) = last ~6 glyphs of the
+  125-char string. Consistent with line/height budget cut +
+  ellipsis on ti125/ti131 (only box-height differentiator:
+  33.1 vs 46.08). Implementation = wrap-at-t_box_w +
+  line-cap-at-t_box_h/lineHeight + U+2026 tail in
+  textDrawPath's glyph loop — feature-sized (needs line
+  breaking + per-line pen reset + ellipsis glyph emit), not
+  landed this leg. All simpler hypotheses dead.
