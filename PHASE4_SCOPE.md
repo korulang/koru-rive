@@ -1945,3 +1945,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   paint path today); bounded renderer leg, oracle = golden
   paint/color records on gradient fixtures. Solo/NestedSM
   gating deferred pending batch-5.
+
+- GRADIENT CLASS OPENED: types decoded already (17 Radial,
+  19 GradientStop, 22 Linear, 1089 Angular; props 33-46 +
+  transform 1103-1105). Fixture discovery pending — no
+  *grad*.riv in unit_tests assets by name; scan needed:
+  which corpus fixtures contain type-17/22 objects (gdump
+  per asset or binary type-key scan). Oracle fix 985a133
+  noted: tier1 last-frame bleed poisoned prior verdicts —
+  re-verify any gradient divergence under fixed oracle.
