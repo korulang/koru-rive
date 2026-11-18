@@ -395,6 +395,33 @@ decoder: probes are now built to a unique path (`koruc run` writes a shared
 actually forwarded to the executed binary (it was only passed to the build, so
 the first version reported zero classes for every artboard).
 
+## Keyframe groups are matched by derived slot, not by object id (2026-11-18)
+
+The decoder's `RivObj` has **no object-id field** — the linear object stream does
+not carry one — so `hasKeyframed` matches `KeyedObject.objectId` against our
+*derived* per-artboard `slot`. That stand-in is the remaining suspect for
+G_Meter's −3.
+
+Traced on G_Meter (active animation 11933):
+
+    KF2 obj=10949 slot=63 kf=true kv=0.000 prop18=false
+    KF2 obj=10958 slot=72 kf=true kv=0.000 prop18=false
+
+Both shapes carry **no opacity property at all** (`prop18=false`), are matched to
+an opacity keyframe group, evaluate to 0, and are culled — while the reference
+draws them, which is exactly the three draws we are short.
+
+Two explanations remain and this evidence does not separate them:
+
+1. our slot numbering diverges from rive's objectId, so the group belongs to a
+   different object; or
+2. the group is ours but rive's value at t=0 is not 0 (keyframe time/fps
+   mapping — another session is changing exactly that).
+
+Settling it needs the objectId assignment decoded (or a C++ probe printing the
+same id→keyframe mapping from rive-cpp), not another guess. `RIVE_TRACE_KF2`
+(the trace above) is in the tree for that work.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
