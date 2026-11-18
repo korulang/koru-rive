@@ -1895,3 +1895,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   obj25's type + any layout/clip width ~150, or check if
   prop285's 157.31 minus artboard inset gives 150. NEXT:
   identify obj25 type_key and its width props.
+
+- OBJ25 IDENTIFIED: type-1 artboard 'Artboard' 500x500 —
+  likely a nested-artboard instance (ParentArtboard
+  component) whose INSTANCE transform scales ~150-effective
+  width, OR texts' real layout parent is deeper. The ~150
+  wrap width may come from instance scale * inner layout.
+  Check: does obj25 have an artboard-instance parent with a
+  scale transform, and do the texts sit under a layout row
+  INSIDE obj25 (children of obj25 other than the 15 texts —
+  rows/containers)? Next probe: list obj25's children types.
