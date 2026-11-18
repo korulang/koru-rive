@@ -1873,3 +1873,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   its prop name in table). ALSO: pts +1 residual — wrapped
   text's final-segment suppression may need the same
   textDrawPath convention applied per-line.
+
+- WIDTH SOURCE FOUND (text.hpp:349): effectiveWidth() =
+  isnan(m_layoutWidth) ? width() : m_layoutWidth — when a
+  LAYOUT controls the text, wrap width = layout-assigned
+  m_layoutWidth (~150), NOT authored width()=157.31. That
+  IS the 150. No type-409 seen earlier — layout participant
+  may be another type or nested-artboard layout; find which
+  object parents ti125/ti131 in the layout tree and what
+  slot width the layout solve assigns. Implementation:
+  textDrawPath's t_box_w should read the layout-resolved
+  width when a layout participant exists (mirror
+  layoutBoxWidth/layoutParticipant logic), else prop285.
