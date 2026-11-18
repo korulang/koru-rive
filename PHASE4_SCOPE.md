@@ -1436,3 +1436,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   TEXTIDX 51 vs a matching (2691) run; check textDrawPath's
   glyph loop for runs golden culls (zero-width/space glyphs
   still emitting contour geometry).
+
+- CONTOUR OBJECTS ID'D: TEXTIDX 51/57 = type-134 Text objects
+  (slots 20/26); their drawPaths come from first TextValueRun
+  (type 135) child via runOverride=-1. +122 verbs each vs
+  golden 2569. To discriminate duplicate-vs-real: dump the
+  run's text string (135 child's string prop) + count verb5
+  contours ours vs golden-implied (~2569v). If ours emits
+  contours for chars golden skips (space/combining), it's a
+  glyph-cull gap; if a whole run's contours duplicate, it's
+  an emission-path bug in textDrawPath's run loop.
