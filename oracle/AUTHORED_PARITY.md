@@ -596,6 +596,29 @@ That is a small patch to `oracle/dump.cpp`/`record.hpp` (thread the
 owning shape's id into the recorded draw), and it should come before any further
 ordering work.
 
+## Per-run text: retried, still wrong (2026-11-18)
+
+With text stabilised by the other session, per-run emission was re-attempted
+(the `runOverride` parameter had survived in the tree; only the loop was
+missing). Measured:
+
+| artboard | ref | per-Text | per-run |
+|---|---:|---:|---:|
+| HorizontalBars | 40 | 34 | **40** |
+| LineBars | 20 | 20 | **26** |
+
+HorizontalBars hitting 40 looks like confirmation and is not: its texts have two
+runs that **share a style** (`style=19 fs=87`, `style=51 fs=14`, …), exactly like
+LineBars', where the reference draws only six text paths. So the two artboards
+have the same run structure but different reference text-draw counts — the
+difference is not per-run versus per-Text, and the matching total is a
+coincidence of composition (12 FLD + 12 text + 16 paints = 40, versus the
+reference's 12 + 6 + 22).
+
+Reverted again. Determining the rule needs the reference's *text* draw count per
+artboard, which means identifying text draws in the reference stream — the same
+identity problem as ordering, not a new experiment on our side.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
