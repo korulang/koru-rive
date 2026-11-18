@@ -1,0 +1,6 @@
+import kr/rive
+import std/args
+std/args:all(): av
+|> kr/rive:open(path: av[1])
+| loaded r |> kr/rive:corpusdump(r) |> kr/rive:free(r)
+| failed e |> std/io:print.ln("open failed {{ e:s }}")
