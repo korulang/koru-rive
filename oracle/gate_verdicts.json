@@ -2981,19 +2981,15 @@
  },
  {
   "gate": "knm_cl2",
-  "verdict": "FAIL",
-  "failed": [
-   "frame-diff",
-   "anti-aliasing",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "knm_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
   "provenance": "unprovenanced",
   "prov_detail": "no .prov.json sidecar",
-  "ours_sha": "e3511b2af559fbb4",
+  "ours_sha": "fc01d841d4257498",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
    {
@@ -3024,12 +3020,12 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=95841 ours=95971 ratio=1.00 (need 0.85..1.15)"
+    "detail": "ref=95841 ours=95854 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.21% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
@@ -3044,7 +3040,7 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.54 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -3053,18 +3049,18 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "0.712% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.036%, excused edge band 12.94% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.007%, excused edge band 14.69% of frame"
    },
    {
     "check": "anti-aliasing",
-    "pass": false,
-    "detail": "blended edge px ours=0 ref=2414 ratio 0.00 (min 0.50)"
+    "pass": true,
+    "detail": "blended edge px ours=2022 ref=2414 ratio 0.84 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 10.6 levels at x=258 y=300 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.2 levels at x=77 y=196 (max 10.0)"
    }
   ],
   "report": {
@@ -3074,7 +3070,7 @@
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 1.001,
+   "ink_mass_ratio": 1.0,
    "vacuous": 0,
    "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
@@ -3082,17 +3078,17 @@
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
    "ink_core_px": 92947,
-   "ink_core_mean": 0.54,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.036,
-   "frame_unexplained_pct": 0.712,
+   "frame_disagree_pct": 0.007,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 2414,
-   "aa_px_ours": 0,
-   "aa_ratio": 0.0,
-   "local_max": 10.56,
-   "rmse_ink_union": 6.27,
+   "aa_px_ours": 2022,
+   "aa_ratio": 0.838,
+   "local_max": 0.22,
+   "rmse_ink_union": 1.16,
    "rmse_backdrop": 0.0
   }
  },
@@ -3106,7 +3102,7 @@
   "vacuous": false,
   "provenance": "unprovenanced",
   "prov_detail": "no .prov.json sidecar",
-  "ours_sha": "96466fdfa558b021",
+  "ours_sha": "c9e70a7cc376e68b",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
    {
@@ -3127,7 +3123,7 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (80.2% of frame)"
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (80.1% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -3137,7 +3133,7 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=33112 ours=33151 ratio=1.00 (need 0.85..1.15)"
+    "detail": "ref=33112 ours=33144 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
@@ -3147,12 +3143,12 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.12% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
+    "detail": "0.00% of 49640 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 195280 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 195260 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
@@ -3167,12 +3163,12 @@
    {
     "check": "frame-diff",
     "pass": true,
-    "detail": "0.002% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.262%, excused edge band 5.49% of frame"
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.230%, excused edge band 5.60% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=972 ref=1299 ratio 0.75 (min 0.50)"
+    "detail": "blended edge px ours=1144 ref=1299 ratio 0.88 (min 0.50)"
    },
    {
     "check": "local-fidelity",
@@ -3189,7 +3185,7 @@
    "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 0.121,
+   "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
@@ -3199,13 +3195,13 @@
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.262,
-   "frame_unexplained_pct": 0.002,
+   "frame_disagree_pct": 0.23,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 1299,
-   "aa_px_ours": 972,
-   "aa_ratio": 0.748,
+   "aa_px_ours": 1144,
+   "aa_ratio": 0.881,
    "local_max": 2.42,
-   "rmse_ink_union": 5.54,
+   "rmse_ink_union": 5.19,
    "rmse_backdrop": 0.0
   }
  },

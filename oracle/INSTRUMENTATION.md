@@ -174,3 +174,14 @@ the browser font AA/hinting spreads ink over more edge pixels than the
 outline-glyph raster. 8× supersampling did not improve the count, so the
 lever is font rasterization, not path-fill samples. This is the named
 text-raster residual; the hole/coverage part of the seam is closed.
+
+## Metal text seam closed (2026-11-18)
+
+The text seam is closed: glyph fills are evenodd (counters subtracted),
+both per-call Metal paths render at 4× and box-downsample, and the
+composite uses the straight fill colour instead of the premultiplied
+readback. `knm_cl1`/`knm_cl2`/`knm_hw` PASS; full table 32/1. The
+window close now flushes the pending batch; the batch optimisation stays
+disabled (`g_metal_batch=false`, named delta) because its command buffer
+errors. A blur was tested and rejected (AA vs local-fidelity/ink-colour).
+The only remaining failure is the `mesh` NOTE.

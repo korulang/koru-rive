@@ -563,3 +563,22 @@ parallel renderer commits landed (bg-fill refresh d994bc9, Metal
 evenodd text a0f159b + 48deacc supersampling). Remaining FAILs:
 knm_cl2 (frame-diff, anti-aliasing, local-fidelity) and mesh
 (ink-mass, coverage-gap, ink-coverage, anti-aliasing).
+
+## Metal text seam closed (2026-11-18): straight-alpha composite was the colour bug
+
+`knm_cl1`, `knm_cl2`, `knm_hw` now PASS. Chain:
+1. Glyph fills forced evenodd -> stencil parity subtracts counters.
+2. Per-call Metal fill (both nonzero and EO) renders at 4× and
+   box-downsamples; `metalBatchFlush` disabled while debugging.
+3. The colour/AA failure was the composite: it passed the
+   premultiplied readback (`rr/16`) *and* an alpha to `blendInto`,
+   which expects straight RGBA and multiplies by alpha — a
+   double-multiply at every AA edge. Using `col.r/g/b` with `ai` fixed
+   ink-colour (0.0003/0.0000/0.0010), AA (0.88/0.84/0.88) and
+   local-fidelity (2.4/0.2/2.2).
+4. `window.close` flushes the pending batch; `knm_cl2` would otherwise
+   dump white. The batch optimisation remains disabled
+   (`g_metal_batch=false`, named delta), its command buffer erroring.
+A 3x3 box / 1px cross blur was tested and rejected: it raised AA but
+broke local-fidelity (15-28) and ink-colour (0.02-0.05). Full table:
+**32 PASS / 1 FAIL** (only `mesh` NOTE).

@@ -297,3 +297,8 @@ were against stale `ours_*` artifacts (100% white). Fresh renders match
 the reference spec colours and all three now PASS; the current table is
 **29 PASS / 4 FAIL**. The audit's vacuous-backdrop call was right about
 the old image, but the image was stale, not the renderer.
+
+**Metal text follow-up (2026-11-18):** `knm_cl1`, `knm_cl2`, and
+`knm_hw` now PASS after evenodd counters, 4× per-call Metal fill, a
+straight-alpha composite, and a window-close batch flush. Full table
+**32 PASS / 1 FAIL**; only the `mesh` NOTE remains.

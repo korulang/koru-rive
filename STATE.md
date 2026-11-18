@@ -484,3 +484,19 @@ glyph raster, a named text-raster residual, not a path-fill hole.
 `knm_cl2`'s headless Metal probe still dumps an all-white surface; its
 artifact remains stale. Full table stays **29 PASS / 4 FAIL** (three
 Metal text/AA + mesh NOTE).
+
+
+Metal text seam closed (2026-11-18): `knm_cl1`, `knm_cl2`, `knm_hw` all
+**PASS**; full table **32 PASS / 1 FAIL** (only the `mesh` NOTE). The
+fixes: glyph fills forced evenodd (counters subtracted), 4× supersampled
+per-call Metal fill for both nonzero and EO paths, and — the actual
+colour bug — composite with the straight `col` instead of the
+premultiplied readback (the old `rr/16` path double-multiplied edge
+alpha, causing ink-colour/local-fidelity failures). `window.close` now
+flushes the pending Metal batch before the surface dump; the batch
+optimisation itself is disabled (`g_metal_batch=false`, named delta)
+because its command buffer was erroring. `knm_cl1` AA 0.88, ink-colour
+0.0003; `knm_cl2` AA 0.84, frame-diff 0.000; `knm_hw` AA 0.88,
+ink-colour 0.0010. A 3×3/1px blur experiment was tested and rejected:
+it bought AA at the cost of local-fidelity/ink-colour. Only `mesh`
+(NOTE) remains.
