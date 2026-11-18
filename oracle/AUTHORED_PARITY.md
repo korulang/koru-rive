@@ -132,13 +132,27 @@ COMPASS and G_Meter are essentially exact — traversal and paint resolution are
 sound. **TIRE PRESSURE is the outlier**, and Main's +197 is that same content
 propagated through the nested instance (186 + neighbours).
 
-TIRE PRESSURE has 226 Shapes and the reference draws 68 of them, so ~70% are
-culled by the reference at frame 0. Painting visibility (`ShapePaint.isVisible`,
-key 41) is already honoured per paint, and opacity (key 18) is read per object —
-so the leading hypothesis is **state**: the artboard's own state machine
-selects a state that hides most layers, and we render the base pose instead.
-The artboard has 350 `KeyFrameDouble` + 451 `KeyFrameColor` keyframes, which is
-the shape of an opacity-animated set.
+Measured facts about that cull (all frame-invariant — the reference draws 68 at
+frames 0..4, so this is not animation):
+
+- 226 Shapes, **all** have a Fill/Stroke child — no unpainted shapes.
+- 116 objects carry `WorldTransformComponent.opacity` (key 18); **none is 0**.
+- Exactly **one** `ShapePaint.isVisible` (key 41) property exists in the whole
+  artboard, and it is `false`.
+- 350 `KeyFrameDouble` + 451 `KeyFrameColor` keyframes exist, but the draw count
+  does not move across five frames.
+
+So the cull is not "no paint", not "opacity 0", and not animation. The remaining
+candidates, in order: (a) the paints are gradients and the reference resolves
+something that culls them (the class-3 gradient finding), (b) shapes whose path
+collapses to zero drawable area at the base pose, (c) a per-shape cull rule we
+have not modelled at all.
+
+Related, and needed for nested instances specifically: each carries a
+`NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
+instance's state comes from the *instance*, not from the target artboard's
+default state machine. Expansion currently calls `smActiveAnimIdx(target, …)`,
+which asks the artboard, not the instance.
 
 Related, and needed for the nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
