@@ -5141,6 +5141,8 @@ fn dashOf(r: *const Riv, paintIdx: usize) DashInfo {
 }
 
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
+    const abEntryOps = out.items.len;
+    defer if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("abops ab={d} depth={d} emitted={d}\n", .{ abIdx, g_abDepth, out.items.len - abEntryOps });
     // Rows pass frame=-1; g_cframe carries the host frame for colors only.
     // Host frame 0 = pre-animation: fall back to -1 so keyframed colors
     // hold their base value (cl2 t1 gray, not the kf end state).

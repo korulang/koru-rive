@@ -1168,3 +1168,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   to fire in recursion — unverified whether depth-2 reached.
   NEXT: count draws per expanded target (trace collectArtboardOps
   entry per abIdx) to see which level starves.
+
+- CS verdict DECISIVE: per-abIdx emit counts — ab26=28,
+  ab9504=263x3, ab9887=122 (expansion WORKS), but
+  **ab9482=0 ops TOTAL** — the gateway to 5840 (31 CS) emits
+  literally nothing, so its 4 nested instances (->4756x3,
+  5840) never fire. 5840's clips are reachable-but-starved at
+  depth-2. Root cause candidate: owningArtboard() inside
+  recursion returns wrong owner for 9482's instances (Koru's
+  parent-chain walk vs file structure), or 9482 early-returns.
+  49 untargeted CS (174/2328) remain structural per aid census.
