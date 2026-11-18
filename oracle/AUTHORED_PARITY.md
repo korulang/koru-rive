@@ -283,6 +283,22 @@ this is inspection, not a byte-identical render. A real re-render still needs
 the probe→gate mapping recovered, and the committed images remain `stale` by
 provenance until then.
 
+## Per-drawable identity (instrument added 2026-11-18)
+
+Attributing a count delta has needed object identity for several rounds. It now
+exists: `RIVE_TRACE_DRAW=1` makes the shape draw path print
+`DRAW obj=<shape> paint=<object> style=<s> color=<c> m=<a>,<b>,<d> t=<e>,<g>`.
+Gated, no behaviour change.
+
+First use — car_widgets Main (+16): matching the reference's draws to ours by
+(transform, colour, style) leaves the largest unmatched groups with object ids
+inside **G_Meter's** range (`11191`, `11224`, `11237`, `11250`; `11167`-`11183`;
+`11094`-`11153`). G_Meter standalone draws 66 against the reference's 69 — we
+are *short* there, yet Main draws extra objects from that range. So the delta is
+in how Main composes that instance, not in G_Meter's own traversal.
+
+This is the first time that sentence could be written with object ids behind it.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
