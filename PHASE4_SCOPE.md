@@ -905,3 +905,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   per-eo-seg stencil parity sub-passes. All 5 knm gates
   re-verified PASS. GPU path now fully batched except
   clipped draws (per-call) and images (per-call).
+
+- Mesh dashed-stroke (sole FAIL gate): recon complete.
+  Dash=507 has ONLY length(692)/lengthIsPercentage(693) —
+  single dash length, gap = same length (Rive dash pattern
+  is [dash,gap] alternating). DashPath=506 carries offset
+  (690/691). Stroke paints parent Dash objects — find via
+  parent_obj == paint slot. Plan: decode dash len+offset on
+  stroke DrawRec -> OpRec/MeshDrawHdr dash fields -> in
+  strokeVerbs path: walk flattened contour measuring arc
+  length, emit dash-run sub-contours (skip gaps) -> existing
+  quad/fan tessellation per run. meshops kind-8 style==0 arm
+  at ~line 6019; probe draw.path stroke arm ~line 5885.
+  Ref: ref_clfp_c_t1.png, ours_mesh_t1.bmp; fails
+  ink-mass 0.71 / ink-coverage 65.66% / AA 0.
