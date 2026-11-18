@@ -866,4 +866,10 @@ light_switch.riv: RESOLVED FLAKE — file is a 319-byte stub; the
 run_probe wrote SHARED ./a.out; parallel specimen compiles during
 batch-4 overwrote it mid-run -> probe executed wrong binary. Fixed
 upstream (unique binary paths per probe). True verdict: divergent
-paint-layer — ffac00/747474 color ORDER swap on drawables 1-2.
+paint-layer — CORRECTED: not an order swap. Inspect shows paint
+edges unambiguous (Fill9->Shape2 rect, Fill10->Shape5 ellipse,
+Fill11->Artboard bg; SolidColor4 has NO static colorValue prop).
+Ref resolves that slot ffac00, ours defaults 747474 -> color-VALUE
+resolution gap = color-source-dynamics class (animated/default
+color prop we don't evaluate), NOT a paint-assignment-order bug.
+Fix site = colorValue/animation eval leg, not traversal order.
