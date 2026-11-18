@@ -194,6 +194,32 @@ static pose) rather than to the shape.
 Note for reproducibility: the first sweep used wrong property keys (rotation is
 15, not 14; `blendModeValue` is 23, not 26) and its numbers were discarded.
 
+Per-**paint** predicates then landed it. Same harness, rules applied to the
+`Fill`/`Stroke` child instead of the shape (target: 53 fills + 15 strokes):
+
+| rule (keep only…) | fills | strokes | total |
+|---|---:|---:|---:|
+| paints whose colour is **keyframed** | **54** | 10 | 64 |
+| paints whose colour is *not* keyframed | 180 | 45 | 225 |
+| gradient paints | 45 | 27 | 72 |
+| keyframed **or** gradient | 64 | 37 | 101 |
+| keyframed **or** stroke | 54 | 55 | 109 |
+| keyframed **and** gradient | 35 | 0 | 35 |
+
+**The drawn set is the keyframed-colour paints.** That rule reproduces 54 of
+the reference's 53 fills — off by one — where no shape-level rule came within
+a factor of two. Strokes come out 10 against 15, and the likely reason is
+`hasKeyframed`: it matches keyframe groups by *slot*, which is exactly the kind
+of lookup that under-matches on stroke paints. So the rule is probably right
+and the detection is slightly narrow.
+
+Interpretation: at the static pose the artboard draws the elements that
+participate in its active animation; paints with no animation participation are
+not drawn. For a gauge whose every visible element is animated, that is a
+coherent authoring style rather than a Rive-wide rule — **so this must be
+validated on the other artboards and files before it becomes a decoder cull.**
+
+
 Related, and needed for nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
 instance's state comes from the *instance*, not from the target artboard's
