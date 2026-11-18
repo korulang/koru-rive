@@ -132,33 +132,34 @@ COMPASS and G_Meter are essentially exact — traversal and paint resolution are
 sound. **TIRE PRESSURE is the outlier**, and Main's +197 is that same content
 propagated through the nested instance (186 + neighbours).
 
-Measured facts about the delta (all frame-invariant — the reference draws 68 at
-frames 0..4):
+Measured facts about the delta:
 
-- 226 Shapes, **all** have a Fill/Stroke child — no unpainted shapes.
+- The reference draws **68 even in its `static t=0` block**, before any advance,
+  with the same colours as frame 0. So this is the **base pose**: not a state
+  machine transition, not an animation, not time.
+- 226 Shapes, **all** have a Fill/Stroke child.
 - 116 objects carry `WorldTransformComponent.opacity` (key 18); **none is 0**.
-- Exactly **one** `ShapePaint.isVisible` (key 41) property exists in the whole
-  artboard, and it is `false`.
-- **Zero** `KeyedProperty` objects in the entire file key opacity (key 18), so
-  the cull is not animated opacity.
-- No `Solo`(147) components exist in any artboard.
-- Every Shape's parent chain reaches the artboard: 226/226, no orphans.
-- Only 27 path objects carry `pathFlags` (3× flag 1, 24× flag 2) — hidden
-  contours cannot account for 158 missing draws.
+- Exactly **one** `ShapePaint.isVisible` (key 41) exists, and it is `false`.
+- **Zero** `KeyedProperty` objects in the file key opacity (18).
+- No `Solo`(147) components in any artboard.
+- 226/226 shapes' parent chains reach the artboard — no orphans.
+- 27 path objects carry `pathFlags`; hidden contours cannot explain 158.
+- Only **12** of the 210 extra draws fall entirely outside the artboard rect,
+  so a cull rect is not the rule either.
+- car_widgets has just **4** `LayoutComponent`s — one per artboard — so the
+  earlier "layout" reading of this delta was wrong; layout is data_viz's
+  problem (`ForegroundLayoutDrawable`), not car_widgets'.
 
-Bbox comparison is what settles it: 44 of the reference's 68 drawables match
-ours by bbox, 3 are absent from our stream, and **210 of our draws have no
-reference counterpart**. Those extras cluster hard at the origin —
-`x ∈ [-383, 2]`, `y ∈ [-331, 13]` — and are the red/amber band colours
-(`ff0000` ×48, `350000` ×36, `1f1717` ×16, `ff4700` ×15 …) plus `747474`
-defaults.
+Bbox comparison: 44 of the reference's 68 match ours, 3 are absent from ours,
+and 210 of ours have no counterpart, clustered near the origin. Base SolidColor
+values in the artboard are red-dominant (`ff0000` ×62), the keyframe palette is
+red-dominant (`fd2020` ×108), and the reference's 68 are greens — so colour
+selection differs as well as set membership.
 
-That is not a visibility cull. It is **un-laid-out content**: TIRE PRESSURE is
-a layout-driven artboard (LayoutComponents, 32 LinearGradients, 5
-RadialGradients), and its items sit at base positions near the origin until the
-solver places them. The reference draws the laid-out result. So this is the
-**same layout gap** already named for `ForegroundLayoutDrawable`(513) — it
-inflates car_widgets' count, it is not a separate cull rule.
+**Next experiment (needs a new instrument):** the 68 cannot be identified by
+colour or count. `oracle/dump.cpp` should print the drawable's object id (or
+name) on each `drawPath` line, so the reference's set can be matched to objects
+by identity instead of inferred. That is the direct route and it is small.
 
 Related, and needed for nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
