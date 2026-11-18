@@ -680,3 +680,19 @@ failure (open succeeds); crash is in the ops/emit path — likely text
 layout measurement or TextStyle handling hitting an assert/unwrap.
 Minimal repro pending: opsdump at name-resolved Main ab index.
 Fix leg: isolate, then guard or implement the missing path.
+
+## RESOLVED-ish — layout_text_match SIGABRT: glyph endPts > decoded points
+
+Crash signature (opsdump_ltm.k repro, ab:5): `textDrawPath` contour walk
+indexes `gp[ni]` where `ni` derives from `endPtsOfContours` — but
+`glyfGlyph` decoded FEWER points than endPts claims. Concrete hits:
+Text obj[11]/obj[19], char 'i' (gid 689): gp.len=16, cend=17, ni=16;
+char ',' (gid 1501): gp.len=4, cend=5, ni=4. Pattern cend = gp.len+1
+on specific gids only -> per-glyph defect, consistent with composite
+glyphs (glyf type 10) mis-parsed as simple outlines, or endPts counting
+points glyfGlyph drops. File: layout_text_match.riv — single artboard
+obj[5], ~10 Text objects nested in LayoutComponents.
+
+Guard added at the np access (index.kz ~4286): ni >= gp.len ->
+LTMOOB stderr print + break. opsdump now completes: 286 ops, exit 0.
+Proper fix = glyfGlyph composite-glyph path — renderer-owner leg.
