@@ -4628,6 +4628,96 @@ fn dumpGraph(r: *Riv) void {
     dumpGraph(r);
 }
 
+// ---- riv2k materialize: canonical spec -> Riv ------------------------------
+fn specTok(spec: []const u8, pos: *usize) []const u8 {
+    while (pos.* < spec.len and (spec[pos.*] == ' ' or spec[pos.*] == '\n' or spec[pos.*] == '\r' or spec[pos.*] == '\t')) pos.* += 1;
+    const s = pos.*;
+    while (pos.* < spec.len and spec[pos.*] != ' ' and spec[pos.*] != '\n' and spec[pos.*] != '\r' and spec[pos.*] != '\t') pos.* += 1;
+    return spec[s..pos.*];
+}
+fn specInt(spec: []const u8, pos: *usize) i64 { return std.fmt.parseInt(i64, specTok(spec, pos), 10) catch -1; }
+fn specU32(spec: []const u8, pos: *usize) u32 { return std.fmt.parseInt(u32, specTok(spec, pos), 16) catch 0; }
+fn specHex(spec: []const u8, pos: *usize, n: usize) ?[]u8 {
+    const t = specTok(spec, pos);
+    if (t.len != n * 2) return null;
+    const out = std.heap.page_allocator.alloc(u8, n) catch return null;
+    for (out, 0..) |*b, i| {
+        b.* = std.fmt.parseInt(u8, t[i * 2 .. i * 2 + 2], 16) catch {
+            std.heap.page_allocator.free(out);
+            return null;
+        };
+    }
+    return out;
+}
+
+fn materializeGraph(spec: []const u8) ?*Riv {
+    const alloc = std.heap.page_allocator;
+    var pos: usize = 0;
+    if (!std.mem.eql(u8, specTok(spec, &pos), "G")) return null;
+    const nobj = specInt(spec, &pos);
+    if (nobj < 0 or !std.mem.eql(u8, specTok(spec, &pos), "B")) return null;
+    const nbytes = specInt(spec, &pos);
+    const bytes = alloc.alloc(u8, @intCast(@max(nbytes, 0))) catch return null;
+    if (nbytes > 0) {
+        const hb = specHex(spec, &pos, @intCast(nbytes)) orelse {
+            alloc.free(bytes);
+            return null;
+        };
+        @memcpy(bytes, hb);
+        alloc.free(hb);
+    }
+    const objects = alloc.alloc(RivObj, @intCast(nobj)) catch return null;
+    for (objects) |*o| {
+        if (!std.mem.eql(u8, specTok(spec, &pos), "O")) return null;
+        o.type_key = @intCast(@max(specInt(spec, &pos), 0));
+        o.slot = specInt(spec, &pos);
+        o.parent = specInt(spec, &pos);
+        o.parent_obj = specInt(spec, &pos);
+        o.style_obj = specInt(spec, &pos);
+        const nprops = specInt(spec, &pos);
+        if (nprops < 0) return null;
+        o.type_name = typeName(o.type_key);
+        const props = alloc.alloc(Prop, @intCast(nprops)) catch return null;
+        for (props) |*p| {
+            p.key = @intCast(@max(specInt(spec, &pos), 0));
+            p.field = @intCast(specInt(spec, &pos));
+            const kind = specTok(spec, &pos);
+            if (std.mem.eql(u8, kind, "u")) {
+                p.value = .{ .uint = @intCast(@max(specInt(spec, &pos), 0)) };
+            } else if (std.mem.eql(u8, kind, "d")) {
+                p.value = .{ .dbl = @bitCast(specU32(spec, &pos)) };
+            } else if (std.mem.eql(u8, kind, "c")) {
+                p.value = .{ .color = specU32(spec, &pos) };
+            } else if (std.mem.eql(u8, kind, "b")) {
+                p.value = .{ .boolean = specInt(spec, &pos) != 0 };
+            } else if (std.mem.eql(u8, kind, "x")) {
+                const n = specInt(spec, &pos);
+                if (n < 0) return null;
+                p.value = .{ .bytes = specHex(spec, &pos, @intCast(n)) orelse return null };
+            } else return null;
+            if (propEntry(p.key)) |pe| {
+                p.name = pe.name;
+            } else {
+                p.name = "?";
+            }
+        }
+        o.props = props;
+    }
+    const riv = alloc.create(Riv) catch return null;
+    riv.bytes = bytes;
+    riv.objects = objects;
+    return riv;
+}
+
+~pub tor fromgraph { spec: string }
+| loaded *Riv<loaded!>
+| failed string
+
+~proc fromgraph|zig {
+    const r = materializeGraph(spec) orelse return .{ .failed = "bad spec" };
+    return .{ .loaded = r };
+}
+
 ~pub tor corpusdump { r: *Riv<loaded> }
 ~proc corpusdump|zig {
     // print artboard map first
@@ -5326,6 +5416,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 vp += np;
             }
             var pm = op0(6); pm.a = w[0]; pm.b = w[1]; pm.c = w[2]; pm.d = w[3]; pm.e = w[4]; pm.g = w[5]; out.append(alloc, pm) catch {};
+            if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("DRAW obj={d} paint={d} style={d} color={x} m={d:.1},{d:.1},{d:.1} t={d:.1},{d:.1}\n", .{ si, pi, style, color, w[0], w[1], w[3], w[4], w[5] });
             var dr = op0(8); dr.style = style; dr.color = color; dr.thick = thick; dr.join = join; dr.cap = cap; dr.eo = if (fr == 1) 1 else 0;
             if (isStroke) { const dd = dashOf(r, pi); if (dd.len > 0) { dr.dash = dd.len; dr.dashOff = dd.off; } }
             out.append(alloc, dr) catch {};
