@@ -769,3 +769,16 @@ but 712's content emits ~0 ops (PointsPath/stroke-path issue inside
 target). NEXT PROBE: opsdump ab:180 with tracing, count collectOps
 recursion or diff RIVE_NO_NESTED=1 op count — distinguishes
 "never entered 712" from "entered but emitted nothing".
+
+## hunter_x_demo clip census — ClippingShape(42) untraversed
+
+Ref 130 clipPaths vs ours 1. Census: 80 ClippingShape objects
+(79 parented to Shape, 1 to Node), ZERO clip=true props, 10
+NestedArtboard instances (5 Leaf + 5 plain). Emit gap: our only clip
+source is the ArtboardComponentList scroll clip — ClippingShape(42)
+is never traversed. ~50 of 130 clips unaccounted by the 80 CS objects
+— likely per-instance artboard-bounds clips or clips inside expanded
+nested targets; secondary. For renderer owner: ClippingShape semantics
+= clip path drawable masking siblings/parent contents (rive-cpp
+clipping_shape.cpp) — needs traversal arm emitting clippush/clippop
+(k=9/10) around the masked subtree.
