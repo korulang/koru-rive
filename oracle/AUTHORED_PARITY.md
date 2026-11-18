@@ -170,9 +170,16 @@ red-dominant, and the reference's 68 are greens — so colour selection differs
 independently of membership), and no shape property we decode splits 68 from
 226.
 
-**Next experiment (needs a new instrument):** `oracle/dump.cpp` should print the drawable's object id (or
-name) on each `drawPath` line, so the reference's set can be matched to objects
-by identity instead of inferred. That is the direct route and it is small.
+**Next experiment (designed, not yet run): an env-gated cull-rule sweep.**
+Guessing predicates from the object dump has failed — the parse and the
+predicate table both need care, and no single decoded property splits 68 from
+226. Put the question to the decoder instead: add a temporary
+`RIVE_CULL_RULE=<name>` switch in the shape-paint loop and sweep candidate
+rules against the reference count. The rules worth trying, in order:
+`blend` / `noblend` (drawables that set `Drawable.blendModeValue`, 149 of 226),
+`opacity` (`opacity < 1`, 51 of 226), `rot` (sets `TransformComponent.rotation`),
+`scale` (sets `scaleX/scaleY`). Target: 53 fills + 15 strokes. The switch is
+diagnostic scaffolding and must not ship.
 
 Related, and needed for nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
