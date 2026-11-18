@@ -1273,3 +1273,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   NEXT: dump the flex parent's 420 props (598 value present?)
   + count its children + check flexWrap(604) — ref 755 smells
   like wrapped/visible-window layout.
+
+- FLEX props dump: db_health has MANY 420 styles; at least
+  one carries 598=0 (COLUMN per Yoga enum 0=col,2=row) +
+  gap 498/499 — direction enum confirmed. The 0->9917 e-spread
+  (x-axis) therefore comes from ROW-direction containers with
+  genuinely many item children, not the column one. Gold ~755
+  implies ref wraps/virtualizes/clips long lists — flexWrap(604)
+  + visible-window semantics still missing. NEXT: per-container
+  item counts + wrap check vs gold's ~755 cluster.
