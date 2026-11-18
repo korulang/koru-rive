@@ -5372,8 +5372,22 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         // SOURCE shape's geometry (sourceId = source shape's slot).
         // clip_tests: Shape47 rect clipped by Shape43 ellipse.
         var clipPushed = false;
+        var clipDepth: usize = 0;
         for (r.objects) |*cc| {
-            if (cc.type_key != 42 or cc.parent_obj != @as(i64, @intCast(si))) continue;
+            if (cc.type_key != 42) continue;
+            // ClippingShape clips every Drawable descendant-or-self of
+            // its parent (container_component forAll includes self):
+            // CS child-of-Shape clips that shape; CS child-of-Node clips
+            // the node's whole drawable subtree. Ancestor test covers both.
+            var anc = so.parent_obj;
+            var isClipped = false;
+            var ad: usize = 0;
+            while (ad < 32) : (ad += 1) {
+                if (anc == cc.parent_obj) { isClipped = true; break; }
+                if (anc < 0) break;
+                anc = r.objects[@intCast(anc)].parent_obj;
+            }
+            if (!isClipped) continue;
             const srcId = propU(cc.props, 92, -1);
             if (srcId < 0) continue;
             var srcIdx: usize = r.objects.len;
@@ -5430,7 +5444,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
             out.append(alloc, op0(7)) catch {};
             clipPushed = true;
-            break;
+            clipDepth += 1;
         }
         for (r.objects, 0..) |*c, pi| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
@@ -5517,7 +5531,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             out.append(alloc, dr) catch {};
             out.append(alloc, op0(7)) catch {};
         }
-        if (clipPushed) out.append(alloc, op0(10)) catch {};
+        for (0..clipDepth) |_| out.append(alloc, op0(10)) catch {};
     }
     // Text objects: glyph outlines via textDrawPath (same gather as emitOps).
     for (r.objects, 0..) |to, ti| {
