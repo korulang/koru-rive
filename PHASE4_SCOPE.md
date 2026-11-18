@@ -1446,3 +1446,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   contours for chars golden skips (space/combining), it's a
   glyph-cull gap; if a whole run's contours duplicate, it's
   an emission-path bug in textDrawPath's run loop.
+
+- CONTOUR CORRECTION: TEXTIDX 51 actually emits 1337/2945
+  (MATCHES golden) — position-mapping was wrong. The 2691v
+  drawPaths belong to a FAMILY of text objects (57,63,73,84,
+  90,100,106,112,125,131,140,159,171,177 all emit 2691) —
+  likely the same repeated label string. Golden expects TWO
+  of them at 2569v5745p (-122v) while rest match at 2691 —
+  so it's not object-identity but STATE-dependent: two runs
+  in a different SM/hover state emit fewer contours (glyph
+  variant or run split). Probe: which two of the 2691-family
+  differ in golden order positions 7-8; check their SM state
+  / TextValueRun count vs siblings.
