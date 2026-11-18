@@ -674,6 +674,28 @@ stored `width`/`height` (keys 285/286) changed the clip count by zero — those
 texts are auto-sized, so their box comes from the layout pass. Third question
 today that lands on the same dependency.
 
+## Scoping the layout pass (2026-11-18)
+
+Before writing a solver, the structure was mapped. LineBars mixes three regimes,
+which is why a simple stacker will not sweep these artboards:
+
+- **explicit-positioned shapes** — bars carry their own `Node.x` (`-98.75`,
+  `-59.25`, `-19.75`, `19.75`, `59.25`, `98.75`) and `y = 0`;
+- **bone-attached content** — the same artboard has `RootBone` nodes at
+  `x = -108.75 … 88.75`, i.e. skinned offsets rather than layout;
+- **layout components** — nested `LayoutComponent`s with width/height and a
+  `LayoutComponentStyle` carrying `directionValue`(599), gaps (498/499) and
+  padding (512-515).
+
+And the measured offsets do not follow one of them: our white bars sit at
+`(30, 54)`, `(69, 54)` … where the reference has `(10, 172)`, `(50, 172)` … — a
+constant `+20 x`, `-118 y` relative to the reference, not a per-child layout
+difference.
+
+So the layout project starts with a **map, not a solver**: which drawable comes
+from which regime, per artboard. That is a day of work, and it should be scoped
+explicitly rather than started inside a round.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
