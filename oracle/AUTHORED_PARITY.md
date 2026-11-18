@@ -456,3 +456,29 @@ are recorded here; the change belongs to whoever owns that code next.
 fixtures/: gradients, sm_conditions, scroll_view, vmlist, emptybind —
 all decode-clean + oracle-verified. RML->.riv via rive CLI pipeline
 (fixtures/PIPELINE.md).
+
+## data_bind_artboard_input — SCRIPT-GATED (named residual, 2026-11)
+
+29/30 PARTIAL; child1 30/30 clean. Failing frame = 29 only, on Main + child2.
+
+Mechanism fully decoded: VM artboard-valued property (ViewModelInstanceArtboard
+type 599, prop846=1 -> child2) binds via DataBind pk=876
+(ScriptInputArtboard.artboardId) to ScriptInputArtboard obj9 -> parent
+ScriptedDrawable obj8. `boundScriptArtboardId` resolves the bind live
+(verified: artboardId=1 overrides authored 2; golden Main fr29 block is
+byte-identical to child2 fr29 — bound selection confirmed correct).
+
+Gate is inside the script: ScriptAsset "ArtboardPainter" (obj1) ->
+FileAssetContents obj2 = LuaJIT-family bytecode (497B, Rive-wrapped —
+stock `luajit -bl` refuses). Function map: init/advance/update/ab/
+instance/draw/late. activeAnim=14 constant fr27-29 rules out SM-state
+gating; SM section serializes no timing props. Hypothesis (unconfirmed
+at instruction level): advance() timer completes at t=1.0 -> draw()
+emits the bound artboard.
+
+Classification: honest FAIL behind the leaf contract's deferred Lua
+gap. pk=876 resolver + ScriptedDrawable->artboard render path are
+implemented and proven (sdraw->child2 verified) but emit stays gated
+off — unconditional emit regresses fr0-28 (verified: 20 ops all
+frames vs golden's fr29-only content). Lua->Koru transpile is a
+separate future arc, not commissioned.
