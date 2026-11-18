@@ -1350,3 +1350,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   same 0.25 tol strokeVerbs consumes, but golden diff flags
   verb structure. NEXT if pursued: cubic-preserving trim
   (split cubics at arc-length boundaries, keep verb 2/3/4).
+
+- AB-SCOPE VERDICT: opsdump_dbh ab:180 IS the first/main
+  artboard (objidx 180 of 11 type-1 objects) — scope CORRECT,
+  the 0->9917 e-spread is real main-artboard fr0 output.
+  Attribution chain now: NOT flex (A/B null), NOT row/nested
+  (bige traces zero), NOT fps (identical under live WIP).
+  Remaining: spread may be CORRECT (scrollable list rows
+  legitimately off-viewport at e 2000-9900; gold ~755 could be
+  a different frame/state) or an uncovered mechanism. Cheapest
+  next: compare ours e-cluster vs GOLDEN db_health section
+  directly (same frame) rather than the ~755 anecdote.
