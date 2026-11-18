@@ -1262,3 +1262,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   NEXT: filter accumulation to actual flex items (exclude 420
   style objects + non-drawable children), verify dir axis,
   re-measure cluster vs 755.
+
+- FLEX-FLOW M2 measured: 420-style filter did NOT change
+  distribution — still 0->9917 ~31px steps. So over-accumulation
+  is NOT style objects; either (a) genuinely hundreds of flex
+  items (db_health long list — ref ~755 implies wrap/
+  virtualization/clamp ours lacks), (b) wrong main-axis dir
+  (598 absent -> default row=2 may be wrong for this container),
+  or (c) items nested under intermediate nodes so p!=flex parent.
+  NEXT: dump the flex parent's 420 props (598 value present?)
+  + count its children + check flexWrap(604) — ref 755 smells
+  like wrapped/visible-window layout.

@@ -3670,6 +3670,7 @@ fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
                 for (r.objects, 0..) |co, ci| {
                     if (co.parent_obj != p) continue;
                     if (ci == idx) { seenSelf = true; break; }
+                    if (co.type_key == 420) continue; // style object, not a flex item
                     const cs = layoutSizeOf(r, ci);
                     mainOff += (if (horiz) cs.w else cs.h) + gap;
                 }
