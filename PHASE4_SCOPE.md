@@ -1253,3 +1253,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   Class verdict: traversal+expansion+cycle-guard all landed;
   clip volume went 1->36, residual is structural+model delta,
   not a traversal bug.
+
+- FLEX-FLOW M1 MEASURED: db_health opsdump e-coords now spread
+  0->9917 (was clustered ~36-50) — sequential flow LIVE but
+  OVER-ACCUMULATING: ~31px steps over hundreds of children
+  suggests layoutSizeOf summed for non-item children (420
+  styles/containers) or wrong item set. Gold target ~755.
+  NEXT: filter accumulation to actual flex items (exclude 420
+  style objects + non-drawable children), verify dir axis,
+  re-measure cluster vs 755.
