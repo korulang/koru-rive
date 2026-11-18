@@ -1185,3 +1185,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   collectArtboardOps may early-return for artboards with no
   direct drawables before reaching the nested arm (arm is
   AFTER shape loop but BEFORE return — verify ordering).
+
+- ab9482 probe partial: owningArtboard() = parent_obj walk to
+  nearest type-1 (no early-out bug visible); collectArtboardOps
+  nested arm sits at fn end — no early return blocks it for
+  drawable-less artboards. 0-emission therefore means either
+  (a) 9482's 4 instances' owningArtboard()!=9482 under Koru's
+  walk (parent_obj chain differs from file layout), or (b)
+  exception/oom silently swallowed, or (c) 9482 itself isn't
+  reached as abIdx (aid->target mismatch: ni59 aid=7 ->
+  artboard-list idx7 = object 9482? VERIFY list order —
+  artboards sorted by object idx: 26,124,149,174,2328,4756,
+  5840,9482 -> idx7=9482 YES). Next: RIVE_TRACE_NEST inside
+  recursion — does ni inside ab9482's call print candidates?
