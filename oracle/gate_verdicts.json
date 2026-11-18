@@ -220,21 +220,13 @@
  },
  {
   "gate": "dsm",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-bbox",
-   "ink-mass",
-   "coverage-gap",
-   "ink-coverage",
-   "registration",
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_dsm_c_t1.bmp",
   "ref": "ref_dsm_c_t1.png",
   "vacuous": false,
-  "ours_sha": "9d37554a74104531",
+  "ours_sha": "2ed095eaae542e67",
   "ref_sha": "b13b46266cb9ccdb",
   "checks": [
    {
@@ -255,27 +247,27 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(255, 0, 255) expected=(255, 0, 255) dist=0 tol=8 (98.4% of frame)"
+    "detail": "ours=(255, 0, 255) expected=(255, 0, 255) dist=0 tol=8 (90.0% of frame)"
    },
    {
     "check": "ink-bbox",
-    "pass": false,
-    "detail": "ref=(0, 0, 249, 99) ours=(0, 0, 99, 39) asserted=x,y deltas={'xmin': 0, 'xmax': 150, 'ymin': 0, 'ymax': 60} tol=6"
+    "pass": true,
+    "detail": "ref=(0, 0, 249, 99) ours=(0, 0, 249, 99) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
    },
    {
     "check": "ink-mass",
-    "pass": false,
-    "detail": "ref=24706 ours=3953 ratio=0.16 (need 0.85..1.15)"
+    "pass": true,
+    "detail": "ref=24706 ours=24706 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
-    "pass": false,
-    "detail": "71.92% of coverage unmatched either way within 1px (max 5.0%)"
+    "pass": true,
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
-    "pass": false,
-    "detail": "84.00% of 25000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "pass": true,
+    "detail": "0.00% of 25000 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
@@ -285,17 +277,17 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 4000 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 24304 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
-    "pass": false,
-    "detail": "ours best aligns to ref when displaced dx=-1.75 dy=-2.00 px (max 0.75 per axis)"
+    "pass": true,
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "8.400% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 8.400%, excused edge band 0.00% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.000%, excused edge band 0.56% of frame"
    },
    {
     "check": "anti-aliasing",
@@ -304,35 +296,35 @@
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 168.0 levels at x=116 y=16 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 0.0 levels at x=0 y=0 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 16.6,
+   "ref_ink_within_1px": 100.0,
    "our_ink_within_1px": 100.0,
-   "ref_ink_within_2px": 17.1,
+   "ref_ink_within_2px": 100.0,
    "our_ink_within_2px": 100.0,
-   "ref_ink_within_3px": 17.7,
+   "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.16,
+   "ink_mass_ratio": 1.0,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 84.0,
+   "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 4000,
+   "ink_core_px": 24304,
    "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
-   "registration_dx": -1.75,
-   "registration_dy": -2.0,
-   "frame_disagree_pct": 8.4,
-   "frame_unexplained_pct": 8.4,
+   "registration_dx": 0.0,
+   "registration_dy": 0.0,
+   "frame_disagree_pct": 0.0,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 0,
    "aa_px_ours": 0,
-   "local_max": 168.0,
-   "rmse_ink_union": 125.68,
+   "local_max": 0.0,
+   "rmse_ink_union": 0.0,
    "rmse_backdrop": 0.0
   }
  },
@@ -556,17 +548,13 @@
  },
  {
   "gate": "clfp_item",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-coverage",
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_clfp_item_t1.bmp",
   "ref": "ref_clfp_item_vm_t1.png",
   "vacuous": false,
-  "ours_sha": "533da081c8e5d462",
+  "ours_sha": "5029f52bfbfdce57",
   "ref_sha": "366c1d4833691c7f",
   "checks": [
    {
@@ -602,22 +590,22 @@
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
-    "pass": false,
-    "detail": "5.28% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "pass": true,
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 215961 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 28712 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -626,61 +614,58 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.209%, excused edge band 2.00% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+    "detail": "blended edge px ours=518 ref=615 ratio 0.84 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.4 levels at x=130 y=311 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 96.0,
-   "our_ink_within_1px": 96.1,
-   "ref_ink_within_2px": 97.6,
-   "our_ink_within_2px": 97.6,
-   "ref_ink_within_3px": 99.1,
-   "our_ink_within_3px": 99.1,
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 5.278,
+   "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 27042,
-   "ink_core_mean": 1.17,
+   "ink_core_px": 28712,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.706,
-   "frame_unexplained_pct": 1.555,
+   "frame_disagree_pct": 0.209,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 615,
-   "aa_px_ours": 477,
-   "aa_ratio": 0.776,
-   "local_max": 103.58,
-   "rmse_ink_union": 68.25,
-   "rmse_backdrop": 0.26
+   "aa_px_ours": 518,
+   "aa_ratio": 0.842,
+   "local_max": 1.38,
+   "rmse_ink_union": 4.51,
+   "rmse_backdrop": 0.35
   }
  },
  {
   "gate": "cl1_item",
-  "verdict": "FAIL",
-  "failed": [
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_cl1_item.bmp",
   "ref": "ref_cl1_item_t1.png",
   "vacuous": false,
-  "ours_sha": "a80d31e9418677e8",
+  "ours_sha": "daf43e79fcc9bbe6",
   "ref_sha": "eb32819a7d63f3b6",
   "checks": [
    {
@@ -701,7 +686,7 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (75.5% of frame)"
+    "detail": "ours=(255, 255, 255) expected=(255, 255, 255) dist=0 tol=8 (75.3% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -711,17 +696,17 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=61009 ours=60184 ratio=0.99 (need 0.85..1.15)"
+    "detail": "ref=61009 ours=61050 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.81% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.01% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "1.99% of 61689 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.04% of 61689 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
@@ -731,56 +716,56 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 55996 px: mean 0.77 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 56914 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
     "pass": true,
-    "detail": "ours best aligns to ref when displaced dx=-0.50 dy=+0.00 px (max 0.75 per axis)"
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "0.680% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.119%, excused edge band 2.75% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.243%, excused edge band 3.07% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=1334 ref=1350 ratio 0.99 (min 0.50)"
+    "detail": "blended edge px ours=1309 ref=1350 ratio 0.97 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 76.2 levels at x=193 y=248 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 7.1 levels at x=270 y=250 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 99.1,
-   "our_ink_within_1px": 99.7,
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
    "ref_ink_within_2px": 100.0,
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.986,
+   "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 1.989,
+   "ink_coverage_notch_pct": 0.041,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 55996,
-   "ink_core_mean": 0.77,
+   "ink_core_px": 56914,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
-   "registration_dx": -0.5,
+   "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.119,
-   "frame_unexplained_pct": 0.68,
+   "frame_disagree_pct": 0.243,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 1350,
-   "aa_px_ours": 1334,
-   "aa_ratio": 0.988,
-   "local_max": 76.22,
-   "rmse_ink_union": 36.24,
-   "rmse_backdrop": 0.26
+   "aa_px_ours": 1309,
+   "aa_ratio": 0.97,
+   "local_max": 7.08,
+   "rmse_ink_union": 7.31,
+   "rmse_backdrop": 0.31
   }
  },
  {
@@ -1006,15 +991,13 @@
  },
  {
   "gate": "cl2",
-  "verdict": "FAIL",
-  "failed": [
-   "frame-diff"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_cl2_t1.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
-  "ours_sha": "bf6eae24f41e8e6a",
+  "ours_sha": "8a1e1d5d0a1c34a1",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
    {
@@ -1050,7 +1033,7 @@
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.17% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
@@ -1065,7 +1048,7 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.35 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -1074,18 +1057,18 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "0.620% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.640%, excused edge band 13.58% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.003%, excused edge band 14.69% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=1813 ref=2414 ratio 0.75 (min 0.50)"
+    "detail": "blended edge px ours=1804 ref=2414 ratio 0.75 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 3.2 levels at x=258 y=305 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 0.2 levels at x=77 y=188 (max 10.0)"
    }
   ],
   "report": {
@@ -1103,32 +1086,29 @@
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
    "ink_core_px": 92947,
-   "ink_core_mean": 0.35,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.64,
-   "frame_unexplained_pct": 0.62,
+   "frame_disagree_pct": 0.003,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 2414,
-   "aa_px_ours": 1813,
-   "aa_ratio": 0.751,
-   "local_max": 3.2,
-   "rmse_ink_union": 4.87,
+   "aa_px_ours": 1804,
+   "aa_ratio": 0.747,
+   "local_max": 0.24,
+   "rmse_ink_union": 1.04,
    "rmse_backdrop": 0.0
   }
  },
  {
   "gate": "cl2_t10",
-  "verdict": "FAIL",
-  "failed": [
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_cl2_t10.bmp",
   "ref": "ref_cl2_t10.png",
   "vacuous": false,
-  "ours_sha": "27774feb35a5bfb8",
+  "ours_sha": "60d966bd29e5795f",
   "ref_sha": "44928ffc0c79377b",
   "checks": [
    {
@@ -1159,17 +1139,17 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=45076 ours=45054 ratio=1.00 (need 0.85..1.15)"
+    "detail": "ref=45076 ours=45056 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.80% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.01% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.05% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.02% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1179,7 +1159,7 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 92747 px: mean 1.68 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -1188,18 +1168,18 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "0.759% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.369%, excused edge band 13.62% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.798%, excused edge band 14.74% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=2010 ref=2415 ratio 0.83 (min 0.50)"
+    "detail": "blended edge px ours=2001 ref=2415 ratio 0.83 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 16.1 levels at x=258 y=303 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.1 levels at x=77 y=188 (max 10.0)"
    }
   ],
   "report": {
@@ -1209,41 +1189,37 @@
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.999,
+   "ink_mass_ratio": 1.0,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 0.049,
+   "ink_coverage_notch_pct": 0.016,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 92747,
-   "ink_core_mean": 1.68,
+   "ink_core_px": 92947,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.369,
-   "frame_unexplained_pct": 0.759,
+   "frame_disagree_pct": 0.798,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 2415,
-   "aa_px_ours": 2010,
-   "aa_ratio": 0.832,
-   "local_max": 16.05,
-   "rmse_ink_union": 24.27,
-   "rmse_backdrop": 0.85
+   "aa_px_ours": 2001,
+   "aa_ratio": 0.829,
+   "local_max": 1.1,
+   "rmse_ink_union": 5.11,
+   "rmse_backdrop": 0.97
   }
  },
  {
   "gate": "clfp_hover",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-coverage",
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_clfp_item_hover.bmp",
   "ref": "ref_clfp_item_hover.png",
   "vacuous": false,
-  "ours_sha": "712e1a1338a4c2f9",
+  "ours_sha": "fbe8d9522ba0eb5f",
   "ref_sha": "94e232dfad314e91",
   "checks": [
    {
@@ -1279,22 +1255,22 @@
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
-    "pass": false,
-    "detail": "5.28% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "pass": true,
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 215961 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 28712 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -1303,62 +1279,58 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.209%, excused edge band 2.00% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+    "detail": "blended edge px ours=518 ref=615 ratio 0.84 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.4 levels at x=130 y=311 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 96.0,
-   "our_ink_within_1px": 96.1,
-   "ref_ink_within_2px": 97.6,
-   "our_ink_within_2px": 97.6,
-   "ref_ink_within_3px": 99.1,
-   "our_ink_within_3px": 99.1,
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 5.278,
+   "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 27042,
-   "ink_core_mean": 1.17,
+   "ink_core_px": 28712,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.706,
-   "frame_unexplained_pct": 1.555,
+   "frame_disagree_pct": 0.209,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 615,
-   "aa_px_ours": 477,
-   "aa_ratio": 0.776,
-   "local_max": 103.58,
-   "rmse_ink_union": 72.24,
-   "rmse_backdrop": 0.28
+   "aa_px_ours": 518,
+   "aa_ratio": 0.842,
+   "local_max": 1.38,
+   "rmse_ink_union": 4.77,
+   "rmse_backdrop": 0.37
   }
  },
  {
   "gate": "kn_sm_input",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-coverage",
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_kn_sm_hover.bmp",
   "ref": "ref_clfp_item_hover.png",
   "vacuous": false,
-  "ours_sha": "712e1a1338a4c2f9",
+  "ours_sha": "fbe8d9522ba0eb5f",
   "ref_sha": "94e232dfad314e91",
   "checks": [
    {
@@ -1394,22 +1366,22 @@
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
-    "pass": false,
-    "detail": "5.28% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "pass": true,
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 215961 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 28712 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -1418,62 +1390,58 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.209%, excused edge band 2.00% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+    "detail": "blended edge px ours=518 ref=615 ratio 0.84 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.4 levels at x=130 y=311 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 96.0,
-   "our_ink_within_1px": 96.1,
-   "ref_ink_within_2px": 97.6,
-   "our_ink_within_2px": 97.6,
-   "ref_ink_within_3px": 99.1,
-   "our_ink_within_3px": 99.1,
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 5.278,
+   "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 27042,
-   "ink_core_mean": 1.17,
+   "ink_core_px": 28712,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.706,
-   "frame_unexplained_pct": 1.555,
+   "frame_disagree_pct": 0.209,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 615,
-   "aa_px_ours": 477,
-   "aa_ratio": 0.776,
-   "local_max": 103.58,
-   "rmse_ink_union": 72.24,
-   "rmse_backdrop": 0.28
+   "aa_px_ours": 518,
+   "aa_ratio": 0.842,
+   "local_max": 1.38,
+   "rmse_ink_union": 4.77,
+   "rmse_backdrop": 0.37
   }
  },
  {
   "gate": "kn_clfp_item",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-coverage",
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_kn_clfp_item.bmp",
   "ref": "ref_clfp_item_vm_t1.png",
   "vacuous": false,
-  "ours_sha": "533da081c8e5d462",
+  "ours_sha": "5029f52bfbfdce57",
   "ref_sha": "366c1d4833691c7f",
   "checks": [
    {
@@ -1509,22 +1477,22 @@
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "4.40% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
-    "pass": false,
-    "detail": "5.28% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "pass": true,
+    "detail": "0.00% of 31525 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 215204 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 215961 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 27042 px: mean 1.17 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 28712 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -1533,61 +1501,58 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "1.555% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.706%, excused edge band 1.17% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.209%, excused edge band 2.00% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=477 ref=615 ratio 0.78 (min 0.50)"
+    "detail": "blended edge px ours=518 ref=615 ratio 0.84 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 103.6 levels at x=88 y=241 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.4 levels at x=130 y=311 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 96.0,
-   "our_ink_within_1px": 96.1,
-   "ref_ink_within_2px": 97.6,
-   "our_ink_within_2px": 97.6,
-   "ref_ink_within_3px": 99.1,
-   "our_ink_within_3px": 99.1,
+   "ref_ink_within_1px": 100.0,
+   "our_ink_within_1px": 100.0,
+   "ref_ink_within_2px": 100.0,
+   "our_ink_within_2px": 100.0,
+   "ref_ink_within_3px": 100.0,
+   "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 5.278,
+   "ink_coverage_notch_pct": 0.0,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 27042,
-   "ink_core_mean": 1.17,
+   "ink_core_px": 28712,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.706,
-   "frame_unexplained_pct": 1.555,
+   "frame_disagree_pct": 0.209,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 615,
-   "aa_px_ours": 477,
-   "aa_ratio": 0.776,
-   "local_max": 103.58,
-   "rmse_ink_union": 68.25,
-   "rmse_backdrop": 0.26
+   "aa_px_ours": 518,
+   "aa_ratio": 0.842,
+   "local_max": 1.38,
+   "rmse_ink_union": 4.51,
+   "rmse_backdrop": 0.35
   }
  },
  {
   "gate": "kn_cl2_t10",
-  "verdict": "FAIL",
-  "failed": [
-   "frame-diff",
-   "local-fidelity"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "ours_kn_cl2_t10.bmp",
   "ref": "ref_cl2_t10.png",
   "vacuous": false,
-  "ours_sha": "27774feb35a5bfb8",
+  "ours_sha": "60d966bd29e5795f",
   "ref_sha": "44928ffc0c79377b",
   "checks": [
    {
@@ -1618,17 +1583,17 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=45076 ours=45054 ratio=1.00 (need 0.85..1.15)"
+    "detail": "ref=45076 ours=45056 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.80% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.01% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.05% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.02% of 119462 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
@@ -1638,7 +1603,7 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 92747 px: mean 1.68 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -1647,18 +1612,18 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "0.759% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 1.369%, excused edge band 13.62% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.798%, excused edge band 14.74% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=2010 ref=2415 ratio 0.83 (min 0.50)"
+    "detail": "blended edge px ours=2001 ref=2415 ratio 0.83 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": false,
-    "detail": "worst 33px-window mean signed delta 16.1 levels at x=258 y=303 (max 10.0)"
+    "pass": true,
+    "detail": "worst 33px-window mean signed delta 1.1 levels at x=77 y=188 (max 10.0)"
    }
   ],
   "report": {
@@ -1668,26 +1633,26 @@
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.999,
+   "ink_mass_ratio": 1.0,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 0.049,
+   "ink_coverage_notch_pct": 0.016,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
-   "ink_core_px": 92747,
-   "ink_core_mean": 1.68,
+   "ink_core_px": 92947,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 1.369,
-   "frame_unexplained_pct": 0.759,
+   "frame_disagree_pct": 0.798,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 2415,
-   "aa_px_ours": 2010,
-   "aa_ratio": 0.832,
-   "local_max": 16.05,
-   "rmse_ink_union": 24.27,
-   "rmse_backdrop": 0.85
+   "aa_px_ours": 2001,
+   "aa_ratio": 0.829,
+   "local_max": 1.1,
+   "rmse_ink_union": 5.11,
+   "rmse_backdrop": 0.97
   }
  },
  {
@@ -2420,15 +2385,13 @@
  },
  {
   "gate": "kn_cl2",
-  "verdict": "FAIL",
-  "failed": [
-   "frame-diff"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "kn_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
-  "ours_sha": "2cd866fdf07880d0",
+  "ours_sha": "c2efb1a03ed4453a",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
    {
@@ -2459,12 +2422,12 @@
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=95841 ours=95860 ratio=1.00 (need 0.85..1.15)"
+    "detail": "ref=95841 ours=95864 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.17% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.00% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
@@ -2479,7 +2442,7 @@
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.35 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 92947 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
@@ -2488,18 +2451,18 @@
    },
    {
     "check": "frame-diff",
-    "pass": false,
-    "detail": "0.613% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.632%, excused edge band 13.54% of frame"
+    "pass": true,
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.006%, excused edge band 14.65% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=2072 ref=2414 ratio 0.86 (min 0.50)"
+    "detail": "blended edge px ours=2055 ref=2414 ratio 0.85 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 3.1 levels at x=291 y=306 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 0.2 levels at x=375 y=303 (max 10.0)"
    }
   ],
   "report": {
@@ -2517,31 +2480,29 @@
    "backdrop_px_max": 0,
    "ink_hue_delta": 0.0,
    "ink_core_px": 92947,
-   "ink_core_mean": 0.35,
+   "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.632,
-   "frame_unexplained_pct": 0.613,
+   "frame_disagree_pct": 0.006,
+   "frame_unexplained_pct": 0.0,
    "aa_px_ref": 2414,
-   "aa_px_ours": 2072,
-   "aa_ratio": 0.858,
-   "local_max": 3.12,
-   "rmse_ink_union": 4.96,
+   "aa_px_ours": 2055,
+   "aa_ratio": 0.851,
+   "local_max": 0.25,
+   "rmse_ink_union": 1.44,
    "rmse_backdrop": 0.0
   }
  },
  {
   "gate": "kn_hw",
-  "verdict": "FAIL",
-  "failed": [
-   "ink-coverage"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "kn_hw.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
-  "ours_sha": "c2853513de5c26e6",
+  "ours_sha": "29380a36d0448125",
   "ref_sha": "433097812796da83",
   "checks": [
    {
@@ -2562,37 +2523,37 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (98.7% of frame)"
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (98.6% of frame)"
    },
    {
     "check": "ink-bbox",
     "pass": true,
-    "detail": "ref=(78, 192, 340, 234) ours=(78, 192, 340, 234) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0} tol=6"
+    "detail": "ref=(78, 192, 340, 234) ours=(78, 192, 340, 235) asserted=x,y deltas={'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 1} tol=6"
    },
    {
     "check": "ink-mass",
     "pass": true,
-    "detail": "ref=2749 ours=2762 ratio=1.00 (need 0.85..1.15)"
+    "detail": "ref=2749 ours=2758 ratio=1.00 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": true,
-    "detail": "0.08% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "0.02% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
-    "pass": false,
-    "detail": "4.19% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "pass": true,
+    "detail": "1.33% of 3316 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 243023 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 242998 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0008 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+    "detail": "hue delta 0.0010 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
    },
    {
     "check": "registration",
@@ -2602,17 +2563,17 @@
    {
     "check": "frame-diff",
     "pass": true,
-    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.260%, excused edge band 2.73% of frame"
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.193%, excused edge band 2.77% of frame"
    },
    {
     "check": "anti-aliasing",
     "pass": true,
-    "detail": "blended edge px ours=853 ref=1097 ratio 0.78 (min 0.50)"
+    "detail": "blended edge px ours=968 ref=1097 ratio 0.88 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 4.1 levels at x=264 y=218 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 2.2 levels at x=126 y=219 (max 10.0)"
    }
   ],
   "report": {
@@ -2622,23 +2583,23 @@
    "our_ink_within_2px": 100.0,
    "ref_ink_within_3px": 100.0,
    "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 1.005,
+   "ink_mass_ratio": 1.003,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 4.192,
+   "ink_coverage_notch_pct": 1.327,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
-   "ink_hue_delta": 0.0008,
+   "ink_hue_delta": 0.001,
    "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.26,
+   "frame_disagree_pct": 0.193,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 1097,
-   "aa_px_ours": 853,
-   "aa_ratio": 0.778,
-   "local_max": 4.15,
-   "rmse_ink_union": 18.6,
-   "rmse_backdrop": 0.0
+   "aa_px_ours": 968,
+   "aa_ratio": 0.882,
+   "local_max": 2.18,
+   "rmse_ink_union": 12.76,
+   "rmse_backdrop": 0.26
   }
  },
  {
@@ -2864,15 +2825,13 @@
  },
  {
   "gate": "kn_clip",
-  "verdict": "FAIL",
-  "failed": [
-   "anti-aliasing"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "kn_clip.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
-  "ours_sha": "dd9214d6d53dcf1b",
+  "ours_sha": "e3ac52f4e5e13861",
   "ref_sha": "43feb82ccb774397",
   "checks": [
    {
@@ -2893,7 +2852,7 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(26, 26, 38) expected=(26, 26, 38) dist=0 tol=8 (90.8% of frame)"
+    "detail": "ours=(26, 26, 38) expected=(26, 26, 38) dist=0 tol=8 (90.7% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -2913,37 +2872,37 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.77% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 225447 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 225404 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0001 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
     "pass": true,
-    "detail": "ours best aligns to ref when displaced dx=-0.25 dy=+0.00 px (max 0.75 per axis)"
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
    },
    {
     "check": "frame-diff",
     "pass": true,
-    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.158%, excused edge band 1.10% of frame"
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.043%, excused edge band 1.25% of frame"
    },
    {
     "check": "anti-aliasing",
-    "pass": false,
-    "detail": "blended edge px ours=0 ref=394 ratio 0.00 (min 0.50)"
+    "pass": true,
+    "detail": "blended edge px ours=298 ref=394 ratio 0.76 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 0.5 levels at x=432 y=179 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 0.3 levels at x=317 y=153 (max 10.0)"
    }
   ],
   "report": {
@@ -2955,24 +2914,24 @@
    "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 0.769,
+   "ink_coverage_notch_pct": 0.004,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
-   "ink_hue_delta": 0.0001,
+   "ink_hue_delta": 0.0,
    "ink_core_px": 21529,
    "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
-   "registration_dx": -0.25,
+   "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.158,
+   "frame_disagree_pct": 0.043,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 394,
-   "aa_px_ours": 0,
-   "aa_ratio": 0.0,
-   "local_max": 0.55,
-   "rmse_ink_union": 3.23,
-   "rmse_backdrop": 0.38
+   "aa_px_ours": 298,
+   "aa_ratio": 0.756,
+   "local_max": 0.32,
+   "rmse_ink_union": 1.16,
+   "rmse_backdrop": 0.17
   }
  },
  {
@@ -3318,15 +3277,13 @@
  },
  {
   "gate": "knm_clip",
-  "verdict": "FAIL",
-  "failed": [
-   "anti-aliasing"
-  ],
+  "verdict": "PASS",
+  "failed": [],
   "hand_label": "PASS",
   "ours": "knm_clip.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
-  "ours_sha": "dd9214d6d53dcf1b",
+  "ours_sha": "e3ac52f4e5e13861",
   "ref_sha": "43feb82ccb774397",
   "checks": [
    {
@@ -3347,7 +3304,7 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(26, 26, 38) expected=(26, 26, 38) dist=0 tol=8 (90.8% of frame)"
+    "detail": "ours=(26, 26, 38) expected=(26, 26, 38) dist=0 tol=8 (90.7% of frame)"
    },
    {
     "check": "ink-bbox",
@@ -3367,37 +3324,37 @@
    {
     "check": "ink-coverage",
     "pass": true,
-    "detail": "0.77% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
+    "detail": "0.00% of 23273 ref-signal px inside shared ink zone are backdrop on ours (max 3.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 225447 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 225404 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
     "pass": true,
-    "detail": "hue delta 0.0001 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
+    "detail": "hue delta 0.0000 (max 0.008); flat ink 21529 px: mean 0.00 (max 3.0) p95 0 (max 8)"
    },
    {
     "check": "registration",
     "pass": true,
-    "detail": "ours best aligns to ref when displaced dx=-0.25 dy=+0.00 px (max 0.75 per axis)"
+    "detail": "ours best aligns to ref when displaced dx=+0.00 dy=+0.00 px (max 0.75 per axis)"
    },
    {
     "check": "frame-diff",
     "pass": true,
-    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.158%, excused edge band 1.10% of frame"
+    "detail": "0.000% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.043%, excused edge band 1.25% of frame"
    },
    {
     "check": "anti-aliasing",
-    "pass": false,
-    "detail": "blended edge px ours=0 ref=394 ratio 0.00 (min 0.50)"
+    "pass": true,
+    "detail": "blended edge px ours=298 ref=394 ratio 0.76 (min 0.50)"
    },
    {
     "check": "local-fidelity",
     "pass": true,
-    "detail": "worst 33px-window mean signed delta 0.5 levels at x=432 y=179 (max 10.0)"
+    "detail": "worst 33px-window mean signed delta 0.3 levels at x=317 y=153 (max 10.0)"
    }
   ],
   "report": {
@@ -3409,24 +3366,24 @@
    "our_ink_within_3px": 100.0,
    "ink_mass_ratio": 1.001,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 0.769,
+   "ink_coverage_notch_pct": 0.004,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
-   "ink_hue_delta": 0.0001,
+   "ink_hue_delta": 0.0,
    "ink_core_px": 21529,
    "ink_core_mean": 0.0,
    "ink_core_p95": 0.0,
-   "registration_dx": -0.25,
+   "registration_dx": 0.0,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.158,
+   "frame_disagree_pct": 0.043,
    "frame_unexplained_pct": 0.0,
    "aa_px_ref": 394,
-   "aa_px_ours": 0,
-   "aa_ratio": 0.0,
-   "local_max": 0.55,
-   "rmse_ink_union": 3.23,
-   "rmse_backdrop": 0.38
+   "aa_px_ours": 298,
+   "aa_ratio": 0.756,
+   "local_max": 0.32,
+   "rmse_ink_union": 1.16,
+   "rmse_backdrop": 0.17
   }
  },
  {

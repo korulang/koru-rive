@@ -373,3 +373,85 @@ empty-vs-content mutant + blank-vs-blank vacuous flag case; calibration
 worst-ok 2.54% vs tol 3.0%, mutant 9.18%. Eyeball package re-synced:
 33 post-fix composites, extras/ holds 5 superseded tick pairs, gates.json
 regenerated from gate_verdicts.json, RUNBOOK updated.
+
+
+Text-placement fix (2026-11-18): two renderer defects closed the
+eyeball-audit text clusters. `textDrawPath` ignored
+`Text.alignValue(281)/sizing(284)/width(285)/height(286)` — fixed-width
+centred text (cl2's 50-wide number cells) drew from the box's left edge,
+~19 px left; the glyph path now takes the alignment slack (right/centre,
+and vertical align is wired for completeness). Separately,
+`effectiveWorld` baked `(pad - artboardOrigin)` for layout-managed
+artboards, but `collectOps` does not emit the origin wrapper; the layout
+offsets already carry the pad, so leaf text was shifted left/up. The
+boundary translation is removed. `render_clfp_item_hover.k` now renders
+frame 8, the pose the browser hover reference actually captures (same as
+`kn_sm_input`), instead of frame 10.
+
+Re-run: **21 PASS / 12 FAIL** (was 13/20). Flips: cl2, cl2_t10,
+clfp_item, clfp_hover, kn_clfp_item, kn_sm_input, kn_cl2, kn_cl2_t10.
+Remaining FAILs are the named classes only: dsm scale; cl1_item
+VM-bound row text (`THREE` vs `text`); the knm_* Metal artifacts (the
+headless window path dumps a blank surface, so they were not
+re-rendered); kn_hw/knm_hw ink-coverage; kn_clip/knm_clip AA; mesh
+stroke; iba/deam/hff vacuous backdrop. `oracle/gallery.html` and
+`oracle/gate_verdicts.json` are regenerated. The eyeball package's `verdicts.jsonl` remains the
+pre-fix audit snapshot and is annotated in `AUDIT_NOTES.md`.
+
+
+Seam instrumentation, first slice (2026-11-18): `kn_clip` now has a
+four-layer first-divergence report instead of a pixel-only verdict.
+`oshun/canvas/index.koru-native.kz` emits a `KORUTRACE` line per path-clip
+push under `KORU_TRACE_CLIP` (mask w/h, inside, edge, intermediate `mid`,
+bbox, path hash). `oracle/trace_kn_clip.sh` captures the C++ stream
+(`oracle/dump`), our ops (`opsdump_clip0.k`), the mask trace, and the
+pixels; `oracle/first_divergence.py` writes
+`oracle/first_divergence_kn_clip.md` from the data.
+
+Result: scene/ops **MATCH** (2 clip pushes, 1 draw, color ff880000,
+transform 258.9/176.3; C++ `5/3`, `6/12`, draw `6/4`); mask **DIVERGES**
+(`mid=0` binary 0/255, inside 23094, edge 483, bbox 274,146-445,317;
+ref 394 blended edge px); pixels anti-aliasing ours=0 ref=394,
+frame-diff 0.000%. First divergent layer: **raster / clip coverage**;
+missing surface: **fractional clip-mask coverage** (`rasterizeClipMask`
+writes 255/0, `clipCov` samples `!=0`). The design and work split live in
+`oracle/INSTRUMENTATION.md`. Next: fractional mask coverage, then the
+compiler-realization seam.
+
+
+Fractional clip-mask coverage (2026-11-18): the `kn_clip` slice's missing
+surface landed. `oshun/canvas/index.koru-native.kz` now rasterizes path
+clips with 4×4 supersampling (0..255 coverage) and `clipCov` multiplies
+the fractional mask coverage into the fill alpha instead of sampling
+`!= 0`. Nested clip coverage is multiplied, not min-ed. The probe clears
+were set to the gate comp (`26,26,38`) so the raw surface is comparable.
+
+Verification: trace `mid` went 0 → 515 (inside 23350, edge 486, same
+bbox/hash). **`kn_clip` PASS** (AA ours=298 / ref=394, ratio 0.76;
+frame-diff 0.000%; registration 0.00) and **`knm_clip` PASS** on the same
+fractional mask. Full gate table: **23 PASS / 10 FAIL** (was 21/12).
+`oracle/first_divergence_kn_clip.md` now reports "none at the instrumented
+seams"; `oracle/INSTRUMENTATION.md` carries the before/after. Next seam:
+compiler realization.
+
+
+Pose/probe and fill-coverage slices (2026-11-18): `dsm` was a stale probe,
+not a renderer scale bug — `render_dsm_main.k` opened `ab: 9` at 1:1
+while the reference is the row (`ab: 20`) at 2.5×. It now renders
+`ab: 20` with the 2.5× transform at y=0 and **PASSes**. `fillContours`
+moved from 2×2 to 4×4 supersampling for thin glyph strokes; `kn_hw`'s
+`ink-coverage` fell from the notch defect to 1.33% and **PASSes**
+(AA 968/1097, ratio 0.88; frame-diff 0.000%).
+
+ViewModel binding slice (2026-11-18): `boundRunText` no longer falls back
+to the first instance of a ViewModel when there is no row scope. A
+data-bound run now keeps its **template text** unless a row scope or an
+explicit `kr/rive:vm.bind` is active; `vm.bind` was added, and the
+`clfp_item` probes bind VM 2 instance 0. `cl1_item` renders the template
+`text` and **PASSes** (frame-diff/local clean); the clfp group
+(`clfp_item`, `clfp_hover`, `kn_clfp_item`, `kn_sm_input`) was re-rendered
+with the explicit binding and re-verified.
+
+Full gate table: **26 PASS / 7 FAIL** (from 13/20 at the start of this
+arc). Remaining: `iba`/`deam`/`hff` vacuous backdrops, `knm_cl1`/
+`knm_cl2`/`knm_hw` Metal text/AA, and `mesh` (NOTE, dashed stroke).

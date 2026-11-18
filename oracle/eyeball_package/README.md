@@ -59,11 +59,41 @@ Rules:
 - FAIL gates: audit them too — an oracle FAIL may hide a second bug,
   or confirm the named caveat.
 
+## Resolved edge cases (2026-11-17)
+
+These were under-specified in the first version of this contract and are
+fixed here so a cold run does not have to guess. `AUDIT_NOTES.md` records
+the reasoning and the first vision pass.
+
+- **`vacuous: true` gates.** `gates.json` marks gates where both sides
+  are blank by design (oracle-limitation fixtures). Judge what is
+  visible, not the missing content. Same frame colour on both sides →
+  `MATCH`, `diff_kind: none`, note "vacuous". Different frame colour →
+  `MISMATCH`, `diff_kind: backdrop`, note "vacuous" — a white-vs-dark
+  frame is a visible whole-frame difference even with no ink. Do not use
+  `UNREADABLE` for a deliberately empty fixture.
+- **Text.** Rasterization-only differences (AA, hinting, stroke weight,
+  sub-pixel phase) are `MINOR`, `diff_kind: text` or `edge-aa`. Text
+  **placement**, **scale**, or **content** differences are `MISMATCH`,
+  `diff_kind: text` or `transform`. This resolves the earlier conflict:
+  `cl2`'s digit is the same glyph in the wrong place, so it is a
+  MISMATCH, not a font difference.
+- **Duplicate composites.** 33 gates use 26 unique images — some gates
+  share a byte-identical pair (e.g. `clv`/`kn_clv`/`knm_clv`,
+  `iba`/`hff`, `kn_clip`/`knm_clip`). Emit one line per gate as required,
+  but name the shared composite in `note`; the tightening pass must not
+  count duplicates as independent confirmations.
+- **Too small to judge.** `dcpo` is 64×64 per side and both sides are
+  uniform. Judge it vacuously (`MATCH`, low confidence) rather than
+  `UNREADABLE`; flag the resolution in `note`.
+
 ## Deliverable
 
 `verdicts.jsonl` — exactly 33 lines, one per gate, valid JSON each.
 This feeds a tightening pass: MISMATCH/MINOR verdicts become new gate
-criteria or bug reports.
+criteria or bug reports. A validated first vision pass is already in
+this directory; run `python3 validate_verdicts.py` to check the schema,
+completeness, and the duplicate-composite map.
 
 ## Context
 
@@ -71,8 +101,9 @@ criteria or bug reports.
   `kn_*` pairs are software, `knm_*` pairs are Metal, unprefixed pairs
   are the macOS canvas path.
 - Backgrounds differ by fixture; dark/colored regions are intentional.
-- Small text may legitimately differ if font rasterization differs —
-  note it as `text` diff_kind rather than MISMATCH unless content differs.
+- Small text rasterization may legitimately differ — use the resolved
+  text rule above: rasterization-only is MINOR, but placement/scale/
+  content differences are MISMATCH.
 - Pair images are composites — left half is always ours, right half the reference.
 
 Runbook for the harness: `RUNBOOK.md`.
