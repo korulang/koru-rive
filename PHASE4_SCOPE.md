@@ -1178,3 +1178,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   recursion returns wrong owner for 9482's instances (Koru's
   parent-chain walk vs file structure), or 9482 early-returns.
   49 untargeted CS (174/2328) remain structural per aid census.
+
+- ab9482 zero-emission: next probe = owningArtboard() on its
+  4 instances (object idx ~9483/9486/9489/9492 area) vs
+  recursion abIdx=9482, plus SM/opacity guard check —
+  collectArtboardOps may early-return for artboards with no
+  direct drawables before reaching the nested arm (arm is
+  AFTER shape loop but BEFORE return — verify ordering).
