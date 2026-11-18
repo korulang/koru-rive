@@ -1361,3 +1361,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   a different frame/state) or an uncovered mechanism. Cheapest
   next: compare ours e-cluster vs GOLDEN db_health section
   directly (same frame) rather than the ~755 anecdote.
+
+- TESS SPECIMEN SCAN state: emitOps (golden-format drawPath
+  printer, ~3740) is invoked at 3199-3223 inside a proc whose
+  tor wrapper wasn't identified before context limit — likely
+  the corpus/golden regen path. NEXT session: find that tor
+  (grep driver .k files for the proc name), run it on
+  curve-heavy fixtures (check goldens for high verbs/pts
+  drawPaths), diff verbs/pts vs ours per drawable -> specimens
+  where divergence IS flattening. Alternative per t42: craft
+  circle.cubic fixture with known ref tessellation.
