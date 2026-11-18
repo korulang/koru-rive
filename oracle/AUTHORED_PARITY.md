@@ -487,6 +487,33 @@ loop pattern occurs twice in the file (collectDraws and collectArtboardOps) and
 the scaffolding referred to a rank array it had not built. Better to leave the
 file untouched than land a half-refactor in a file another session is editing.
 
+### Tested and rejected: rank-ordered shape pass (2026-11-18)
+
+A `treeRanks()` DFS helper was written and the shape pass ordered by it, with a
+sibling-order switch. ColorGuide positional agreement:
+
+| emission order | matches |
+|---|---:|
+| stream order (default) | 9/38 |
+| DFS pre-order rank | **9/38** |
+| DFS with siblings last-first | 8/38 |
+| whole shape list reversed | 8/38 |
+
+No permutation helps — and the reason is structural: objects are stored in
+creation order, so **DFS pre-order *is* stream order**. The reference's order is
+therefore not a permutation of our shape list at all.
+
+**Which exposes a weakness in my own metric.** "Positional colour agreement"
+compares colour sequences, but a chart artboard repeats a handful of colours
+across many draws (32 shapes, most `000000`/`ffffff`), so the score is nearly
+insensitive to real ordering: 9/38 does not prove our order is wrong, and a high
+score would not prove it is right. Ordering cannot be measured this way.
+
+Measuring it properly needs a reference stream that carries **drawable identity**
+(the object id or name per `drawPath`), which `oracle/dump.cpp` does not print.
+That is the prerequisite for any further ordering work — and it is a small
+change on the C++ side, not another permutation on ours.
+
 So the fix is a DFS over the artboard's children (objects already appear in
 creation order, so sibling order is free), emitting each node's draws as it is
 visited instead of the current pass order (artboard paint -> FLD -> shapes ->
