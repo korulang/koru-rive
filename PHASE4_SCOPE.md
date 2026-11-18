@@ -1559,3 +1559,10 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (prop268 hex) -> confirms whether 148-char texts emit same
   2691 (our tail-drop bug) or distinct count (golden-only
   truncation). Then implement the named budget mechanism.
+
+- RESUME STATE: TEXTIDX trace print was lost in the ellipsis
+  revert (env-gated diagnostic, needs re-adding at emitTextDraw
+  ~4760 before drawPath print). Per-object verb counts still
+  unmeasured. All analysis state banked above; vertex-exact
+  frontier = text contour divergence (golden 2x2569v vs ours
+  8x2691v on repeated-label family, strings 125/148-char).
