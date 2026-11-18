@@ -171,7 +171,10 @@
   ],
   "bg_source": "reference backdrop",
   "hand_label": "PASS",
-  "note": "cl2 color keyframes animate item fill at t10"
+  "note": "cl2 color keyframes animate item fill at t10",
+  "opts": {
+   "prev": "ours_cl2_t1.bmp"
+  }
  },
  {
   "gate": "clfp_hover",
@@ -239,7 +242,10 @@
   ],
   "bg_source": "reference backdrop",
   "hand_label": "PASS",
-  "note": "NATIVE cl2 animated keyframes t10"
+  "note": "NATIVE cl2 animated keyframes t10",
+  "opts": {
+   "prev": "kn_cl2.bmp"
+  }
  },
  {
   "gate": "clip",
@@ -289,7 +295,14 @@
   ],
   "bg_source": "reference backdrop",
   "hand_label": "LIMIT",
-  "note": "in_band_asset \u2014 1x1 grayscale PNG, vacuous both sides"
+  "note": "in_band_asset \u2014 1x1 grayscale PNG, vacuous both sides",
+  "opts": {
+   "clear": [
+    255,
+    255,
+    255
+   ]
+  }
  },
  {
   "gate": "lwti",
@@ -317,7 +330,14 @@
   ],
   "bg_source": "reference backdrop",
   "hand_label": "LIMIT",
-  "note": "databind_external_artboard_main \u2014 VM-data class"
+  "note": "databind_external_artboard_main \u2014 VM-data class",
+  "opts": {
+   "clear": [
+    255,
+    255,
+    255
+   ]
+  }
  },
  {
   "gate": "hff",
@@ -331,7 +351,14 @@
   ],
   "bg_source": "reference backdrop",
   "hand_label": "LIMIT",
-  "note": "hosted_font_file \u2014 hosted font 404"
+  "note": "hosted_font_file \u2014 hosted font 404",
+  "opts": {
+   "clear": [
+    255,
+    255,
+    255
+   ]
+  }
  },
  {
   "gate": "dcpo",

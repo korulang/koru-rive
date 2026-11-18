@@ -51,6 +51,8 @@ def run_gate(g):
     # bbox_tol, bg_tol, mass_min/max, gap_max, frame_max, aa_min,
     # reg_tol, vacuous_px, notch_max and the rest of evaluate()'s kwargs.
     opts = dict(g.get("opts", {}))
+    if "prev" in opts and not os.path.isabs(opts["prev"]):
+        opts["prev"] = os.path.join(IMG, opts["prev"])
     res = po.evaluate(ref, ours, bg=tuple(g["bg"]), comp=tuple(g["comp"]) if g.get("comp") else None,
                       bbox_axes="x,y", allow_missing_time=untimed, **opts)
     failed = [c["check"] for c in res["checks"] if not c["pass"]]

@@ -290,6 +290,26 @@ def main():
         if not ok:
             failures.append("bad_stale_duplicate")
 
+    # clear-colour survival: probe clear painted into ours must fail --clear;
+    # an absent clear colour must pass it. This is the iba/deam/hff class:
+    # probe clear showing through where the artboard should have painted.
+    identp = os.path.join(tmpdir, "ok_identity.png")
+    painted = np.array(Image.open(identp).convert("RGBA")).copy()
+    painted[50:90, 50:90, :3] = 255
+    paintedp = os.path.join(tmpdir, "clear_survives.png")
+    save(painted, paintedp)
+    for name, path, clear, expect in (
+            ("bad_clear_survives", paintedp, (255, 255, 255), "fail"),
+            ("ok_clear_absent", identp, (0, 0, 255), "pass")):
+        res = po.evaluate(a.ref, path, bg=bg, inset=a.inset, clear=clear,
+                          allow_missing_time=True)
+        c = [c for c in res["checks"] if c["check"] == "clear"]
+        got = "fail" if c and not c[0]["pass"] else "pass"
+        ok = got == expect
+        rows.append((name, expect, got, ok, "clear" if got == "fail" else "-"))
+        if not ok:
+            failures.append(name)
+
     # vacuous agreement: blank vs blank passes AND is flagged vacuous --
     # the flag is what keeps an empty PASS honest in gate_verdicts.json.
     im0 = Image.open(a.ref)

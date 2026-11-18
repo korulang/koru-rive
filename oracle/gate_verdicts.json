@@ -1202,6 +1202,11 @@
     "check": "local-fidelity",
     "pass": true,
     "detail": "worst 33px-window mean signed delta 1.1 levels at x=77 y=188 (max 10.0)"
+   },
+   {
+    "check": "stale",
+    "pass": true,
+    "detail": "pixels differing from previous frame=99439 (need >=1)"
    }
   ],
   "report": {
@@ -1654,6 +1659,11 @@
     "check": "local-fidelity",
     "pass": true,
     "detail": "worst 33px-window mean signed delta 1.1 levels at x=77 y=188 (max 10.0)"
+   },
+   {
+    "check": "stale",
+    "pass": true,
+    "detail": "pixels differing from previous frame=99441 (need >=1)"
    }
   ],
   "report": {
@@ -1932,6 +1942,11 @@
     "detail": "both fully opaque"
    },
    {
+    "check": "clear",
+    "pass": true,
+    "detail": "clear pixels remaining=0"
+   },
+   {
     "check": "backdrop",
     "pass": true,
     "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (100.0% of frame)"
@@ -2138,6 +2153,11 @@
     "detail": "both fully opaque"
    },
    {
+    "check": "clear",
+    "pass": true,
+    "detail": "clear pixels remaining=0"
+   },
+   {
     "check": "backdrop",
     "pass": true,
     "detail": "ours=(40, 40, 40) expected=(40, 40, 40) dist=0 tol=8 (100.0% of frame)"
@@ -2239,6 +2259,11 @@
     "check": "alpha",
     "pass": true,
     "detail": "both fully opaque"
+   },
+   {
+    "check": "clear",
+    "pass": true,
+    "detail": "clear pixels remaining=0"
    },
    {
     "check": "backdrop",

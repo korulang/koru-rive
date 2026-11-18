@@ -582,3 +582,32 @@ knm_cl2 (frame-diff, anti-aliasing, local-fidelity) and mesh
 A 3x3 box / 1px cross blur was tested and rejected: it raised AA but
 broke local-fidelity (15-28) and ink-colour (0.02-0.05). Full table:
 **32 PASS / 1 FAIL** (only `mesh` NOTE).
+
+## Never-firing check review: ring / stale / clear / alpha (2026-11-18)
+
+Reviewed per arbiter loop order. Verdicts:
+
+- **alpha** — NOT dead: self-activates whenever either side carries
+  non-opaque alpha post-composite (pixel_oracle.py:328). All comp gates
+  composite to opaque so it reports "alpha vacuous"; NOCOMP gates with
+  a genuinely transparent ref would fire it today. Nothing to wire.
+- **stale** — WIRED: cl2_t10 opts.prev=ours_cl2_t1.bmp,
+  kn_cl2_t10 opts.prev=kn_cl2.bmp. Real tick pairs; asserts the t10
+  frame actually differs from t1 (frozen-animation catch). Both PASS
+  on current renders. run_gates resolves bare prev filenames against
+  oracle/images/. Mutant already existed: bad_stale_duplicate.
+- **clear** — WIRED on the three adjudicated gates only: iba, deam,
+  hff get opts.clear=[255,255,255] (their probes clear white;
+  artboards paint full-frame bg so any surviving white = dropped
+  paint, the exact class that produced the stale-evidence FAILs).
+  Other zero-white gates not wired: gate->driver mapping is itself
+  unprovenanced, so clear colour per gate is unverifiable until
+  provenance covers them. New mutants: bad_clear_survives (must
+  fail), ok_clear_absent (must pass).
+- **ring** — stays opt-in, documented: no current fixture has annulus
+  content to assert angular-sector completeness against. Asserted
+  surface kept; schema supports it via opts.ring when an oval/ring
+  fixture lands.
+
+Gate table: 32 PASS / 1 FAIL (knm_cl2 re-rendered + stamped fresh by
+renderer lane; mesh remains the sole FAIL).
