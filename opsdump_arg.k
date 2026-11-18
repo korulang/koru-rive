@@ -1,0 +1,8 @@
+import kr/rive
+import std/args
+import std/io
+import std/parse
+std/args:all(): av
+|> kr/rive:open(path: "/Users/larsde/src/koru-rive/rive-cpp/tests/unit_tests/assets/component_list_follow_path.riv")
+| loaded r |> kr/rive:opsdump(r, ab: 18, frame: std/parse:int(av[1]) orelse 0) |> kr/rive:free(r)
+| failed e |> std/io:print.ln("open failed {{ e:s }}")

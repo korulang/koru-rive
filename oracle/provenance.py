@@ -92,6 +92,25 @@ def classify(g, repo=REPO):
     om = os.path.getmtime(ours)
     if newest > om:
         return "stale", "dep %s newer than render" % os.path.relpath(npath, repo)
+    # git-anchored check for in-repo deps: mtime lies after checkouts;
+    # commit-diff does not. ".." paths and abs paths are other repos --
+    # mtime covers those.
+    commit = prov.get("commit")
+    if commit and commit != "unknown":
+        for d in deps:
+            if os.path.isabs(d) or d.startswith(".."):
+                continue
+            for args in (["diff", "--name-only", commit, "HEAD", "--", d],
+                         ["status", "--porcelain", "--", d]):
+                try:
+                    r = subprocess.run(["git", "-C", repo] + args,
+                                       capture_output=True, text=True, timeout=10)
+                except Exception:
+                    continue
+                if r.returncode == 0 and r.stdout.strip():
+                    verb = "changed since" if args[0] == "diff" else "dirty in"
+                    return "stale", "dep %s %s artifact commit %s" % (
+                        d, verb, str(commit)[:8])
     return "fresh", "commit %s driver %s" % (str(prov.get("commit"))[:8], drv or "?")
 
 
