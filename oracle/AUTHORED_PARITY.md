@@ -537,6 +537,25 @@ visited instead of the current pass order (artboard paint -> FLD -> shapes ->
 text). That is a real refactor of `collectArtboardOps`, not a flag, and it is the
 next piece of work rather than a quick win.
 
+### What the identity diff says about LineBars: FLD positions, not paint
+
+LineBars has 20 draws on both sides and an identity-set match of 6/20. The
+difference is positional, and it is uniform:
+
+    reference: (1,0,0,1, 210, 172)  (1,0,0,1, 170, 172)  ... (1,0,0,1, 10, 172)
+    ours:      (1,0,0,1,  30,  54)  (1,0,0,1,  69,  54)  ... (1,0,0,1, 227, 54)
+
+Same colours, same style, same scale — every bar sits ~20px right and ~118px up
+of where the reference draws it. These are `ForegroundLayoutDrawable` rects, and
+their placement comes from the parent `LayoutComponent`'s **computed** layout:
+the box has width/height in the file but its position is solved. We emit the box
+at the component's own transform, which is why counts came out right and
+positions did not.
+
+So the residual on these artboards is the layout solver, not paint or ordering —
+which is consistent with `ForegroundLayoutDrawable` having been recorded as
+"blocked on layout solving" from the beginning.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
