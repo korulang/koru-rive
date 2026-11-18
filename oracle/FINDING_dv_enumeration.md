@@ -96,3 +96,27 @@ identical across artboards, keeps only last (Circles) — prior 'Main
 ref 44' row was Circles-vs-Main-ours; true Main is 199 vs 3.
 EOF
 )" && git log --oneline -1 && git status --short | head -5
+## Class-3 verdict (2026-11-18, measured): NOT a colour read site — it is gradient paints
+
+Premise falsified. The ~72 `000000`→`747474` swaps are **gradient-filled
+draws**. Proof chain:
+
+- `oracle/dump` frame-0 blocks carry `shader=N(...)` per drawPath.
+  `shader=1` counts per artboard equal the missing-black counts EXACTLY:
+  ColorGuide 19=LG19, LineBars 7=LG7, Data 19=LG19, VerticalBars 12=LG12,
+  Pie 8=LG2+RG6, Circles 18=LG18, HBars 24=LG24 (+1 other black).
+- Gradient draws in the reference emit `color=ff000000` — the colour
+  field is a placeholder when a shader paint is active. Ours emits the
+  `SolidColorBase` default `747474` because the Fill/Stroke paint child
+  is `LinearGradient`(22)/`RadialGradient`(17), not `SolidColor`(18) —
+  the `g.type_key == 18` paint lookup finds nothing and defaults.
+- Object census: Shape-less artboards (HBars/VBars) lose *counts* to
+  class 2; Shape-ful ones lose only colour fidelity to this class.
+
+So class 3 = **gradient paint resolution**, the named ops-kinds-11+
+gap. Not a fifth read site. Real fix scope: paint-child lookup must
+accept gradient types → new op kind carrying axis+stops (image-op
+side-table pattern exists) → canvas `draw.gradient`/`.radial` are
+two-stop only (multi-stop needs shader work) → digest already aligns
+if gradient ops carry the ref's `000000` placeholder convention.
+Deferred to its own leg — feature-sized, not a read-site patch.
