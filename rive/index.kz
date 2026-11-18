@@ -4249,11 +4249,19 @@ fn listRowSlot(r: *const Riv, loIdx: usize, itemArtIdx: usize, rowIdx: usize, ro
     return matMul(effectiveWorldRaw(r, loIdx), local);
 }
 
-fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), textColor: *u32, textFillRule: *i64) bool {
+fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.ArrayList(V2), textColor: *u32, textFillRule: *i64, runOverride: i64) bool {
     _ = frame;
+    // A Text holds one or more TextValueRun children, each with its own style
+    // and text; rive draws one path PER RUN. runOverride selects one run;
+    // -1 falls back to the first (callers that still want one draw).
     var runIdx: usize = 0; var have = false;
-    for (r.objects, 0..) |c, ci| {
-        if (c.type_key == 135 and c.parent_obj == @as(i64, @intCast(textIdx))) { runIdx = ci; have = true; break; }
+    if (runOverride >= 0) {
+        runIdx = @intCast(runOverride);
+        have = true;
+    } else {
+        for (r.objects, 0..) |c, ci| {
+            if (c.type_key == 135 and c.parent_obj == @as(i64, @intCast(textIdx))) { runIdx = ci; have = true; break; }
+        }
     }
     if (!have) return false;
     const run = &r.objects[runIdx];
@@ -4448,7 +4456,7 @@ fn emitTextDraw(r: *const Riv, textIdx: usize, frame: i64) void {
     defer verbs.deinit(alloc); defer pts.deinit(alloc);
     var textColor: u32 = 0xFF313131;
     var textFillRule: i64 = 2;
-    if (!textDrawPath(r, textIdx, frame, alloc, &verbs, &pts, &textColor, &textFillRule)) return;
+    if (!textDrawPath(r, textIdx, frame, alloc, &verbs, &pts, &textColor, &textFillRule, -1)) return;
 std.debug.print("drawPath style=1 color={x:0>8} thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule={d} verbs={d} pts={d}\n", .{ textColor, textFillRule, verbs.items.len, pts.items.len });
     var vp: usize = 0;
     for (verbs.items) |v| {
@@ -4540,11 +4548,9 @@ fn dumpGraph(r: *Riv) void {
 // Value objects are the contiguous isVmInstanceValueType block after the
 // instance; prop 554 selects the VM property, the scalar key is per-type.
 ~pub tor vm.set { r: *Riv<loaded>, vm: i64, inst: i64, prop: i64, value: string }
-| set
-| failed string
 
 ~proc vm.set|zig {
-    const ii = findVmInstance(r, vm, inst) orelse return .{ .failed = "no such vm instance" };
+    const ii = findVmInstance(r, vm, inst) orelse std.debug.print("vm.set: no such vm instance vm={d} inst={d}\n", .{vm, inst}); return;
     var j = ii + 1;
     while (j < r.objects.len) : (j += 1) {
         const vo = &r.objects[j];
@@ -4552,29 +4558,29 @@ fn dumpGraph(r: *Riv) void {
         if (propU(vo.props, 554, -1) != prop) continue;
         const key: u16 = switch (vo.type_key) {
             442 => 575, 433 => 561, 449 => 593, 432 => 560, 426 => 555, 565, 566 => 814,
-            else => return .{ .failed = "unsupported value type" },
+            else => { std.debug.print("vm.set: unsupported value type {d}\n", .{vo.type_key}); return; },
         };
         for (vo.props) |*p| {
             if (p.key != key) continue;
             switch (vo.type_key) {
-                442 => p.value = .{ .dbl = std.fmt.parseFloat(f32, value) catch return .{ .failed = "bad number" } },
+                442 => p.value = .{ .dbl = std.fmt.parseFloat(f32, value) catch { std.debug.print("vm.set: bad number\n", .{}); return; } },
                 433 => {
-                    const b = std.fmt.allocPrint(std.heap.page_allocator, "{s}", .{value}) catch return .{ .failed = "oom" };
+                    const b = std.fmt.allocPrint(std.heap.page_allocator, "{s}", .{value}) catch { std.debug.print("vm.set: oom\n", .{}); return; };
                     p.value = .{ .bytes = b };
                 },
                 449 => p.value = .{ .uint = if (std.mem.eql(u8, value, "true") or std.mem.eql(u8, value, "1")) 1 else 0 },
                 426 => {
                     var hx = value;
                     if (hx.len > 0 and hx[0] == '#') hx = hx[1..];
-                    p.value = .{ .color = std.fmt.parseInt(u32, hx, 16) catch return .{ .failed = "bad color" } };
+                    p.value = .{ .color = std.fmt.parseInt(u32, hx, 16) catch { std.debug.print("vm.set: bad color\n", .{}); return; } };
                 },
-                else => p.value = .{ .uint = std.fmt.parseInt(u64, value, 10) catch return .{ .failed = "bad int" } },
+                else => p.value = .{ .uint = std.fmt.parseInt(u64, value, 10) catch { std.debug.print("vm.set: bad int\n", .{}); return; } },
             }
-            return .{ .set = {} };
+            return;
         }
-        return .{ .failed = "scalar slot missing" };
+        std.debug.print("vm.set: scalar slot missing prop={d} type={d}\n", .{prop, vo.type_key}); return;
     }
-    return .{ .failed = "prop not on instance" };
+    std.debug.print("vm.set: prop {d} not on instance\n", .{prop}); return;
 }
 
 // input.fire appends an event to the SM input schedule — same
@@ -4582,14 +4588,17 @@ fn dumpGraph(r: *Riv) void {
 // schedule. val: 0/1 (bool inputs only; number/trigger inputs are a
 // named gap until eval grows those readers).
 ~pub tor input.fire { name: string, val: i64, frame: i64 }
-| fired
-| failed string
 
 ~proc input.fire|zig {
     ensureSmInputs();
-    const nm = std.heap.page_allocator.dupe(u8, name) catch return .{ .failed = "oom" };
-    g_smInputs.append(std.heap.page_allocator, .{ .name = nm, .val = val != 0, .frame = frame }) catch return .{ .failed = "oom" };
-    return .{ .fired = {} };
+    const nm = std.heap.page_allocator.dupe(u8, name) catch {
+        std.debug.print("input.fire: oom\n", .{});
+        return;
+    };
+    g_smInputs.append(std.heap.page_allocator, .{ .name = nm, .val = val != 0, .frame = frame }) catch {
+        std.debug.print("input.fire: oom\n", .{});
+        return;
+    };
 }
 
 ~pub tor inspect { r: *Riv<loaded> }
@@ -5614,7 +5623,18 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         defer tverbs.deinit(alloc); defer tpts.deinit(alloc);
         var tcolor: u32 = 0xFF000000;
         var tfr: i64 = 2;
-        if (!textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr)) continue;
+        var runs = std.ArrayList(usize).empty;
+        defer runs.deinit(alloc);
+        for (r.objects, 0..) |rc, ri| {
+            if (rc.type_key == 135 and rc.parent_obj == @as(i64, @intCast(ti))) runs.append(alloc, ri) catch {};
+        }
+        const runCount: usize = if (runs.items.len == 0) 1 else runs.items.len;
+        var runIt: usize = 0;
+        while (runIt < runCount) : (runIt += 1) {
+        const runSel: i64 = if (runs.items.len == 0) -1 else @intCast(runs.items[runIt]);
+        tverbs.clearRetainingCapacity();
+        tpts.clearRetainingCapacity();
+        if (!textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr, runSel)) continue;
         const w = effectiveWorld(r, ti, frame);
         out.append(alloc, op0(0)) catch {};
         var vp: usize = 0;
@@ -5632,6 +5652,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("TXT obj={d} color={x}\n", .{ ti, tcolor });
         var dr = op0(8); dr.style = 1; dr.color = tcolor; dr.join = -1; dr.cap = -1; dr.eo = if (tfr == 1) 1 else 0; out.append(alloc, dr) catch {};
         out.append(alloc, op0(7)) catch {};
+        }
     }
     if (clipOn) out.append(alloc, op0(10)) catch {};
     return;
@@ -5738,9 +5759,11 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     for (r.objects, 0..) |no, ni| {
         if (noNested) break;
         if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
+        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest cand ni={d} type={d} owner={d} ab={d}\n", .{ ni, no.type_key, owningArtboard(r, ni), abIdx });
         if (owningArtboard(r, ni) != abIdx) continue;
         if (g_abDepth >= 8) continue;
         const aid = propU(no.props, 197, -1);
+        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest owned ni={d} aid={d}\n", .{ ni, aid });
         if (aid < 0) continue;
         var seen: i64 = 0;
         var target: i64 = -1;
@@ -5749,6 +5772,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
             if (seen == aid) { target = @intCast(abi); break; }
             seen += 1;
         }
+        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest target ni={d} aid={d} -> {d}\n", .{ ni, aid, target });
         if (target < 0) continue;
         if (target == @as(i64, @intCast(abIdx))) continue; // self-reference guard
         const w = effectiveWorld(r, ni, frame);

@@ -1158,3 +1158,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   174->5, 2328->4, 5840->5 clips). NEXT: instrument the 451 arm
   — print ni/aid/target resolution for ab26 to see where it
   bails (owningArtboard!=26? aid<0? target<0? depth?).
+
+- nest trace DECISIVE: 451 arm FIRES for ab26 — ni35/41/47->9504,
+  ni59->9482, ni64->9887 all resolve+recurse (RIVE_TRACE_NEST).
+  Yet composed opsdump still 33 draws — bail is DOWNSTREAM inside
+  recursive collectArtboardOps(target): expanded targets emit
+  ~nothing (SM state? opacity? frame? or target content is
+  non-k8 kinds). 9482->5840 chain needs 9482's own 4 instances
+  to fire in recursion — unverified whether depth-2 reached.
+  NEXT: count draws per expanded target (trace collectArtboardOps
+  entry per abIdx) to see which level starves.
