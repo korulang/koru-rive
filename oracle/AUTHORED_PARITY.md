@@ -262,6 +262,27 @@ their verdicts mean anything again.
 
 Gradient paint colour remains open and is *not* stop-derived (see below).
 
+## Gate impact of the decoder changes (analysed 2026-11-18; not re-rendered)
+
+A re-render was flagged as required. The probe→gate recipe could not be
+rediscovered in this session (building `render_kn_hw.k` produced a binary whose
+own log says `meshrender`, so the file→gate mapping is not what the names
+suggest), so the impact was bounded by inspection instead:
+
+| change | gate fixtures affected |
+|---|---|
+| `ForegroundLayoutDrawable` emission | **none** — 0 type-513 objects in every gate fixture |
+| text colour default → black | **none** — the two fixtures with a `Text` (`component_list_follow_path`, `hello_world`) both carry an explicit `SolidColor` (`0xffffffff`, `0xff00f3ff`), so the default never applies |
+| gradient paint colour | **none** — 0 `shader=1` draws in any gate fixture |
+| nested-artboard expansion | **none** — 0 `NestedArtboard*` objects in the sampled fixtures |
+| ancestor opacity | only where an ancestor opacity is <1; such a case would have been failing before |
+| fill-rule `2 → nonZero` | 8 draws across 2 fixtures (`component_list_follow_path` 6, `hello_world` 2) — all simple closed shapes, where nonZero and evenOdd agree |
+
+So the decoder changes are gate-neutral on the evidence, with one honest limit:
+this is inspection, not a byte-identical render. A real re-render still needs
+the probe→gate mapping recovered, and the committed images remain `stale` by
+provenance until then.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
