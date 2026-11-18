@@ -637,3 +637,46 @@ local-fidelity 97.6 levels. The meshops->mesh.* path is over-filling:
 ink everywhere the artboard should be backdrop. NOT stale-evidence —
 reproduces on current master. Driver: meshrender_clfp.k (kr/rive:
 meshops, component_list_follow_path.riv ab:18).
+
+## Toolchain defect — koru backend const-flow crash on slice pointer+index for-capture
+
+**Symptom:** `koruc run` fails in the compiler's own Zig backend
+(`src/transform_pass_runner.zig`), not in emitted code:
+`error: expected type '?*ast.Flow', found '*const *ast.Flow'`
+`note: cast discards const qualifier` — walkOnce/walkAndTransformStages.
+
+**Minimal repro shape (rive/index.kz annotateWorldBbox):**
+```zig
+for (recs, 0..) |*rec, ri| {   // pointer + index two-capture over []OpRec
+    switch (rec.kind) { ... rec.wx0 = v; ... }
+}
+```
+Compiles the module fine until this loop is added; backend walk dies.
+
+**What does NOT trigger it:**
+- `for (recs) |*rec|` — single pointer capture, no index (committed
+  world-bbox version compiled clean).
+- `for (recs, 0..) |rec, ri|` — by-value + index capture: WORKS.
+  Mutations go through `recs[ri].field = x` indexed writes instead of
+  `rec.field`.
+
+**Workaround shipped (koru-rive-vm @ frustum-cull commit):** by-value
+capture `|rec, ri|` + all writes via `recs[ri]`/`recs[pi]` indexing.
+kind=-1 tombstone + compaction replaces any alloc'd side array (also
+sidesteps a second latent issue: `alloc.alloc(...) catch return` +
+`defer` inside the same fn did not isolate the crash — the for-capture
+was the real trigger, verified by bisect).
+
+**Owner:** ~/src/koru transform_pass_runner — the flow-node typer emits
+`*const *ast.Flow` where `?*ast.Flow` is expected specifically for the
+two-capture pointer form. Commissioned to t42 for a koru-side fix.
+
+## FLAG — opsdump SIGABRT on layout_text_match.riv (exit 134)
+
+Found by authored_parity 40-file batch (2026-11-18): ours_digest probe
+crashes SIGABRT — "no op stream emitted". File:
+rive-cpp/tests/unit_tests/assets/layout_text_match.riv. Not a decode
+failure (open succeeds); crash is in the ops/emit path — likely text
+layout measurement or TextStyle handling hitting an assert/unwrap.
+Minimal repro pending: opsdump at name-resolved Main ab index.
+Fix leg: isolate, then guard or implement the missing path.
