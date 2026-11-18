@@ -619,6 +619,27 @@ Reverted again. Determining the rule needs the reference's *text* draw count per
 artboard, which means identifying text draws in the reference stream — the same
 identity problem as ordering, not a new experiment on our side.
 
+## Feather clips: three variants measured, none matches (2026-11-18)
+
+Implemented clip emission for feathered paints (clip to the shape path, which is
+what rive records before drawing the inset inner path). Clip counts on
+data_viz Main + ColorGuide:
+
+| predicate | clips | reference |
+|---|---:|---:|
+| any `Feather` child | 73 | 44 (38 + ~6) |
+| `Feather.strength > 0` | 61 | 44 |
+| stroke paints with `strength > 0` | **7** | 44 |
+
+No variant matches, so the reference's clips are not "feathered paints" alone —
+38 clips on Main must come from several sources (feathers, text, layout, nested
+instances) and we have not separated them. Reverted rather than ship the
+closest guess.
+
+**What would separate them:** count the reference's `clipPath` lines by the kind
+of draw that follows (fill / stroke / text / nested) — cheap on the dump, and it
+would say which source contributes how many before implementing any of them.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
