@@ -1809,3 +1809,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   measure golden advance empirically — per-line contour
   count*avg-advance vs ours; or extract font, check kern/GPOS
   tables via fontdump.
+
+- FONT TABLES: embedded font HAS kern@6278 + GPOS@192.
+  No type-409 layout objects (not layout-managed width).
+  Kern alone (~10-15% typical) probably can't explain ~33%
+  advance gap BUT could tip 2.9->3.2 lines over the boundary.
+  CHEAPEST DECISIVE TEST before implementing kerning: apply
+  uniform advance scale factor k to wrap math only (glyph
+  coords unchanged), sweep k in {1.05,1.1,1.15,1.2} -> if any
+  k makes ti125/131 drop to ~2569v while siblings stay 2691,
+  the mechanism is advance-width and exact k can then be
+  sourced (kern sum or fontScale). ONE build+4 runs settles
+  it vs full GPOS implementation.
