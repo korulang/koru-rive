@@ -129,6 +129,15 @@ def ref_blocks(path, frames, dt, dump_bin, timeout):
     return blocks, artboards, None
 
 
+def _affine_mul(m, n):
+    """m then n, in the row-vector form rive's transform(a,b,c,d,e,f) uses."""
+    a, b, c, d, e, f = m
+    a2, b2, c2, d2, e2, f2 = n
+    return (a * a2 + b * c2, a * b2 + b * d2,
+            c * a2 + d * c2, c * b2 + d * d2,
+            e * a2 + f * c2 + e2, e * b2 + f * d2 + f2)
+
+
 def _bbox(points):
     if not points:
         return None
@@ -165,15 +174,26 @@ def ref_digest(lines):
     counts differ for reasons that are not ink.
     """
     d = {"save": 0, "restore": 0, "xform": 0, "clip": 0, "draw": 0,
-         "colors": [], "styles": [], "rules": [], "points": 0, "draws": []}
+         "colors": [], "styles": [], "rules": [], "points": 0, "draws": [],
+         "keys": []}
+    ctm = (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+    mstack = []
     for line in lines:
         s = line.strip()
         if s == "save":
             d["save"] += 1
+            mstack.append(ctm)
         elif s == "restore":
             d["restore"] += 1
+            if mstack:
+                ctm = mstack.pop()
         elif s.startswith("transform "):
             d["xform"] += 1
+            m = re.match(r"transform ([-0-9.]+) ([-0-9.]+) ([-0-9.]+) ([-0-9.]+) ([-0-9.]+) ([-0-9.]+)", s)
+            if m:
+                import os as _os
+                mt = tuple(float(g) for g in m.groups())
+                ctm = _affine_mul(ctm, mt) if _os.environ.get("PARITY_MUL_ALT") else _affine_mul(mt, ctm)
         elif s.startswith("clipPath"):
             d["clip"] += 1
         elif s.startswith("drawPath"):
@@ -185,6 +205,7 @@ def ref_digest(lines):
             m = re.search(r"fillRule=(-?\d+)", s)
             rule = int(m.group(1)) if m else 0
             d["rules"].append(1 if rule == 1 else 0)
+            d["keys"].append((tuple(round(v, 1) for v in ctm), d["colors"][-1], d["styles"][-1]))
             d["draws"].append([])
         elif s.startswith("V ") and d["draws"]:
             parts = s.split()
@@ -273,7 +294,8 @@ def ours_digest(path, ab, frame, koruc, root, timeout):
         tail = [ln for ln in text.strip().splitlines() if ln.strip()][-1:]
         return None, f"no op stream emitted (exit {code}): {tail[0] if tail else 'no output'}"
     d = {"draw": 0, "colors": [], "styles": [], "rules": [], "clip": 0, "points": 0,
-         "paths": 0, "matpush": 0, "matpop": 0, "draws": []}
+         "paths": 0, "matpush": 0, "matpop": 0, "draws": [], "keys": []}
+    mat = None
     buf = []
 
     def pt(line, xg, yg):
@@ -304,6 +326,10 @@ def ours_digest(path, ab, frame, koruc, root, timeout):
             buf = []
         elif kind == 6:
             d["matpush"] += 1
+            mv = dict(re.findall(r'([a-z0-9]+)=(-?[0-9.]+)', line))
+            if all(k in mv for k in ("a", "b", "c", "d", "e", "g")):
+                mat = (round(float(mv["a"]), 1), round(float(mv["b"]), 1), round(float(mv["c"]), 1),
+                       round(float(mv["d"]), 1), round(float(mv["e"]), 1), round(float(mv["g"]), 1))
         elif kind == 7:
             d["matpop"] += 1
         elif kind == 9:
@@ -316,6 +342,7 @@ def ours_digest(path, ab, frame, koruc, root, timeout):
             d["styles"].append(int(ms.group(1)) if ms else 0)
             me = re.search(r"eo=(\d+)", line)
             d["rules"].append(int(me.group(1)) if me else 0)
+            d["keys"].append((mat, d["colors"][-1], d["styles"][-1]))
             d["draws"].append(list(buf))
             buf = []
     d["bboxes"] = [_bbox(p) for p in d["draws"]]
@@ -347,8 +374,21 @@ def first_divergence(ref, ours):
             return "paint", "; ".join(bits)
         first = next(i for i, (a, b) in enumerate(zip(ref["colors"], ours["colors"])) if a != b)
         match = sum(1 for a, b in zip(ref["colors"], ours["colors"]) if a == b)
+        # Positional identity is confounded by the order difference itself.
+        # What matters first is whether the same draws exist at all, so match
+        # on the SET of (quantised transform, colour, style).
+        def _q(k):
+            if k is None or k[0] is None:
+                return None
+            return (tuple(round(v) for v in k[0]), k[1], k[2])
+        import collections as _c2
+        rk = _c2.Counter(_q(k) for k in ref.get("keys", []))
+        ok = _c2.Counter(_q(k) for k in ours.get("keys", []))
+        ident = sum((rk & ok).values())
+        n_keys = len(ref.get("keys", []))
         return "draw-order", (f"same {len(ref['colors'])} drawables, different order "
-                              f"(positional match {match}/{len(ref['colors'])}, first diff at {first})")
+                              f"(colour match {match}/{len(ref['colors'])}, "
+                              f"identity-set match {ident}/{n_keys}, first diff at {first})")
     if ref["styles"] != ours["styles"]:
         import collections as _c
         if _c.Counter(ref["styles"]) != _c.Counter(ours["styles"]):

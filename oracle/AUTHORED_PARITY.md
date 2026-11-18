@@ -509,6 +509,23 @@ across many draws (32 shapes, most `000000`/`ffffff`), so the score is nearly
 insensitive to real ordering: 9/38 does not prove our order is wrong, and a high
 score would not prove it is right. Ordering cannot be measured this way.
 
+**Update (same round): identity exists without touching C++.** The reference
+already prints a `transform` line per draw, so composing its save/restore stack
+into an absolute CTM gives an identity per drawable: `(CTM, colour, style)`.
+Comparing the *sets* of those (positional comparison is confounded by the order
+difference itself):
+
+| artboard | colour match | identity-set match | reading |
+|---|---:|---:|---|
+| ColorGuide | 9/38 | **38/38** | pure ordering — every drawable identical |
+| Pie Chart | 2/16 | 9/16 | real differences beyond order |
+| Circles | 30/44 | 14/44 | real differences beyond order |
+| LineBars | 16/20 | 6/20 | real differences beyond order |
+
+So ColorGuide's divergence is *only* order (38/38 identity), while the other
+three genuinely differ in transform or paint. That is a much better target than
+"order": only one of the four is an ordering problem at all.
+
 Measuring it properly needs a reference stream that carries **drawable identity**
 (the object id or name per `drawPath`), which `oracle/dump.cpp` does not print.
 That is the prerequisite for any further ordering work — and it is a small
