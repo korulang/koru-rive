@@ -1123,3 +1123,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   that item ~zero area or different bounds; ours sizes it ->
   green boxes. THIS IS THE t4f LAYOUT-SOLVER GAP MANIFESTING,
   not a paint bug. Text is correctly white.
+
+- CS last hop VERIFIED: nested expansion (92/451/452 arm at
+  ~5761) resolves artboardId prop197 as INDEX into file's
+  artboard list -> target object idx -> recursive
+  collectArtboardOps -> same shape loop where CS ancestor-test
+  fires. Routing is CORRECT by construction. Residual question
+  is aid->target mapping: do any instances carry aid 3/4/6
+  (object idx 174/2328/5840 = artboard-list positions 3,4,6)?
+  ab26 opsdump showed 1 clip — either ab26 isn't composed main
+  or its instances target other artboards. Next: dump prop197
+  per 451/452 instance + confirm true main artboard index.
