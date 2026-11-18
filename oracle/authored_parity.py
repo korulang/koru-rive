@@ -438,8 +438,17 @@ def main():
                 continue
             print(f"divergent        {r['file']}  [{r.get('artboard', '?')}]")
             print(f"                 layer: {r['layer']} — {r['detail']}")
-            print(f"                 ref : {r['ref']}")
-            print(f"                 ours: {r['ours']}")
+            # Compact summary only: dumping the full digest buries the line that
+            # matters (and once filled a terminal). --json has the detail.
+            for side in ('ref', 'ours'):
+                d = r.get(side)
+                if not d:
+                    continue
+                cols = d.get('colors', [])
+                print(f"                 {side:4}: draws {d['draw']:>4}  clips {d['clip']:>3}  "
+                      f"fills/strokes {sum(1 for s in d.get('styles', []) if s == 1)}/"
+                      f"{sum(1 for s in d.get('styles', []) if s == 0)}  "
+                      f"colours {cols[:6]}{'...' if len(cols) > 6 else ''}")
 
     compared = [r for r in results if r["status"] in ("op-identical", "divergent")]
     return 0 if compared and all(r["status"] == "op-identical" for r in compared) else 1

@@ -149,6 +149,31 @@ matched (COMPASS, G_Meter): a rule that requires a global cull would have
 under-drawn them, so the rule had to be wrong. A correlation that reproduces
 one file's number is not a rule until it survives the files that already work.
 
+## The clip gap is the next lever (2026-11-18, measured)
+
+With the digests compact (the harness now prints counts, not full bboxes),
+data_viz Main makes the clip gap obvious:
+
+| | draws | clips | fills/strokes |
+|---|---:|---:|---|
+| reference | 199 | **38** | 172/27 |
+| ours | 170 | **3** | 144/26 |
+
+So ~35 clips are missing on Main alone. Nested-instance content is the likely
+source: rive-cpp clips a nested artboard to its own bounds, and our expansion
+pushes the instance matrix but never the matching clip — so instance content
+that overflows its rect paints over its siblings. Implementing that is a
+contained change in the nested-expansion block (emit the instance bounds as
+clippush/clippop around the recursive collect).
+
+Two other things from this round, recorded so they are not re-tried blindly:
+- Changing the text colour default from `0xFF313131` to black makes the harness
+  report a *different* divergence layer for data_viz (geometry instead of
+  drawable-count), so the default is load-bearing somewhere and the change was
+  reverted. It needs its own probe, not a speculative edit.
+- The harness now prints a compact per-side summary instead of dumping whole
+  digests — the dump once buried the line that mattered in 14 KB of bboxes.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
