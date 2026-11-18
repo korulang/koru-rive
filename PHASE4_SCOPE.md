@@ -1934,3 +1934,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   golden wraps in a different space). (c) prop285 units —
   maybe width is in different units than advances.
   wrap_w=150 remains the empirical oracle value.
+
+- WIDTH-SOURCE PARKED (t42 ruling): mechanism proven
+  (wrap_w=150 verb+pt exact on text_follow_path_shape_length,
+  pair={125,131} short-box); source unresolved — named
+  residual: "layout-assigned ~150 width; advance-model-or-
+  units unresolved; env hooks RIVE_WRAP_W/RIVE_ADV_K remain
+  as diagnostics". Reopen when a second fixture demands it.
+- NEXT CLASS PICK: gradient fills — named gap (solid-only
+  paint path today); bounded renderer leg, oracle = golden
+  paint/color records on gradient fixtures. Solo/NestedSM
+  gating deferred pending batch-5.
