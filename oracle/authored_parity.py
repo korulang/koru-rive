@@ -348,11 +348,15 @@ def first_divergence(ref, ours):
         first = next(i for i, (a, b) in enumerate(zip(ref["colors"], ours["colors"])) if a != b)
         return "draw-order", f"same {len(ref['colors'])} drawables, different order (first at {first})"
     if ref["styles"] != ours["styles"]:
-        return "paint-style", f"reference {ref['styles']}, ours {ours['styles']}"
+        import collections as _c
+        if _c.Counter(ref["styles"]) != _c.Counter(ours["styles"]):
+            return "paint-style", f"reference {ref['styles']}, ours {ours['styles']}"
+        return "draw-order", "same paint styles, different order"
     if ref["rules"] != ours["rules"]:
-        for i, (a, b) in enumerate(zip(ref["rules"], ours["rules"])):
-            if a != b:
-                return "fill-rule", f"drawable {i}: reference {'evenOdd' if a else 'nonZero'}, ours {'evenOdd' if b else 'nonZero'}"
+        import collections as _c
+        if _c.Counter(ref["rules"]) != _c.Counter(ours["rules"]):
+            return "fill-rule", f"reference {ref['rules']}, ours {ours['rules']}"
+        return "draw-order", "same fill rules, different order"
     if ref["clip"] != ours["clip"]:
         return "clip", f"reference clips {ref['clip']} time(s), ours {ours['clip']}"
     for i, (a, b) in enumerate(zip(ref["bboxes"], ours["bboxes"])):
