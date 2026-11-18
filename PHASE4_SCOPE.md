@@ -1485,3 +1485,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   implement char-budget truncation in textDrawPath's glyph
   loop — measure glyph advance vs path length, stop at
   budget (matches "shape_length" fixture intent).
+
+- TRUNCATION MECHANISM PARTIAL: TextFollowPathModifier does NOT
+  cull glyphs — transformGlyph positions overflow along the
+  tangent (pathLength/validLength math at ~108-160), so glyph
+  COUNT is decided upstream in text layout. -122 verbs ≈ 1-3
+  glyph contours = likely a trailing-char/ellipsis cut or a
+  line-break width constraint in text.cpp layout (paragraph
+  maxWidth vs follow-path length). NEXT: check text.cpp for
+  where follow-path feeds a width/char budget into shaping
+  (grep maxWidth/ellipsis in text.cpp ~840 region where
+  resetTextFollowPath is called), or diff the two divergent
+  runs' resolved glyph sequences vs golden-implied count.
