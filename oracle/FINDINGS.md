@@ -728,3 +728,27 @@ Fix: append `base + ce`. Verified: LTMOOB hits 10+ -> 0; opsdump
 Guard retained as loud defensive bound (never fires post-fix).
 Known remaining TODO in same path: ARGS_ARE_XY_VALUES assumed —
 point-matched component args (flags&2==0) would misplace, not crash.
+
+## layout_text_match clip signature (class-5 evidence for t4f)
+
+Ref dump: 2 clipPath records, each `verbs=5 pts=3` (rect-ish path)
+wrapping ONE glyph drawPath inside the text-row sequence (~rows 3 and
+7 of ~10). File census: ZERO ClippingShape objects, ZERO clip=true
+props (only Artboard LayoutComponent.clip=false) — the clip is
+IMPLICIT, not flag-driven. Candidates: per-LC overflow/clip on the
+specific row's LayoutComponent, or text-bounds clipping when glyph
+runs exceed cell width. Trigger condition unidentified — needs the
+clip-condition decode leg. Draw/paint parity otherwise exact
+(37/37 draws, colors identical).
+
+## TOOLCHAIN BLOCKER (2026-11-18 ~23:00) — not decode timeout
+
+db_health_tracker/hunter_x_demo 'artboard name not decoded' root cause
+is NOT file size: ALL koruc probe builds now fail —
+koru/koru_std/compiler.kz:1114 uses `for(...) |capture| { }` which the
+installed koruc rejects (PARSE001). koru_std is committed-clean at
+fa180ba48 -> installed koruc binary is STALE vs koru HEAD (needs
+rebuild) or a concurrent session is mid-edit. Also: untracked
+rive/rivgen_hello.kz (t4f riv2k output) independently breaks
+import kr/rive builds (KORU022) — moved to /tmp/rivgen_hello.kz.bak.
+Both must clear before parity probes compile again.
