@@ -1497,3 +1497,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   (grep maxWidth/ellipsis in text.cpp ~840 region where
   resetTextFollowPath is called), or diff the two divergent
   runs' resolved glyph sequences vs golden-implied count.
+
+- ELLIPSIS MECHANISM NAMED: Text.overflowValue(287)=3 on ALL
+  family texts; differentiator is box size (285/286 w/h dbls
+  vary: h=33.1 vs 47.9). rive-cpp: wantEllipsis =
+  overflow==ellipsis && overflowAsFixed -> last fitting line
+  gets ellipsized -> fewer glyphs -> -122 verbs. OUR
+  textDrawPath never reads 285/286/287 — no box constraint,
+  no ellipsis, draws full string. The two golden-2569 runs =
+  the two texts whose box fits fewer lines/chars. NEXT:
+  implement overflow-ellipsis in textDrawPath's layout —
+  wrap to box width(285), cap lines by height(286), replace
+  tail with ellipsis glyph run when overflow=ellipsis(287=3?).
