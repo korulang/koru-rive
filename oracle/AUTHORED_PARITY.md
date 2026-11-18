@@ -707,6 +707,25 @@ artboard translation would move them by `-780 / +408`.
 So the artboard transform is a real property our emission ignores, but it is not
 what explains LineBars. Recorded so the next pass does not re-derive it.
 
+## Drawable identity: blocked on being able to relink the dumper (2026-11-18)
+
+The plan was to stamp each recorded draw with the owning shape's name —
+`Component::name()` exists (`component_base.hpp`), so a hook in `Shape::draw` plus
+an `extern` in `record.hpp` would give the reference stream a real identity.
+
+The patch cannot be built here. `oracle/dump` links only system frameworks plus
+static archives, but rebuilding from `rive-cpp/out/debug/librive.a` fails:
+
+    undefined symbol: typeinfo for rive::Renderer
+    undefined symbol: typeinfo for oracle::RecordingPaint
+    nm -g out/debug/librive.a | grep _ZTIN5rive8RendererE  ->  0
+
+There is no renderer archive (`libluau_vm`, `libminiaudio`, `librive`,
+`librive_{harfbuzz,sheenbidi,yoga}`), and `librive.a` carries no Renderer
+typeinfo, so the available objects are not what produced the existing binary.
+Until the oracle's build is reproducible, the identity work is blocked — not by
+the patch, which is small, but by the toolchain that would consume it.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
