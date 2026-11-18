@@ -2987,8 +2987,8 @@
   "ours": "knm_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "fresh",
+  "prov_detail": "commit 0cf28036 driver render_knm_cl2.k",
   "ours_sha": "fc01d841d4257498",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -3100,8 +3100,8 @@
   "ours": "knm_cl1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "fresh",
+  "prov_detail": "commit 0cf28036 driver render_knm_cl1.k",
   "ours_sha": "c9e70a7cc376e68b",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
@@ -3438,8 +3438,8 @@
   "ours": "knm_hw.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "fresh",
+  "prov_detail": "commit 0cf28036 driver render_knm_hw.k",
   "ours_sha": "9f293790e1b0f2ad",
   "ref_sha": "433097812796da83",
   "checks": [
