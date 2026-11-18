@@ -170,16 +170,29 @@ red-dominant, and the reference's 68 are greens — so colour selection differs
 independently of membership), and no shape property we decode splits 68 from
 226.
 
-**Next experiment (designed, not yet run): an env-gated cull-rule sweep.**
-Guessing predicates from the object dump has failed — the parse and the
-predicate table both need care, and no single decoded property splits 68 from
-226. Put the question to the decoder instead: add a temporary
-`RIVE_CULL_RULE=<name>` switch in the shape-paint loop and sweep candidate
-rules against the reference count. The rules worth trying, in order:
-`blend` / `noblend` (drawables that set `Drawable.blendModeValue`, 149 of 226),
-`opacity` (`opacity < 1`, 51 of 226), `rot` (sets `TransformComponent.rotation`),
-`scale` (sets `scaleX/scaleY`). Target: 53 fills + 15 strokes. The switch is
-diagnostic scaffolding and must not ship.
+**Cull-rule sweep (run, then scaffolding removed).** A temporary
+`RIVE_CULL_RULE` switch skipped shapes by candidate property and counted the
+resulting draws, against the reference's 53 fills + 15 strokes:
+
+| rule | fills | strokes | total |
+|---|---:|---:|---:|
+| none | 199 | 55 | 254 |
+| skip shapes that set `blendModeValue`(23) | 97 | **16** | 113 |
+| skip shapes without it | 137 | 39 | 176 |
+| skip shapes with `rotation`(15) | 163 | 55 | 218 |
+| skip shapes with `scaleX/scaleY`(16/17) | 126 | 38 | 164 |
+
+No single shape-level property reproduces the reference. The near-miss is
+informative: filtering on `blendModeValue` leaves **16 strokes against a target
+of 15**, while fills only fall to 97 against 53. That asymmetry says the
+remaining rule is **per paint, not per shape** — one shape can carry both a fill
+and a stroke, and the reference's stroke set is nearly explained while its fill
+set is not. Next probe: apply the candidate predicates to the *paint* child
+(`Fill`/`Stroke`, its gradient vs solid kind, and its keyed colour during the
+static pose) rather than to the shape.
+
+Note for reproducibility: the first sweep used wrong property keys (rotation is
+15, not 14; `blendModeValue` is 23, not 26) and its numbers were discarded.
 
 Related, and needed for nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
