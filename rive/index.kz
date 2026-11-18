@@ -5129,6 +5129,15 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 fanc = fao.parent_obj;
             }
             if (faop <= 0) continue;
+            // No paint source, nothing to draw: the FLD's fill is a *sibling*
+            // Fill under the same LayoutComponent. LineBars' six FLDs have none
+            // and the reference draws none of them (that was the +6 overshoot).
+            var fpaint = false;
+            for (r.objects) |*fpb| {
+                if (fpb.parent_obj != fo.parent_obj) continue;
+                if (fpb.type_key == 20 or fpb.type_key == 24) { fpaint = true; break; }
+            }
+            if (!fpaint) continue;
             const fwm = effectiveWorld(r, fi, frame);
             out.append(alloc, op0(0)) catch {};
             var f0 = op0(1); f0.x1 = 0; f0.y1 = 0; out.append(alloc, f0) catch {};

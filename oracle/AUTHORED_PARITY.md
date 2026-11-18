@@ -234,6 +234,22 @@ Two things this cost, worth recording:
   the very next isolated run of the same artboard succeeded. A transient
   toolchain failure is not a regression — check it alone before believing it.
 
+**Paint-source guard (same day).** An FLD with no sibling `Fill`/`Stroke` under
+its LayoutComponent has nothing to paint, and the reference draws none of them —
+that was exactly LineBars' +6 overshoot (its six FLDs have no fill sibling,
+HorizontalBars' twelve all do). With the guard:
+
+| artboard | ref | before guard | after guard |
+|---|---:|---:|---:|
+| Main | 199 | 202 (+3) | 196 (−3) |
+| HorizontalBars | 40 | 34 | 34 (−6) |
+| VerticalBars | 31 | 33 (+2) | 33 (+2) |
+| LineBars | 20 | 26 (+6) | **20 (exact count)** |
+| Data | 45 | 46 (+1) | 46 (+1) |
+
+Total absolute error 18 → 12. LineBars' remaining divergence is a *paint*
+mismatch (reference white, ours black) at one drawable, not a count.
+
 Gradient paint colour remains open and is *not* stop-derived (see below).
 
 ## Remaining deltas

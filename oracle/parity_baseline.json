@@ -53,13 +53,13 @@
     "LineBars (idx 1166)": {
       "clips_ours": 1,
       "clips_ref": 1,
-      "ours": 26,
+      "ours": 20,
       "ref": 20
     },
     "Main (idx 315)": {
       "clips_ours": 3,
       "clips_ref": 38,
-      "ours": 202,
+      "ours": 196,
       "ref": 199
     },
     "Pie Chart (idx 1897)": {
