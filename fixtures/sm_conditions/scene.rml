@@ -1,0 +1,42 @@
+<Rive version="1" kind="fragment">
+    <!-- SM with input-driven conditional transitions: TransitionBoolCondition +
+         TransitionNumberCondition — never-seen types in the corpus. -->
+    <Artboard width="400" height="300" styleId="0:1" name="Cond" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:1"/>
+
+        <Fill name="Background"><SolidColor colorValue="FF202028" name="C"/></Fill>
+
+        <Shape x="200" y="150" name="Box" id="0:10">
+            <Rectangle width="120" height="120" originX="0.5" originY="0.5" name="Path"/>
+            <Fill name="Fill"><SolidColor colorValue="FF57A5E0" name="C"/></Fill>
+        </Shape>
+
+        <StateMachine name="State Machine 1" id="0:7">
+            <StateMachineBool name="armed" id="0:40"/>
+            <StateMachineNumber name="level" id="0:41"/>
+            <StateMachineTrigger name="go" id="0:42"/>
+            <StateMachineLayer name="Layer 1" id="0:8">
+                <AnyState x="200" y="-140"/>
+                <ExitState x="400" y="-140"/>
+                <EntryState>
+                    <StateTransition stateToId="0:12" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
+                </EntryState>
+                <AnimationState animationId="0:20" id="0:12">
+                    <StateTransition stateToId="0:13" duration="150">
+                        <TransitionBoolCondition inputId="0:40" opValue="equal"/>
+                    </StateTransition>
+                    <StateTransition stateToId="0:14" duration="150">
+                        <TransitionNumberCondition inputId="0:41" opValue="greaterThan" value="80"/>
+                    </StateTransition>
+                    <StateTransition stateToId="0:15">
+                        <TransitionTriggerCondition inputId="0:42"/>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState id="0:13"/>
+                <AnimationState id="0:14"/>
+                <AnimationState id="0:15"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation duration="60" name="Animation 1" id="0:20"/>
+    </Artboard>
+</Rive>

@@ -1,0 +1,48 @@
+<Rive version="1" kind="fragment">
+    <!-- Gradient fills: Linear + Radial + Angular — corpus has Linear/Radial
+         objects but ops path draws none; AngularGradient is never-in-corpus. -->
+    <Artboard width="420" height="300" styleId="0:1" name="Gradients" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:1"/>
+
+        <Shape x="70" y="100" name="Lin" id="0:10">
+            <Rectangle width="120" height="200" originX="0.5" originY="0.5" name="Path"/>
+            <Fill name="Fill">
+                <LinearGradient startX="-60" startY="0" endX="60" endY="0" name="G">
+                    <GradientStop colorValue="FFFF2020" position="0" name="S0"/>
+                    <GradientStop colorValue="FF2040FF" position="1" name="S1"/>
+                </LinearGradient>
+            </Fill>
+        </Shape>
+
+        <Shape x="210" y="100" name="Rad" id="0:20">
+            <Rectangle width="120" height="200" originX="0.5" originY="0.5" name="Path"/>
+            <Fill name="Fill">
+                <RadialGradient startX="0" startY="0" endX="0" endY="100" name="G">
+                    <GradientStop colorValue="FFFFFF80" position="0" name="S0"/>
+                    <GradientStop colorValue="FF8040FF" position="1" name="S1"/>
+                </RadialGradient>
+            </Fill>
+        </Shape>
+
+        <Shape x="350" y="100" name="Ang" id="0:30">
+            <Rectangle width="120" height="200" originX="0.5" originY="0.5" name="Path"/>
+            <Fill name="Fill">
+                <AngularGradient startX="0" startY="-100" endX="0" endY="100" name="G">
+                    <GradientStop colorValue="FF40FF80" position="0" name="S0"/>
+                    <GradientStop colorValue="FFFF40FF" position="1" name="S1"/>
+                </AngularGradient>
+            </Fill>
+        </Shape>
+
+        <!-- gradient stroke: Stroke paint can also be a gradient -->
+        <Shape x="210" y="270" name="StrokeG" id="0:40">
+            <Rectangle width="300" height="40" originX="0.5" originY="0.5" name="Path"/>
+            <Stroke thickness="8" name="Stroke">
+                <LinearGradient startX="-150" startY="0" endX="150" endY="0" name="G">
+                    <GradientStop colorValue="FFFFFFFF" position="0" name="S0"/>
+                    <GradientStop colorValue="FF000000" position="1" name="S1"/>
+                </LinearGradient>
+            </Stroke>
+        </Shape>
+    </Artboard>
+</Rive>

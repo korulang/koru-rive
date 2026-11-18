@@ -1,0 +1,36 @@
+<Rive version="1" kind="fragment">
+    <!-- Scroll view: ScrollConstraint + ClampedScrollPhysics — never-seen types.
+         Tall content column inside a fixed viewport. -->
+    <Artboard width="360" height="420" styleId="0:1" name="Scroll" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:1"/>
+
+        <Fill name="Background"><SolidColor colorValue="FF181820" name="C"/></Fill>
+
+        <!-- viewport -->
+        <LayoutComponent x="180" y="210" width="320" height="400" styleId="0:11" name="Viewport" id="0:10">
+            <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed"
+                                  name="VP Style" id="0:11"/>
+
+            <!-- scrollable content: 10 rows, 1200px tall -->
+            <LayoutComponent width="320" height="1200" styleId="0:12" name="Content" id="0:13">
+                <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed"
+                                      flexDirectionValue="column" gapVertical="8"
+                                      name="Content Style" id="0:12"/>
+                <ScrollConstraint name="Scroll" id="0:20" physicsId="0:21"/>
+            </LayoutComponent>
+        </LayoutComponent>
+
+        <ClampedScrollPhysics name="Physics" id="0:21" constraintId="0:20"/>
+
+        <!-- rows: 10 cards -->
+        <ComponentAsset artboardId="0:30" name="Row"/>
+    </Artboard>
+
+    <Artboard isComponent="true" width="300" height="80" styleId="0:31" name="Row" id="0:30" x="700" y="0">
+        <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed" name="Row Style" id="0:31"/>
+        <Shape x="150" y="40" name="Body" id="0:32">
+            <Rectangle width="300" height="80" originX="0.5" originY="0.5" name="Path"/>
+            <Fill name="Fill"><SolidColor colorValue="FF3FA46A" name="C"/></Fill>
+        </Shape>
+    </Artboard>
+</Rive>
