@@ -1037,3 +1037,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   side ignores/handles tri coords differently. Next concrete
   step: dump ctm_stk depth+matrix at ONE row's kind-8 and
   hand-compose to compare vs traced pos.
+
+- constrainList DECISIVE: ctm_stk dump shows [slot=tB, inner=artboard
+  offset(+8,+8)] folding CORRECTLY (inner applied first, slot
+  outer) — row0 stk=[-0,1,-1,-0,25,154.5]+[1,0,0,1,8,8] =
+  90deg rot + path pos + 8px artboard pad. Verts land at
+  traced positions BY CONSTRUCTION. Residual is therefore
+  DOWNSTREAM of tri emission: mesh.tri/draw.mesh canvas-side
+  consumption, or the row content's local coords vs pivot.
+  Pipeline koru-side is exonerated end-to-end.

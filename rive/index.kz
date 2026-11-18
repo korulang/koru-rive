@@ -6447,6 +6447,11 @@ const MeshDrawHdr = struct { style: i64, color: u32, thick: f64, join: i64, cap:
                         mdraw(hdr);
                         // composed CTM: acc = ctmMul(acc, m) fold, identity start
                         var ctm = [6]f64{ 1, 0, 0, 1, 0, 0 };
+                        if (std.posix.getenv("RIVE_TRACE_CTM") != null) {
+                            std.debug.print("ctm depth={d} stk:", .{ctm_depth});
+                            for (ctm_stk[0..ctm_depth]) |m| std.debug.print(" [{d:.2},{d:.2},{d:.2},{d:.2},{d:.1},{d:.1}]", .{ m[0], m[1], m[2], m[3], m[4], m[5] });
+                            std.debug.print("\n", .{});
+                        }
                         for (ctm_stk[0..ctm_depth]) |m| {
                             ctm = .{
                                 ctm[0] * m[0] + ctm[2] * m[1],
