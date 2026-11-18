@@ -1198,3 +1198,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   artboards sorted by object idx: 26,124,149,174,2328,4756,
   5840,9482 -> idx7=9482 YES). Next: RIVE_TRACE_NEST inside
   recursion — does ni inside ab9482's call print candidates?
+
+- DEPTH-2 FIX LANDED: nested arm MOVED from collectOps (root
+  only) into collectArtboardOps end — recursion now expands
+  all depths. VERIFIED expansion reaches depth-2+ but exposes
+  NEW panic: integer overflow in keyframedColor->lerpColor
+  (propColorAnimOr) inside nested collectArtboardOps — likely
+  g_activeAnim/SM-scope or blend-state corruption at depth,
+  or smActiveAnimIdx returning bad idx for SM-less targets.
+  NEXT: guard lerpColor/keyframedColor inputs or fix
+  g_activeAnim save/restore around nested expansion.

@@ -5657,6 +5657,42 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         }
     }
     if (clipOn) out.append(alloc, op0(10)) catch {};
+    // subtree.
+    const noNested = std.posix.getenv("RIVE_NO_NESTED") != null;
+    for (r.objects, 0..) |no, ni| {
+        if (noNested) break;
+        if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
+        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest cand ni={d} type={d} owner={d} ab={d}\n", .{ ni, no.type_key, owningArtboard(r, ni), abIdx });
+        if (owningArtboard(r, ni) != abIdx) continue;
+        if (g_abDepth >= 8) continue;
+        const aid = propU(no.props, 197, -1);
+        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest owned ni={d} aid={d}\n", .{ ni, aid });
+        if (aid < 0) continue;
+        var seen: i64 = 0;
+        var target: i64 = -1;
+        for (r.objects, 0..) |abo, abi| {
+            if (abo.type_key != 1) continue;
+            if (seen == aid) { target = @intCast(abi); break; }
+            seen += 1;
+        }
+        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest target ni={d} aid={d} -> {d}\n", .{ ni, aid, target });
+        if (target < 0) continue;
+        if (target == @as(i64, @intCast(abIdx))) continue; // self-reference guard
+        const w = effectiveWorld(r, ni, frame);
+        var so = op0(6); so.a = w[0]; so.b = w[1]; so.c = w[2]; so.d = w[3]; so.e = w[4]; so.g = w[5];
+        out.append(alloc, so) catch {};
+        const hostAnim = g_activeAnim;
+        const hostFrom = g_blendFrom;
+        const hostT = g_blendT;
+        g_activeAnim = smActiveAnimIdx(r, @intCast(target), frame);
+        g_abDepth += 1;
+        collectArtboardOps(r, @intCast(target), frame, alloc, out);
+        g_abDepth -= 1;
+        g_activeAnim = hostAnim;
+        g_blendFrom = hostFrom;
+        g_blendT = hostT;
+        out.append(alloc, op0(7)) catch {};
+    }
     return;
 }
 
@@ -5756,42 +5792,6 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
     // artboardId(197) is an INDEX into the file's artboard list (rive-cpp:
     // File::artboard(size_t index)), NOT a ViewModel id: matching on
     // 583/Artboard.viewModelId matches by coincidence and expands the wrong
-    // subtree.
-    const noNested = std.posix.getenv("RIVE_NO_NESTED") != null;
-    for (r.objects, 0..) |no, ni| {
-        if (noNested) break;
-        if (no.type_key != 92 and no.type_key != 451 and no.type_key != 452) continue;
-        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest cand ni={d} type={d} owner={d} ab={d}\n", .{ ni, no.type_key, owningArtboard(r, ni), abIdx });
-        if (owningArtboard(r, ni) != abIdx) continue;
-        if (g_abDepth >= 8) continue;
-        const aid = propU(no.props, 197, -1);
-        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest owned ni={d} aid={d}\n", .{ ni, aid });
-        if (aid < 0) continue;
-        var seen: i64 = 0;
-        var target: i64 = -1;
-        for (r.objects, 0..) |abo, abi| {
-            if (abo.type_key != 1) continue;
-            if (seen == aid) { target = @intCast(abi); break; }
-            seen += 1;
-        }
-        if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("nest target ni={d} aid={d} -> {d}\n", .{ ni, aid, target });
-        if (target < 0) continue;
-        if (target == @as(i64, @intCast(abIdx))) continue; // self-reference guard
-        const w = effectiveWorld(r, ni, frame);
-        var so = op0(6); so.a = w[0]; so.b = w[1]; so.c = w[2]; so.d = w[3]; so.e = w[4]; so.g = w[5];
-        out.append(alloc, so) catch {};
-        const hostAnim = g_activeAnim;
-        const hostFrom = g_blendFrom;
-        const hostT = g_blendT;
-        g_activeAnim = smActiveAnimIdx(r, @intCast(target), frame);
-        g_abDepth += 1;
-        collectArtboardOps(r, @intCast(target), frame, alloc, &out);
-        g_abDepth -= 1;
-        g_activeAnim = hostAnim;
-        g_blendFrom = hostFrom;
-        g_blendT = hostT;
-        out.append(alloc, op0(7)) catch {};
-    }
     g_activeAnim = -1;
     g_blendFrom = -1;
     g_blendT = 0;
