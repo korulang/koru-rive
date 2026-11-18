@@ -375,6 +375,26 @@ Until the time mapping settles, the defect stands: slot collisions *can* cull
 drawables in a multi-artboard file, and the G_Meter −3 is unexplained by
 artboard scoping.
 
+## `--attribute`: per-class accounting in one command
+
+    python3 oracle/authored_parity.py --attribute G_Meter \
+        rive-cpp/tests/unit_tests/assets/car_widgets_v01.riv
+    # car_widgets_v01.riv [G_Meter (idx 10881)] draws=66
+    #   DRAW      60
+    #   TXT        6
+    #   skips: opacity=3
+
+Every attribution this doc describes by hand — which class emits what, and which
+culls fire — is now one command. It reuses the decoder's class tags
+(`RIVE_TRACE_DRAW`) and skip tags (`RIVE_TRACE_SKIP`), so the report cannot
+disagree with the decoder.
+
+Two bugs had to be fixed to make it honest, both in the harness rather than the
+decoder: probes are now built to a unique path (`koruc run` writes a shared
+`./a.out`, and a concurrent session can swap the program), and the trace env is
+actually forwarded to the executed binary (it was only passed to the build, so
+the first version reported zero classes for every artboard).
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour

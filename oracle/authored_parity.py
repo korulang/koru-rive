@@ -79,9 +79,9 @@ def short_color(h):
     return (h or "0")[-6:].rjust(6, "0").lower()
 
 
-def run(cmd, timeout):
+def run(cmd, timeout, env=None):
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env)
         return p.returncode, p.stdout, p.stderr
     except subprocess.TimeoutExpired:
         return 124, "", f"timeout after {timeout}s"
@@ -216,7 +216,7 @@ kr/rive:open(path: "{path}")
 """
 
 
-def run_probe(koruc, root, body, timeout):
+def run_probe(koruc, root, body, timeout, trace_env=()):
     """Build the probe to a UNIQUE path and run that binary.
 
     `koruc run` writes ./a.out in the working directory, and this repo is
@@ -234,10 +234,12 @@ def run_probe(koruc, root, body, timeout):
     try:
         env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=os.path.join(root, ".zig-global"))
         env.setdefault("KORU_BACKEND_LIBPATH", os.path.expanduser("~/src/oshun/canvas/koruos-darwin"))
+        for k in trace_env:
+            env[k] = "1"
         code, out, err = run([koruc, "build", probe, "-o", binary], timeout)
         if code != 0 or not os.path.exists(binary):
             return out + "\n" + err, code or 1
-        code, out, err = run([binary], timeout)
+        code, out, err = run([binary], timeout, env)
         return out + "\n" + err, code
     finally:
         for f in (probe, binary):
@@ -347,6 +349,44 @@ def first_divergence(ref, ours):
     return None
 
 
+
+
+def attribute(path, artboard, koruc, root, timeout):
+    """Per-class draw accounting plus skip reasons for one artboard.
+
+    Replaces the ad-hoc greps this project grew: one run with the decoder's
+    class tags on, reported back as a table. Trace output goes to stderr, which
+    is why probes here capture both streams.
+    """
+    body = ABNAMES_PROBE.format(path=path)
+    arts, err = ours_abnames(path, koruc, root, timeout)
+    if err:
+        return None, err
+    match = [a for a in arts if a[1] == artboard]
+    if not match:
+        return None, f"artboard {artboard!r} not decoded (have: {[a[1] for a in arts][:6]})"
+    ab_idx = match[0][0]
+    text, code = run_probe(koruc, root, OPS_PROBE.format(path=path, ab=ab_idx, frame=0),
+                           timeout, trace_env=("RIVE_TRACE_DRAW", "RIVE_TRACE_SKIP"))
+    classes = {"DRAW": 0, "FLD": 0, "TXT": 0, "ARTPAINT": 0, "LAYPAINT": 0}
+    skips = {}
+    draws = 0
+    for line in text.splitlines():
+        if line.startswith("OP k=8"):
+            draws += 1
+        for name in classes:
+            if line.startswith(name + " "):
+                classes[name] += 1
+        if line.startswith("SKIP "):
+            why = "?"
+            m = re.search(r"why=(\S+)", line)
+            if m:
+                why = m.group(1)
+            skips[why] = skips.get(why, 0) + 1
+    return {"artboard": f"{match[0][1]} (idx {ab_idx})", "draws": draws,
+            "classes": classes, "skips": skips}, None
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("files", nargs="*", help="authored .riv files (default: the demo set)")
@@ -356,6 +396,8 @@ def main():
     ap.add_argument("--koruc", default=os.path.expanduser("~/src/koru/zig-out/bin/koruc"))
     ap.add_argument("--dump", default=os.path.join(HERE, "dump"))
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument("--attribute", metavar="ARTBOARD",
+                    help="per-class draw accounting + skips for one artboard")
     ap.add_argument("--save-baseline", action="store_true",
                     help="write oracle/parity_baseline.json from this run")
     ap.add_argument("--all-artboards", action="store_true",
@@ -364,6 +406,24 @@ def main():
     args = ap.parse_args()
 
     files = args.files or [os.path.join(ASSETS, f) for f in DEFAULT_FILES]
+
+    if args.attribute:
+        if not files:
+            print("--attribute needs a file", file=sys.stderr)
+            return 2
+        acct, err = attribute(files[0], args.attribute, args.koruc, ROOT, args.timeout)
+        if err:
+            print(f"unavailable: {err}")
+            return 1
+        print(f"{os.path.basename(files[0])} [{acct['artboard']}] draws={acct['draws']}")
+        for k, v in acct["classes"].items():
+            if v:
+                print(f"  {k:<10} {v}")
+        if acct["skips"]:
+            print("  skips:", ", ".join(f"{k}={v}" for k, v in acct["skips"].items()))
+        else:
+            print("  skips: none")
+        return 0
     results = []
     for path in files:
         name = os.path.basename(path)
