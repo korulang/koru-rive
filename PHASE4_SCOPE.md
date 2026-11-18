@@ -1724,3 +1724,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   fact golden has exactly 3-4 lines: sort contour origins by
   y then x, split where y jumps >lh/2. Then chars/line +
   xmax/line -> effective advance vs ours. STILL OPEN.
+
+- BASELINE CLUSTER VERDICT: golden 2569 = 3 kept lines
+  (baselines ~9/19/28, pitch ~9.7 = lh) + a culled 4th line;
+  ~37-44 contours/line. Ours wraps 125 chars into ~3 lines
+  total (bw=157.3) -> cap never engages. Golden chars/line
+  ~31 vs ours ~42 -> golden wraps NARROWER: either true wrap
+  width <157.3 (check which prop feeds t_box_w — LAY bw=157.3
+  vs raw prop285=150.3 mismatch!) or advances wider. FIRST
+  CHECK: where does t_box_w=157.3 come from vs prop 285 —
+  possible wrong-prop or scale bug making our wrap too wide.
