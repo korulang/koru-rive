@@ -19,3 +19,4 @@ goldens/corpus/
 .zig-cache/
 zig-out/
 fixtures/vmlist/build/
+oracle/dump_vmbound
