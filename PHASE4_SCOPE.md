@@ -1240,3 +1240,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   most CS; (c) CS parents invisible/hidden. 49 CS in 174/2328
   remain structurally untargeted. Next: count CS objects whose
   parent_obj chain reaches a type-3 shape that actually emits.
+
+- CLIP-VOLUME VERDICT: golden hunter_x_demo.txt = 130
+  clipPath ops per frame (artboard-0 scope). Ours now 36 k=9
+  pushes on ab26 f8 (was 1). Residual decomposition: (a) 49 CS
+  structurally untargeted (174/2328, aid census — cannot fire);
+  (b) emission-model delta — golden counts clipPath ops in
+  rive's per-drawable-run interleave (start+end pairs per
+  group), ours emits per-shape push/pop — count semantics
+  differ so 36-vs-130 isn't 1:1 comparable; (c) deeper-nested
+  CS inside 9504/9887 subtrees may still under-fire.
+  Class verdict: traversal+expansion+cycle-guard all landed;
+  clip volume went 1->36, residual is structural+model delta,
+  not a traversal bug.
