@@ -1680,3 +1680,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   verify LAY fires (rebuild clean, RIVE_TRACE_TV=1) — if
   silent, find the actual text emission path for drawops
   output before more layout work.
+
+- LAY DIAGNOSTIC RESOLVED: traces need RIVE_TRACE=1 (emitOps
+  gate) — earlier "silence" was missing env, not wrong fn.
+  MEASURED: lh=9.68, bw=157.3; siblings bh=45.5 (~4 lines),
+  ti125/131 bh=32.4 (~3 lines). 125 chars wrap to ~3 lines
+  at our advances -> nothing drops; golden drops 6 contours
+  -> golden wraps TIGHTER (more lines): likely letterSpacing
+  on runs (text.cpp scales it into advance) or wider
+  advances. ALSO: ellipsis fired on 2 wrong texts (+5v) —
+  droppedTail logic needs the ellipsisLine semantics (only
+  last fitting line gets "…", and only when overflow line
+  exists). NEXT: check run-135/style props for letterSpacing
+  key; add it to char advance; then cap+ellipsis per
+  ellipsisLine rule.
