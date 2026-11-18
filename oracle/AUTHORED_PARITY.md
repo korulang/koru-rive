@@ -614,6 +614,17 @@ next piece of work rather than a quick win.
   empty op stream on ab 3844 (possible empty-emit).
 - Cumulative: ~100 files measured, ~47 identical (~47%).
 
+### ORACLE FIX (2026-11-19, t4j) — ALL PRIOR DISTRIBUTIONS SUSPECT
+
+tier1_compare.py poisoned EVERY fixture's last frame: next artboard's
+static/sm0 prefix bled into fr29 comparison. csvmi/dbai re-sweeps
+post-fix: FULL GREEN — 'script-gated' was the artifact. ALL batch
+distributions b1-b5 (~130 files) were measured on the poisoned oracle;
+identical counts UNDERCOUNTED. harness also updated: first_divergence
+now compares color/style/rule SETS + draw-order layer (order is not
+content). RE-SWEEP IN FLIGHT — treat all prior identical rates as
+lower bounds.
+
 ### Batch distribution (stratified ~40, post class-1/2/5 fixes)
 - 13/40 op-identical · 24 divergent · 1 ours-unavailable
   (layout_text_match SIGABRT — FIXED, composite-glyph endPts
