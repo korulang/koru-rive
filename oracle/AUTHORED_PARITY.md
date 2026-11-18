@@ -150,14 +150,27 @@ Measured facts about the delta:
   earlier "layout" reading of this delta was wrong; layout is data_viz's
   problem (`ForegroundLayoutDrawable`), not car_widgets'.
 
-Bbox comparison: 44 of the reference's 68 match ours, 3 are absent from ours,
-and 210 of ours have no counterpart, clustered near the origin. Base SolidColor
-values in the artboard are red-dominant (`ff0000` ×62), the keyframe palette is
-red-dominant (`fd2020` ×108), and the reference's 68 are greens — so colour
-selection differs as well as set membership.
+Identity comparison settles the shape of it: matching each draw by
+(transform matrix, colour, style) instead of by bbox, **52 of the reference's
+68 draws match ours exactly**, 16 are reference-only, and 202 are ours-only. So
+the reference's set is mostly a subset of ours — an over-draw of ~3x, not a
+different scene.
 
-**Next experiment (needs a new instrument):** the 68 cannot be identified by
-colour or count. `oracle/dump.cpp` should print the drawable's object id (or
+**A correction worth recording:** an earlier reading said the extra draws
+"cluster at the origin" and inferred un-laid-out content. That was wrong —
+the bbox coordinates in the digest are the drawable's **local path** bounds, not
+its world position. Reading the matrices instead shows every draw at a real
+gauge position (728,655 / 984,1051 / 617,564 …), with **zero** draws near the
+origin. Both the layout reading and the cull-rect reading were artifacts of
+reading local coordinates as world ones.
+
+What the 202 extras share is still unidentified. Colour does not separate them
+(the artboard's base `SolidColor`s are red-dominant, its keyframe palette is
+red-dominant, and the reference's 68 are greens — so colour selection differs
+independently of membership), and no shape property we decode splits 68 from
+226.
+
+**Next experiment (needs a new instrument):** `oracle/dump.cpp` should print the drawable's object id (or
 name) on each `drawPath` line, so the reference's set can be matched to objects
 by identity instead of inferred. That is the direct route and it is small.
 
