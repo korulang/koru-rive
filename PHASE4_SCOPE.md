@@ -954,3 +954,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   plus '^O 165' for comparison. Then find list items: rows are
   NestedArtboard(92)/artboard instances whose ancestor chain
   reaches the constraint's parent (ConstrainableList).
+
+- CRITICAL recon result: graphdump(clfp ab:all) shows ZERO
+  type-625 objects AND zero type-92 nested artboards in the
+  dump grep — the follow-path constraint may be a different
+  type_key in this file, or rows position via list layout
+  alone. Verify: /tmp/gdump | grep '^O ' | awk '{print $2}'
+  | sort -n | uniq -c — enumerate actual type_keys present,
+  look for constraint-ish types (165 handled? 625 absent?).
+  If no 625 exists, the x~0 collapse is LIST LAYOUT solving
+  (component_list rows at origin), not constraint eval —
+  reclassify residual to t4f layout lane.
