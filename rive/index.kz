@@ -2419,15 +2419,17 @@ fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
         var lo: usize = 0; var hi: usize = kf.items.len - 1;
         while (hi - lo > 1) { const mid = (lo + hi) / 2; if (kf.items[mid].f <= frame) lo = mid else hi = mid; }
         const t0 = kf.items[lo]; const t1 = kf.items[hi];
-        const span = @as(f32, @floatFromInt(t1.f - t0.f));
-        const u = if (span <= 0) 0 else @as(f32, @floatFromInt(frame - t0.f)) / span;
+        const span = @as(f32, @floatFromInt(t1.f -% t0.f));
+        const u = if (span <= 0) 0 else @as(f32, @floatFromInt(frame -% t0.f)) / span;
         // lerp each channel
         var outc: u32 = 0;
         var sh: u5 = 0;
         while (sh < 32) : (sh += 8) {
             const a0 = @as(f32, @floatFromInt((t0.v >> sh) & 0xFF));
             const a1 = @as(f32, @floatFromInt((t1.v >> sh) & 0xFF));
-            outc |= @as(u32, @intFromFloat(a0 + (a1 - a0) * u)) << sh;
+            const ch = a0 + (a1 - a0) * u;
+            const cv: u32 = if (!(ch >= 0)) 0 else if (ch > 255) 255 else @intFromFloat(@round(ch));
+            outc |= cv << sh;
         }
         return outc;
     }
@@ -2435,7 +2437,10 @@ fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
 }
 
 fn lerpChan(x: f32, y: f32, t: f32) u32 {
-    return @intFromFloat(@round(x + (y - x) * t));
+    const v = x + (y - x) * t;
+    if (!(v >= 0)) return 0;
+    if (v > 255) return 255;
+    return @intFromFloat(@round(v));
 }
 
 fn lerpColor(c0: u32, c1: u32, t: f32) u32 {
@@ -3947,6 +3952,29 @@ fn vmScalarToString(r: *const Riv, convIdx: i64, s: VmScalar, alloc: std.mem.All
     }
 }
 
+// True when the run's text is bound in the *name-based* form we cannot
+// resolve (no versioned manifest). Such a run renders nothing in rive — the
+// literal is a template placeholder, not content — so callers must skip it
+// rather than draw the raw string.
+fn runTextUnresolvable(r: *const Riv, targetIdx: usize) bool {
+    var lastBindable: i64 = -1;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 446 or o.type_key == 447) {
+            if (lastBindable == @as(i64, @intCast(targetIdx)) and o.type_key == 447) {
+                var pk: u64 = 0;
+                var flags: u64 = 0;
+                for (o.props) |p| {
+                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 587) flags = if (p.value == .uint) p.value.uint else 0;
+                }
+                if (pk == 268 and (flags & 16) != 0) return true;
+            }
+            lastBindable = @intCast(i);
+        }
+    }
+    return false;
+}
+
 // Resolve the DataBindContext targeting targetIdx with propertyKey==268
 // to the bound text, or null when unbound/unresolvable (literal stays).
 fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]const u8 {
@@ -4550,7 +4578,10 @@ fn dumpGraph(r: *Riv) void {
 ~pub tor vm.set { r: *Riv<loaded>, vm: i64, inst: i64, prop: i64, value: string }
 
 ~proc vm.set|zig {
-    const ii = findVmInstance(r, vm, inst) orelse std.debug.print("vm.set: no such vm instance vm={d} inst={d}\n", .{vm, inst}); return;
+    const ii = findVmInstance(r, vm, inst) orelse {
+        std.debug.print("vm.set: no such vm instance vm={d} inst={d}\n", .{vm, inst});
+        return;
+    };
     var j = ii + 1;
     while (j < r.objects.len) : (j += 1) {
         const vo = &r.objects[j];
@@ -5634,9 +5665,19 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         var runIt: usize = 0;
         while (runIt < runCount) : (runIt += 1) {
         const runSel: i64 = if (runs.items.len == 0) -1 else @intCast(runs.items[runIt]);
+        if (runSel >= 0 and runTextUnresolvable(r, @intCast(runSel))) continue;
         tverbs.clearRetainingCapacity();
         tpts.clearRetainingCapacity();
-        if (!textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr, runSel)) continue;
+        const runOk = textDrawPath(r, ti, frame, alloc, &tverbs, &tpts, &tcolor, &tfr, runSel);
+        if (std.posix.getenv("RIVE_TRACE_RUN") != null) {
+            var tlen: usize = 0;
+            if (runSel >= 0) {
+                const ro = &r.objects[@intCast(runSel)];
+                for (ro.props) |pp| { if (pp.key == 268 and pp.value == .bytes) tlen = pp.value.bytes.len; }
+            }
+            std.debug.print("RUN text={d} run={d} ok={} verbs={d} color={x}\n", .{ ti, runSel, runOk, tverbs.items.len, tcolor });
+        }
+        if (!runOk) continue;
         const w = effectiveWorld(r, ti, frame);
         out.append(alloc, op0(0)) catch {};
         var vp: usize = 0;

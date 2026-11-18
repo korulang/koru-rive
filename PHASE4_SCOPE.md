@@ -1208,3 +1208,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   or smActiveAnimIdx returning bad idx for SM-less targets.
   NEXT: guard lerpColor/keyframedColor inputs or fix
   g_activeAnim save/restore around nested expansion.
+
+- lerpColor/keyframedColor overflow FIXED: guarded channel
+  clamps (ch NaN/negative/over-255) + wrapping i64 subtractions
+  (t1.f-t0.f, frame-t0.f) — panic gone, opsdump completes.
+- NEW blocker: nested expansion now HANGS — arm inside
+  collectArtboardOps re-expands shared targets per instance;
+  diamond/cyclic nesting (5840 contains an instance) multiplies
+  work, depth-8 cap insufficient -> opsdump never returns
+  (timeout kills, zero OP output). NEEDS: per-path cycle guard
+  (visited artboard set) or expansion budget. CS clips in 5840
+  unreachable until bounded.
