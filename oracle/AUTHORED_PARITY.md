@@ -159,12 +159,15 @@ data_viz Main makes the clip gap obvious:
 | reference | 199 | **38** | 172/27 |
 | ours | 170 | **3** | 144/26 |
 
-So ~35 clips are missing on Main alone. Nested-instance content is the likely
-source: rive-cpp clips a nested artboard to its own bounds, and our expansion
-pushes the instance matrix but never the matching clip — so instance content
-that overflows its rect paints over its siblings. Implementing that is a
-contained change in the nested-expansion block (emit the instance bounds as
-clippush/clippop around the recursive collect).
+So ~35 clips are missing on Main alone. **Nested-instance bounds are not the
+source** (tried and reverted: the nested target artboards carry no clip flag,
+on the artboard or on their LayoutComponent children, and emitting a bounds
+clip changed nothing — 3 clips before and after). The source is **feathers**:
+data_viz has 118 `Feather` objects and car_widgets 452, and rive-cpp's
+`shape_paint.cpp` emits a `clipPath` to the feather's inner path. That is the
+same feature-sized port already named for car_widgets, now confirmed as the
+clip gap for data_viz too. `ClippingShape` count in data_viz: 1 — it is not
+the mechanism.
 
 Two other things from this round, recorded so they are not re-tried blindly:
 - Changing the text colour default from `0xFF313131` to black makes the harness
