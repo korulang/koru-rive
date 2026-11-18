@@ -1919,3 +1919,18 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   are type 419/421 or the style 420 belongs to a 409 I
   missed). NEXT: grep O-lines for type in {409,419,421,423}
   and LayoutComponentStyle parents.
+
+- WIDTH SOURCE NEGATIVE RESULTS: obj25 children = 5 shapes +
+  15 texts + 1 paint + 1 LayoutComponentStyle — NO layout
+  row/container; texts are direct artboard children. Runs
+  (135) carry no width props (only 268 text bytes, 272
+  styleId). So ~150 is NOT a layout slot. Reopened candidates:
+  (a) golden advance model adds per-char gap (~5% — word
+  spacing/letter gap default), making effective wrap 150
+  equivalent; (b) width() itself is transformed — check if
+  text's world/local transform scale (~0.95) applies to
+  layout width in golden (layout happens in local space
+  BEFORE transform — should be 157.31 local... unless
+  golden wraps in a different space). (c) prop285 units —
+  maybe width is in different units than advances.
+  wrap_w=150 remains the empirical oracle value.
