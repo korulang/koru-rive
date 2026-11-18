@@ -2372,31 +2372,6 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
     return -1;
 }
 
-// Artboard-scoped keyframe lookup. KeyedObject.objectId is a per-artboard local
-// id, so a bare slot match crosses artboards: G_Meter's slot 63 matched a Main
-// object's keyframed opacity, which culled three gauge shapes the reference
-// draws. With no active animation kfOwnerOk() accepts every group, so the scope
-// has to come from the artboard.
-fn hasKeyframedAb(r: *const Riv, abIdx: usize, objSlot: i64, propKey: u16) bool {
-    var inGroup = false;
-    var curObjIdx: i64 = -1;
-    for (r.objects, 0..) |o, oi| {
-        if (propByKey(o.props, 51)) |v| {
-            const sl: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
-            inGroup = (sl == objSlot);
-            curObjIdx = @intCast(oi);
-            continue;
-        }
-        if (inGroup and kfOwnerOk(r, curObjIdx) and owningArtboard(r, @intCast(curObjIdx)) == abIdx) {
-            if (propByKey(o.props, 53)) |v| {
-                const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
-                if (k == @as(i64, propKey)) return true;
-            }
-        }
-    }
-    return false;
-}
-
 fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
     for (g_scrubOverrides.items) |ov| {
         if (ov.slot == objSlot and ov.key == propKey) return true;
@@ -5997,7 +5972,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
-            const opSelf: f32 = if (frame >= 0 and hasKeyframedAb(r, abIdx, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            const opSelf: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
             // Ancestor opacity multiplies down the tree: rive-cpp hides a whole
             // subtree when a Node's opacity is 0 (car_widgets TIRE PRESSURE's
             // red band sits under a Node with opacity 0.000 and we drew it).
@@ -6013,8 +5988,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             if (aop <= 0) continue;
             const op: f32 = opSelf * aop;
-            if (op <= 0 and std.posix.getenv("RIVE_NO_OPACITY_CULL") == null) {
-                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=opacity self={d:.3} anc={d:.3} color={x} t={d:.1},{d:.1}\n", .{ si, pi, opSelf, aop, color, w[4], w[5] });
+            if (op <= 0) {
+                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=opacity color={x} t={d:.1},{d:.1}\n", .{ si, pi, color, w[4], w[5] });
                 continue;
             }
             const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
