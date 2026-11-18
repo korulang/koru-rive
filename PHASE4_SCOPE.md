@@ -1566,3 +1566,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   unmeasured. All analysis state banked above; vertex-exact
   frontier = text contour divergence (golden 2x2569v vs ours
   8x2691v on repeated-label family, strings 125/148-char).
+
+- PER-OBJECT VERB TABLE (RIVE_TRACE_TV, verified this session):
+  ti51=1337 ti57=2691 ti63=2691 ti73=3257 ti84=3257 ti90=2691
+  ti100=2691 ti106=778 ti112=1337 ti125=2691 ti131=2691
+  ti140=566 ti159=2691 ti171=2691 ti177=1601.
+  Golden wants the 2691-family as 6x2691 + 2x2569 -> exactly
+  TWO of {57,63,90,100,125,131,159,171} must lose ~122 verbs.
+  3257-pair (73,84 = 148-char texts) already exact. Remaining
+  differentiator candidates: fontSize/box-width per object
+  (overflow=3 ellipsis only fires when advance>box), or
+  follow-path length budget. NOTE: /tmp/dops2 stale-binary
+  artifact explained — fresh /tmp/dv build emits full dump.
+  NEXT: dump per-text fontSize+box props for the eight
+  2691-family members -> the two outliers should differ.
