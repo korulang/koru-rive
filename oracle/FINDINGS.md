@@ -696,3 +696,14 @@ obj[5], ~10 Text objects nested in LayoutComponents.
 Guard added at the np access (index.kz ~4286): ni >= gp.len ->
 LTMOOB stderr print + break. opsdump now completes: 286 ops, exit 0.
 Proper fix = glyfGlyph composite-glyph path — renderer-owner leg.
+
+## FIXED — composite-glyph endPts off-by-one (layout_text_match SIGABRT root cause)
+
+glyfGlyph composite branch appended `base + ce + 1` to ends[] but ce is
+already the child's 0-based last-point index — caller adds +1 again when
+computing cend, double-counting -> cend = gp.len+1 -> contour walk OOB.
+Fix: append `base + ce`. Verified: LTMOOB hits 10+ -> 0; opsdump
+286 -> 21839 ops (composite glyphs now emit full outlines); exit 0.
+Guard retained as loud defensive bound (never fires post-fix).
+Known remaining TODO in same path: ARGS_ARE_XY_VALUES assumed —
+point-matched component args (flags&2==0) would misplace, not crash.

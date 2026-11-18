@@ -3777,7 +3777,7 @@ fn glyfGlyph(b: []const u8, gid: u32, ends: *std.ArrayList(u32), alloc: std.mem.
             for (cpts) |pt| {
                 out.append(alloc, .{ .x = @as(i32, @intFromFloat(@as(f32, @floatFromInt(pt.x)) * sx)) + dx, .y = @as(i32, @intFromFloat(@as(f32, @floatFromInt(pt.y)) * sy)) + dy, .on = pt.on }) catch {};
             }
-            for (cends.items) |ce| ends.append(alloc, @intCast(base + @as(usize, ce) + 1)) catch {};
+            for (cends.items) |ce| ends.append(alloc, @intCast(base + @as(usize, ce))) catch {};
             cends.deinit(alloc);
             if (flags & 32 == 0) break; // !MORE_COMPONENTS
         }
@@ -4159,8 +4159,9 @@ fn listFollowPathWorld(r: *const Riv, loIdx: usize, rowIdx: usize, count: usize,
     const startOffset = dOff + distance;
     const span = dEnd - distance;
     const frac = if (count <= 1) startOffset else startOffset + @as(f32, @floatFromInt(rowIdx)) * span / @as(f32, @floatFromInt(count - 1));
-    const pm = pathMeasureAt(streams.verbs, wpts.items, frac * total);
-    const orient = if (propByKey(c.props, 364)) |v| switch (v) { .boolean => |b| b, else => true } else true;
+    const pm = pathMeasureAt(streams.verbs, wpts.items, frac);
+    if (std.posix.getenv("RIVE_TRACE_LFP") != null) std.debug.print("lfp lo={d} row={d}/{d} frac={d:.3} pos={d:.1},{d:.1} tan={d:.2},{d:.2} dist={d:.2} dEnd={d:.2} dOff={d:.2}\n", .{ loIdx, rowIdx, count, frac, pm.pos.x, pm.pos.y, pm.tan.x, pm.tan.y, distance, dEnd, dOff });
+    const orient = if (std.posix.getenv("RIVE_LFP_NORIENT") != null) false else if (propByKey(c.props, 364)) |v| switch (v) { .boolean => |b| b, else => true } else true;
     var tB = tgtWorld;
     if (orient) {
         const tangentRot = std.math.atan2(pm.tan.y, pm.tan.x);
