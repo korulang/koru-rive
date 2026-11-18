@@ -1716,3 +1716,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   fails. If font lacks kern/GPOS, gap may be fontScale
   (text.cpp multiplies size AND spacing by fontScale — check
   what fontScale is for these runs).
+
+- EMPIRICAL X-DIFF ATTEMPT: naive y/11 clustering failed (V0 y
+  varies per glyph, not per line). Correct route: cluster
+  contours by BASELINE — each glyph contour's bottom edge y
+  (max y within contour) approximates baseline; or use the
+  fact golden has exactly 3-4 lines: sort contour origins by
+  y then x, split where y jumps >lh/2. Then chars/line +
+  xmax/line -> effective advance vs ours. STILL OPEN.
