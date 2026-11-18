@@ -2519,6 +2519,17 @@ fn boundScriptArtboardId(r: *const Riv, siaIdx: usize) ?i64 {
     return null;
 }
 
+// Animation fps: LinearAnimation.fps (prop56), default 60 — Rive
+// authors keyframe "frames" at the animation's fps; our eval ticks at
+// 30fps, so keyframe times convert via 30/fps into tick units.
+fn animFps(r: *const Riv, animIdx: i64) f32 {
+    if (animIdx < 0 or animIdx >= @as(i64, @intCast(r.objects.len))) return 60;
+    if (propByKey(r.objects[@intCast(animIdx)].props, 56)) |v| {
+        return switch (v) { .uint => |u| @floatFromInt(u), .dbl => |d| d, else => 60 };
+    }
+    return 60;
+}
+
 fn keyframedValueT(r: *const Riv, objSlot: i64, propKey: u16, t: f32, ignoreOwner: bool) f32 {
     var kf = std.ArrayList(struct { f: f32, v: f32 }).empty;
     defer kf.deinit(std.heap.page_allocator);
@@ -2540,7 +2551,10 @@ fn keyframedValueT(r: *const Riv, objSlot: i64, propKey: u16, t: f32, ignoreOwne
         if (propByKey(o.props, 67) != null or propByKey(o.props, 68) != null or propByKey(o.props, 70) != null) {
             var val = if (propByKey(o.props, 70)) |v| switch (v) { .dbl => |x| x, else => 0 } else 0;
             if (boundKfValue(r, oi)) |bv| val = bv;
-            kf.append(std.heap.page_allocator, .{ .f = @as(f32, @floatFromInt(propU(o.props, 67, 0))), .v = val }) catch {};
+            const kfOwner = if (curObjIdx >= 0) animOwnerOf(r, @as(usize, @intCast(curObjIdx))) else -1;
+            const kfFps = animFps(r, kfOwner);
+            const fTicks = @as(f32, @floatFromInt(propU(o.props, 67, 0))) * 30.0 / kfFps;
+            kf.append(std.heap.page_allocator, .{ .f = fTicks, .v = val }) catch {};
         }
     }
     if (std.posix.getenv("RIVE_TRACE_KF") != null) std.debug.print("kf slot={d} key={d} t={d:.2} n={d} activeAnim={d}\n", .{ objSlot, propKey, t, kf.items.len, g_activeAnim });
@@ -2586,7 +2600,7 @@ fn keyframedValueF(r: *const Riv, objSlot: i64, propKey: u16, t: f32) f32 {
 }
 
 fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
-    var kf = std.ArrayList(struct { f: i64, v: u32 }).empty;
+    var kf = std.ArrayList(struct { f: f32, v: u32 }).empty;
     defer kf.deinit(std.heap.page_allocator);
     var curSlot: i64 = -1;
     var curKey: i64 = -1;
@@ -2604,7 +2618,12 @@ fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
         }
         if (curSlot != objSlot or curKey != @as(i64, propKey) or !kfOwnerOk(r, curObjIdx)) continue;
         if (propByKey(o.props, 88)) |v| switch (v) {
-            .color => |c| kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = c }) catch {},
+            .color => |c| {
+                const kfOwner = if (curObjIdx >= 0) animOwnerOf(r, @as(usize, @intCast(curObjIdx))) else -1;
+                const kfFps = animFps(r, kfOwner);
+                const fTicks = @as(f32, @floatFromInt(propU(o.props, 67, 0))) * 30.0 / kfFps;
+                kf.append(std.heap.page_allocator, .{ .f = fTicks, .v = c }) catch {};
+            },
             else => {},
         };
     }
@@ -2615,15 +2634,16 @@ fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
             const t = kf.items[j - 1]; kf.items[j - 1] = kf.items[j]; kf.items[j] = t;
         }
     }
+    const t = @as(f32, @floatFromInt(frame));
     var v0 = kf.items[0].v;
-    if (frame <= kf.items[0].f) v0 = kf.items[0].v;
-    if (frame >= kf.items[kf.items.len - 1].f) v0 = kf.items[kf.items.len - 1].v;
-    if (frame > kf.items[0].f and frame < kf.items[kf.items.len - 1].f) {
+    if (t <= kf.items[0].f) v0 = kf.items[0].v;
+    if (t >= kf.items[kf.items.len - 1].f) v0 = kf.items[kf.items.len - 1].v;
+    if (t > kf.items[0].f and t < kf.items[kf.items.len - 1].f) {
         var lo: usize = 0; var hi: usize = kf.items.len - 1;
-        while (hi - lo > 1) { const mid = (lo + hi) / 2; if (kf.items[mid].f <= frame) lo = mid else hi = mid; }
+        while (hi - lo > 1) { const mid = (lo + hi) / 2; if (kf.items[mid].f <= t) lo = mid else hi = mid; }
         const t0 = kf.items[lo]; const t1 = kf.items[hi];
-        const span = @as(f32, @floatFromInt(t1.f -% t0.f));
-        const u = if (span <= 0) 0 else @as(f32, @floatFromInt(frame -% t0.f)) / span;
+        const span = t1.f - t0.f;
+        const u = if (span <= 0) 0 else (t - t0.f) / span;
         // lerp each channel
         var outc: u32 = 0;
         var sh: usize = 0;
@@ -5449,7 +5469,8 @@ fn animDurationFrames(r: *const Riv, animIdx: i64) f32 {
 fn scrubAnimAxis(r: *const Riv, animIdx: i64, axis: f32) void {
     const dur = animDurationFrames(r, animIdx);
     if (dur <= 0) return;
-    const scrubT = ((axis + 1.0) / 2.0) * dur;
+    const scrubTAnim = ((axis + 1.0) / 2.0) * dur;
+    const scrubT = scrubTAnim * 30.0 / animFps(r, animIdx);
     var pendSlot: i64 = -1;
     for (r.objects, 0..) |mo, mi| {
         if (mo.type_key == 25) {
@@ -5463,7 +5484,7 @@ fn scrubAnimAxis(r: *const Riv, animIdx: i64, axis: f32) void {
                 if (pendSlot >= 0 and key >= 0 and animOwnerOf(r, mi) == animIdx) {
                     const val = keyframedValueT(r, pendSlot, @as(u16, @intCast(key)), scrubT, true);
                     g_scrubOverrides.append(std.heap.page_allocator, .{ .slot = pendSlot, .key = @as(u16, @intCast(key)), .val = val }) catch {};
-                    if (std.posix.getenv("RIVE_TRACE_SCRUB") != null) std.debug.print("scrub anim={d} slot={d} key={d} t={d:.2} val={d:.3}\n", .{ animIdx, pendSlot, key, scrubT, val });
+                    if (std.posix.getenv("RIVE_TRACE_SCRUB") != null) std.debug.print("scrub anim={d} slot={d} key={d} t={d:.2} val={d:.3}\n", .{ animIdx, pendSlot, key, scrubTAnim, val });
                 }
             }
             pendSlot = -1;
@@ -6004,21 +6025,34 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             const join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1);
             const cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
             const fr = if (pathFR >= 0) pathFR else if (isStroke) @as(i64, 2) else propU(c.props, 40, 0);
+            // TrimPath(47) stroke effect: child of this paint trims the
+            // path to [start,end] fractions of arc length (+offset).
+            var tverbs = std.ArrayList(u8).empty;
+            var tpts = std.ArrayList(V2).empty;
+            defer tverbs.deinit(alloc); defer tpts.deinit(alloc);
+            var useVerbs: []const u8 = verbs.items;
+            var usePts: []const V2 = pts.items;
+            if (isStroke) {
+                for (r.objects) |*tp| {
+                    if (tp.parent_obj != @as(i64, @intCast(pi)) or tp.type_key != 47) continue;
+                    const tmode = propU(tp.props, 117, 1);
+                    trimPathVerbs(verbs.items, pts.items, @floatCast(propF(tp.props, 114, 0)), @floatCast(propF(tp.props, 115, 1)), @floatCast(propF(tp.props, 116, 0)), tmode == 2, alloc, &tverbs, &tpts);
+                    if (tverbs.items.len > 0) { useVerbs = tverbs.items; usePts = tpts.items; }
+                    break;
+                }
+            }
             out.append(alloc, op0(0)) catch {};
             var vp: usize = 0;
-            for (verbs.items) |v| {
+            for (useVerbs) |v| {
                 const np: usize = if (v == 0 or v == 1) 1 else if (v == 2 or v == 3) 2 else if (v == 4) 3 else 0;
-                if (vp + np > pts.items.len) {
-                    // Silent truncation here is what hid the missing
-                    // contours: the whole rest of the path (including close)
-                    // vanished with no signal.
-                    std.debug.print("collectArtboardOps: PATH TRUNCATED verb={d} vp={d} np={d} pts={d}\n", .{ v, vp, np, pts.items.len });
+                if (vp + np > usePts.len) {
+                    std.debug.print("collectArtboardOps: PATH TRUNCATED verb={d} vp={d} np={d} pts={d}\n", .{ v, vp, np, usePts.len });
                     break;
                 }
                 var o = op0(if (v == 0) 1 else if (v == 1) 2 else if (v == 2 or v == 3) 3 else if (v == 4) 4 else 5);
-                if (v == 0 or v == 1) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; }
-                if (v == 2 or v == 3) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; o.x2 = pts.items[vp + 1].x; o.y2 = pts.items[vp + 1].y; }
-                if (v == 4) { o.x1 = pts.items[vp].x; o.y1 = pts.items[vp].y; o.x2 = pts.items[vp + 1].x; o.y2 = pts.items[vp + 1].y; o.x3 = pts.items[vp + 2].x; o.y3 = pts.items[vp + 2].y; }
+                if (v == 0 or v == 1) { o.x1 = usePts[vp].x; o.y1 = usePts[vp].y; }
+                if (v == 2 or v == 3) { o.x1 = usePts[vp].x; o.y1 = usePts[vp].y; o.x2 = usePts[vp + 1].x; o.y2 = usePts[vp + 1].y; }
+                if (v == 4) { o.x1 = usePts[vp].x; o.y1 = usePts[vp].y; o.x2 = usePts[vp + 1].x; o.y2 = usePts[vp + 1].y; o.x3 = usePts[vp + 2].x; o.y3 = usePts[vp + 2].y; }
                 out.append(alloc, o) catch {};
                 vp += np;
             }
@@ -6085,6 +6119,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         for (g_abStack[0..g_abStackLen]) |sa| { if (sa == @as(usize, @intCast(target))) { onPath = true; break; } }
         if (onPath) continue; // cycle: target already on expansion path
         const w = effectiveWorld(r, ni, frame);
+        if (std.posix.getenv("RIVE_TRACE_BIGE") != null and (w[4] > 1500 or w[5] > 1500 or w[4] < -1500 or w[5] < -1500)) std.debug.print("bige NEST ni={d} target={d} e={d:.1} g={d:.1}\n", .{ ni, target, w[4], w[5] });
         var so = op0(6); so.a = w[0]; so.b = w[1]; so.c = w[2]; so.d = w[3]; so.e = w[4]; so.g = w[5];
         out.append(alloc, so) catch {};
         const hostAnim = g_activeAnim;
@@ -6174,6 +6209,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     // Static (-1) reproduces the observed 100x40 exactly.
                     // Colors still animate via g_cframe (cl2 item fill).
                     const slot = listRowSlot(r, li, ai2, rowIdx, rowCountOf(items), frame);
+                    if (std.posix.getenv("RIVE_TRACE_BIGE") != null and (slot[4] > 1500 or slot[5] > 1500 or slot[4] < -1500 or slot[5] < -1500)) std.debug.print("bige ROW li={d} row={d} e={d:.1} g={d:.1}\n", .{ li, rowIdx, slot[4], slot[5] });
                     var so = op0(6); so.a = slot[0]; so.b = slot[1]; so.c = slot[2]; so.d = slot[3]; so.e = slot[4]; so.g = slot[5];
                     out.append(alloc, so) catch {};
                     // Per-row SM scope: the embedded artboard's own state
@@ -6737,6 +6773,93 @@ fn strokeContour(ptsIn: []const V2, thick: f32, join: i64, cap: i64, closedIn: b
 // under pattern [on dashLen, off dashLen] measured along arc length.
 // v1: linear measure (closed contours dash linearly, no wrap — named
 // delta); dashOff shifts pattern phase.
+// TrimPath(47) sequential/synchronized: extract the arc-length
+// sub-path between start/end fractions (+offset rotation) from a
+// flattened path. Operates on flattenPath output (0.25 tol — same
+// tolerance strokeVerbs uses, so trimmed strokes lose nothing).
+fn trimContourRange(c: []const V2, d0: f32, d1: f32, out: *std.ArrayList(V2), alloc: std.mem.Allocator) void {
+    if (c.len < 2 or d1 <= d0) return;
+    var pos: f32 = 0;
+    var started = false;
+    for (c, 0..) |p, i| {
+        if (i + 1 >= c.len) break;
+        const q = c[i + 1];
+        const seglen = @sqrt(v2dist2(p, q));
+        if (seglen <= 0) continue;
+        const s0 = pos;
+        const s1 = pos + seglen;
+        pos = s1;
+        if (s1 < d0 or s0 > d1) continue;
+        const t0 = if (d0 > s0) (d0 - s0) / seglen else 0;
+        const t1 = if (d1 < s1) (d1 - s0) / seglen else 1;
+        const a: V2 = .{ .x = p.x + (q.x - p.x) * t0, .y = p.y + (q.y - p.y) * t0 };
+        const b: V2 = .{ .x = p.x + (q.x - p.x) * t1, .y = p.y + (q.y - p.y) * t1 };
+        if (!started) { out.append(alloc, a) catch {}; started = true; }
+        out.append(alloc, b) catch {};
+    }
+}
+
+fn trimPathVerbs(verbs: []const u8, pts: []const V2, start: f32, end: f32, offset: f32, sync: bool, alloc: std.mem.Allocator, tverbs: *std.ArrayList(u8), tpts: *std.ArrayList(V2)) void {
+    const contours = flattenPath(verbs, pts, 0.25, alloc);
+    defer { for (contours) |c| alloc.free(c); }
+    const ro = @mod(@mod(offset, 1.0) + 1.0, 1.0);
+    if (sync) {
+        // synchronized: each contour trimmed to the same fractions
+        for (contours) |c| {
+            var len: f32 = 0;
+            for (c, 0..) |p, i| { if (i + 1 < c.len) len += @sqrt(v2dist2(p, c[i + 1])); }
+            if (len <= 0) continue;
+            var s0 = @mod(start + ro, 1.0) * len;
+            var s1 = @mod(end + ro, 1.0) * len;
+            if (s1 < s0) { const t = s0; s0 = s1; s1 = t; }
+            var piece = std.ArrayList(V2).empty;
+            defer piece.deinit(alloc);
+            trimContourRange(c, s0, s1, &piece, alloc);
+            if (piece.items.len >= 2) {
+                tverbs.append(alloc, 0) catch {};
+                tpts.append(alloc, piece.items[0]) catch {};
+                for (piece.items[1..]) |p| { tverbs.append(alloc, 1) catch {}; tpts.append(alloc, p) catch {}; }
+            }
+        }
+        return;
+    }
+    // sequential: fractions of TOTAL length across all contours
+    var total: f32 = 0;
+    for (contours) |c| {
+        for (c, 0..) |p, i| { if (i + 1 < c.len) total += @sqrt(v2dist2(p, c[i + 1])); }
+    }
+    if (total <= 0) return;
+    var startLen = total * (start + ro);
+    var endLen = total * (end + ro);
+    if (endLen < startLen) { const t = startLen; startLen = endLen; endLen = t; }
+    if (startLen > total) {
+        const wrapped = @mod(startLen, total);
+        endLen -= startLen - wrapped;
+        startLen = wrapped;
+    }
+    endLen = @min(endLen, @max(startLen, 0) + total);
+    var pos: f32 = 0;
+    for (contours) |c| {
+        var len: f32 = 0;
+        for (c, 0..) |p, i| { if (i + 1 < c.len) len += @sqrt(v2dist2(p, c[i + 1])); }
+        const cEnd = pos + len;
+        if (pos >= endLen) break;
+        if (cEnd > startLen and pos < endLen) {
+            const d0 = @max(startLen - pos, 0);
+            const d1 = @min(endLen - pos, len);
+            var piece = std.ArrayList(V2).empty;
+            defer piece.deinit(alloc);
+            trimContourRange(c, d0, d1, &piece, alloc);
+            if (piece.items.len >= 2) {
+                tverbs.append(alloc, 0) catch {};
+                tpts.append(alloc, piece.items[0]) catch {};
+                for (piece.items[1..]) |p| { tverbs.append(alloc, 1) catch {}; tpts.append(alloc, p) catch {}; }
+            }
+        }
+        pos = cEnd;
+    }
+}
+
 fn dashContour(c: []const V2, dashLen: f32, off: f32, alloc: std.mem.Allocator) [][]V2 {
     var out = std.ArrayList([]V2).empty;
     if (c.len < 2 or dashLen <= 0) return out.toOwnedSlice(alloc) catch &.{};

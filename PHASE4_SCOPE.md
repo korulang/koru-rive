@@ -1320,3 +1320,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   transient working-tree state (concurrent uncommitted edits
   since evolved). e36->e755 remains OPEN pending t4j's actual
   landed commit; re-measure then. Flex/layout hunt stays parked.
+
+- TRIMPATH(47) IMPLEMENTED: trimContourRange + trimPathVerbs
+  (flattenPath 0.25 tol, sequential total-length fractions +
+  synchronized per-contour, offset rotation, de Casteljau
+  already flattened upstream). Hooked per-paint in
+  collectArtboardOps: stroke paints with type-47 child emit
+  trimmed verbs/pts. trim.riv opsdump clean (27 ops ab1).
+  Golden trim.txt: 62 drawPaths/31 verbs=0 — full-section diff
+  pending (ab-index scope). Residual: multi-trim chaining,
+  fill-mode closeShape, cubic-preserving split (currently
+  flattened lines — same 0.25 tol strokeVerbs uses).
