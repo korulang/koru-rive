@@ -5211,6 +5211,18 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var color: u32 = 0xFF747474;
             for (r.objects, 0..) |*g, gi| {
                 if (g.type_key == 18 and g.parent_obj == @as(i64, @intCast(pi))) { color = propColorAnimOr(r, g, 37, cf, 0xFF747474); _ = gi; }
+            // Gradient paints carry their paint as a shader, so the renderer's
+            // recorded colour is black, not the SolidColor default. Until ops
+            // can carry a shader (named gap), match the recorded colour: an
+            // opaque black rather than the 0xFF747474 default.
+            {
+                var hasGrad = false;
+                for (r.objects) |*gg| {
+                    if (gg.parent_obj != @as(i64, @intCast(pi))) continue;
+                    if (gg.type_key == 17 or gg.type_key == 22) { hasGrad = true; break; }
+                }
+                if (hasGrad and propByKey(c.props, 41) == null) color = 0xFF000000;
+            }
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
