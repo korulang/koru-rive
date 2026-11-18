@@ -135,20 +135,32 @@ def compare_fixture(n):
         # prefix (parts[] ends at the next frame-0 marker, not section end).
         # Truncate every frame body at the first '---' marker line.
         for k in gframes: gframes[k]=gframes[k].split('---',1)[0]
-        eq=tot=0; diffs=[]
+        eq=tot=0; diffs=[]; ndbl=nreo=0
         for gn,gb in gframes.items():
             ge=gold_events(gb)
             if not ge: continue
-            tot+=1; hit=False
-            for cand in (int(gn),2*int(gn)):
+            tot+=1
+            cands=[(int(gn),False),(2*int(gn),True)]
+            hit=None
+            for cand,isdbl in cands:
                 ops=frames.get((ab,cand))
                 if ops is None: continue
-                oe=our_events(ops)
-                if events_match(ge,oe): hit=True;break
-                if len(ge)==len(oe) and all(events_match([g],[o]) for g,o in zip(sorted(ge,key=str),sorted(oe,key=str))): hit='REORDERED';break
-            if hit: eq+=1
+                if events_match(ge,our_events(ops)):
+                    hit='dbl' if isdbl else 'ok'; break
+            if hit is None:
+                for cand,isdbl in cands:
+                    ops=frames.get((ab,cand))
+                    if ops is None: continue
+                    oe=our_events(ops)
+                    if len(ge)==len(oe) and all(events_match([g],[o]) for g,o in zip(sorted(ge,key=str),sorted(oe,key=str))):
+                        hit='reodbl' if isdbl else 'reo'; break
+            if hit:
+                eq+=1
+                if 'dbl' in hit: ndbl+=1
+                if 'reo' in hit: nreo+=1
             else: diffs.append(gn)
-        results.append((gname,f'{eq}/{tot}',diffs[:4]))
+        tag=f' [{ndbl}dbl {nreo}reo]' if (ndbl or nreo) else ''
+        results.append((gname,f'{eq}/{tot}{tag}',diffs[:4]))
     return results
 
 if __name__=='__main__':
