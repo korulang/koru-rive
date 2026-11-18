@@ -4832,7 +4832,8 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
             if (b < 0x20) continue;
             var a = @as(f64, hmtxAdvance(font, cmapGlyph(font, b))) * scale;
             if (advK != 1.0) a *= advK;
-            if (lx > 0 and lx + a > t_box_w) { line += 1; lx = 0; }
+            const wrapW = if (std.posix.getenv("RIVE_WRAP_W")) |wv| std.fmt.parseFloat(f64, wv) catch t_box_w else t_box_w;
+            if (lx > 0 and lx + a > wrapW) { line += 1; lx = 0; }
             // per-line bottom vs box height (text.cpp ellipsis cap):
             // line L's bottom ~ (L+1)*lineHeight must fit t_box_h
             if (@as(f64, @floatFromInt(line + 1)) * lineHeight > t_box_h) { droppedTail = true; break; }
@@ -4848,7 +4849,17 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         for (text) |b| { cps.append(alloc, b) catch {}; cpsLine.append(alloc, 0) catch {}; }
     }
 
-    if (std.posix.getenv("RIVE_TRACE_TV") != null) std.debug.print("LAY ti={d} fs={d:.2} asc={d:.2} desc={d:.2} gap={d:.2} lh={d:.2} bw={d:.1} bh={d:.1} sz={d} ov={d} cps={d}\n", .{ textIdx, fontSize, asc, desc, gap, lineHeight, t_box_w, t_box_h, t_sizing, propU(tobj.props, 287, 0), cps.items.len });
+    if (std.posix.getenv("RIVE_TRACE_TV") != null) {
+        std.debug.print("LAY ti={d} fs={d:.2} upem={d} scale={d:.5} asc={d:.2} lh={d:.2} bw={d:.1} bh={d:.1} ov={d} cps={d}\n", .{ textIdx, fontSize, upem, scale, asc, lineHeight, t_box_w, t_box_h, propU(tobj.props, 287, 0), cps.items.len });
+        var di: usize = 0;
+        for (text) |b| {
+            if (di >= 12) break;
+            if (b < 0x20) continue;
+            const g = cmapGlyph(font, b);
+            std.debug.print("  adv[{d}] ch={d} gid={d} raw={d} px={d:.3}\n", .{ di, b, g, hmtxAdvance(font, g), @as(f64, hmtxAdvance(font, g)) * scale });
+            di += 1;
+        }
+    }
     var curLine: i64 = -1;
     var baseY: f64 = asc;
     for (cps.items, cpsLine.items) |ch, cl| {

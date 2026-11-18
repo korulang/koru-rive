@@ -1862,3 +1862,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   on this string in python (extract font via fontdump->file);
   also test RIVE_WRAP_W env override at 150.0 — if verb-exact,
   width-source is the answer not advances.
+
+- WRAP_W=150 VERDICT — ATTRIBUTION SETTLED: ti125+ti131 emit
+  exactly 2569v/5746p (golden 5745 — +1pt residual only).
+  The pair IS the short-box texts; width-source confirmed
+  over kern (uniform wrap width reproduces golden exactly).
+  Remaining: WHERE does 150 come from — box_w=157.31, delta
+  7.31. Candidates: layout-assigned width (rows?), box_w
+  minus inset, or prop 288 (=400 only on ti125/131 — check
+  its prop name in table). ALSO: pts +1 residual — wrapped
+  text's final-segment suppression may need the same
+  textDrawPath convention applied per-line.
