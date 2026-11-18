@@ -369,6 +369,14 @@ own style — and the class tags make it verifiable in one run.
   clip 1 — clips nearly closed as first-divergence; paint is #2.
 
 ### Divergence classes — status
+0. **VERTEX-EXACT PATH CONSTRUCTION — named #1 frontier (t4f verdict,
+   db_health post-cull-fix: ref 116 vs ours 10 draws).** Curve
+   tessellation + clip ordering is THE central blocker across ALL
+   authored fixtures — not per-fixture bugs. Our paths emit
+   approximations where ref emits vertex-exact outlines; every
+   authored file's draw/clip/geometry counts inherit the error.
+   Tessellation-decode leg in flight. Supersedes per-class chase
+   order until it lands.
 1. NestedArtboard expansion (92/451/452) — LANDED (t4f). Follow-ups:
    frustum-cull vs expansion (db_health: expansion fires 6283 ops but
    only 81 k=8 draws — cull rejects huge-coord nested content),
