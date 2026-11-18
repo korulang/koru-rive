@@ -4817,8 +4817,8 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
 
 // ---- ops: flat command list for canvas replay (OpRec) ----
 // kind: 0=open 1=move 2=line 3=quad 4=cubic 5=close 6=pushmat 7=popmat 8=draw 9=clippush 10=clippop
-const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64 };
-fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0, .e = 0, .g = 0 }; }
+const OpRec = struct { kind: i64, x1: f64, y1: f64, x2: f64, y2: f64, x3: f64, y3: f64, style: i64, color: u32, thick: f64, join: i64, cap: i64, eo: i64, a: f64, b: f64, c: f64, d: f64, e: f64, g: f64, dash: f64, dashOff: f64 };
+fn op0(kind: i64) OpRec { return .{ .kind = kind, .x1 = 0, .y1 = 0, .x2 = 0, .y2 = 0, .x3 = 0, .y3 = 0, .style = 0, .color = 0, .thick = 0, .join = 0, .cap = 0, .eo = 0, .a = 0, .b = 0, .c = 0, .d = 0,  .e = 0, .g = 0, .dash = 0, .dashOff = 0 }; }
 
 // Embedded image blobs for kind-11 image ops — FileAssetContents bytes
 // ride a side table; OpRec.kind==11 carries the blob index + draw rect.
@@ -4828,6 +4828,27 @@ var imgBlobs: std.ArrayList([]const u8) = .empty;
     const b = imgBlobs.items[@intFromFloat(i)];
     return b;
 }
+
+// Dash decode: Dash(507) length(692)/isPct(693) + DashPath(506)
+// offset(690)/offsetIsPct(691) — children of the stroke paint.
+const DashInfo = struct { len: f64, off: f64 };
+fn dashOf(r: *const Riv, paintIdx: usize) DashInfo {
+    var res: DashInfo = .{ .len = 0, .off = 0 };
+    for (r.objects, 0..) |d, di| {
+        if (d.parent_obj != @as(i64, @intCast(paintIdx))) continue;
+        if (d.type_key == 507) {
+            const L = propF(d.props, 692, 0);
+            const pct = propU(d.props, 693, 0) != 0;
+            _ = pct; // percentage-of-path dash: treat as absolute px v1 (named delta)
+            if (L > 0) res.len = L;
+        } else if (d.type_key == 506) {
+            res.off = propF(d.props, 690, 0);
+        }
+        _ = di;
+    }
+    return res;
+}
+
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
     // Rows pass frame=-1; g_cframe carries the host frame for colors only.
     // Host frame 0 = pre-animation: fall back to -1 so keyframed colors
@@ -5190,7 +5211,9 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 vp += np;
             }
             var pm = op0(6); pm.a = w[0]; pm.b = w[1]; pm.c = w[2]; pm.d = w[3]; pm.e = w[4]; pm.g = w[5]; out.append(alloc, pm) catch {};
-            var dr = op0(8); dr.style = style; dr.color = color; dr.thick = thick; dr.join = join; dr.cap = cap; dr.eo = if (fr == 2) 1 else 0; out.append(alloc, dr) catch {};
+            var dr = op0(8); dr.style = style; dr.color = color; dr.thick = thick; dr.join = join; dr.cap = cap; dr.eo = if (fr == 2) 1 else 0;
+            if (isStroke) { const dd = dashOf(r, pi); if (dd.len > 0) { dr.dash = dd.len; dr.dashOff = dd.off; } }
+            out.append(alloc, dr) catch {};
             out.append(alloc, op0(7)) catch {};
         }
         if (clipPushed) out.append(alloc, op0(10)) catch {};
