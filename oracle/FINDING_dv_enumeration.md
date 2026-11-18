@@ -120,3 +120,24 @@ side-table pattern exists) → canvas `draw.gradient`/`.radial` are
 two-stop only (multi-stop needs shader work) → digest already aligns
 if gradient ops carry the ref's `000000` placeholder convention.
 Deferred to its own leg — feature-sized, not a read-site patch.
+
+## Class-2 scope (ForegroundLayoutDrawable 513) — blocked on layout solving
+
+`rive schema`: FLD extends `Drawable > Node > TransformComponent` —
+node transform + `blendModeValue` + `drawableFlags`, and **zero paint or
+geometry children** (30 FLD objects in data_viz, 0 children). All
+geometry props are `computed*` (derived, key 806-811) — the file stores
+no bounds; the layout solver computes them.
+
+So class 2 is not a traversal patch: emitting an FLD means (a) solving
+the parent `LayoutComponent` flex layout to get its computed rect —
+the same named layout gap as class 1's instance sizing — then (b)
+resolving its paint, whose source is still unidentified (no children;
+candidates: parent LayoutComponent's Fill children — the "layout-box
+pass" already emits those — the LayoutComponentStyle, or the 12
+DataBindContexts binding per-item colors). Next evidence step: read
+rive-cpp's `foreground_layout_drawable.cpp` render path or export a
+minimal .rev to see which object owns the paint.
+
+Our HBars=21/VBars=20 draws are the layout-box fill pass + text; the
+-19/-11 deltas are the FLD items themselves (bar segments/labels).
