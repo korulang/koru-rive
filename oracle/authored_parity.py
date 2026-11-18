@@ -240,6 +240,12 @@ def ours_digest(path, ab, frame, koruc, root, timeout):
     text, code = run_probe(koruc, root, OPS_PROBE.format(path=path, ab=ab, frame=frame), timeout)
     if "OPENFAIL" in text:
         return None, text.strip().splitlines()[-1]
+    # A probe that fails to build prints no op stream. An empty digest is NOT
+    # "zero drawables" — say unavailable and quote the failure, or a broken
+    # toolchain reports as a decoder finding (it did once).
+    if "OPSDUMP" not in text:
+        tail = [ln for ln in text.strip().splitlines() if ln.strip()][-1:]
+        return None, f"no op stream emitted (exit {code}): {tail[0] if tail else 'no output'}"
     d = {"draw": 0, "colors": [], "styles": [], "rules": [], "clip": 0, "points": 0,
          "paths": 0, "matpush": 0, "matpop": 0, "draws": []}
     buf = []
