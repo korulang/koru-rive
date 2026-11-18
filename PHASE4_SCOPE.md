@@ -1230,3 +1230,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   reach it? per-shape clip emission should yield MORE than 6
   if all matched -> CS ancestor-match may under-fire. NEXT:
   RIVE_TRACE_NEST confirm 5840 reached + count CS matches.
+
+- CLIP-VOLUME VERDICT DATA: expansion reaches 5840 at depth=2
+  (ni9493 aid6, emitted=3654 ops) and 9482 (7538). Yet only 6
+  k=9 clip pushes total vs 31 CS owned by 5840 — CS traversal
+  UNDER-FIRES. Suspects: (a) CS parent shapes emit via
+  layout-managed branch not the type-3 shape loop (CS check
+  only lives there); (b) prop92 source resolution fails for
+  most CS; (c) CS parents invisible/hidden. 49 CS in 174/2328
+  remain structurally untargeted. Next: count CS objects whose
+  parent_obj chain reaches a type-3 shape that actually emits.
