@@ -46,6 +46,7 @@ import tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 ASSETS = os.path.join(ROOT, "rive-cpp/tests/unit_tests/assets")
+BASELINE = os.path.join(HERE, "parity_baseline.json")
 
 DEFAULT_FILES = [
     "joystick_databound_keyframe_test.riv",
@@ -332,6 +333,8 @@ def main():
     ap.add_argument("--koruc", default=os.path.expanduser("~/src/koru/zig-out/bin/koruc"))
     ap.add_argument("--dump", default=os.path.join(HERE, "dump"))
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument("--save-baseline", action="store_true",
+                    help="write oracle/parity_baseline.json from this run")
     ap.add_argument("--all-artboards", action="store_true",
                     help="compare every reference artboard, not just the first")
     ap.add_argument("--json", action="store_true")
@@ -417,6 +420,44 @@ def main():
             rec["ours"] = row["ours_digest"]
         results.append(rec)
 
+    # Baseline: the numbers in prose rot (that is this repo's recurring lesson),
+    # so the last measured state is committed and drift is reported, not recited.
+    if args.save_baseline:
+        base = {}
+        for r in results:
+            if "per_artboard" in r:
+                base[r["file"]] = {row["artboard"]: {"ref": row.get("ref_draw"), "ours": row.get("ours_draw"),
+                                                     "clips_ref": row.get("ref_clip"), "clips_ours": row.get("ours_clip")}
+                                   for row in r["per_artboard"]}
+            elif "ref" in r:
+                base[r["file"]] = {r.get("artboard", "?"): {"ref": r["ref"]["draw"],
+                                                            "ours": r.get("ours", {}).get("draw"),
+                                                            "clips_ref": r["ref"]["clip"],
+                                                            "clips_ours": r.get("ours", {}).get("clip")}}
+        with open(BASELINE, "w") as f:
+            json.dump(base, f, indent=2, sort_keys=True)
+        print(f"baseline saved: {BASELINE}")
+
+    drift = []
+    if os.path.exists(BASELINE) and not args.save_baseline:
+        try:
+            base = json.load(open(BASELINE))
+        except Exception:
+            base = {}
+        for r in results:
+            per = r.get("per_artboard") or (
+                [{**{k: v for k, v in r.items() if k in ("ref_draw", "ours_draw")}}] if "ref" in r else [])
+            for row in per:
+                key = r["file"]
+                ab = row.get("artboard", "?")
+                want = base.get(key, {}).get(ab)
+                if not want:
+                    continue
+                got_ours = row.get("ours_draw", row.get("ours"))
+                if got_ours != want.get("ours") or row.get("ref_draw", row.get("ref")) != want.get("ref"):
+                    drift.append(f"{key} [{ab}]: ref {want.get('ref')}->{row.get('ref_draw', row.get('ref'))}, "
+                                 f"ours {want.get('ours')}->{got_ours}")
+
     if args.json:
         print(json.dumps(results, indent=2))
     elif args.all_artboards:
@@ -449,6 +490,11 @@ def main():
                       f"fills/strokes {sum(1 for s in d.get('styles', []) if s == 1)}/"
                       f"{sum(1 for s in d.get('styles', []) if s == 0)}  "
                       f"colours {cols[:6]}{'...' if len(cols) > 6 else ''}")
+
+    if drift:
+        print("\nBASELINE DRIFT:")
+        for d in drift:
+            print("  " + d)
 
     compared = [r for r in results if r["status"] in ("op-identical", "divergent")]
     return 0 if compared and all(r["status"] == "op-identical" for r in compared) else 1

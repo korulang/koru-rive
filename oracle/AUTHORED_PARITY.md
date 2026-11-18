@@ -177,6 +177,34 @@ Two other things from this round, recorded so they are not re-tried blindly:
 - The harness now prints a compact per-side summary instead of dumping whole
   digests — the dump once buried the line that mattered in 14 KB of bboxes.
 
+## Baseline (2026-11-18)
+
+`oracle/parity_baseline.json` now records the measured per-artboard numbers, and
+`authored_parity.py` reports `BASELINE DRIFT` when a run disagrees with it.
+Prose numbers rot — this repo's recurring lesson — so the last measured state is
+committed and compared, not recited.
+
+Full per-artboard run at baseline time:
+
+| file | artboard | ref | ours |
+|---|---|---:|---:|
+| joystick | Main | 2 | 2 (**op-identical**) |
+| car_widgets | Main_Artboard / TIRE PRESSURE / COMPASS / G_Meter | 612 / 68 / 413 / 69 | 628 / 73 / 417 / 66 |
+| data_viz | Main | 199 | 172 |
+| data_viz | HorizontalBars / VerticalBars | 40 / 31 | 22 / 21 |
+| data_viz | Data | 45 | 46 |
+| data_viz | ColorGuide / LineBars / Pie Chart / Circles | counts match | **paint mismatch** (reference purples, ours `000000`) |
+| jellyfish | Jellyfish / New Artboard | 2 / 1 | 1 / 0 (mesh) |
+
+The gradient-colour rule (opaque black for gradient paints) is a **stopgap**: it
+makes car_widgets match exactly, and on data_viz it replaces one wrong colour
+(`747474`) with another (`000000`) — those artboards were already mismatched, so
+it is not a regression, but it is not resolution either. The reference's
+recorded colour for a gradient paint is per-drawable (purples like `472f62`,
+`3f2958`, `442d5e` in data_viz; black in car_widgets) and is not the gradient's
+stop colour (`GradientStop.colorValue`, key 38) as far as this dump shows. That
+needs its own probe against a single gradient drawable.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
