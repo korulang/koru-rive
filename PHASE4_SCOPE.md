@@ -1885,3 +1885,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   textDrawPath's t_box_w should read the layout-resolved
   width when a layout participant exists (mirror
   layoutBoxWidth/layoutParticipant logic), else prop285.
+
+- PARENT MAP: all 15 family texts share parent obj25 (the
+  artboard/container) — uniform parent means width source is
+  SHARED; per-text divergence is purely box HEIGHT (32.45
+  drops line 4, 45.52 keeps it). Model coherent: all wrap
+  at ~150, short-box pair culls tail. 150 likely = layout/
+  artboard-derived width uniform across family — resolve
+  obj25's type + any layout/clip width ~150, or check if
+  prop285's 157.31 minus artboard inset gives 150. NEXT:
+  identify obj25 type_key and its width props.
