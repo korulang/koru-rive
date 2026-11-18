@@ -1775,6 +1775,7 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16, frame: i64) ?f
                     // Keyframed VM value: Timeline-1 animates
                     // ViewModelInstanceNumber.propertyValue(575) — the
                     // bound size grows over frames (ParentArtboard).
+                    if (std.posix.getenv("RIVE_TRACE_BSP") != null) std.debug.print("bsp vo={d} slot={d} kf={}\n", .{ j, vo.slot, frame >= 0 and hasKeyframed(r, vo.slot, 575) });
                     if (frame >= 0 and hasKeyframed(r, vo.slot, 575)) return @as(f32, keyframedValue(r, vo.slot, 575, frame));
                     const scalar = vmScalarOf(vo) orelse return null;
                     return switch (scalar) {
