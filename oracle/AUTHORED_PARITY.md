@@ -655,6 +655,20 @@ box (`text.cpp` calls `clipPath` before drawing glyphs). That displaces the
 feather hypothesis I had carried for several rounds; the four fill-clips on Main
 *are* feathers and are a small remainder.
 
+**Text clips, three predicates measured.** Emitting a clip for every text draw,
+using the glyph bounds we already compute as the rect (a no-op visually for
+auto-sized text, since the clip equals the content bounds):
+
+| gate | clips (Main + ColorGuide) | reference |
+|---|---:|---:|
+| every text | 54 | 43 |
+| `sizing`(284) != 0 | 21 | 43 |
+| `overflow`(287) != 0 | 3 | 43 |
+
+All three bracket the reference without matching it, so the gate is not a stored
+flag — it is almost certainly "does this run overflow its computed layout box",
+which needs the layout bounds again. Reverted.
+
 **But the clip rect is layout-derived.** Emitting a clip from the text object's
 stored `width`/`height` (keys 285/286) changed the clip count by zero — those
 texts are auto-sized, so their box comes from the layout pass. Third question
