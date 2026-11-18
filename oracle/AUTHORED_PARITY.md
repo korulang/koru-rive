@@ -453,6 +453,29 @@ appear in creation order) would interleave shapes, text and layout paint the way
 the reference does, and is the likely route to turning those four artboards
 fully op-identical.
 
+## Draw order is tree order — measured, not yet implemented (2026-11-18)
+
+The `draw-order` verdicts were tested against two cheap hypotheses on
+ColorGuide (38 draws):
+
+| emission order | positional matches with the reference |
+|---|---:|
+| object-stream order (current) | **9 / 38** |
+| reversed stream order | **8 / 38** |
+
+Neither is the rule — reverse only wins on the first draw and loses overall. The
+structure of the divergence names the real one: the reference's first ColorGuide
+draw is shape `876`, a **direct child of the artboard**, while our first is shape
+`660`, nested three LayoutComponents deep (`660 -> 659 -> 658 -> 657 -> 655 ->
+654 -> 653`). The reference emits in a **draw-tree walk**, not in the order
+objects happen to sit in the file.
+
+So the fix is a DFS over the artboard's children (objects already appear in
+creation order, so sibling order is free), emitting each node's draws as it is
+visited instead of the current pass order (artboard paint -> FLD -> shapes ->
+text). That is a real refactor of `collectArtboardOps`, not a flag, and it is the
+next piece of work rather than a quick win.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
