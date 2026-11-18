@@ -796,3 +796,19 @@ degenerate/zero rects without the layout solver -> silent drop;
 (2) NestedStateMachine state selects collapsed variant -> fewer
 instances visible than ref frame-0. Discriminator: opsdump ab:1 with
 RIVE_NO_NESTED=1 diff + NestedSM default-state inspect.
+
+## collapsing_elements discriminator — SM-selection NOT the count cause
+
+Nesting decoded: main(ab1) has 3 NestedArtboard instances (obj3/5/7,
+ALL artboardId=1->ab26) each with NestedStateMachine child, all
+parented to Solo(obj2) — Rive view-switcher picks one variant. ab26
+mirrors: 3 instances (33/37/42, ALL artboardId=2->ab65) + NestedSM
+each under LayoutComponents. CRITICAL: every variant points to the
+SAME target — Solo/NestedSM selects WHICH instance shows, not WHAT
+content. Draw count is therefore selection-invariant; the -32 is NOT
+SM-state. Verdict: solver-blocked — ab65's 14 + ab26's 5 LC-fills
+need computed rects; without the layout solver expanded targets emit
+degenerate/zero-area fills -> silent drop. Named residual = class-2
+(layout solver) confirmed; NestedSM/Solo gating remains unmodeled
+and will surface later as an OVERDRAW class (we expand all variants,
+ref shows one) once counts converge. Parked with evidence.
