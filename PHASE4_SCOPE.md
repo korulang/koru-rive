@@ -1134,3 +1134,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   ab26 opsdump showed 1 clip — either ab26 isn't composed main
   or its instances target other artboards. Next: dump prop197
   per 451/452 instance + confirm true main artboard index.
+
+- CS aid-mapping DECISIVE: artboard list idx->obj: 0=26,1=124,
+  2=149,3=174,4=2328,5=4756,6=5840,7=9482,8=9504,9=9887,
+  10=9916. Instance prop197 aids: ab26's five 451s -> 7,8,8,8,9
+  (9482,9504x3,9887); ab9482's 92s -> 5,5,5,6 (4756x3,5840).
+  REACHABLE CS owner: only 5840 (31 clips) via chain
+  26->9482->5840. UNREACHABLE: 174(25)+2328(24)=49 CS — no
+  instance targets aid 3 or 4 anywhere in file. Those clips
+  CANNOT fire in composed render — matches FINDINGS'
+  "~50 of 130 clips unaccounted" precisely (49 CS objects).
+  Residual for clip-volume gate: nested expansion must carry
+  5840's clips (reachable) AND the 49 unreachable are a
+  fixture/oracle-scope question (ref may render them via a
+  different composition path — e.g. direct artboard render).
