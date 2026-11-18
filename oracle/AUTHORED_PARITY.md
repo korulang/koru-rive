@@ -299,6 +299,29 @@ in how Main composes that instance, not in G_Meter's own traversal.
 
 This is the first time that sentence could be written with object ids behind it.
 
+## HorizontalBars −6: one draw per Text, not one per TextValueRun
+
+Draw-class tags (`RIVE_TRACE_DRAW`) now account for every draw we emit:
+
+| class | ours |
+|---|---:|
+| `ForegroundLayoutDrawable` | 12 |
+| text | **6** |
+| artboard paint | 1 |
+| layout paint | 15 |
+| **total** | **34** |
+
+The reference draws **40**, and HorizontalBars has exactly 6 `Text` objects with
+**two `TextValueRun` children each**. 12 + **12** + 16 = 40 fits the reference
+exactly; we draw one path per Text (6) instead of one per run (12). That is the
+missing six.
+
+Not fixed here deliberately: text rendering is under active change in this
+repository right now (composite-glyph `endPts` fix landed the same day), and a
+per-run refactor inside that code would collide. The finding names the exact
+change — loop `TextValueRun` children and emit one draw per run, each with its
+own style — and the class tags make it verifiable in one run.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour

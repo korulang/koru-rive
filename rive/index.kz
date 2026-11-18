@@ -3889,6 +3889,17 @@ const VmScalar = union(enum) {
     symbol: u64,
 };
 
+fn findVmInstance(r: *const Riv, vmId: i64, ord: i64) ?usize {
+    var seen: i64 = 0;
+    for (r.objects, 0..) |cand, ci| {
+        if (cand.type_key == 437 and propU(cand.props, 566, -1) == vmId) {
+            if (seen == ord) return ci;
+            seen += 1;
+        }
+    }
+    return null;
+}
+
 fn vmScalarOf(o: *const RivObj) ?VmScalar {
     return switch (o.type_key) {
         442 => .{ .num = @floatCast(propF(o.props, 575, 0)) },
@@ -4523,6 +4534,64 @@ fn dumpGraph(r: *Riv) void {
     g_vm_inst = inst;
 }
 
+// ---- leaf control verbs (LEAF_CONTRACT §4) ----
+// vm.set overwrites a scalar property on a ViewModel instance in place;
+// eval re-reads props every ops call, so the next stream sees the value.
+// Value objects are the contiguous isVmInstanceValueType block after the
+// instance; prop 554 selects the VM property, the scalar key is per-type.
+~pub tor vm.set { r: *Riv<loaded>, vm: i64, inst: i64, prop: i64, value: string }
+| set
+| failed string
+
+~proc vm.set|zig {
+    const ii = findVmInstance(r, vm, inst) orelse return .{ .failed = "no such vm instance" };
+    var j = ii + 1;
+    while (j < r.objects.len) : (j += 1) {
+        const vo = &r.objects[j];
+        if (!isVmInstanceValueType(vo.type_key)) break;
+        if (propU(vo.props, 554, -1) != prop) continue;
+        const key: u16 = switch (vo.type_key) {
+            442 => 575, 433 => 561, 449 => 593, 432 => 560, 426 => 555, 565, 566 => 814,
+            else => return .{ .failed = "unsupported value type" },
+        };
+        for (vo.props) |*p| {
+            if (p.key != key) continue;
+            switch (vo.type_key) {
+                442 => p.value = .{ .dbl = std.fmt.parseFloat(f32, value) catch return .{ .failed = "bad number" } },
+                433 => {
+                    const b = std.fmt.allocPrint(std.heap.page_allocator, "{s}", .{value}) catch return .{ .failed = "oom" };
+                    p.value = .{ .bytes = b };
+                },
+                449 => p.value = .{ .uint = if (std.mem.eql(u8, value, "true") or std.mem.eql(u8, value, "1")) 1 else 0 },
+                426 => {
+                    var hx = value;
+                    if (hx.len > 0 and hx[0] == '#') hx = hx[1..];
+                    p.value = .{ .color = std.fmt.parseInt(u32, hx, 16) catch return .{ .failed = "bad color" } };
+                },
+                else => p.value = .{ .uint = std.fmt.parseInt(u64, value, 10) catch return .{ .failed = "bad int" } },
+            }
+            return .{ .set = {} };
+        }
+        return .{ .failed = "scalar slot missing" };
+    }
+    return .{ .failed = "prop not on instance" };
+}
+
+// input.fire appends an event to the SM input schedule — same
+// latest-event-at-or-before-frame semantics as the RIVE_INPUTS env
+// schedule. val: 0/1 (bool inputs only; number/trigger inputs are a
+// named gap until eval grows those readers).
+~pub tor input.fire { name: string, val: i64, frame: i64 }
+| fired
+| failed string
+
+~proc input.fire|zig {
+    ensureSmInputs();
+    const nm = std.heap.page_allocator.dupe(u8, name) catch return .{ .failed = "oom" };
+    g_smInputs.append(std.heap.page_allocator, .{ .name = nm, .val = val != 0, .frame = frame }) catch return .{ .failed = "oom" };
+    return .{ .fired = {} };
+}
+
 ~pub tor inspect { r: *Riv<loaded> }
 
 ~proc inspect|zig {
@@ -5153,6 +5222,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         }
         out.append(alloc, op0(5)) catch {};
         var bpm = op0(6); bpm.a = 1; bpm.d = 1; out.append(alloc, bpm) catch {};
+        if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("ARTPAINT obj={d} color={x}\n", .{ pi, color });
         var bdr = op0(8); bdr.style = if (c.type_key == 24) @as(i64, 0) else @as(i64, 1); bdr.color = color; bdr.join = -1; bdr.cap = -1; out.append(alloc, bdr) catch {};
         out.append(alloc, op0(7)) catch {};
     }
@@ -5250,6 +5320,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 out.append(alloc, op0(5)) catch {};
                 var bpm = op0(6); bpm.a = 1; bpm.b = 0; bpm.c = 0; bpm.d = 1; bpm.e = @floatCast(lx); bpm.g = @floatCast(ly); out.append(alloc, bpm) catch {};
                 const isStroke = c.type_key == 24;
+                if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("LAYPAINT obj={d} color={x}\n", .{ pi, lcolor });
                 var bdr = op0(8); bdr.style = if (isStroke) @as(i64, 0) else @as(i64, 1); bdr.color = lcolor; bdr.thick = if (isStroke) propF(c.props, 47, 1) else 0; bdr.join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1); bdr.cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
                 if (isStroke) { const dd = dashOf(r, pi); if (dd.len > 0) { bdr.dash = dd.len; bdr.dashOff = dd.off; } }
                 out.append(alloc, bdr) catch {};
@@ -5332,6 +5403,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var f3 = op0(2); f3.x1 = 0; f3.y1 = @floatCast(fh); out.append(alloc, f3) catch {};
             out.append(alloc, op0(5)) catch {};
             var fm = op0(6); fm.a = fwm[0]; fm.b = fwm[1]; fm.c = fwm[2]; fm.d = fwm[3]; fm.e = fwm[4]; fm.g = fwm[5]; out.append(alloc, fm) catch {};
+            if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("FLD obj={d}\n", .{fi});
             var fd = op0(8); fd.style = 1; fd.color = 0xFF000000; fd.join = -1; fd.cap = -1; fd.eo = 0; out.append(alloc, fd) catch {};
             out.append(alloc, op0(7)) catch {};
         }
@@ -5557,6 +5629,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             vp += np;
         }
         var pm = op0(6); pm.a = w[0]; pm.b = w[1]; pm.c = w[2]; pm.d = w[3]; pm.e = w[4]; pm.g = w[5]; out.append(alloc, pm) catch {};
+        if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("TXT obj={d} color={x}\n", .{ ti, tcolor });
         var dr = op0(8); dr.style = 1; dr.color = tcolor; dr.join = -1; dr.cap = -1; dr.eo = if (tfr == 1) 1 else 0; out.append(alloc, dr) catch {};
         out.append(alloc, op0(7)) catch {};
     }
