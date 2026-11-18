@@ -1509,3 +1509,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   implement overflow-ellipsis in textDrawPath's layout —
   wrap to box width(285), cap lines by height(286), replace
   tail with ellipsis glyph run when overflow=ellipsis(287=3?).
+
+- ELLIPSIS ATTEMPT FALSIFIED: implemented overflow=3+box_w
+  truncation -> over-truncated EVERYTHING (all texts -> 874v).
+  Box-width-285 is NOT the constraint in our units (or texts
+  follow paths whose LENGTH is the real budget — fixture name
+  says shape_length). All boxes ~150w but golden truncates
+  only 2 -> constraint is per-path length, not box. Reverted;
+  tree clean (only concurrent g_instVmid WIP remains).
+  NEXT: constraint = follow-path length — accumulate glyph
+  advance vs pathMeasure length of the follow-path shape,
+  truncate at budget. Find where textDrawPath learns its
+  follow-path target (TextOnPath/constraint object props).
