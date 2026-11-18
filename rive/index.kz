@@ -1725,7 +1725,7 @@ fn frameColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64, dflt: u32) 
 // prop key and whose lastBindable target is this object overrides the
 // authored prop value with the bound VM scalar — same instance-scope /
 // row / global selection as boundKfValue.
-fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16) ?f32 {
+fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16, frame: i64) ?f32 {
     var lastBindable: i64 = -1;
     for (r.objects, 0..) |o, i| {
         if (o.type_key == 446 or o.type_key == 447) {
@@ -1772,6 +1772,10 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16) ?f32 {
                         break;
                     }
                     if (propU(vo.props, 554, -1) != @as(i64, @intCast(propId))) continue;
+                    // Keyframed VM value: Timeline-1 animates
+                    // ViewModelInstanceNumber.propertyValue(575) — the
+                    // bound size grows over frames (ParentArtboard).
+                    if (frame >= 0 and hasKeyframed(r, vo.slot, 575)) return @as(f32, keyframedValue(r, vo.slot, 575, frame));
                     const scalar = vmScalarOf(vo) orelse return null;
                     return switch (scalar) {
                         .num => |x| @as(f32, @floatCast(x)),
@@ -1792,7 +1796,7 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16) ?f32 {
 fn propFAnim(r: *const Riv, v: *const RivObj, key: u16, dflt: f32, frame: i64) f32 {
     if (frame >= 0 and hasKeyframed(r, v.slot, key)) return @as(f32, keyframedValue(r, v.slot, key, frame));
     const vidx: usize = @intCast(@divExact(@as(usize, @intCast(@intFromPtr(v) - @intFromPtr(r.objects.ptr))), @sizeOf(RivObj)));
-    if (boundStaticProp(r, vidx, key)) |bv| return bv;
+    if (boundStaticProp(r, vidx, key, frame)) |bv| return bv;
     return propF(v.props, key, dflt);
 }
 fn fileVert(r: *const Riv, v: *const RivObj, frame: i64) PV {
@@ -4713,21 +4717,22 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
     defer cps.deinit(alloc); defer cpsLine.deinit(alloc);
     var droppedTail = false;
     if (t_sizing == 2 and t_box_w > 0 and t_box_h > 0) {
-        const maxLines = @max(@as(i64, 1), @as(i64, @intFromFloat(@floor(t_box_h / lineHeight))));
         var lx: f64 = 0;
         var line: i64 = 0;
         for (text) |b| {
             if (b < 0x20) continue;
             const a = @as(f64, hmtxAdvance(font, cmapGlyph(font, b))) * scale;
             if (lx > 0 and lx + a > t_box_w) { line += 1; lx = 0; }
-            if (line >= maxLines) { droppedTail = true; break; }
+            // per-line bottom vs box height (text.cpp ellipsis cap):
+            // line L's bottom ~ (L+1)*lineHeight must fit t_box_h
+            if (@as(f64, @floatFromInt(line + 1)) * lineHeight > t_box_h) { droppedTail = true; break; }
             cps.append(alloc, b) catch {};
             cpsLine.append(alloc, line) catch {};
             lx += a;
         }
         if (droppedTail and propU(tobj.props, 287, 0) == 3) {
             cps.append(alloc, 0x2026) catch {};
-            cpsLine.append(alloc, @min(maxLines - 1, line)) catch {};
+            cpsLine.append(alloc, line) catch {};
         }
     } else {
         for (text) |b| { cps.append(alloc, b) catch {}; cpsLine.append(alloc, 0) catch {}; }

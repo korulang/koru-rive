@@ -1671,3 +1671,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   emission. WIP pre-pass at index.kz ~4706-4740 is the
   scaffold — replace maxLines floor() with per-line bottom
   check and add ellipsis-run emission.
+
+- CAP-FORMULA SWAP = NULL RESULT (identical multiset): the
+  per-line-bottom check changed nothing — combined with LAY/TV
+  diagnostic silence, strongest remaining suspect is that the
+  wrap branch never engages OR textDrawPath isn't the fn
+  emitting these drawPaths on this binary. NEXT session FIRST
+  verify LAY fires (rebuild clean, RIVE_TRACE_TV=1) — if
+  silent, find the actual text emission path for drawops
+  output before more layout work.
