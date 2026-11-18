@@ -517,3 +517,18 @@ must name the artifact hash/mtime and be generated from a fresh render;
 otherwise a stale `ours_*` file is indistinguishable from a verb/raster
 bug. `oracle/trace_kn_clip.sh` already rebuilds its artifacts; the
 iba/deam/hff probes should be run through the same freshness rule.
+
+## Metal text seam (2026-11-18): counters fixed, AA remains font-raster residual
+
+Glyph fills are forced evenodd so the Metal stencil-parity path subtracts
+counters; the per-call EO path now renders at 4× and box-downsamples.
+`knm_cl1`'s white blobs are gone (ink-mass 0.99, ink-coverage 0.12%,
+frame-diff 0.002%); `knm_hw` ink-coverage falls to 2.65%. Both still fail
+`anti-aliasing` (0.38/0.39 of ref blended edge px) and `ink-colour`: the
+browser font AA/hinting spreads ink over ~2.5× more edge pixels than the
+outline-glyph raster. That is a text-raster residual, not a path-fill
+hole; 8× supersampling did not improve it (478 vs 489 blended px), so
+more samples are not the lever. `knm_cl2`'s headless probe still dumps
+white; its artifact is stale. The other model's in-progress MSAA batch
+code was made to compile (setStoreAction arg type, print specifiers), but
+the text gates use the per-call EO path, not the batch MSAA path.

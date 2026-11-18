@@ -162,3 +162,15 @@ a full 504×504 mask, so the fill was realized. The divergence was the
 and mtime in the report, and only then attribute a layer. A stale
 `ours_*` file is indistinguishable from a real renderer bug in a
 first-divergence walk.
+
+## Metal text seam (2026-11-18)
+
+The text fill is forced evenodd so the Metal stencil-parity passes
+subtract glyph counters (the old per-contour ear-clip filled them). The
+per-call EO path renders at 4× and box-downsamples for geometric AA.
+`knm_cl1`'s blobs are gone and `knm_hw`'s ink-coverage drops to 2.65%,
+but both still fail `anti-aliasing` (0.38/0.39 of ref) and `ink-colour`:
+the browser font AA/hinting spreads ink over more edge pixels than the
+outline-glyph raster. 8× supersampling did not improve the count, so the
+lever is font rasterization, not path-fill samples. This is the named
+text-raster residual; the hole/coverage part of the seam is closed.

@@ -468,3 +468,17 @@ table: **29 PASS / 4 FAIL**; remaining are `knm_cl1`/`knm_cl2`/`knm_hw`
 Metal text/AA and `mesh` (NOTE). `oracle/FINDINGS.md` carries the
 correction; the lesson is to refresh and hash the artifact before
 attributing a first-divergence layer.
+
+
+Metal text seam (2026-11-18): glyph fills are now forced to evenodd
+(`textFillRule=2`), so the Metal stencil-parity path subtracts counters
+instead of filling them; the per-call EO path renders at 4× and
+box-downsamples for geometric AA. `knm_cl1`'s white blobs are gone
+(ink-mass 0.99, ink-coverage 0.12%, frame-diff 0.002%); `knm_hw`'s
+ink-coverage falls to 2.65%. Both still fail `anti-aliasing`
+(0.38 / 0.39 of ref blended edge px) and `ink-colour`: the browser's
+font AA/hinting distributes ink over more edge pixels than our outline
+glyph raster, a named text-raster residual, not a path-fill hole.
+`knm_cl2`'s headless Metal probe still dumps an all-white surface; its
+artifact remains stale. Full table stays **29 PASS / 4 FAIL** (three
+Metal text/AA + mesh NOTE).
