@@ -343,6 +343,28 @@ Both live in text rendering, which another session is actively changing
 (composite-glyph `endPts` fix, same day). The diagnosis and the shape of the fix
 are recorded here; the change belongs to whoever owns that code next.
 
+## Defect found: keyframe lookup ignores artboard (2026-11-18)
+
+`hasKeyframed(r, slot, key)` matches `KeyedObject.objectId` (key 51) against an
+object **slot** with no artboard check, and `kfOwnerOk()` accepts every group
+when no animation is active (`g_activeAnim < 0`). Slots are per-artboard, so the
+match crosses artboards.
+
+Measured consequence: G_Meter draws 66 against the reference's 69, and the three
+missing shapes are culled by false-positive keyframed opacity. The shapes carry
+**no opacity property at all** (`obj[10949]`: parentId/rotation/scaleX/scaleY/
+x/y/blendMode), and no `KeyedObject` targets them — yet `opSelf` read
+`0.000`, because a *Main* object's keyframed opacity matched G_Meter's slot 63.
+
+The obvious repair — scope the match with `owningArtboard()` — **does not work**:
+`KeyedObject` groups are not parented into the artboard tree, so parentage
+cannot attribute them. Measured: G_Meter 66 → 68 but Main 628 → 630, a wash in
+total error, partly from *suppressed* matches rather than correct ones. Reverted.
+
+The correct scope has to come from the animation→artboard mapping (the same
+machinery `smActiveAnimIdx` needs), not from object parentage. Until then the
+defect stands: slot collisions can cull drawables in any multi-artboard file.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
