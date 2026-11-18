@@ -671,6 +671,27 @@ was the real trigger, verified by bisect).
 `*const *ast.Flow` where `?*ast.Flow` is expected specifically for the
 two-capture pointer form. Commissioned to t42 for a koru-side fix.
 
+**CORRECTION 2026-11-18 (t42 investigation): PHANTOM — no koru defect.**
+The quoted error is a static Zig type error inside
+`src/transform_pass_runner.zig` itself; consumer `.kz` content cannot
+produce it. It matches verbatim an UNCOMMITTED in-flight edit to that
+file on the same day (collect-mode `c.current_flow = &node.flow`
+yielding `*const *ast.Flow` vs `?*ast.Flow` in the walkOnce call tree).
+Clean tree reproduces nothing: backend builds, `for (xs, 0..) |*x, i|`
+compiles through the frontend. The bisect coincided with the broken
+edit + backend-cache invalidation; the "workaround" correlated with
+the file being fixed/reverted, not with the capture form.
+
+**REAL adjacent defect found while reproducing (uncommissioned):**
+the brace+capture form `for (xs, 0..) |*x, i| { ~steps }` is NOT Koru
+syntax — `for` is `for(expr) ! each ... | done ...` chains only
+(koru_std/control.kz). The brace form parses and shape-checks, then NO
+transform consumes it: the emitter leaks the raw text verbatim into
+output_emitted.zig (`for (xs, 0..) |*x, i| {` at module top level →
+`error: expected type expression, found '{'`). Single-capture variants
+fail differently (`for input is not captured`). Parser leniency bug —
+should refuse loudly, not leak. Repro: /tmp/cf_try3.kz shape.
+
 ## FLAG — opsdump SIGABRT on layout_text_match.riv (exit 134)
 
 Found by authored_parity 40-file batch (2026-11-18): ours_digest probe
