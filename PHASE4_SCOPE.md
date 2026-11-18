@@ -1148,3 +1148,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   5840's clips (reachable) AND the 49 unreachable are a
   fixture/oracle-scope question (ref may render them via a
   different composition path — e.g. direct artboard render).
+
+- CS verdict path BLOCKER found: opsdump ab:26 emits only 33
+  draws/1 clip — nested expansion NOT firing despite 5 owned
+  451 instances (5840 alone has 303 draws). So composed render
+  never reaches ANY CS target — the clip-volume gap is upstream
+  in nested expansion (owningArtboard/aid-197 resolution or
+  noNested gate), not in CS traversal (proven per-artboard:
+  174->5, 2328->4, 5840->5 clips). NEXT: instrument the 451 arm
+  — print ni/aid/target resolution for ab26 to see where it
+  bails (owningArtboard!=26? aid<0? target<0? depth?).
