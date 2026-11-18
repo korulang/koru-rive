@@ -965,3 +965,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   If no 625 exists, the x~0 collapse is LIST LAYOUT solving
   (component_list rows at origin), not constraint eval —
   reclassify residual to t4f layout lane.
+
+- constrainList residual (post-97dc6a5+a9feb54): traced
+  positions CORRECT (10-row S + 6-row ellipse match ref ink
+  windows) but rendered rows land as blobs BETWEEN traced
+  points — row-origin vs row-body offset under tangent
+  rotation, or missing component scale (constrainHelper keeps
+  A.scale; our listRowSlot never applies layout sizing scale).
+  destSpace default=world(0) so NO parent-space conversion
+  needed — world-space tB was algorithm-correct. strength=1,
+  spaces=world defaults confirmed. NEXT bisect: emit one row's
+  vertex bbox under RIVE_TRACE_DRAW and compare vs traced
+  (frac,pos,tan) — isolates whether slot reaches emitOps or
+  row artboard adds its own offset/scale.
