@@ -861,5 +861,9 @@ files with matching transforms, or craft a curve-heavy fixture).
 opsdump exit 134 signal 6, no op stream — same class as
 layout_text_match (now fixed). IKConstraint(81)/DistanceConstraint(82)
 family file; isolate crashing object next leg. Also
-light_switch.riv: opsdump exit 0 but EMPTY stream on ab idx 3844 —
-collectOps returned nothing (possible empty-emit or wrong-ab probe).
+light_switch.riv: RESOLVED FLAKE — file is a 319-byte stub; the
+"AB idx=3844" output was impossible from it. Root cause: old
+run_probe wrote SHARED ./a.out; parallel specimen compiles during
+batch-4 overwrote it mid-run -> probe executed wrong binary. Fixed
+upstream (unique binary paths per probe). True verdict: divergent
+paint-layer — ffac00/747474 color ORDER swap on drawables 1-2.
