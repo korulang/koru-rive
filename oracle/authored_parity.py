@@ -331,10 +331,22 @@ def first_divergence(ref, ours):
     if ref["draw"] != ours["draw"]:
         return "drawable-count", f"reference draws {ref['draw']}, ours draws {ours['draw']}"
     if ref["colors"] != ours["colors"]:
-        for i, (a, b) in enumerate(zip(ref["colors"], ours["colors"])):
-            if a != b:
-                return "paint", f"drawable {i}: reference colour {a}, ours {b}"
-        return "paint", f"reference {ref['colors']}, ours {ours['colors']}"
+        # Order is not content. The reference records draws in its own tree
+        # order; we emit in object-stream order, so an identical set of
+        # drawables can line up differently. Compare the SET first, and only
+        # call it a paint difference when the colours themselves differ.
+        import collections as _c
+        cr, co = _c.Counter(ref["colors"]), _c.Counter(ours["colors"])
+        if cr != co:
+            missing, extra = cr - co, co - cr
+            bits = []
+            if missing:
+                bits.append("missing " + ", ".join(f"{k}x{v}" for k, v in missing.most_common(4)))
+            if extra:
+                bits.append("extra " + ", ".join(f"{k}x{v}" for k, v in extra.most_common(4)))
+            return "paint", "; ".join(bits)
+        first = next(i for i, (a, b) in enumerate(zip(ref["colors"], ours["colors"])) if a != b)
+        return "draw-order", f"same {len(ref['colors'])} drawables, different order (first at {first})"
     if ref["styles"] != ours["styles"]:
         return "paint-style", f"reference {ref['styles']}, ours {ours['styles']}"
     if ref["rules"] != ours["rules"]:

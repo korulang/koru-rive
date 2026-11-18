@@ -422,6 +422,37 @@ Settling it needs the objectId assignment decoded (or a C++ probe printing the
 same id→keyframe mapping from rive-cpp), not another guess. `RIVE_TRACE_KF2`
 (the trace above) is in the tree for that work.
 
+## Draw order is not content: the metric was wrong (2026-11-18)
+
+The digest compared draws **positionally**. The reference records them in its own
+tree order; we emit them from separate passes (artboard paint, FLD, shapes,
+text). For artboards whose draw *counts* match, that positional comparison was
+reporting an ordering difference as a paint mismatch.
+
+ColorGuide, measured: 38 draws each side, **identical colour multisets**,
+first positional difference at index 0.
+
+`first_divergence` now compares colour multisets first and reports
+`draw-order` as its own layer:
+
+| data_viz artboard | previous verdict | now |
+|---|---|---|
+| ColorGuide (38) | paint mismatch | **draw-order** |
+| LineBars (20) | paint mismatch | **draw-order** |
+| Pie Chart (16) | paint mismatch | **draw-order** |
+| Circles (44) | paint mismatch | **draw-order** |
+
+Four artboards are content-correct and differ only in ordering. That retires
+"gradient paint colour" as a *paint* problem for them — the remaining question is
+ordering, which matters for pixels only where draws overlap.
+
+Next step this implies: emit in **tree order** rather than pass order. Our
+draws come from separate passes appended in fixed sequence, so the stream order
+is ours, not the tree's. A DFS over the artboard's children (objects already
+appear in creation order) would interleave shapes, text and layout paint the way
+the reference does, and is the likely route to turning those four artboards
+fully op-identical.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
