@@ -217,16 +217,34 @@ kr/rive:open(path: "{path}")
 
 
 def run_probe(koruc, root, body, timeout):
-    with tempfile.NamedTemporaryFile("w", suffix=".k", dir=root, delete=False) as f:
+    """Build the probe to a UNIQUE path and run that binary.
+
+    `koruc run` writes ./a.out in the working directory, and this repo is
+    worked on by more than one session at a time — a concurrent build can
+    replace a.out between compile and execution, so the program that runs is
+    somebody else's (measured: a data_viz probe printed clip_tests artboards).
+    Building to a per-call path removes the race.
+    """
+    import uuid
+    tag = uuid.uuid4().hex[:8]
+    probe = os.path.join(root, f".parity_probe_{tag}.k")
+    binary = os.path.join(tempfile.gettempdir(), f"parity_{tag}")
+    with open(probe, "w") as f:
         f.write(body)
-        probe = f.name
     try:
         env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=os.path.join(root, ".zig-global"))
         env.setdefault("KORU_BACKEND_LIBPATH", os.path.expanduser("~/src/oshun/canvas/koruos-darwin"))
-        code, out, err = run([koruc, "run", probe], timeout)
+        code, out, err = run([koruc, "build", probe, "-o", binary], timeout)
+        if code != 0 or not os.path.exists(binary):
+            return out + "\n" + err, code or 1
+        code, out, err = run([binary], timeout)
         return out + "\n" + err, code
     finally:
-        os.unlink(probe)
+        for f in (probe, binary):
+            try:
+                os.unlink(f)
+            except OSError:
+                pass
 
 
 def ours_abnames(path, koruc, root, timeout):
