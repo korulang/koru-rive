@@ -1605,3 +1605,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   textDrawPath's glyph loop — feature-sized (needs line
   breaking + per-line pen reset + ellipsis glyph emit), not
   landed this leg. All simpler hypotheses dead.
+
+- OPEN FORK before implementing: two candidate mechanisms for
+  the ~6-tail-glyph drop — (a) height-budget ellipsis (box h
+  33.1 vs 46.08, needs wrap+line-cap+U+2026), or (b)
+  FOLLOW-PATH LENGTH glyph cull: fixture is text_follow_path;
+  if ti125/131 follow shorter paths, glyphs past path length
+  aren't emitted. Discriminator: check ti125/131's modifier/
+  constraint children vs siblings — a TextFollowPath target
+  prop or path-length difference settles it. If (b), the fix
+  is measuring cumulative advance vs pathMeasure length in
+  textDrawPath's glyph loop — much smaller than full
+  wrap+ellipsis layout. Check children/parent props of
+  ti125/131 vs ti57 first.
