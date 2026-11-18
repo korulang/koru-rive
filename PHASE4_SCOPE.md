@@ -1091,3 +1091,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   content (rows verified at path pos but content shape/size
   vs ref unverified — next: dump one row's emitted path bbox
   in LOCAL coords vs ref row extent).
+
+- green IS row content (RIVE_LFP_OFF -> green 6980 at layout
+  column; fp-on -> 2416 at path positions). NOT FLD
+  (RIVE_NO_FLD unchanged 2416). Emitted via layout-managed
+  branch. Row74 subtree: nested LayoutComponents (409->76)
+  + SolidColors (20->88 parent75, 20->89 parent78). Open:
+  which shape carries paint->88, and whether ref hides it via
+  opacity/hidden/VM-bound color (ViewModelPropertyColor 440
+  exists; only boundRunText resolves VM props today — no
+  bound-color path). If row color is VM-bound, base green
+  shows instead of bound gray = exact symptom.
