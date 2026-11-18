@@ -1070,3 +1070,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   child selected, or z-order (white overlay should cover).
   rowbind confirms all rows legitimately vmid=2 (numbered
   list 0-9, single template) — not a binding bug.
+
+- green spatial map: green ink concentrates at ~2 spots
+  (~(175,175) and ~(175,325)) — NOT all 16 rows. So the green
+  is a specific sub-element visible only in certain rows/
+  positions, not a universal row background. Row artboard 74
+  subtree: children = LayoutComponent(409 idx75) + LayoutNode
+  (420 idx87); SolidColor(20 idx88, parent 75) is likely the
+  ff12a100 source. Next: identify which shape under 75 carries
+  paint->88 and why it should be invisible (opacity/clip/SM
+  state) in ref.
