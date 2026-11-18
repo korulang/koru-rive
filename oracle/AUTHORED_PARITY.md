@@ -117,32 +117,34 @@ emits (`ff0000` ×50, `350000` ×36, `1f1717` ×16) with 80 default `747474` and
 50 fewer `000000`. Not yet attributed; the class-3 finding (gradient paints)
 covers the colour half, and the over-draw is a separate culling question.
 
-## Per-artboard attribution (`--all-artboards`)
+## Per-artboard attribution (`--all-artboards`, re-measured 2026-11-18 21:10)
 
-The harness now compares every artboard independently (`--all-artboards`), so a
-file-level delta can be attributed to a specific artboard.
+car_widgets_v01, frame 0, after nested expansion and with a working toolchain:
 
-car_widgets_v01, frame 0:
+| artboard | ref draws | ours | delta | Shapes | ref clips |
+|---|---:|---:|---:|---:|---:|
+| Main_Artboard | 612 | 809 | +197 | 74 | 7 |
+| TIRE PRESSURE | 68 | 254 | **+186** | 226 | 0 |
+| COMPASS | 413 | 417 | +4 | 369 | 0 |
+| G_Meter | 69 | 66 | −3 | 61 | 0 |
 
-| artboard | ref draws | ours (standalone) |
-|---|---:|---:|
-| Main_Artboard | 612 | 809 (+197) |
-| TIRE PRESSURE | 68 | **0** |
-| COMPASS | 413 | **0** |
-| G_Meter | 69 | **0** |
+COMPASS and G_Meter are essentially exact — traversal and paint resolution are
+sound. **TIRE PRESSURE is the outlier**, and Main's +197 is that same content
+propagated through the nested instance (186 + neighbours).
 
-Two separate problems, and the second is the surprising one:
+TIRE PRESSURE has 226 Shapes and the reference draws 68 of them, so ~70% are
+culled by the reference at frame 0. Painting visibility (`ShapePaint.isVisible`,
+key 41) is already honoured per paint, and opacity (key 18) is read per object —
+so the leading hypothesis is **state**: the artboard's own state machine
+selects a state that hides most layers, and we render the base pose instead.
+The artboard has 350 `KeyFrameDouble` + 451 `KeyFrameColor` keyframes, which is
+the shape of an opacity-animated set.
 
-1. Main over-draws by 197 with nested expansion on.
-2. **The "non-first artboards emit zero draws" row was an instrument
-   failure, not a decoder finding.** Those probes ran while the Koru
-   toolchain was mid-edit and could not build; the harness counted an empty
-   op stream as "0 draws". The census (Shapes 74/226/369/61 per artboard,
-   paints parented to Shapes 389 of 420 in COMPASS, geometry carried by
-   `PointsPath`) says the content is ordinary and reachable. Fixed: a probe
-   with no `OPSDUMP` line now reports `ours-unavailable` with the build
-   error, never a zero count. The per-artboard table must be re-measured
-   once the toolchain builds again.
+Related, and needed for the nested instances specifically: each carries a
+`NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
+instance's state comes from the *instance*, not from the target artboard's
+default state machine. Expansion currently calls `smActiveAnimIdx(target, …)`,
+which asks the artboard, not the instance.
 
 ## Recommended order (revised after the fix)
 
