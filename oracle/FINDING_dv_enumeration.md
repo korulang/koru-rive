@@ -167,3 +167,34 @@ under the 30 data_viz FLDs — either those particular FLDs are unpainted
 (invisible items) or the Fill/Stroke→FLD parent edge resolves via a
 slot/id path the census regex missed. Verify by grepping inspect output
 for fills whose resolved parent is a 513 before writing the emit arm.
+
+## Class-2 anomaly RESOLVED + verdict complete (fills→513 edges verified)
+
+**Zero edges confirmed.** All 30 data_viz FLDs have no Fill/Stroke
+children — the earlier census was correct, not a regex miss. In
+rive-cpp terms their `m_ShapePaints` is empty, so `FLD::draw` is a
+no-op for this file even in the reference. FLD is a layout-item
+*marker*; the paint that actually renders lives one level up.
+
+**Paint owner (final):** `LayoutComponent`-parented Fill(20)/Stroke(24)
+children — 40 such objects in HorizontalBars alone, parented to LCs
+(`->394:LayoutComponent` etc.), never to FLDs. `pickPath(parentLayout)`
+in the cpp is how shape paints acquire layout geometry.
+
+**Our emit state** (`emitArtboardPaints` layout-box pass, ~index.kz:4984):
+per-409, computes lw/lh (style units 607/608 fill-parent resolution,
+corner radii 640-643) then emits **one rounded-rect per type-20 Fill
+child at the LC's whole box**. Three residual gaps vs ref:
+
+1. **Type-24 Stroke children of LCs are skipped** (`c.type_key != 20
+   continue`) — small counts here (1/artboard) but real.
+2. **Per-item geometry**: every LC-fill paints the LC's entire box;
+   ref paints at *computed item rects* (FLD sub-regions). Needs the
+   flex solver — the feature-sized blocker.
+3. Fills parented to non-409/non-artboard/non-shape nodes (e.g. nested
+   layout nodes) may fall between the passes — unmeasured.
+
+**Class-2 verdict: NAMED RESIDUAL** — paint owner = LC-child
+Fill/Stroke; blocker = layout solver for per-item rects (feature-sized,
+same family as class-1 instance sizing). Cheap sub-fix available now:
+emit LC-parented Stroke(24) in the layout-box pass.
