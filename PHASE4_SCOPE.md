@@ -1905,3 +1905,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   scale transform, and do the texts sit under a layout row
   INSIDE obj25 (children of obj25 other than the 15 texts —
   rows/containers)? Next probe: list obj25's children types.
+
+- OBJ25 CHILDREN: shapes(3), texts(134), AND LayoutComponent
+  Style(420@83) — obj25 artboard HAS layout styling; the ~150
+  width likely = layout row/slot inside it. Texts' parent
+  field=25 but layout rows may parent differently (check
+  layoutParentOf used by layoutSizeOf — it reads
+  node.parent_obj; if texts' parent_obj==25 and 25 is type-1
+  with layout, layoutAvailOf(25) gives artboard content box
+  500-pad — still not 150; so a ROW between is needed —
+  check if any type-409/row object exists that I filtered
+  out (earlier 'O 409' grep found none — maybe layout rows
+  are type 419/421 or the style 420 belongs to a 409 I
+  missed). NEXT: grep O-lines for type in {409,419,421,423}
+  and LayoutComponentStyle parents.
