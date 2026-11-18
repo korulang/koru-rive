@@ -1721,8 +1721,79 @@ fn frameColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64, dflt: u32) 
     }
     return outc;
 }
+// Static (non-keyframed) DataBind resolution: a 447 whose pk names this
+// prop key and whose lastBindable target is this object overrides the
+// authored prop value with the bound VM scalar — same instance-scope /
+// row / global selection as boundKfValue.
+fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16) ?f32 {
+    var lastBindable: i64 = -1;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 446 or o.type_key == 447) {
+            if (lastBindable == @as(i64, @intCast(targetIdx)) and o.type_key == 447) {
+                var pk: u64 = 0;
+                var flags: u64 = 0;
+                var pb: ?[]const u8 = null;
+                for (o.props) |p| {
+                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 587) flags = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 588) { if (p.value == .bytes) pb = p.value.bytes; }
+                }
+                if (pk != propKey) continue;
+                if (flags & 16 != 0) return null;
+                const bytes = pb orelse continue;
+                var pos: usize = 0;
+                var path = std.ArrayList(u64).empty;
+                defer path.deinit(std.heap.page_allocator);
+                while (pos < bytes.len) {
+                    const v = readVarU64(bytes, &pos) orelse return null;
+                    path.append(std.heap.page_allocator, v) catch return null;
+                }
+                if (path.items.len != 2) return null;
+                const vmId = path.items[0];
+                const propId = path.items[1];
+                if (std.posix.getenv("RIVE_TRACE_BSP") != null) std.debug.print("bsp resolve t={d} k={d} vm={d} prop={d} scopeV={d} scopeO={d}\n", .{ targetIdx, propKey, vmId, propId, g_instVmid, g_instObj });
+                const ii: usize = if (g_instObj >= 0 and g_instVmid == @as(i64, @intCast(vmId)))
+                    @intCast(g_instObj)
+                else blk: {
+                    var wantOrd: i64 = -1;
+                    if (g_rowInstOrd >= 0) {
+                        if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                    } else if (g_vm_bound) {
+                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = g_vm_inst;
+                    } else return null;
+                    break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                };
+                var j = ii + 1;
+                while (j < r.objects.len) : (j += 1) {
+                    const vo = &r.objects[j];
+                    if (!isVmInstanceValueType(vo.type_key)) {
+                        if (vo.type_key == 446 or vo.type_key == 447) continue;
+                        break;
+                    }
+                    if (propU(vo.props, 554, -1) != @as(i64, @intCast(propId))) continue;
+                    const scalar = vmScalarOf(vo) orelse return null;
+                    if (std.posix.getenv("RIVE_TRACE_BSP") != null) std.debug.print("bsp hit ii={d} j={d} p554={d} want={d}\n", .{ ii, j, propU(vo.props, 554, -1), propId });
+                    return switch (scalar) {
+                        .num => |x| @as(f32, @floatCast(x)),
+                        .boolean => |b| @as(f32, if (b) 1.0 else 0.0),
+                        .enumv => |v| @as(f32, @floatFromInt(v)),
+                        else => null,
+                    };
+                }
+                return null;
+            }
+            continue;
+        }
+        lastBindable = @as(i64, @intCast(i));
+    }
+    return null;
+}
+
 fn propFAnim(r: *const Riv, v: *const RivObj, key: u16, dflt: f32, frame: i64) f32 {
     if (frame >= 0 and hasKeyframed(r, v.slot, key)) return @as(f32, keyframedValue(r, v.slot, key, frame));
+    const vidx: usize = @intCast(@divExact(@as(usize, @intCast(@intFromPtr(v) - @intFromPtr(r.objects.ptr))), @sizeOf(RivObj)));
+    if (boundStaticProp(r, vidx, key)) |bv| return bv;
     return propF(v.props, key, dflt);
 }
 fn fileVert(r: *const Riv, v: *const RivObj, frame: i64) PV {
@@ -1883,8 +1954,8 @@ fn printPathGolden(verbs: []const u8, pts: []const V2, alloc: std.mem.Allocator,
 const CIRCLE_C = 0.552284749831;
 
 fn synthParametric(r: *const Riv, o: *const RivObj, pvs: *std.ArrayList(PV), alloc: std.mem.Allocator, frame: i64) bool {
-    const w = if (frame >= 0 and hasKeyframed(r, o.slot, 20)) @as(f32, keyframedValue(r, o.slot, 20, frame)) else propF(o.props, 20, 0);
-    const h = if (frame >= 0 and hasKeyframed(r, o.slot, 21)) @as(f32, keyframedValue(r, o.slot, 21, frame)) else propF(o.props, 21, 0);
+    const w = propFAnim(r, o, 20, 0, frame);
+    const h = propFAnim(r, o, 21, 0, frame);
     const oxx = -propF(o.props, 123, 0.5) * w;
     const oyy = -propF(o.props, 124, 0.5) * h;
     const Z: V2 = .{ .x = 0, .y = 0 };
@@ -2073,11 +2144,7 @@ fn dumpKeyed(r: *Riv) void {
 // eval lands; clfp Item hover needs it to pick the dark-green hold
 // animation over the idle one on the same slot+prop.
 var g_activeAnim: i64 = -1;
-var g_abDepth: u8 = 0;
-// Artboard currently being collected: scopes keyframe-group matches, which are
-// keyed by per-artboard slot ids and would otherwise cross artboards (G_Meter
-// slot 63 matched a Main object's keyframed opacity and culled 3 shapes).
-var g_abScope: i64 = -1; // nested-artboard expansion depth guard
+var g_abDepth: u8 = 0; // nested-artboard expansion depth guard
 var g_abStack: [24]usize = undefined; // expansion-path cycle guard
 var g_abStackLen: usize = 0;
 // Transition crossfade: when an SM transition is mid-flight, colors
@@ -2394,7 +2461,7 @@ fn hasKeyframed(r: *const Riv, objSlot: i64, propKey: u16) bool {
             const ook = inGroup and kfOwnerOk(r, curObjIdx);
             std.debug.print("  hk slot={d} key={d} inGroup={} curObj={} ownerOk={} activeAnim={}\n", .{ objSlot, propKey, inGroup, curObjIdx, ook, g_activeAnim });
         }
-        if (inGroup and kfOwnerOk(r, curObjIdx) and (g_abScope < 0 or animArtboard(r, @intCast(curObjIdx)) == g_abScope)) {
+        if (inGroup and kfOwnerOk(r, curObjIdx)) {
             if (propByKey(o.props, 53)) |v| {
                 const k: i64 = switch (v) { .uint => |u| @intCast(u), else => -1 };
                 if (k == @as(i64, propKey)) return true;
@@ -2436,14 +2503,18 @@ fn boundKfValue(r: *const Riv, kfIdx: usize) ?f32 {
                 if (path.items.len != 2) return null;
                 const vmId = path.items[0];
                 const propId = path.items[1];
-                var wantOrd: i64 = -1;
-                if (g_rowInstOrd >= 0) {
-                    if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                } else if (g_vm_bound) {
-                    if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                    wantOrd = g_vm_inst;
-                } else return null;
-                const ii = findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                const ii: usize = if (g_instObj >= 0 and g_instVmid == @as(i64, @intCast(vmId)))
+                    @intCast(g_instObj)
+                else blk: {
+                    var wantOrd: i64 = -1;
+                    if (g_rowInstOrd >= 0) {
+                        if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                    } else if (g_vm_bound) {
+                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = g_vm_inst;
+                    } else return null;
+                    break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                };
                 var j = ii + 1;
                 while (j < r.objects.len) : (j += 1) {
                     const vo = &r.objects[j];
@@ -2498,14 +2569,18 @@ fn boundScriptArtboardId(r: *const Riv, siaIdx: usize) ?i64 {
                 if (path.items.len != 2) return null;
                 const vmId = path.items[0];
                 const propId = path.items[1];
-                var wantOrd: i64 = -1;
-                if (g_rowInstOrd >= 0) {
-                    if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                } else if (g_vm_bound) {
-                    if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                    wantOrd = g_vm_inst;
-                } else return null;
-                const ii = findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                const ii: usize = if (g_instObj >= 0 and g_instVmid == @as(i64, @intCast(vmId)))
+                    @intCast(g_instObj)
+                else blk: {
+                    var wantOrd: i64 = -1;
+                    if (g_rowInstOrd >= 0) {
+                        if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                    } else if (g_vm_bound) {
+                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = g_vm_inst;
+                    } else return null;
+                    break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                };
                 var j = ii + 1;
                 while (j < r.objects.len) : (j += 1) {
                     const vo = &r.objects[j];
@@ -4143,6 +4218,12 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
 var g_rowVmid: i64 = -1;
 var g_rowInstOrd: i64 = -1;
 var g_rowIdx: i64 = -1;
+// Component-instance VM scope: a NestedArtboard(92/451/452) node owns a
+// ViewModelInstance(437) child whose values bind the component's internal
+// DataBinds. Set around the nested descent, restored after — innermost
+// scope wins over row/global in bound* resolution.
+var g_instVmid: i64 = -1;
+var g_instObj: i64 = -1;
 // Explicit ViewModel-instance binding (kr/rive:vm.bind). Without this and
 // without row scope, a data-bound run keeps its template text — the
 // browser's behavior for a standalone artboard with no bound instance.
@@ -4264,28 +4345,33 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                 // Row scope: a list item's viewModelInstanceId selects the
                 // Nth instance of this ViewModel (only when the bind's
                 // viewModelId matches the item's own).
-                var wantOrd: i64 = -1;
-                if (g_rowInstOrd >= 0) {
-                    if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                } else if (g_vm_bound) {
-                    if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                    wantOrd = g_vm_inst;
-                } else {
-                    // No row scope, no explicit binding: the run keeps the
-                    // template text (cl1_item's reference "text").
-                    return null;
-                }
                 var instIdx: usize = 0;
                 var haveInst = false;
-                var seen: i64 = 0;
-                for (r.objects, 0..) |cand, ci| {
-                    if (cand.type_key == 437 and propU(cand.props, 566, -1) == @as(i64, @intCast(vmId))) {
-                        if (wantOrd < 0 or seen == wantOrd) {
-                            instIdx = ci;
-                            haveInst = true;
-                            break;
+                if (g_instObj >= 0 and g_instVmid == @as(i64, @intCast(vmId))) {
+                    instIdx = @intCast(g_instObj);
+                    haveInst = true;
+                } else {
+                    var wantOrd: i64 = -1;
+                    if (g_rowInstOrd >= 0) {
+                        if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                    } else if (g_vm_bound) {
+                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = g_vm_inst;
+                    } else {
+                        // No row scope, no explicit binding: the run keeps the
+                        // template text (cl1_item's reference "text").
+                        return null;
+                    }
+                    var seen: i64 = 0;
+                    for (r.objects, 0..) |cand, ci| {
+                        if (cand.type_key == 437 and propU(cand.props, 566, -1) == @as(i64, @intCast(vmId))) {
+                            if (wantOrd < 0 or seen == wantOrd) {
+                                instIdx = ci;
+                                haveInst = true;
+                                break;
+                            }
+                            seen += 1;
                         }
-                        seen += 1;
                     }
                 }
                 if (!haveInst) return null;
@@ -5563,8 +5649,6 @@ fn computeScrubOverrides(r: *const Riv, abIdx: i64, frame: i64) void {
 }
 
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
-    const prevAbScope = g_abScope;
-    g_abScope = @intCast(abIdx);
     const scrubBase = g_scrubOverrides.items.len;
     computeScrubOverrides(r, @as(i64, @intCast(abIdx)), frame);
     if (std.posix.getenv("RIVE_TRACE_ABIND") != null) {
@@ -6144,6 +6228,17 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         const hostFrom = g_blendFrom;
         const hostT = g_blendT;
         g_activeAnim = smActiveAnimIdx(r, @intCast(target), frame);
+        const hostVmid = g_instVmid;
+        const hostInst = g_instObj;
+        g_instVmid = -1;
+        g_instObj = -1;
+        for (r.objects, 0..) |io, ii| {
+            if (io.type_key == 437 and io.parent_obj == @as(i64, @intCast(ni))) {
+                g_instObj = @intCast(ii);
+                g_instVmid = propU(io.props, 566, -1);
+                break;
+            }
+        }
         g_abDepth += 1;
         if (g_abStackLen < g_abStack.len) { g_abStack[g_abStackLen] = @as(usize, @intCast(target)); g_abStackLen += 1; }
         collectArtboardOps(r, @intCast(target), frame, alloc, out);
@@ -6152,10 +6247,11 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         g_activeAnim = hostAnim;
         g_blendFrom = hostFrom;
         g_blendT = hostT;
+        g_instVmid = hostVmid;
+        g_instObj = hostInst;
         out.append(alloc, op0(7)) catch {};
     }
     g_scrubOverrides.items.len = scrubBase;
-    g_abScope = prevAbScope;
     return;
 }
 
