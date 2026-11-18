@@ -1580,3 +1580,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   artifact explained — fresh /tmp/dv build emits full dump.
   NEXT: dump per-text fontSize+box props for the eight
   2691-family members -> the two outliers should differ.
+
+- DIFFERENTIATOR FOUND: of the eight 2691-family texts, exactly
+  TWO — ti125 and ti131 — carry box height 286=33.10
+  (0x4201c825) vs all others' 46.08 (0x42361405); width 285
+  identical 150.3, sizing=2 fixed, overflow=3 ellipsis on all.
+  Prime suspects for golden's 2569v pair. Mechanism: fixed
+  box + overflow=ellipsis -> golden wraps to width and caps
+  lines by height; shorter box -> fewer lines -> tail replaced
+  by ellipsis -> -122 verbs. OUR textDrawPath does single-line
+  pen-walk, no wrap/line-cap/ellipsis. NEXT: implement
+  box-constrained layout in textDrawPath: wrap chars at
+  t_box_w advance, cap visible lines at t_box_h/lineHeight,
+  append U+2026 on the truncated last line when overflow=3 —
+  verify ti125/ti131 emit ~2569v.
