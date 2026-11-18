@@ -4182,7 +4182,10 @@ fn listFollowPathWorld(r: *const Riv, loIdx: usize, rowIdx: usize, count: usize,
 // cl1 measured: Item 200x50 + gapV 10 = pitch 60, column direction,
 // rows at canvas y = 0,60,120,180,240 (5 visible of 8, scroll-clipped).
 fn listRowSlot(r: *const Riv, loIdx: usize, itemArtIdx: usize, rowIdx: usize, rowCount: usize, frame: i64) Mat2 {
-    if (listFollowPathWorld(r, loIdx, rowIdx, rowCount, frame)) |fw| return fw;
+    if (listFollowPathWorld(r, loIdx, rowIdx, rowCount, frame)) |fw| {
+        if (std.posix.getenv("RIVE_TRACE_LFP") != null) std.debug.print("lfp-slot e={d:.1} g={d:.1} a={d:.2} d={d:.2}\n", .{ fw[4], fw[5], fw[0], fw[3] });
+        return fw;
+    }
     const lo = &r.objects[loIdx];
     const p = lo.parent_obj;
     var dir: i64 = 0;

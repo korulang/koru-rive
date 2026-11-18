@@ -1010,3 +1010,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   listFollowPathWorld? (c) trsCompose(rot,1,1,0,0) then
   tB[4]/[5] overwrite — verify no aliasing. Line 27 of
   clfp_ops.txt (frame-8 dump) is the suspect op.
+
+- constrainList last-mile state: slot transforms VERIFIED in
+  ops stream (e=25..471, rotations correct) AND meshops
+  kind-8 arm DOES fold ctm_stk into draw verts (~line 6450).
+  So transform path is complete on paper — residual must be
+  in the ctm fold detail (application order to verbs/pts, or
+  pts transformed pre/post flattenPath) OR row content offset.
+  Uncommitted: lfp-slot trace print in listRowSlot.
