@@ -95,6 +95,28 @@ reference dumper does not drive, so the two streams are not comparable and the
 harness reports a large false divergence. Do not use it as a fixture gate.
 
 
+## Snapshot after nested-artboard expansion (2026-11-18, later)
+
+`rive/index.kz` now expands `NestedArtboard`(92)/`NestedArtboardLeaf`(451)/
+`NestedArtboardLayout`(452) recursively, resolving `artboardId`(197) as an
+**index into the file's artboard list** (`File::artboard(size_t)`) — matching
+it against `Artboard.viewModelId`(583) had expanded wrong subtrees by
+coincidence.
+
+| file | ref draws | ours before | ours now | first layer |
+|---|---:|---:|---:|---|
+| joystick_databound_keyframe_test | 2 | 1 | **2** | **op-identical** |
+| data_viz_demo (Main) | 199 | 3 | 170 | drawable-count (≈ -29 = ForegroundLayoutDrawable, layout-blocked) |
+| car_widgets_v01 | 612 | 72 | 809 | drawable-count (over-expansion, unmatched) |
+| jellyfish_test | 2 | 1 | 1 | mesh file — 243 mesh verts / 121 tendons; the known mesh worklist |
+| inventory_demo_test_v2 | — | — | — | ref-unavailable (rive-cpp asset importer assert) |
+
+Net absolute error improved on both expanded files (data_viz 196→29,
+car_widgets 540→197). car_widgets now *over*-draws: colours the reference never
+emits (`ff0000` ×50, `350000` ×36, `1f1717` ×16) with 80 default `747474` and
+50 fewer `000000`. Not yet attributed; the class-3 finding (gradient paints)
+covers the colour half, and the over-draw is a separate culling question.
+
 ## Recommended order (revised after the fix)
 
 1. **Save/restore grouping** — the remaining joystick divergence, and the same
