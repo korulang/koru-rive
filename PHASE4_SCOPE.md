@@ -1705,3 +1705,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   the laid-out positions — diff ours vs golden per-contour x
   to derive the advance model golden used, possibly
   hmtx+constant or kern-pair table subset).
+
+- NEXT (kerned advances): two routes — (a) parse font table
+  dir for kern/GPOS presence (ttf magic scan at offset 107
+  inconclusive — extract font via fontdump tor properly);
+  (b) EMPIRICAL: golden contour x-positions give laid-out
+  advances — compare per-line char counts: golden ~4 lines vs
+  ours ~3 on 125 chars implies ~33% wider effective advance;
+  test uniform scale first (cheap), kern-pair table if it
+  fails. If font lacks kern/GPOS, gap may be fontScale
+  (text.cpp multiplies size AND spacing by fontScale — check
+  what fontScale is for these runs).
