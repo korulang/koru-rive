@@ -381,6 +381,14 @@ own style — and the class tags make it verifiable in one run.
 - ref-unavailable x3: oracle-side (missing frame-0 block; two
   file_asset_importer assertions on scripted-VM files).
 
+### Batch-3 distribution (30 files, stratified slice 3, quiet serial)
+- 11 op-identical / 16 divergent / 3 ref-unavailable /
+  0 ours-unavailable (harness fix held — no flake masking).
+- First-divergence: drawable-count 7, geometry 4, paint 4, clip 1 —
+  geometry+paint together = 8/16, the vertex-exact + color-dynamics
+  frontier confirmed as the dominant residual.
+- Cumulative measured corpus: ~70 files, ~34 identical (~49%).
+
 ### Batch distribution (stratified ~40, post class-1/2/5 fixes)
 - 13/40 op-identical · 24 divergent · 1 ours-unavailable
   (layout_text_match SIGABRT — FIXED, composite-glyph endPts
