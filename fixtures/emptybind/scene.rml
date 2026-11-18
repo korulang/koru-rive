@@ -1,4 +1,5 @@
 <Rive version="1" kind="fragment">
+    <FontAsset file="Montserrat.ttf" name="Montserrat" id="0:80"/>
     <!-- Empty-bound layout cell: ViewModelInstanceNumber carries k554
          (viewModelPropertyId) but NO k575 (propertyValue) — the bind
          resolves empty; mimics data_viz Total-footer collapse case. -->
@@ -11,7 +12,8 @@
         <LayoutComponent x="200" y="60" width="360" height="60" styleId="0:11" name="ControlRow" id="0:10">
             <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed" name="Row Style" id="0:11"/>
             <Text x="180" y="30" name="Label" id="0:12">
-                <TextValueRun text="Control: 42" name="Run"/>
+                <TextValueRun styleId="0:90" text="Control: 42" name="Run"/>
+                <TextStylePaint fontSize="16" fontAssetId="0:80" name="ControlStyle" id="0:90"/>
             </Text>
         </LayoutComponent>
 
@@ -19,9 +21,10 @@
         <LayoutComponent x="200" y="200" width="360" height="60" styleId="0:15" name="FooterRow" id="0:16">
             <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed" name="Footer Style" id="0:15"/>
             <Text x="180" y="30" name="Total" id="0:17">
-                <TextValueRun text="Total: " name="Run">
+                <TextValueRun styleId="0:91" text="Total: " name="Run">
                     <DataBindContext sourcePathIds="0:70-0:71" propertyKey="268"/>
                 </TextValueRun>
+                <TextStylePaint fontSize="16" fontAssetId="0:80" name="TotalStyle" id="0:91"/>
             </Text>
         </LayoutComponent>
 

@@ -141,3 +141,9 @@ minimal .rev to see which object owns the paint.
 
 Our HBars=21/VBars=20 draws are the layout-box fill pass + text; the
 -19/-11 deltas are the FLD items themselves (bar segments/labels).
+
+## Note — emptybind fixture emit gap (from t42 cross-val)
+
+`fixtures/emptybind` at correct ab shows ours ~1 draw vs ref 8: the
+NuRive-branding `NestedArtboard` content does not expand — same class-1
+rule, now observed on an RML-authored file too (not just corpus demos).
