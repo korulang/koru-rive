@@ -1,0 +1,35 @@
+<Rive version="1" kind="fragment">
+    <!-- Empty-bound layout cell: ViewModelInstanceNumber carries k554
+         (viewModelPropertyId) but NO k575 (propertyValue) — the bind
+         resolves empty; mimics data_viz Total-footer collapse case. -->
+    <Artboard width="400" height="300" styleId="0:1" name="EmptyBind" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:1"/>
+
+        <Fill name="Background"><SolidColor colorValue="FF1D1D24" name="C"/></Fill>
+
+        <!-- control row: always visible -->
+        <LayoutComponent x="200" y="60" width="360" height="60" styleId="0:11" name="ControlRow" id="0:10">
+            <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed" name="Row Style" id="0:11"/>
+            <Text x="180" y="30" name="Label" id="0:12">
+                <TextValueRun text="Control: 42" name="Run"/>
+            </Text>
+        </LayoutComponent>
+
+        <!-- footer row: single cell bound to the empty number -->
+        <LayoutComponent x="200" y="200" width="360" height="60" styleId="0:15" name="FooterRow" id="0:16">
+            <LayoutComponentStyle layoutWidthScaleType="fixed" layoutHeightScaleType="fixed" name="Footer Style" id="0:15"/>
+            <Text x="180" y="30" name="Total" id="0:17">
+                <TextValueRun text="Total: " name="Run">
+                    <DataBindContext sourcePathIds="0:70-0:71" propertyKey="268"/>
+                </TextValueRun>
+            </Text>
+        </LayoutComponent>
+
+        <ViewModel defaultInstanceId="0:72" name="Totals" id="0:70">
+            <ViewModelPropertyNumber name="total" id="0:71"/>
+            <ViewModelInstance exports="true" name="Default" id="0:72">
+                <ViewModelInstanceNumber viewModelPropertyId="0:71"/>
+            </ViewModelInstance>
+        </ViewModel>
+    </Artboard>
+</Rive>
