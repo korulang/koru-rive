@@ -1471,3 +1471,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   different strings per instance scope; if the two golden-2569
   objects are VM-bound to shorter values, the fix is already
   in flight via inst-scope — re-diff after it settles.
+
+- VERDICT DATA: run strings DIFFER — family members carry
+  125/148/58/32-char texts. Golden's 2569v drawPaths = a
+  TEXT-LENGTH variant (fewer chars -> fewer glyph contours),
+  NOT VM binding (boundRunText returned null for all runs —
+  RIVE_TRACE_BT empty). Fixture name says it: text ON A PATH
+  WITH LENGTH CONSTRAINT — golden truncates/ellipsizes runs
+  exceeding the path length; ours draws full string ->
+  2691v. The two 2569s = the two runs whose text overflows
+  their follow-path length budget. NEXT: find the path-length
+  prop (likely on the path-follower/constraint object) and
+  implement char-budget truncation in textDrawPath's glyph
+  loop — measure glyph advance vs path length, stop at
+  budget (matches "shape_length" fixture intent).
