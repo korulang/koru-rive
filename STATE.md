@@ -8,6 +8,8 @@ Harness status at time of writing: **`oracle/verify_harness.py` → 8/8 PASS**.
 
 ---
 
+Provenance backfilled: 30 sidecars (commit=artifact last-touch); classify now git-anchored for in-repo deps. Result fresh=3/stale=30 — all stale on uncommitted canvas/index.koru-native.kz edits. mesh re-adjudicated on fresh render: FAILs 7 checks (over-fill, ink 5.12x, full-frame bbox) — real, not stale.
+
 Checks wired: stale->cl2_t10/kn_cl2_t10 (tick pairs), clear->[255,255,255] on iba/deam/hff; alpha self-activates; ring stays opt-in (no annulus fixture).
 
 Provenance: oracle/provenance.py stamps .prov.json sidecars {driver,commit,ts}; run_gates flags fresh|stale|unprovenanced per ours asset (all 33 currently unprovenanced -- render->stamp->freeze going forward). vacuous_px=200 boundary mutant-pinned in selftest.

@@ -611,3 +611,29 @@ Reviewed per arbiter loop order. Verdicts:
 
 Gate table: 32 PASS / 1 FAIL (knm_cl2 re-rendered + stamped fresh by
 renderer lane; mesh remains the sole FAIL).
+
+## Provenance backfill + mesh adjudication (2026-11-18)
+
+classify() gained a git-anchored check: for in-repo deps, stale fires
+when `git diff <prov.commit> HEAD` or `git status` shows dep changes —
+immune to checkout-mtime noise. mtime still covers cross-repo deps
+(../oshun/*).
+
+Backfilled 30 prov sidecars (commit = artifact's last-touch commit,
+driver unknown -> shared deps only; the 3 renderer-lane stamps left
+untouched). Result: **fresh=3, stale=30** — all 30 flag on
+`../oshun/canvas/index.koru-native.kz`, which carries UNCOMMITTED
+renderer-lane edits newer than every backfilled render. Honest
+reading: while canvas is dirty, no render predating the edit is
+provably current. The 32/1 table is "as of render time"; expect
+movement when the lane commits + re-renders.
+
+**mesh adjudication** (sole FAIL, scratch render — gate asset
+untouched, t47 owns the worklist): fresh `meshrender_clfp.k` output
+on current tree FAILs 7 checks, worse than the committed artifact's
+4. ours ink bbox = full frame (0,0,499,499) vs ref (24,89,471,452);
+ink mass 6177 vs 1206 (5.12x); coverage-gap 82%; notch 63%;
+local-fidelity 97.6 levels. The meshops->mesh.* path is over-filling:
+ink everywhere the artboard should be backdrop. NOT stale-evidence —
+reproduces on current master. Driver: meshrender_clfp.k (kr/rive:
+meshops, component_list_follow_path.riv ab:18).
