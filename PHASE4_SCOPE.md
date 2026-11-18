@@ -1618,3 +1618,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   textDrawPath's glyph loop — much smaller than full
   wrap+ellipsis layout. Check children/parent props of
   ti125/131 vs ti57 first.
+
+- DISCRIMINATOR VERDICT: golden's 2569 drawPath y-bands span
+  0-30 in THREE line clusters (~0-10, 15-20, 25-30) with all
+  x<160 — golden WRAPS at box width 150.3 into multiple lines;
+  ours emits ONE line (y 1.9-9.5, x->467). The -6 contours =
+  height cap (box h 33.1 ~ 2.x lines) dropping overflow +
+  likely ellipsis tail. Mechanism CONFIRMED = full box
+  layout: wrap-at-width + line-cap-by-height + overflow
+  handling. This is a real text-layout feature (line
+  breaking), not a cull — implementation needs per-line pen
+  reset at t_box_w advance, y advance per line, stop when
+  line's y exceeds t_box_h budget, emit U+2026 if overflow=3.
+  Estimated scope: moderate — textDrawPath's glyph loop gains
+  a line-break pass before emission.
