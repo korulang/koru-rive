@@ -1797,3 +1797,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   glyphs beyond path end skip path emission — contour count
   drops without layout change. NEXT: read text.cpp ~940-1090
   for a path-length/coverage check around glyph path emission.
+
+- DRAW-STAGE CULL CHECK: text.cpp ~1040-1090 is hit-rect/
+  background bounds + curX advance — NO path-length skip.
+  Follow-path glyph positioning is transformGlyph-only
+  (already exonerated). Every cull mechanism now measured
+  dead; the surviving explanation for -6 contours is WRAP
+  DENSITY: golden's shaped advances (HarfBuzz, kerned) are
+  wider -> 4+ lines -> height cap drops tail. That makes the
+  fix = advance model, not culling. Bounded next step:
+  measure golden advance empirically — per-line contour
+  count*avg-advance vs ours; or extract font, check kern/GPOS
+  tables via fontdump.
