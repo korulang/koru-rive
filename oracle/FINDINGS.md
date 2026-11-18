@@ -832,3 +832,26 @@ resolution, not paint class. Dynamic-color machinery per file:
 NAMED CLASS: color-source dynamics — VM-color binds + keyframed
 color props + blend compositing, all evaluated at frame 0 by ref.
 NOT the gradient class (class-3 unaffected); NOT unbound-paint-type.
+
+## Vertex-delta specimens (batch-3 geometry divergences) — NOT tessellation
+
+Per-file gold-vs-ours path-op counts on the 4 geometry divergences:
+- trim.riv [work]: ref emits verbs=0 pts=0 EMPTY drawPath for the
+  diverging drawable; ours emits ~14 path ops — TrimPath(47) never
+  evaluated, we draw untrimmed geometry. Path-effect class.
+- text_listener_simpler.riv: shared draws are VERTEX-EXACT — ours
+  630 path-ops vs ref verbs=630 on the big glyph run; divergence is
+  draw COUNT (ref 6 drawPaths incl. duplicated text pair vs ours 3
+  groups) + ~10px text-width delta = text metrics/duplication, not
+  flattening.
+- scripted_listener_context.riv: ref bbox 85x91 vs ours 172x158
+  (~2.02x uniform) — transform-scale class, vertex counts unmeasured
+  (ref block extraction empty — needs digest-level pts).
+- component_stateful_vm_instance.riv: ref (-10,-51,10,51) tall-thin
+  vs ours (-41,-39.5,41,39.5) — aspect+scale transform delta, same
+  caveat.
+VERDICT for t4f: batch-3 geometry divergences are HETEROGENEOUS —
+TrimPath eval, transform-scale eval, text metrics — NOT curve
+tessellation specimens. The vertex-exact frontier needs specimens
+from files whose divergence IS flattening (look to drawable-count
+files with matching transforms, or craft a curve-heavy fixture).
