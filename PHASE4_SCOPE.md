@@ -1025,3 +1025,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   the bbox print into the fill branch (after tessellate() call)
   to dump final tri world-bounds per draw. Everything upstream
   verified: slot->ops->ctm fold all correct on paper.
+
+- constrainList end-state: pipeline verified correct through
+  mtri emission (ctm fold -> per-tri vert transform -> mtri).
+  Render STILL identical FAIL (mass 1.99, coverage 64.11%)
+  across all instrumentation — residual is NOT missing
+  plumbing. Remaining suspects ranked: (1) ctm_stk fold ORDER
+  — stack[0]=outermost? if inner transforms push after slot,
+  fold direction may invert nesting; (2) row artboard emits
+  its own op6 that RESETS expectation; (3) draw.mesh canvas
+  side ignores/handles tri coords differently. Next concrete
+  step: dump ctm_stk depth+matrix at ONE row's kind-8 and
+  hand-compose to compare vs traced pos.
