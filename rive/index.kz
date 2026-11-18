@@ -2151,6 +2151,57 @@ fn smInputEventFrame(name: []const u8, frame: i64) i64 {
     return f;
 }
 
+// ---- pointer input channel (INPUT_STACK.md slice 1) ----
+// Scheduled positional events, per-Riv. Same latest-event-at-or-before
+// semantics as g_smInputs, but keyed by the loaded Riv pointer so two
+// files can carry independent schedules. No eval consumer yet — slice 2
+// adds listener dispatch.
+const PtrEvent = struct { ab: i64, x: f64, y: f64, frame: i64, id: i64 };
+const PtrLog = struct { events: std.ArrayList(PtrEvent), seeded: bool };
+var g_ptrLogs = std.AutoHashMap(usize, *PtrLog).init(std.heap.page_allocator);
+
+fn ptrLogFor(r: *const Riv) ?*PtrLog {
+    const key = @intFromPtr(r);
+    if (g_ptrLogs.get(key)) |pl| return pl;
+    const pl = std.heap.page_allocator.create(PtrLog) catch return null;
+    pl.* = .{ .events = std.ArrayList(PtrEvent).empty, .seeded = false };
+    g_ptrLogs.put(key, pl) catch {};
+    return pl;
+}
+
+// RIVE_POINTERS="x,y@frame;x,y@frame" — probe seed; ab=-1 wildcard,
+// resolved against the queried artboard at dispatch time.
+fn ensurePtrSeed(pl: *PtrLog) void {
+    if (pl.seeded) return;
+    pl.seeded = true;
+    const s = std.posix.getenv("RIVE_POINTERS") orelse return;
+    var it = std.mem.splitScalar(u8, s, ';');
+    while (it.next()) |e| {
+        const at = std.mem.lastIndexOfScalar(u8, e, '@') orelse continue;
+        const fr = std.fmt.parseInt(i64, e[at + 1 ..], 10) catch continue;
+        var xy = std.mem.splitScalar(u8, e[0..at], ',');
+        const xs = xy.next() orelse continue;
+        const ys = xy.next() orelse continue;
+        const x = std.fmt.parseFloat(f64, xs) catch continue;
+        const y = std.fmt.parseFloat(f64, ys) catch continue;
+        pl.events.append(std.heap.page_allocator, .{ .ab = -1, .x = x, .y = y, .frame = fr, .id = 0 }) catch {};
+    }
+}
+
+// Latest pointer-move event at-or-before frame for (artboard,id);
+// ab<0 events match any artboard.
+fn ptrMoveAt(r: *const Riv, ab: i64, id: i64, frame: i64) ?PtrEvent {
+    const pl = ptrLogFor(r) orelse return null;
+    ensurePtrSeed(pl);
+    var best: ?PtrEvent = null;
+    for (pl.events.items) |ev| {
+        if (ev.frame > frame or ev.id != id) continue;
+        if (ev.ab >= 0 and ev.ab != ab) continue;
+        if (best == null or ev.frame >= best.?.frame) best = ev;
+    }
+    return best;
+}
+
 // slot -> owning artboard, via the object that carries the slot.
 fn slotArtboard(r: *const Riv, slot: i64) i64 {
     for (r.objects, 0..) |o, i| {
@@ -2407,8 +2458,63 @@ fn boundKfValue(r: *const Riv, kfIdx: usize) ?f32 {
     return null;
 }
 
-fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
-    var kf = std.ArrayList(struct { f: i64, v: f32 }).empty;
+// A DataBind(447) with propertyKey==876 targets the ScriptInputArtboard
+// that precedes it and replaces its .artboardId with the bound
+// ViewModelInstanceArtboard value (prop 846). data_bind_artboard_input:
+// VM value 1 selects child2 where the authored id 2 selects child1.
+fn boundScriptArtboardId(r: *const Riv, siaIdx: usize) ?i64 {
+    var lastBindable: i64 = -1;
+    for (r.objects, 0..) |o, i| {
+        if (o.type_key == 446 or o.type_key == 447) {
+            if (lastBindable == @as(i64, @intCast(siaIdx)) and o.type_key == 447) {
+                var pk: u64 = 0;
+                var flags: u64 = 0;
+                var pb: ?[]const u8 = null;
+                for (o.props) |p| {
+                    if (p.key == 586) pk = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 587) flags = if (p.value == .uint) p.value.uint else 0;
+                    if (p.key == 588) { if (p.value == .bytes) pb = p.value.bytes; }
+                }
+                if (pk != 876) return null;
+                if (flags & 16 != 0) return null;
+                const bytes = pb orelse return null;
+                var pos: usize = 0;
+                var path = std.ArrayList(u64).empty;
+                defer path.deinit(std.heap.page_allocator);
+                while (pos < bytes.len) {
+                    const v = readVarU64(bytes, &pos) orelse return null;
+                    path.append(std.heap.page_allocator, v) catch return null;
+                }
+                if (path.items.len != 2) return null;
+                const vmId = path.items[0];
+                const propId = path.items[1];
+                var wantOrd: i64 = -1;
+                if (g_rowInstOrd >= 0) {
+                    if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                } else if (g_vm_bound) {
+                    if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                    wantOrd = g_vm_inst;
+                } else return null;
+                const ii = findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
+                var j = ii + 1;
+                while (j < r.objects.len) : (j += 1) {
+                    const vo = &r.objects[j];
+                    if (!isVmInstanceValueType(vo.type_key) and vo.type_key != 599) break;
+                    if (propU(vo.props, 554, -1) != @as(i64, @intCast(propId))) continue;
+                    if (vo.type_key != 599) return null;
+                    return propU(vo.props, 846, -1);
+                }
+                return null;
+            }
+            continue;
+        }
+        lastBindable = @as(i64, @intCast(i));
+    }
+    return null;
+}
+
+fn keyframedValueT(r: *const Riv, objSlot: i64, propKey: u16, t: f32, ignoreOwner: bool) f32 {
+    var kf = std.ArrayList(struct { f: f32, v: f32 }).empty;
     defer kf.deinit(std.heap.page_allocator);
     var curSlot: i64 = -1;
     var curKey: i64 = -1;
@@ -2424,35 +2530,53 @@ fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
             curKey = switch (v) { .uint => |u| @intCast(u), else => -1 };
             continue;
         }
-        if (curSlot != objSlot or curKey != @as(i64, propKey) or !kfOwnerOk(r, curObjIdx)) continue;
+        if (curSlot != objSlot or curKey != @as(i64, propKey) or (!ignoreOwner and !kfOwnerOk(r, curObjIdx))) continue;
         if (propByKey(o.props, 67) != null or propByKey(o.props, 68) != null or propByKey(o.props, 70) != null) {
             var val = if (propByKey(o.props, 70)) |v| switch (v) { .dbl => |x| x, else => 0 } else 0;
             if (boundKfValue(r, oi)) |bv| val = bv;
-            kf.append(std.heap.page_allocator, .{ .f = propU(o.props, 67, 0), .v = val }) catch {};
+            kf.append(std.heap.page_allocator, .{ .f = @as(f32, @floatFromInt(propU(o.props, 67, 0))), .v = val }) catch {};
         }
     }
-    if (std.posix.getenv("RIVE_TRACE_KF") != null) std.debug.print("kf slot={d} key={d} frame={d} n={d} activeAnim={d}\n", .{ objSlot, propKey, frame, kf.items.len, g_activeAnim });
+    if (std.posix.getenv("RIVE_TRACE_KF") != null) std.debug.print("kf slot={d} key={d} t={d:.2} n={d} activeAnim={d}\n", .{ objSlot, propKey, t, kf.items.len, g_activeAnim });
     if (kf.items.len == 0) return 0;
     // insertion sort by frame (tiny n)
     for (kf.items, 0..) |*a, i| {
         var j = i;
         while (j > 0 and kf.items[j - 1].f > a.f) : (j -= 1) {
-            const t = kf.items[j - 1]; kf.items[j - 1] = kf.items[j]; kf.items[j] = t;
+            const tmp = kf.items[j - 1]; kf.items[j - 1] = kf.items[j]; kf.items[j] = tmp;
         }
     }
-    if (frame <= kf.items[0].f) return kf.items[0].v;
-    if (frame >= kf.items[kf.items.len - 1].f) return kf.items[kf.items.len - 1].v;
+    if (t <= kf.items[0].f) return kf.items[0].v;
+    if (t >= kf.items[kf.items.len - 1].f) return kf.items[kf.items.len - 1].v;
     var lo: usize = 0;
     var hi: usize = kf.items.len - 1;
     while (hi - lo > 1) {
         const mid = (lo + hi) / 2;
-        if (kf.items[mid].f <= frame) lo = mid else hi = mid;
+        if (kf.items[mid].f <= t) lo = mid else hi = mid;
     }
     const t0 = kf.items[lo]; const t1 = kf.items[hi];
-    const span = @as(f32, @floatFromInt(t1.f - t0.f));
+    const span = t1.f - t0.f;
     if (span <= 0) return t1.v;
-    const u = @as(f32, @floatFromInt(frame - t0.f)) / span;
+    const u = (t - t0.f) / span;
     return t0.v + (t1.v - t0.v) * u;
+}
+
+
+// Joystick.apply scrub overrides (INPUT_STACK.md): (slot,key)->value
+// computed from the joystick's normalized axis at this frame. Consulted
+// before live sampling so scrubbed (SM-inactive) animations win.
+const ScrubOverride = struct { slot: i64, key: u16, val: f32 };
+var g_scrubOverrides = std.ArrayList(ScrubOverride).empty;
+
+fn keyframedValue(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) f32 {
+    for (g_scrubOverrides.items) |ov| {
+        if (ov.slot == objSlot and ov.key == propKey) return ov.val;
+    }
+    return keyframedValueT(r, objSlot, propKey, @as(f32, @floatFromInt(frame)), false);
+}
+
+fn keyframedValueF(r: *const Riv, objSlot: i64, propKey: u16, t: f32) f32 {
+    return keyframedValueT(r, objSlot, propKey, t, false);
 }
 
 fn keyframedColor(r: *const Riv, objSlot: i64, propKey: u16, frame: i64) u32 {
@@ -3953,7 +4077,7 @@ var g_cframe: i64 = -1;
 
 fn isVmInstanceValueType(key: u64) bool {
     return switch (key) {
-        426, 428, 432, 433, 441, 442, 444, 449, 501, 565, 566, 586, 587, 427 => true,
+        426, 428, 432, 433, 441, 442, 444, 449, 501, 565, 566, 586, 587, 427, 599 => true,
         else => false,
     };
 }
@@ -4682,6 +4806,24 @@ fn dumpGraph(r: *Riv) void {
     };
 }
 
+// pointer.move appends a scheduled positional event to this Riv's
+// pointer log — INPUT_STACK.md slice 1 (channel only; listener
+// dispatch is slice 2). ab: artboard object index, id: pointer id.
+~pub tor pointer.move { r: *Riv<loaded>, ab: i64, x: f64, y: f64, frame: i64, id: i64 }
+
+~proc pointer.move|zig {
+    const pl = ptrLogFor(r) orelse {
+        std.debug.print("pointer.move: oom\n", .{});
+        return;
+    };
+    ensurePtrSeed(pl);
+    pl.events.append(std.heap.page_allocator, .{ .ab = ab, .x = x, .y = y, .frame = frame, .id = id }) catch {
+        std.debug.print("pointer.move: oom\n", .{});
+        return;
+    };
+    if (std.posix.getenv("RIVE_TRACE_PTR") != null) std.debug.print("pmove ab={d} id={d} x={d:.1} y={d:.1} frame={d} n={d}\n", .{ ab, id, x, y, frame, pl.events.items.len });
+}
+
 ~pub tor inspect { r: *Riv<loaded> }
 
 ~proc inspect|zig {
@@ -4698,6 +4840,10 @@ fn dumpGraph(r: *Riv) void {
     }
     std.heap.page_allocator.free(rr.objects);
     std.heap.page_allocator.free(rr.bytes);
+    if (g_ptrLogs.fetchRemove(@intFromPtr(rr))) |kv| {
+        kv.value.events.deinit(std.heap.page_allocator);
+        std.heap.page_allocator.destroy(kv.value);
+    }
     std.heap.page_allocator.destroy(rr);
 }
 
@@ -5221,7 +5367,89 @@ fn dashOf(r: *const Riv, paintIdx: usize) DashInfo {
     return res;
 }
 
+// Joystick.apply scrub (INPUT_STACK.md slice 2): for each Joystick
+// component in the artboard, read its animated x/y props, map to
+// [0,1], and evaluate the referenced x/y animations' keyframe tracks
+// at the scrub time — recording (slot,key)->value overrides that
+// keyframedValue consults before live sampling. SM-inactive
+// animations (yAnim/xAnim) are evaluated via ignoreOwner.
+fn animDurationFrames(r: *const Riv, animIdx: i64) f32 {
+    const ao = &r.objects[@intCast(animIdx)];
+    if (propByKey(ao.props, 57)) |v| {
+        return switch (v) { .uint => |u| @as(f32, @floatFromInt(u)), .dbl => |d| d, else => 0 };
+    }
+    var mx: f32 = 0;
+    for (r.objects, 0..) |o, oi| {
+        if (o.type_key != 30) continue;
+        if (animOwnerOf(r, oi) != animIdx) continue;
+        const f = @as(f32, @floatFromInt(propU(o.props, 67, 0)));
+        if (f > mx) mx = f;
+    }
+    return mx;
+}
+
+fn scrubAnimAxis(r: *const Riv, animIdx: i64, axis: f32) void {
+    const dur = animDurationFrames(r, animIdx);
+    if (dur <= 0) return;
+    const scrubT = ((axis + 1.0) / 2.0) * dur;
+    var pendSlot: i64 = -1;
+    for (r.objects, 0..) |mo, mi| {
+        if (mo.type_key == 25) {
+            pendSlot = if (propByKey(mo.props, 51)) |v| switch (v) { .uint => |u| @intCast(u), else => -1 } else -1;
+            continue;
+        }
+        if (mo.type_key == 26) {
+            if (propByKey(mo.props, 53)) |v| {
+                const key = switch (v) { .uint => |u| @intCast(u), else => -1 };
+                if (pendSlot >= 0 and key >= 0 and animOwnerOf(r, mi) == animIdx) {
+                    const val = keyframedValueT(r, pendSlot, @as(u16, @intCast(key)), scrubT, true);
+                    g_scrubOverrides.append(std.heap.page_allocator, .{ .slot = pendSlot, .key = @intCast(key), .val = val }) catch {};
+                    if (std.posix.getenv("RIVE_TRACE_SCRUB") != null) std.debug.print("scrub anim={d} slot={d} key={d} t={d:.2} val={d:.3}\n", .{ animIdx, pendSlot, key, scrubT, val });
+                }
+            }
+            pendSlot = -1;
+            continue;
+        }
+        if (!isKfClusterObj(mo)) pendSlot = -1;
+    }
+}
+
+fn computeScrubOverrides(r: *const Riv, abIdx: i64, frame: i64) void {
+    var anims = std.ArrayList(i64).empty;
+    defer anims.deinit(std.heap.page_allocator);
+    for (r.objects, 0..) |ao, ai| {
+        if (ao.type_key == 31 and owningArtboard(r, ai) == abIdx) anims.append(std.heap.page_allocator, @intCast(ai)) catch {};
+    }
+    for (r.objects, 0..) |jo, ji| {
+        if (jo.type_key != 148) continue;
+        if (owningArtboard(r, ji) != abIdx) continue;
+        const flags = propU(jo.props, 312, 0);
+        const y = keyframedValue(r, jo.slot, 300, frame);
+        const x = keyframedValue(r, jo.slot, 299, frame);
+        const yId = propU(jo.props, 302, -1);
+        const xId = propU(jo.props, 301, -1);
+        if (yId >= 0 and yId < @as(i64, @intCast(anims.items.len))) {
+            const axis = if (flags & 2 != 0) -y else y;
+            scrubAnimAxis(r, anims.items[@as(usize, @intCast(yId))], axis);
+        }
+        if (xId >= 0 and xId < @as(i64, @intCast(anims.items.len))) {
+            const axis = if (flags & 1 != 0) -x else x;
+            scrubAnimAxis(r, anims.items[@as(usize, @intCast(xId))], axis);
+        }
+    }
+}
+
 fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator, out: *std.ArrayList(OpRec)) void {
+    const scrubBase = g_scrubOverrides.items.len;
+    computeScrubOverrides(r, @intCast(abIdx), frame);
+    if (std.posix.getenv("RIVE_TRACE_ABIND") != null) {
+        for (r.objects, 0..) |so, si| {
+            if (so.type_key == 621 and owningArtboard(r, si) == @as(i64, @intCast(abIdx))) {
+                const bid = boundScriptArtboardId(r, si) orelse propU(so.props, 876, -1);
+                std.debug.print("abind sia={d} ab={d} artboardId={d}\n", .{ si, abIdx, bid });
+            }
+        }
+    }
     const abEntryOps = out.items.len;
     defer if (std.posix.getenv("RIVE_TRACE_NEST") != null) std.debug.print("abops ab={d} depth={d} emitted={d}\n", .{ abIdx, g_abDepth, out.items.len - abEntryOps });
     // Rows pass frame=-1; g_cframe carries the host frame for colors only.
@@ -5537,13 +5765,13 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         // clip_tests: Shape47 rect clipped by Shape43 ellipse.
         var clipPushed = false;
         var clipDepth: usize = 0;
-        for (r.objects) |*cc| {
+        for (r.objects, 0..) |*cc, ci| {
             if (cc.type_key != 42) continue;
             // ClippingShape clips every Drawable descendant-or-self of
             // its parent (container_component forAll includes self):
             // CS child-of-Shape clips that shape; CS child-of-Node clips
             // the node's whole drawable subtree. Ancestor test covers both.
-            var anc = so.parent_obj;
+            var anc: i64 = @intCast(si); // self included: CS child-of-shape clips that shape
             var isClipped = false;
             var ad: usize = 0;
             while (ad < 32) : (ad += 1) {
@@ -5553,11 +5781,13 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             if (!isClipped) continue;
             const srcId = propU(cc.props, 92, -1);
+            if (std.posix.getenv("RIVE_TRACE_CS") != null) std.debug.print("cs cand cc={d} srcId={d}\n", .{ ci, srcId });
             if (srcId < 0) continue;
             var srcIdx: usize = r.objects.len;
             for (r.objects, 0..) |*so2, sj| {
-                if (so2.type_key == 3 and so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
+                if (so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
             }
+            if (std.posix.getenv("RIVE_TRACE_CS") != null) std.debug.print("cs src cc found={} srcIdx={d}\n", .{ srcIdx != r.objects.len, srcIdx });
             if (srcIdx == r.objects.len) continue;
             var sVerbs = std.ArrayList(u8).empty;
             var sPts = std.ArrayList(V2).empty;
@@ -5567,7 +5797,24 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             // per-child outputs yields move-separated subpaths (the
             // joined-single-contour form broke clip.push.path masks).
             for (r.objects, 0..) |*sc, sci| {
-                if (sc.parent_obj != @as(i64, @intCast(srcIdx))) continue;
+                // Transitive: any descendant of the source node (or the
+                // source itself) can carry clip contours — hunter_x CS
+                // sources are Nodes/parametric shapes whose paths nest
+                // deeper than one level. Skip objects nested inside an
+                // intermediate type-16 contour (already counted there).
+                if (sci != srcIdx) {
+                    var reach = false;
+                    var mid16 = false;
+                    var hops: usize = 0;
+                    var cur = sc.parent_obj;
+                    while (hops < 32) : (hops += 1) {
+                        if (cur < 0) break;
+                        if (cur == @as(i64, @intCast(srcIdx))) { reach = true; break; }
+                        if (r.objects[@intCast(cur)].type_key == 16) mid16 = true;
+                        cur = r.objects[@intCast(cur)].parent_obj;
+                    }
+                    if (!reach or mid16) continue;
+                }
                 // pathFlags(128) bit0 = hidden contour — clip_tests
                 // clipper's second ellipse (obj45, flags=1) must not
                 // join the clip region; only the +150 half clips.
@@ -5590,6 +5837,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 for (cVs.items) |*pv| xformPV(scm2, pv);
                 if (cVs.items.len >= 2) buildPath(cVs.items, cClosed, &sVerbs, &sPts, alloc);
             }
+            if (std.posix.getenv("RIVE_TRACE_CS") != null) std.debug.print("cs verbs={d}\n", .{sVerbs.items.len});
             if (sVerbs.items.len == 0) continue;
             const sw = effectiveWorld(r, srcIdx, frame);
             out.append(alloc, op0(0)) catch {};
@@ -5654,8 +5902,8 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             if (aop <= 0) continue;
             const op: f32 = opSelf * aop;
-            if (op <= 0) {
-                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=opacity color={x} t={d:.1},{d:.1}\n", .{ si, pi, color, w[4], w[5] });
+            if (op <= 0 and std.posix.getenv("RIVE_NO_OPACITY_CULL") == null) {
+                if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=opacity self={d:.3} anc={d:.3} color={x} t={d:.1},{d:.1}\n", .{ si, pi, opSelf, aop, color, w[4], w[5] });
                 continue;
             }
             const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
@@ -5767,12 +6015,15 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         g_blendT = hostT;
         out.append(alloc, op0(7)) catch {};
     }
-    return;
+    g_scrubOverrides.items.len = scrubBase;    return;
 }
 
 
 fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpRec {
     g_activeAnim = smActiveAnimIdx(r, abIdx, frame);
+    if (std.posix.getenv("RIVE_TRACE_SM") != null) std.debug.print("sm ab={d} frame={d} activeAnim={d}\n", .{ abIdx, frame, g_activeAnim });
+    const scrubBase = g_scrubOverrides.items.len;
+    computeScrubOverrides(r, @intCast(abIdx), frame);
     g_abStackLen = 0;
     if (g_abStackLen < g_abStack.len) { g_abStack[g_abStackLen] = abIdx; g_abStackLen += 1; }
     var out = std.ArrayList(OpRec).empty;
