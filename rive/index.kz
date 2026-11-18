@@ -3663,23 +3663,40 @@ fn layoutOffsetOf(r: *const Riv, idx: usize) Mat2 {
                 const dir = propU(fst.props, 598, 2);
                 const gapH = propF(fst.props, 498, 0);
                 const gapV = propF(fst.props, 499, 0);
+                const wrap = propU(fst.props, 604, 0);
                 const horiz = dir == 2 or dir == 3;
                 const gap = if (horiz) gapH else gapV;
+                const crossGap = if (horiz) gapV else gapH;
+                const availF = layoutAvailOf(r, @intCast(p));
+                const availMain = if (horiz) availF.w else availF.h;
+                const szSelf = layoutSizeOf(r, idx);
+                const selfCross = if (horiz) szSelf.h else szSelf.w;
                 var mainOff: f32 = 0;
+                var crossOff: f32 = 0;
+                var lineCross: f32 = 0;
                 var seenSelf = false;
                 for (r.objects, 0..) |co, ci| {
                     if (co.parent_obj != p) continue;
-                    if (ci == idx) { seenSelf = true; break; }
                     if (co.type_key == 420) continue; // style object, not a flex item
                     const cs = layoutSizeOf(r, ci);
-                    mainOff += (if (horiz) cs.w else cs.h) + gap;
+                    const cMain = if (horiz) cs.w else cs.h;
+                    const cCross = if (horiz) cs.h else cs.w;
+                    const isSelf = ci == idx;
+                    if (wrap != 0 and availMain > 0 and mainOff > 0 and mainOff + cMain > availMain) {
+                        crossOff += lineCross + crossGap;
+                        lineCross = 0;
+                        mainOff = 0;
+                    }
+                    if (isSelf) { seenSelf = true; break; }
+                    mainOff += cMain + gap;
+                    if (cCross > lineCross) lineCross = cCross;
                 }
                 if (seenSelf) {
-                    var padL: f32 = 0; var padT: f32 = 0;
-                    padL = propF(fst.props, 512, 0);
-                    padT = propF(fst.props, 514, 0);
-                    if (horiz) return .{ 1, 0, 0, 1, padL + mainOff, padT };
-                    return .{ 1, 0, 0, 1, padL, padT + mainOff };
+                    if (selfCross > lineCross) lineCross = selfCross;
+                    const padL: f32 = propF(fst.props, 512, 0);
+                    const padT: f32 = propF(fst.props, 514, 0);
+                    if (horiz) return .{ 1, 0, 0, 1, padL + mainOff, padT + crossOff };
+                    return .{ 1, 0, 0, 1, padL + crossOff, padT + mainOff };
                 }
             }
         }
@@ -5493,8 +5510,31 @@ fn computeScrubOverrides(r: *const Riv, abIdx: i64, frame: i64) void {
         if (owningArtboard(r, ji) != abIdx) continue;
         if (dbg) std.debug.print("  joy ji={d} slot={d}\n", .{ ji, jo.slot });
         const flags = propU(jo.props, 312, 0);
-        const y = keyframedValue(r, jo.slot, 300, frame);
-        const x = keyframedValue(r, jo.slot, 299, frame);
+        var y = keyframedValue(r, jo.slot, 300, frame);
+        var x = keyframedValue(r, jo.slot, 299, frame);
+        // Pointer-driven path (INPUT_STACK.md slice 3): a joystick with
+        // handleSourceId(313) reads the handle position — which the SM
+        // listener aligns to the pointer — through inverseWorld +
+        // localBounds.factorFrom -> [-1,1] axis values. Pointer event
+        // position stands in for handleSource->worldTranslation (the
+        // align-target makes them equal for this fixture class).
+        if (propU(jo.props, 313, -1) >= 0) {
+            if (ptrMoveAt(r, abIdx, 0, frame)) |pev| {
+                const px_ = propF(jo.props, 303, 0);
+                const py_ = propF(jo.props, 304, 0);
+                const w = propF(jo.props, 305, 0);
+                const h = propF(jo.props, 306, 0);
+                const ox = propF(jo.props, 307, 0.5);
+                const oy = propF(jo.props, 308, 0.5);
+                const lx = @as(f32, @floatCast(pev.x)) - px_;
+                const ly = @as(f32, @floatCast(pev.y)) - py_;
+                const bx = if (w == 0) 0 else (lx - (-w * ox)) * 2.0 / w - 1.0;
+                const by = if (h == 0) 0 else (ly - (-h * oy)) * 2.0 / h - 1.0;
+                x = bx;
+                y = by;
+                if (std.posix.getenv("RIVE_TRACE_SCRUB") != null) std.debug.print("  ptrdrv ji slot={d} ptr=({d:.0},{d:.0}) loc=({d:.1},{d:.1}) axis=({d:.3},{d:.3})\n", .{ jo.slot, pev.x, pev.y, lx, ly, bx, by });
+            }
+        }
         const yId = propU(jo.props, 302, -1);
         const xId = propU(jo.props, 301, -1);
         if (dbg) std.debug.print("    yId={d} xId={d} flags={d} y={d:.3}\n", .{ yId, xId, flags, y });

@@ -1282,3 +1282,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   implies ref wraps/virtualizes/clips long lists — flexWrap(604)
   + visible-window semantics still missing. NEXT: per-container
   item counts + wrap check vs gold's ~755 cluster.
+
+- FLEX WRAP M3 measured: line-breaking implemented (wrap!=0 ->
+  crossOff/lineCross accumulate, mainOff resets per line) but
+  e-distribution IDENTICAL (0->9917) — wrap containers absent
+  or availMain never exceeded. Strong signal the spread is NOT
+  from layoutOffsetOf flex at all for most values — likely
+  nested-artboard/list transforms compounding. Verify by
+  A/B: RIVE_NO_ flex env or check which op6 e-values trace to
+  flex parents vs other mechanisms before more flex work.
