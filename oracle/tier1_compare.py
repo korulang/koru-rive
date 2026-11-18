@@ -131,6 +131,10 @@ def compare_fixture(n):
         secs=re.split(r'--- frame (\d+) t=[\d.]+ ---',body)
         gframes={'0':secs[0]}
         for i in range(1,len(secs)-1,2): gframes[secs[i]]=secs[i+1]
+        # last frame's body bleeds the NEXT artboard's '--- static/sm0 ---'
+        # prefix (parts[] ends at the next frame-0 marker, not section end).
+        # Truncate every frame body at the first '---' marker line.
+        for k in gframes: gframes[k]=gframes[k].split('---',1)[0]
         eq=tot=0; diffs=[]
         for gn,gb in gframes.items():
             ge=gold_events(gb)

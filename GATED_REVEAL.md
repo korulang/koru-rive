@@ -15,17 +15,20 @@ script VM — **feature-sized, separate arc**, already logged in
 `oracle/AUTHORED_PARITY.md`.
 
 **B — `component_stateful_vm_instance [ParentArtboard]` fr29
-(SM-materialization, this note).** Golden frame 29 appends a
-`--- static t=0 ---` block: a *third* draw of component content —
-rect + ellipse ry≈40 (= the DEFAULT VM values 82×79, i.e. instance
-obj4's `{554:1→82, 554:0→79}`) — with **no instance-position
-ancestor** (identity + inner `72,70.5` only). Only two NestedArtboard
-nodes exist (obj16@(288.6,314), obj21@(65.5,67)); both draw every
-frame with their own VM copies. The reveal is a default-VM instance
-materialization timed at t=1.0 — the SM transition boundary
-(`StateTransition` obj41, `prop151=2`).
+(RETRACTED — parser artifact, not a reveal).** The "third draw /
+default-VM instance / no position ancestor" was `tier1_compare.py`'s
+last-frame bleed: each artboard's final frame body ran past its own
+section into the next artboard's `--- static t=0 ---`/`--- sm0 ---`
+prefix. With boundaries corrected, ParentArtboard is **30/30** and
+`data_bind_artboard_input` is **30/30 on all three artboards** — the
+"script-gated frame-29" was the same artifact. The gated-reveal
+class currently has **zero confirmed specimens** in the corpus.
 
 ## What the gate probably is — candidates, evidence-ranked
+
+> Post-retraction: candidates 1–3 below were ranked against specimen
+> B's phantom evidence. Keep for the NEXT gated-reveal candidate, but
+> no corpus file currently demands any of them.
 
 1. **ViewModel state transition.** Rive VM property defs include a
    `state` kind (csvmi_2 obj7 tk448 "state"; enum value objects
