@@ -4402,6 +4402,34 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
     _ = endFx; _ = endFy;
 }
 
+// Canonical graph serialization for riv2k: the DECODED object graph as
+// ASCII lines — build-time decode output, materializable without the
+// .riv parser. Names are NOT serialized: materialize refills them from
+// the schema lookups (typeName/propEntry), which are name-only metadata.
+// f32 bitCast→hex keeps round-trip exact; bytes props hex-encode.
+fn dumpGraph(r: *Riv) void {
+    std.debug.print("G {d}\n", .{r.objects.len});
+    std.debug.print("B {d} ", .{r.bytes.len});
+    for (r.bytes) |b| std.debug.print("{x:0>2}", .{b});
+    std.debug.print("\n", .{});
+    for (r.objects) |o| {
+        std.debug.print("O {d} {d} {d} {d} {d} {d}\n", .{ o.type_key, o.slot, o.parent, o.parent_obj, o.style_obj, o.props.len });
+        for (o.props) |p| {
+            switch (p.value) {
+                .uint => |v| std.debug.print("P {d} {d} u {d}\n", .{ p.key, p.field, v }),
+                .dbl => |v| std.debug.print("P {d} {d} d {x}\n", .{ p.key, p.field, @as(u32, @bitCast(v)) }),
+                .color => |v| std.debug.print("P {d} {d} c {x}\n", .{ p.key, p.field, v }),
+                .boolean => |v| std.debug.print("P {d} {d} b {d}\n", .{ p.key, p.field, @intFromBool(v) }),
+                .bytes => |v| {
+                    std.debug.print("P {d} {d} x {d} ", .{ p.key, p.field, v.len });
+                    for (v) |b| std.debug.print("{x:0>2}", .{b});
+                    std.debug.print("\n", .{});
+                },
+            }
+        }
+    }
+}
+
 // ---- Koru surface ---------------------------------------------------------
 
 ~pub tor open { path: string }
@@ -4588,6 +4616,11 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
             std.debug.print("\n", .{});
         }
     }
+}
+
+~pub tor graphdump { r: *Riv<loaded> }
+~proc graphdump|zig {
+    dumpGraph(r);
 }
 
 ~pub tor corpusdump { r: *Riv<loaded> }
