@@ -1834,3 +1834,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   env k) then remove RIVE_ADV_K hook. NOTE: advK currently
   only scales WRAP pre-pass advance, not pen/emission —
   coords still match because wrap only decides line breaks.
+
+- K-SOURCE INVESTIGATION: fontScale DEAD (text.cpp:2253 —
+  only fitFontSize overflow=5 scales; ours are overflow=3).
+  Other text fixtures (new_text, runtime_nested_text_runs)
+  have unrelated emission gaps (ours 4-10 drawPaths vs gold
+  9-14) — k universality UNPROVEN, can't validate there.
+  k~1.047 remains unexplained: kern usually NEGATIVE
+  (narrows), can't explain wider wrap. NEW SUSPECT: our
+  advance may MISS something golden includes — e.g. space
+  advance, or hmtxAdvance returns wrong field, or golden
+  advance = hb shaped advance including mark/attachment
+  offsets. NEXT: dump our per-char advance list for ti125's
+  string + golden's implied per-line char counts -> solve
+  for the per-char advance model directly.
