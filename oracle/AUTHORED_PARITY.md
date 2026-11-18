@@ -132,21 +132,33 @@ COMPASS and G_Meter are essentially exact — traversal and paint resolution are
 sound. **TIRE PRESSURE is the outlier**, and Main's +197 is that same content
 propagated through the nested instance (186 + neighbours).
 
-Measured facts about that cull (all frame-invariant — the reference draws 68 at
-frames 0..4, so this is not animation):
+Measured facts about the delta (all frame-invariant — the reference draws 68 at
+frames 0..4):
 
 - 226 Shapes, **all** have a Fill/Stroke child — no unpainted shapes.
 - 116 objects carry `WorldTransformComponent.opacity` (key 18); **none is 0**.
 - Exactly **one** `ShapePaint.isVisible` (key 41) property exists in the whole
   artboard, and it is `false`.
-- 350 `KeyFrameDouble` + 451 `KeyFrameColor` keyframes exist, but the draw count
-  does not move across five frames.
+- **Zero** `KeyedProperty` objects in the entire file key opacity (key 18), so
+  the cull is not animated opacity.
+- No `Solo`(147) components exist in any artboard.
+- Every Shape's parent chain reaches the artboard: 226/226, no orphans.
+- Only 27 path objects carry `pathFlags` (3× flag 1, 24× flag 2) — hidden
+  contours cannot account for 158 missing draws.
 
-So the cull is not "no paint", not "opacity 0", and not animation. The remaining
-candidates, in order: (a) the paints are gradients and the reference resolves
-something that culls them (the class-3 gradient finding), (b) shapes whose path
-collapses to zero drawable area at the base pose, (c) a per-shape cull rule we
-have not modelled at all.
+Bbox comparison is what settles it: 44 of the reference's 68 drawables match
+ours by bbox, 3 are absent from our stream, and **210 of our draws have no
+reference counterpart**. Those extras cluster hard at the origin —
+`x ∈ [-383, 2]`, `y ∈ [-331, 13]` — and are the red/amber band colours
+(`ff0000` ×48, `350000` ×36, `1f1717` ×16, `ff4700` ×15 …) plus `747474`
+defaults.
+
+That is not a visibility cull. It is **un-laid-out content**: TIRE PRESSURE is
+a layout-driven artboard (LayoutComponents, 32 LinearGradients, 5
+RadialGradients), and its items sit at base positions near the origin until the
+solver places them. The reference draws the laid-out result. So this is the
+**same layout gap** already named for `ForegroundLayoutDrawable`(513) — it
+inflates car_widgets' count, it is not a separate cull rule.
 
 Related, and needed for nested instances specifically: each carries a
 `NestedStateMachine` child (`NestedAnimation.animationId`), so a nested
