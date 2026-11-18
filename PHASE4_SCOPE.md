@@ -1734,3 +1734,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   vs raw prop285=150.3 mismatch!) or advances wider. FIRST
   CHECK: where does t_box_w=157.3 come from vs prop 285 —
   possible wrong-prop or scale bug making our wrap too wide.
+
+- t_box_w RESOLVED: no mismatch — prop285 decodes to
+  157.31 (my earlier 150.3 was a hex misread); LAY bw=157.3
+  correct. Remaining question: why golden wraps ~31 chars/
+  line vs ours ~42 at same 157.3 width -> golden's effective
+  advance ~35% wider OR wrap width is NOT box_w for
+  follow-path text (path length / shape-length constraint —
+  fixture name!). NEXT: check whether ti125/131's text has a
+  follow-path modifier/constraint whose path is shorter than
+  siblings' — if wrap width = path length, that's the whole
+  mechanism and box_w is a red herring for this fixture.
