@@ -1046,3 +1046,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   DOWNSTREAM of tri emission: mesh.tri/draw.mesh canvas-side
   consumption, or the row content's local coords vs pivot.
   Pipeline koru-side is exonerated end-to-end.
+
+- constrainList final hypothesis: rotation pivot. Row content
+  local coords span ~(0,0)-(40,40); tB rotates about ORIGIN
+  then translates to path pos — under 60-90deg tangents the
+  body swings ~40px perpendicular off the traced point =
+  "blobs between positions" signature EXACTLY. rive-cpp
+  constrainHelper would produce identical math UNLESS the
+  item's authored pivot differs — check whether row artboard
+  content is centered at origin in the .riv (shape coords
+  -20..20?) vs our emission adding +8,+8 inner offset that
+  shifts the effective pivot. Cheap test: translate tB by
+  -(inner offset) rotated, or emit row content centered.
