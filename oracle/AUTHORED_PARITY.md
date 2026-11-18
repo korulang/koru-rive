@@ -556,6 +556,31 @@ So the residual on these artboards is the layout solver, not paint or ordering �
 which is consistent with `ForegroundLayoutDrawable` having been recorded as
 "blocked on layout solving" from the beginning.
 
+### Ordering: four hypotheses tried, none fits
+
+For ColorGuide — the one artboard whose identity sets match 38/38, so ordering is
+the *only* difference — positional identity was measured against candidate
+orders:
+
+| candidate order | positional identity |
+|---|---:|
+| ours as-is (stream order) | 1/38 |
+| DFS pre-order (== stream order here) | 1/38 |
+| reversed siblings | 1/38 |
+| sorted row-major by transform (y, x) | 0/38 |
+
+The same test on the other three: LineBars 5/20 regardless, Pie Chart 3/16 at
+best, Circles 1/44. So the reference's order is not stream, not reversed, not
+tree pre-order, and not layout order.
+
+**Prerequisite to go further:** the reference stream needs a stable drawable
+identity per `drawPath` (object id or name), not just a composed transform. With
+identity, order becomes a matching problem with a checkable answer; without it,
+every candidate order is judged through a proxy that repeats colours 30+ times
+per artboard. That is a small patch to `oracle/dump.cpp`/`record.hpp` (thread the
+owning shape's id into the recorded draw), and it should come before any further
+ordering work.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
