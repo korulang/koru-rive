@@ -147,3 +147,23 @@ Our HBars=21/VBars=20 draws are the layout-box fill pass + text; the
 `fixtures/emptybind` at correct ab shows ours ~1 draw vs ref 8: the
 NuRive-branding `NestedArtboard` content does not expand — same class-1
 rule, now observed on an RML-authored file too (not just corpus demos).
+
+## Class-2 paint owner — NAMED (rive-cpp source evidence)
+
+`rive-cpp/src/foreground_layout_drawable.cpp:45-95`:
+`ForegroundLayoutDrawable::draw` iterates **`m_ShapePaints`** — the FLD's
+OWN Fill/Stroke children — and draws them over **the parent
+LayoutComponent's outline at the layout's transform**
+(`parent()->as<LayoutComponent>()`; comment: "it has no box of its own:
+it paints the parent layout's outline, at the layout's transform, with
+its own paints"). `paintedWorldBounds` confirms: bounds = parent's.
+
+So paint owner = FLD's own shape-paint children; geometry owner = parent
+LayoutComponent's computed layout rect. NOT LayoutComponentStyle, NOT
+DataBindContext directly (binds may feed the paints' props).
+
+Open linkage check for the fix side: my object census found 0 children
+under the 30 data_viz FLDs — either those particular FLDs are unpainted
+(invisible items) or the Fill/Stroke→FLD parent edge resolves via a
+slot/id path the census regex missed. Verify by grepping inspect output
+for fills whose resolved parent is a 513 before writing the emit arm.
