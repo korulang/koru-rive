@@ -640,6 +640,26 @@ closest guess.
 of draw that follows (fill / stroke / text / nested) — cheap on the dump, and it
 would say which source contributes how many before implementing any of them.
 
+## The clip gap is TEXT clipping (2026-11-18)
+
+Classifying the reference's `clipPath` lines by the draw that follows them, on
+data_viz:
+
+| artboard | clips | before a fill draw | before a text draw |
+|---|---:|---:|---:|
+| Main | 37 | 4 | **33** |
+| ColorGuide | 6 | 0 | **6** |
+
+So the clip gap is **text**, not feathers — rive clips a text run to its layout
+box (`text.cpp` calls `clipPath` before drawing glyphs). That displaces the
+feather hypothesis I had carried for several rounds; the four fill-clips on Main
+*are* feathers and are a small remainder.
+
+**But the clip rect is layout-derived.** Emitting a clip from the text object's
+stored `width`/`height` (keys 285/286) changed the clip count by zero — those
+texts are auto-sized, so their box comes from the layout pass. Third question
+today that lands on the same dependency.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
