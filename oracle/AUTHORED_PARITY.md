@@ -361,9 +361,19 @@ The obvious repair — scope the match with `owningArtboard()` — **does not wo
 cannot attribute them. Measured: G_Meter 66 → 68 but Main 628 → 630, a wash in
 total error, partly from *suppressed* matches rather than correct ones. Reverted.
 
-The correct scope has to come from the animation→artboard mapping (the same
-machinery `smActiveAnimIdx` needs), not from object parentage. Until then the
-defect stands: slot collisions can cull drawables in any multi-artboard file.
+The correct scope *is* available — `animArtboard()` resolves "nearest preceding
+Artboard in stream order", which works for flat keyframe groups — so it was
+implemented exactly that way (a module-level `g_abScope` set by
+`collectArtboardOps`, checked in `hasKeyframed`). **It changed nothing:**
+car_widgets measured 694 draws before and after. So the cross-artboard match was
+not what culled those three shapes after all; the likely cause is the keyframe
+**time mapping** (animation fps vs our 30fps ticks), which another session is
+actively changing in this same file. The scoping was reverted as a no-op rather
+than left in on principle.
+
+Until the time mapping settles, the defect stands: slot collisions *can* cull
+drawables in a multi-artboard file, and the G_Meter −3 is unexplained by
+artboard scoping.
 
 ## Remaining deltas
 
