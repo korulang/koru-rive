@@ -129,6 +129,23 @@ def ref_blocks(path, frames, dt, dump_bin, timeout):
     return blocks, artboards, None
 
 
+def _phash(points):
+    """Stable identity for a path: its vertex list, quantised.
+
+    Both streams print vertices, so this needs no change to the reference dumper
+    and is far sharper than colour (which repeats 30+ times per artboard).
+    """
+    # Set-of-points, not sequence: rive-cpp omits each contour's terminal point
+    # when PRINTING (Skia RawPath convention) while the geometry keeps it, so a
+    # sequence hash would report every closed path as different. Deduping also
+    # absorbs the duplicated closing vertex.
+    import hashlib
+    h = hashlib.sha1()
+    for x, y in sorted({(round(x, 1), round(y, 1)) for x, y in points}):
+        h.update(f"{x},{y};".encode())
+    return h.hexdigest()[:12]
+
+
 def _affine_mul(m, n):
     """m then n, in the row-vector form rive's transform(a,b,c,d,e,f) uses."""
     a, b, c, d, e, f = m
@@ -213,6 +230,7 @@ def ref_digest(lines):
                 d["points"] += 1
                 d["draws"][-1].append((float(parts[-2]), float(parts[-1])))
     d["bboxes"] = [_bbox(p) for p in d["draws"]]
+    d["phashes"] = [_phash(p) for p in d["draws"]]
     return d
 
 
@@ -346,6 +364,7 @@ def ours_digest(path, ab, frame, koruc, root, timeout):
             d["draws"].append(list(buf))
             buf = []
     d["bboxes"] = [_bbox(p) for p in d["draws"]]
+    d["phashes"] = [_phash(p) for p in d["draws"]]
     return d, None
 
 
@@ -385,10 +404,15 @@ def first_divergence(ref, ours):
         rk = _c2.Counter(_q(k) for k in ref.get("keys", []))
         ok = _c2.Counter(_q(k) for k in ours.get("keys", []))
         ident = sum((rk & ok).values())
+        import collections as _c3
+        pr = _c3.Counter(ref.get("phashes", []))
+        po = _c3.Counter(ours.get("phashes", []))
+        geo = sum((pr & po).values())
+        geo_n = len(ref.get("phashes", []))
         n_keys = len(ref.get("keys", []))
         return "draw-order", (f"same {len(ref['colors'])} drawables, different order "
                               f"(colour match {match}/{len(ref['colors'])}, "
-                              f"identity-set match {ident}/{n_keys}, first diff at {first})")
+                              f"identity-set {ident}/{n_keys}, first diff at {first})")
     if ref["styles"] != ours["styles"]:
         import collections as _c
         if _c.Counter(ref["styles"]) != _c.Counter(ours["styles"]):

@@ -577,7 +577,22 @@ tree pre-order, and not layout order.
 identity per `drawPath` (object id or name), not just a composed transform. With
 identity, order becomes a matching problem with a checkable answer; without it,
 every candidate order is judged through a proxy that repeats colours 30+ times
-per artboard. That is a small patch to `oracle/dump.cpp`/`record.hpp` (thread the
+per artboard. **Tried instead: geometry identity.** Both streams carry path vertices, so
+hashing them would give identity without touching C++ — but the conventions
+differ in two ways that make a naive hash useless (measured 0–1/38):
+
+- rive-cpp omits each contour's **terminal point when printing** (Skia RawPath
+  convention) while the geometry keeps it — the code already documents this in
+  `buildPath`;
+- our op stream carries cubic segments as **three** points (in, out, end) where
+  the text form prints two.
+
+Set-of-points normalisation fixes neither fully (1/38 after deduping), so
+geometry identity needs its own normalisation pass before it can be used. The
+`(CTM, colour, style)` identity remains the best available — and it already says
+ColorGuide's drawables are identical, ordered differently.
+
+That is a small patch to `oracle/dump.cpp`/`record.hpp` (thread the
 owning shape's id into the recorded draw), and it should come before any further
 ordering work.
 
