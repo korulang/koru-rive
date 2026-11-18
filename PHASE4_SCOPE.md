@@ -1761,3 +1761,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   textIdx (block0 vs block1 earlier: block1 matched ti125
   coords 1.4091/1.9318 — CHECK block0's first coords vs
   ti131/others to assign both 2569s definitively).
+
+- ATTRIBUTION DATA: all family texts emit IDENTICAL contour
+  sequences (same string) — coords can't distinguish members.
+  BUT golden's two 2569 blocks have DIFFERENT y-offsets:
+  block0 baseline ~y39, block1 ~y2 -> different box heights
+  or valign -> the pair is NOT uniformly {125,131} short-box.
+  Follow-path path-length attribution gains weight. NEXT:
+  resolve 547-P778 targets -> path objects -> lengths; two
+  shortest = golden pair. ALSO: block0's ~39 y-offset may
+  match a 45.52-box text's valign positioning — cross-check
+  golden 2691 blocks' y-offsets per box-height group to learn
+  golden's valign convention (needed anyway for coord parity).
