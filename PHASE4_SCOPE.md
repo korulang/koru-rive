@@ -978,3 +978,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   vertex bbox under RIVE_TRACE_DRAW and compare vs traced
   (frac,pos,tan) — isolates whether slot reaches emitOps or
   row artboard adds its own offset/scale.
+
+- constrainList bisect RESULT: all 16 rows emit ops (lfp fires
+  per row, slot->op6->collectArtboardOps recursion confirmed).
+  Rendered ink: ~4/15 traced windows show blobs AT the traced
+  pos (rows 3,6 of list20; 1,4 of list24) — rest show ZERO ink
+  in-window but scattered ink elsewhere on canvas. Signature:
+  steep-tangent rows rotate content away from row-origin windows
+  -> rotation pivot / row-local offset composition residual.
+  Row content local coords vs pivot assumption is the open
+  question (does row artboard center content at origin?).
+  emitOps is debug-only (tracing-gated); real path = collectOps
+  op6 CTM + recursion. DRAW trace prints object-hierarchy world
+  NOT the CTM-composed transform — t=0,0 expected, not a bug.
