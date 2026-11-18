@@ -1821,3 +1821,16 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   the mechanism is advance-width and exact k can then be
   sourced (kern sum or fontScale). ONE build+4 runs settles
   it vs full GPOS implementation.
+
+- SWEEP VERDICT — MECHANISM CONFIRMED: RIVE_ADV_K=1.045-1.05
+  makes the ENTIRE static section verb+pt EXACT vs golden —
+  only residual is unrelated (12,9)g vs (10,8)o small path.
+  ti-pair emits exactly 2569v; all siblings hold 2691v.
+  Advance model gap is real and uniform ~+4.7%. NEXT: find
+  the actual source — candidates: fontScale prop on run,
+  upem/scale rounding, or golden advance = hmtx + fixed
+  letter gap. Check text.cpp fontScale computation + whether
+  run carries a scale prop; implement REAL advance (not the
+  env k) then remove RIVE_ADV_K hook. NOTE: advK currently
+  only scales WRAP pre-pass advance, not pen/emission —
+  coords still match because wrap only decides line breaks.
