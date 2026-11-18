@@ -1773,3 +1773,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   match a 45.52-box text's valign positioning — cross-check
   golden 2691 blocks' y-offsets per box-height group to learn
   golden's valign convention (needed anyway for coord parity).
+
+- P778 RESOLVED: TextTargetModifier.targetId — values
+  {6,1,13,84,112} are path-target ids for modifier texts
+  {63,73,90,131,159} respectively (order: 72->63? verify
+  group->text map). NEXT: map each targetId to its path
+  object (shape/path vertex list), measure path length via
+  existing pathMeasure/flattenPath machinery; texts on the
+  two shortest paths = golden's 2569 pair; wrap width for
+  follow-path text = f(path length) per text.cpp — find
+  where paragraph maxWidth derives from follow-path
+  (text.cpp ~840 resetTextFollowPath junction) then feed it
+  into t_box_w in the wrap pre-pass.
