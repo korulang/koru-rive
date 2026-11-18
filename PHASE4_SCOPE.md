@@ -1331,3 +1331,12 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   pending (ab-index scope). Residual: multi-trim chaining,
   fill-mode closeShape, cubic-preserving split (currently
   flattened lines — same 0.25 tol strokeVerbs uses).
+
+- TRIM VERDICT DATA: trim.riv has exactly ONE TrimPath —
+  mode=2 (synchronized), NO start/end/offset props -> defaults
+  0/1/0 = identity trim, so the 6-pathop stroke output is
+  CORRECT-by-default, not a partial-trim bug. The golden's 31
+  verbs=0 drawPaths belong to other drawables/scope. Residual
+  question narrows to: does ref treat absent end(115) as 0
+  (empty) rather than 1 (full)? Check trim_path.riv (the
+  animated fixture) for keyed 114/115 to confirm defaults.
