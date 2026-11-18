@@ -2308,6 +2308,8 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
                 if (isA) { animId = stateAnimId.items[i]; break; }
             }
         }
+        if (std.posix.getenv("RIVE_NO_ANIM") != null) return -1; // EXPERIMENT
+        if (std.posix.getenv("RIVE_TRACE") != null) std.debug.print("smActiveAnim ab={d} sm={d} animId={d}\n", .{ abIdx, smi, animId });
         if (animId >= 0) return artboardAnimAt(r, abIdx, animId);
         return -1;
     }
@@ -5212,7 +5214,22 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
             // opacity 0 = object hidden by SM — skip the draw entirely.
-            const op: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            const opSelf: f32 = if (frame >= 0 and hasKeyframed(r, so.slot, 18)) keyframedValue(r, so.slot, 18, frame) else propF(so.props, 18, 1);
+            // Ancestor opacity multiplies down the tree: rive-cpp hides a whole
+            // subtree when a Node's opacity is 0 (car_widgets TIRE PRESSURE's
+            // red band sits under a Node with opacity 0.000 and we drew it).
+            var aop: f32 = 1;
+            var anc: i64 = so.parent_obj;
+            var ahop: usize = 0;
+            while (anc >= 0 and ahop < 64) : (ahop += 1) {
+                const ao = &r.objects[@intCast(anc)];
+                if (ao.type_key == 1) break;
+                aop *= propF(ao.props, 18, 1);
+                if (aop <= 0) break;
+                anc = ao.parent_obj;
+            }
+            if (aop <= 0) continue;
+            const op: f32 = opSelf * aop;
             if (op <= 0) continue;
             const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
             color = (color & 0x00FFFFFF) | (oa << 24);
