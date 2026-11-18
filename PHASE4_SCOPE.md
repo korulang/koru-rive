@@ -1000,3 +1000,13 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   absolute-vs-relative) before vertex-level bisect continues.
   ink blobs (~1000px/60x40win) = MULTIPLE small rows overlapping
   or row+stroke combos, not single big rects.
+
+- constrainList SMOKING GUN: ops-stream k=6 transforms for
+  rows show e=0 (x-translation ZERO) with rotation — rows
+  collapse to x~0 column = the render bug. Traced pos.x=25..
+  471 never reaches so.e. Check: (a) is the e=0 k=6 the slot
+  or an inner artboard/clip transform? (b) so.e=slot[4] —
+  Mat2 idx4=e; tB[4]=pm.pos.x set correctly in
+  listFollowPathWorld? (c) trsCompose(rot,1,1,0,0) then
+  tB[4]/[5] overwrite — verify no aliasing. Line 27 of
+  clfp_ops.txt (frame-8 dump) is the suspect op.
