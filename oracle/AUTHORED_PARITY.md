@@ -696,6 +696,17 @@ So the layout project starts with a **map, not a solver**: which drawable comes
 from which regime, per artboard. That is a day of work, and it should be scoped
 explicitly rather than started inside a round.
 
+## Artboards carry their own transform (checked, not the offset)
+
+Every chart artboard has `Node.x = -780` and its own `Node.y`
+(HorizontalBars 207, ColorGuide 2224, VerticalBars -29, LineBars 408). Worth
+recording because it is a plausible source of the constant offset — and it is
+not the one: our bars are `+20 x / -118 y` from the reference, where applying the
+artboard translation would move them by `-780 / +408`.
+
+So the artboard transform is a real property our emission ignores, but it is not
+what explains LineBars. Recorded so the next pass does not re-derive it.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
