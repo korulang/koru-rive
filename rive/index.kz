@@ -5106,6 +5106,28 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         out.append(alloc, im1) catch {};
         out.append(alloc, op0(7)) catch {};
     }
+    // ForegroundLayoutDrawable(513) draws a rect from its parent LayoutComponent
+    // box, painted black. Layout solving is not implemented, so the box is the
+    // parent's stored width/height — enough for the chart artboards' bars.
+        for (r.objects, 0..) |*fo, fi| {
+            if (fo.type_key != 513) continue;
+            if (owningArtboard(r, fi) != abIdx) continue;
+            const pl = &r.objects[@intCast(fo.parent_obj)];
+            const fw = propF(pl.props, 7, 0);
+            const fh = propF(pl.props, 8, 0);
+            if (fw <= 0 or fh <= 0) continue;
+            const fwm = effectiveWorld(r, fi, frame);
+            out.append(alloc, op0(0)) catch {};
+            var f0 = op0(1); f0.x1 = 0; f0.y1 = 0; out.append(alloc, f0) catch {};
+            var f1 = op0(2); f1.x1 = @floatCast(fw); f1.y1 = 0; out.append(alloc, f1) catch {};
+            var f2 = op0(2); f2.x1 = @floatCast(fw); f2.y1 = @floatCast(fh); out.append(alloc, f2) catch {};
+            var f3 = op0(2); f3.x1 = 0; f3.y1 = @floatCast(fh); out.append(alloc, f3) catch {};
+            out.append(alloc, op0(5)) catch {};
+            var fm = op0(6); fm.a = fwm[0]; fm.b = fwm[1]; fm.c = fwm[2]; fm.d = fwm[3]; fm.e = fwm[4]; fm.g = fwm[5]; out.append(alloc, fm) catch {};
+            var fd = op0(8); fd.style = 1; fd.color = 0xFF000000; fd.join = -1; fd.cap = -1; fd.eo = 0; out.append(alloc, fd) catch {};
+            out.append(alloc, op0(7)) catch {};
+        }
+
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;

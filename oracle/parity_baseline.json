@@ -47,19 +47,19 @@
     "HorizontalBars (idx 390)": {
       "clips_ours": 0,
       "clips_ref": 12,
-      "ours": 22,
+      "ours": 34,
       "ref": 40
     },
     "LineBars (idx 1166)": {
       "clips_ours": 1,
       "clips_ref": 1,
-      "ours": 20,
+      "ours": 26,
       "ref": 20
     },
     "Main (idx 315)": {
       "clips_ours": 3,
       "clips_ref": 38,
-      "ours": 172,
+      "ours": 202,
       "ref": 199
     },
     "Pie Chart (idx 1897)": {
@@ -71,7 +71,7 @@
     "VerticalBars (idx 927)": {
       "clips_ours": 0,
       "clips_ref": 7,
-      "ours": 21,
+      "ours": 33,
       "ref": 31
     }
   },

@@ -205,29 +205,36 @@ recorded colour for a gradient paint is per-drawable (purples like `472f62`,
 stop colour (`GradientStop.colorValue`, key 38) as far as this dump shows. That
 needs its own probe against a single gradient drawable.
 
-## ForegroundLayoutDrawable — investigation notes (2026-11-18, unresolved)
+## ForegroundLayoutDrawable — landed (2026-11-18)
 
-The chart artboards' deficits (HorizontalBars −18, VerticalBars −10) are the
-`ForegroundLayoutDrawable`(513) class. Findings so far, all measured:
+`ForegroundLayoutDrawable`(513) now draws a rect from its parent
+LayoutComponent's stored `width`(7)/`height`(8), painted black. No layout solver
+is involved: the chart artboards' boxes are already in the file, so a solver was
+never the prerequisite — only the emission was missing.
 
-- 30 FLD nodes exist: 12 each in HorizontalBars(390) and VerticalBars(927), the
-  rest elsewhere. They are `props=1` (parentId only) — no geometry of their own.
-- Their parent chains **do** terminate at their chart artboard
-  (`407 → 397 → 395 → 394 → 392 → 390:Artboard`), so artboard attribution is
-  not the problem.
-- The parent `LayoutComponent` carries `width`(7)/`height`(8) — keys confirmed
-  against the dump — so a bounding rect is available without a solver.
-- An env-gated experiment that emitted such a rect per FLD produced **no change
-  in the op count** (22 before and after, reference 40). It compiled and ran, so
-  either the block did not execute or its guard rejected every FLD. That is
-  unresolved and needs a probe that can report whether the emission runs (a
-  trace line), not another guess.
+| artboard | ref | before | after |
+|---|---:|---:|---:|
+| data_viz Main | 199 | 172 | **202** (+3) |
+| HorizontalBars | 40 | 22 | 34 (−6) |
+| VerticalBars | 31 | 21 | 33 (+2) |
+| LineBars | 20 | 20 | 26 (+6) |
+| Data | 45 | 46 | 46 (+1) |
 
-Gradient paint colour, likewise unresolved: the reference records per-drawable
-colours for gradient draws (`472f62`, `3f2958`, `442d5e` in data_viz; black in
-car_widgets) that do **not** appear among the gradient's stop colours
-(`GradientStop.colorValue`, key 38 — the stops are values like `0x38ffffff`,
-`0xffd311`). Stop-based resolution was the obvious hypothesis and it is wrong.
+Main's error drops from −27 to +3. The residual is now overshoot on two
+artboards (+2 LineBars, +6 in the second run) — some FLDs should not draw, or
+draw once rather than per node — which is a culling question, not a geometry
+one.
+
+Two things this cost, worth recording:
+
+- The first attempt was silently dead because the pass was inserted *inside*
+  the shape loop; a standalone pass plus a trace line proved it runs. When an
+  experiment changes nothing, prove it executes before theorising about guards.
+- The run reported `LineBars: ours-unavailable (backend execution failed)` and
+  the very next isolated run of the same artboard succeeded. A transient
+  toolchain failure is not a regression — check it alone before believing it.
+
+Gradient paint colour remains open and is *not* stop-derived (see below).
 
 ## Remaining deltas
 
