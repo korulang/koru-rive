@@ -1383,3 +1383,11 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   Draw ORDER also permutes vs golden (z-order question,
   separate). This is THE vertex-exact frontier specimen —
   smallest possible delta, uniform signature.
+
+- +1 PT ROOT CAUSE NARROWED: verbs counts MATCH golden
+  exactly (1337=1337 etc.) — geometry/verb structure identical.
+  The +1 is in PRINTED pts only: pathPrintedPoints suppresses
+  each contour's terminal point; ours suppresses one FEWER ->
+  isTailSegment/pathPrintedPoints off-by-one (extra contour or
+  verb-5 boundary miscount), NOT a geometry bug. Fix site =
+  pathPrintedPoints/isTailSegment in index.kz (~1845).
