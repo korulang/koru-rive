@@ -13,6 +13,7 @@ std/io:print.ln("render_clfp: start")
             |> libs/canvas:transform.push(f, a: 5.494505, b: 0.0, c: 0.0, d: 5.494505, e: 0.0, g: 107.1428)
             |> kr/rive:open(path: "/Users/larsde/src/koru-rive/rive-cpp/tests/unit_tests/assets/component_list_follow_path.riv")
             | loaded r
+                |> kr/rive:vm.bind(r, vm: 2, inst: 0)
                 |> kr/rive:ops(r, ab: 74, frame: -1)
                     ! op o |> kr/probe:step(o, f)
                     | done n |> std/io:print.ln("ops {{ n:d }}") |> libs/canvas:transform.pop(f) |> kr/rive:free(r)

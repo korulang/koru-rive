@@ -9,6 +9,8 @@ std/build:requires {
     exe.linkFramework("Metal");
     exe.linkFramework("Foundation");
     exe.linkFramework("CoreFoundation");
+    exe.linkFramework("CoreGraphics");
+    exe.linkFramework("ImageIO");
 }
 std/io:print.ln("render_knm_clip: start")
 |> libs/canvas:window.open(width: 500, height: 500, title: "knm clip")
@@ -16,7 +18,7 @@ std/io:print.ln("render_knm_clip: start")
     |> libs/canvas:frames(win: w, count: 1)
         ! frame f
             |> libs/canvas:metal.paths(on: 1)
-            |> libs/canvas:window.clear.color(r: 1.0, g: 1.0, b: 1.0)
+            |> libs/canvas:window.clear.color(r: 0.10196078, g: 0.10196078, b: 0.14901961)
             |> kr/rive:open(path: "/Users/larsde/src/koru-rive/rive-cpp/tests/unit_tests/assets/clip_tests.riv")
             | loaded r
                 |> kr/rive:ops(r, ab: 42, frame: -1)

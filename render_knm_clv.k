@@ -9,6 +9,8 @@ std/build:requires {
     exe.linkFramework("Metal");
     exe.linkFramework("Foundation");
     exe.linkFramework("CoreFoundation");
+    exe.linkFramework("CoreGraphics");
+    exe.linkFramework("ImageIO");
 }
 std/io:print.ln("render_knm_clv: start")
 |> libs/canvas:window.open(width: 400, height: 400, title: "knm clv")

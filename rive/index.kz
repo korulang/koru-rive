@@ -2841,7 +2841,6 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
     }
     var p = o.parent_obj;
     var depth: usize = 0;
-    var rootAb: i64 = -1;
     while (p >= 0 and depth < 32) : (depth += 1) {
         const po = &r.objects[@intCast(p)];
         if (isNodeType(po.type_key)) {
@@ -2849,10 +2848,14 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
                 return matMul(constrainedWorld(r, @intCast(p), frame), acc);
             }
             // Artboard (type_key 1) is the coordinate root for its
-            // content — its own Node.x/y applies only in the
-            // PARENT's instantiation space, not internally.
+            // content — its own Node.x/y applies only in the PARENT's
+            // instantiation space, not internally. Do NOT bake the
+            // artboard origin here: collectOps omits the origin wrapper,
+            // and layoutOffsetOf already carries the pad to each child;
+            // adding (pad - origin) shifted leaf text left/up (cl2 /
+            // clfp_item).
             if (po.type_key == 1) {
-                rootAb = p;
+                // coordinate root: no transform
             } else if (po.type_key == 409) {
                 acc = matMul(layoutOffsetOf(r, @intCast(p)), acc);
             } else {
@@ -2860,31 +2863,6 @@ fn effectiveWorld(r: *const Riv, idx: usize, frame: i64) Mat2 {
             }
         }
         p = po.parent_obj;
-    }
-    // layout-managed artboard: children live in pad-inset space —
-    // golden composes translate(pad - origin*intrinsicSize) at the
-    // artboard boundary (Item text: 8-25.7051, 8-20.0996)
-    if (rootAb >= 0) {
-        const ra = &r.objects[@intCast(rootAb)];
-        var hasLayout = false;
-        for (r.objects, 0..) |lo, li| {
-            if (lo.type_key == 409 and owningArtboard(r, li) == @as(usize, @intCast(rootAb))) { hasLayout = true; break; }
-        }
-        if (hasLayout) {
-            const es = artboardIntrinsicSize(r, @intCast(rootAb), propF(ra.props, 7, 0), propF(ra.props, 8, 0));
-            const ox = propF(ra.props, 11, 0) * es.w;
-            const oy = propF(ra.props, 12, 0) * es.h;
-            if (ox != 0 or oy != 0) {
-                // pad from layout styles parenting this artboard's LayoutComponents
-                var padL: f32 = 0; var padT: f32 = 0;
-                for (r.objects) |ls| {
-                    if (ls.type_key != 420) continue;
-                    padL = @max(padL, propF(ls.props, 512, 0));
-                    padT = @max(padT, propF(ls.props, 514, 0));
-                }
-                acc = matMul(.{ 1, 0, 0, 1, padL - ox, padT - oy }, acc);
-            }
-        }
     }
     return acc;
 }
@@ -3867,6 +3845,14 @@ fn hmtxAdvance(b: []const u8, gid: u32) f32 {
 var g_rowVmid: i64 = -1;
 var g_rowInstOrd: i64 = -1;
 var g_rowIdx: i64 = -1;
+// Explicit ViewModel-instance binding (kr/rive:vm.bind). Without this and
+// without row scope, a data-bound run keeps its template text — the
+// browser's behavior for a standalone artboard with no bound instance.
+// The old fallback to "first instance of this ViewModel" was wrong for
+// cl1_item (template "text" rendered as the first row's "THREE").
+var g_vm_bound: bool = false;
+var g_vm_vmid: i64 = -1;
+var g_vm_inst: i64 = -1;
 // Color keyframes keep animating inside row artboards even though their
 // transforms render at base pose (frame=-1): cl2's item fill 0xffcccccc
 // keyframes to black while geometry stays put. cf = frame>=0 ? frame :
@@ -3970,7 +3956,16 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                 // Nth instance of this ViewModel (only when the bind's
                 // viewModelId matches the item's own).
                 var wantOrd: i64 = -1;
-                if (g_rowInstOrd >= 0 and g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                if (g_rowInstOrd >= 0) {
+                    if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
+                } else if (g_vm_bound) {
+                    if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
+                    wantOrd = g_vm_inst;
+                } else {
+                    // No row scope, no explicit binding: the run keeps the
+                    // template text (cl1_item's reference "text").
+                    return null;
+                }
                 var instIdx: usize = 0;
                 var haveInst = false;
                 var seen: i64 = 0;
@@ -4220,6 +4215,18 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
     const scale: f64 = @as(f64, fontSize) / @as(f64, upem);
     const hh2 = sfntFind(font, tag4("hhea")) orelse return false;
     const asc: f64 = @as(f64, @floatFromInt(beS16(font, @as(usize, @intCast(hh2.off)) + 4))) * scale;
+    const desc: f64 = @as(f64, @floatFromInt(beS16(font, @as(usize, @intCast(hh2.off)) + 6))) * scale;
+    const gap: f64 = @as(f64, @floatFromInt(beS16(font, @as(usize, @intCast(hh2.off)) + 8))) * scale;
+    // Text layout: align(281)/sizing(284)/width(285)/height(286)/
+    // verticalAlign(685). Fixed-width and fixed-height boxes use the
+    // authored box, not the glyph advance; without this, centered text
+    // draws from the box's left edge (cl2 digits ~19 px left).
+    const tobj = &r.objects[textIdx];
+    const t_align = propU(tobj.props, 281, 0);
+    const t_sizing = propU(tobj.props, 284, 0);
+    const t_box_w = propF(tobj.props, 285, 0);
+    const t_box_h = propF(tobj.props, 286, 0);
+    const t_valign = propU(tobj.props, 685, 0);
     _ = frame;
     var pen: f64 = 0;
 
@@ -4292,6 +4299,34 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         }
         pen += @as(f64, hmtxAdvance(font, gid)) * scale;
     }
+    // Horizontal/vertical placement inside the authored text box. The
+    // glyph path is built from the box's top-left, so offset it by the
+    // alignment slack. autoWidth (0) has no box; center is 2, right 1,
+    // logical end 4. Vertical: top 0, bottom 1, middle 2.
+    const text_w: f64 = pen;
+    const line_h: f64 = asc - desc + gap;
+    var xoff: f64 = 0;
+    var yoff: f64 = 0;
+    if (t_sizing != 0 and t_box_w > 0) {
+        xoff = switch (t_align) {
+            1, 4 => @as(f64, t_box_w) - text_w,
+            2 => (@as(f64, t_box_w) - text_w) * 0.5,
+            else => 0,
+        };
+    }
+    if (t_sizing != 0 and t_box_h > 0) {
+        yoff = switch (t_valign) {
+            1 => @as(f64, t_box_h) - line_h,
+            2 => (@as(f64, t_box_h) - line_h) * 0.5,
+            else => 0,
+        };
+    }
+    if (xoff != 0 or yoff != 0) {
+        for (pts.items) |*p| {
+            p.x += @floatCast(xoff);
+            p.y += @floatCast(yoff);
+        }
+    }
     if (tracing()) {
         var vp: usize = 0;
         for (verbs.items) |v| {
@@ -4359,8 +4394,19 @@ fn emitQuadCubic(alloc: std.mem.Allocator, verbs: *std.ArrayList(u8), pts: *std.
 | failed string
 
 ~proc open|zig {
+    g_vm_bound = false;
+    g_vm_vmid = -1;
+    g_vm_inst = -1;
     const r = decodeImpl(path) orelse return .{ .failed = "not a .riv or truncated" };
     return .{ .loaded = r };
+}
+
+~pub tor vm.bind { r: *Riv<loaded>, vm: i64, inst: i64 }
+~proc vm.bind|zig {
+    _ = r;
+    g_vm_bound = true;
+    g_vm_vmid = vm;
+    g_vm_inst = inst;
 }
 
 ~pub tor inspect { r: *Riv<loaded> }

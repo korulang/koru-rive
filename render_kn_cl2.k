@@ -6,7 +6,15 @@ import kr/probe
 import kr/rive
 import std/build
 import std/io
-std/build:requires { exe.linkSystemLibrary("koruos_shim"); }
+std/build:requires {
+    exe.linkSystemLibrary("koruos_shim");
+    exe.linkSystemLibrary("objc");
+    exe.linkFramework("Metal");
+    exe.linkFramework("Foundation");
+    exe.linkFramework("CoreFoundation");
+    exe.linkFramework("CoreGraphics");
+    exe.linkFramework("ImageIO");
+}
 std/io:print.ln("render_kn_cl2: start")
 |> libs/canvas:window.open(width: 500, height: 500, title: "kn cl2")
 | win w
