@@ -752,3 +752,20 @@ rebuild) or a concurrent session is mid-edit. Also: untracked
 rive/rivgen_hello.kz (t4f riv2k output) independently breaks
 import kr/rive builds (KORU022) — moved to /tmp/rivgen_hello.kz.bak.
 Both must clear before parity probes compile again.
+
+## db_health_tracker expansion miss — skip-condition analysis
+
+Chain verified: obj[203] NestedArtboardLayout(artboardId=6->651) IS
+inside artboard 180's subtree (203->202LC->184LC->183LC->182LC->180);
+obj[690](artboardId=7->712) is inside 651's (690->688LC->678LC->676LC
+->655LC->651). Expansion code (index.kz ~5645) requires
+owningArtboard(instance)==abIdx — legal chain: emit 180 -> expand 203
+-> recurse 651 -> expand 690 -> recurse 712. Depth=2 << guard 8.
+All links type 452, artboardIds resolve to ordinals correctly.
+So the skip is NOT type/owner/depth — remaining suspects: (a)
+propU(197) field-type mismatch on one link (b) effectiveWorld
+degenerate -> emits transform but empty subtree (c) expansion fires
+but 712's content emits ~0 ops (PointsPath/stroke-path issue inside
+target). NEXT PROBE: opsdump ab:180 with tracing, count collectOps
+recursion or diff RIVE_NO_NESTED=1 op count — distinguishes
+"never entered 712" from "entered but emitted nothing".
