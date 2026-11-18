@@ -4132,6 +4132,7 @@ fn rowCountOf(items: []const ListRow) usize {
 // sits at startOffset + i*(distanceEnd-distance)/(count-1).
 // Returns the row's world transform, or null when no 625 constrains loIdx.
 fn listFollowPathWorld(r: *const Riv, loIdx: usize, rowIdx: usize, count: usize, frame: i64) ?Mat2 {
+    if (std.posix.getenv("RIVE_LFP_OFF") != null) return null;
     var cIdx: usize = 0; var found = false;
     for (r.objects, 0..) |c, ci| {
         if (c.type_key == 625 and c.parent_obj == @as(i64, @intCast(loIdx))) { cIdx = ci; found = true; break; }
@@ -4141,6 +4142,7 @@ fn listFollowPathWorld(r: *const Riv, loIdx: usize, rowIdx: usize, count: usize,
     const tgtSlot = propU(c.props, 173, -1);
     if (tgtSlot < 0) return null;
     const tgtIdx = findBySlot(r, cIdx, tgtSlot) orelse return null;
+    if (std.posix.getenv("RIVE_TRACE_LFP") != null) std.debug.print("lfp-target idx={d} type={d}\n", .{ tgtIdx, r.objects[tgtIdx].type_key });
     const alloc = std.heap.page_allocator;
     const streams = pathStreamsFor(r, tgtIdx, alloc) orelse return null;
     defer { alloc.free(streams.verbs); alloc.free(streams.pts); }
@@ -4947,6 +4949,7 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;
+        if (std.posix.getenv("RIVE_SKIP_TGT") != null and (si == 27 or si == 30)) continue;
         var pathVs = std.ArrayList(PV).empty;
         var verbs = std.ArrayList(u8).empty;
         var pts = std.ArrayList(V2).empty;
@@ -5336,6 +5339,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;
+        if (std.posix.getenv("RIVE_SKIP_TGT") != null and (si == 27 or si == 30)) continue;
         var pathVs = std.ArrayList(PV).empty;
         var verbs = std.ArrayList(u8).empty;
         var pts = std.ArrayList(V2).empty;

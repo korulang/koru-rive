@@ -1058,3 +1058,15 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   -20..20?) vs our emission adding +8,+8 inner offset that
   shifts the effective pivot. Cheap test: translate tB by
   -(inner offset) rotated, or emit row content centered.
+
+- constrainList RESIDUAL REFRAMED (decisive): ref_clfp has ZERO
+  green pixels; ours renders ~600+ green (18,161,0 = paint
+  ff12a100) — the row template's green background fill is
+  wrongly VISIBLE. Positions/transforms verified correct
+  end-to-end; the remaining bug is row-content visibility:
+  green shape should be hidden/occluded/transparent in ref.
+  Suspects: opacity-0 ancestor not honored inside row
+  artboard recursion, hidden flag on the shape, wrong paint
+  child selected, or z-order (white overlay should cover).
+  rowbind confirms all rows legitimately vmid=2 (numbered
+  list 0-9, single template) — not a binding bug.
