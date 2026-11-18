@@ -873,3 +873,22 @@ Ref resolves that slot ffac00, ours defaults 747474 -> color-VALUE
 resolution gap = color-source-dynamics class (animated/default
 color prop we don't evaluate), NOT a paint-assignment-order bug.
 Fix site = colorValue/animation eval leg, not traversal order.
+
+## Color-dynamics mechanism census (paint-divergent files)
+
+Per-file mechanism feeding unresolved colorValue:
+- KeyFrameColor tracks: advance_blend_mode(4), bindable_focus_tree_swap(6),
+  custom_property_trigger(1), layout_order_pointer_test(4),
+  listener_action_inputs(2), pause_nested_artboard(2).
+- VM/bind-driven: component_stateful_vm_instance_2 (ViewModelInstanceColor x2);
+  DataBindContext-heavy files (bindable_focus_tree_swap 11,
+  color_passthrough 11, pause_nested_artboard 9, layout_order_pointer 8,
+  data_binding_artboards 6) — bind-eval class.
+- Missing static colorValue (default/interpolated): 0-5 SolidColors per
+  file across most — light_switch=1, follow_path_path=1, ik_anim=0.
+- kfdouble-only (numeric anims, likely opacity/transform NOT color):
+  follow_path_path(19), ik_anim_test(31), scripted_path_effect_clip(4),
+  light_switch(2).
+Fix surface for eval leg: (1) KeyFrameColor sampling, (2) VM-color bind
+resolution, (3) SolidColor default when colorValue absent. kfdouble
+tracks are probably red herrings for color (opacity/transform).
