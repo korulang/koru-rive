@@ -1112,3 +1112,14 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   audit — find shape owning paint->SolidColor88, check its
   ancestor opacity chain + whether a same-slot sibling paint
   (white/gray) should win instead.
+
+- GREEN OBJECT CHAIN SOLVED: row74 subtree = Text(77/78/82,
+  number glyphs, WHITE color carrier 79=ffffffff) + Layout
+  components. GREEN = Fill obj88 (type20, parent_obj=75
+  LayoutComponent) -> color carrier 86 (type18, prop37=
+  ff12a100). It is a LAYOUT-ITEM BACKGROUND fill — the green
+  boxes are layout-managed drawables whose visible area depends
+  on layout solving. Ref shows zero green => ref's layout gives
+  that item ~zero area or different bounds; ours sizes it ->
+  green boxes. THIS IS THE t4f LAYOUT-SOLVER GAP MANIFESTING,
+  not a paint bug. Text is correctly white.
