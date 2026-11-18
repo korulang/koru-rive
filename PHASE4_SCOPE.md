@@ -919,3 +919,17 @@ a pixel verdict. Verdict labels are authoritative; images are the evidence.
   at ~line 6019; probe draw.path stroke arm ~line 5885.
   Ref: ref_clfp_c_t1.png, ours_mesh_t1.bmp; fails
   ink-mass 0.71 / ink-coverage 65.66% / AA 0.
+
+- ListFollowPathConstraint(625) — mesh gate last mile.
+  Props: distance(363-range shared?), distanceEnd(888),
+  distanceOffset(889), target slot, strength/orient likely
+  shared with FollowPath(165). Semantics (rive-cpp
+  list_follow_path_constraint.cpp): constrainList(list) —
+  startOffset = distanceOffset + distance; per-item offset
+  = startOffset + i * itemSpacing along pathMeasure of
+  target path; constrainAtOffset per TransformComponents.
+  Our gap: constrainedWorld handles 165 only; 625 needs
+  LIST-LEVEL eval — enumerate constrainable list items
+  (component_list rows), compute per-item arc offset,
+  compose path position+tangent into each item's world.
+  clfp rows currently emit x~0 (list at origin).
