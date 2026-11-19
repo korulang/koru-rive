@@ -986,6 +986,23 @@ whatever the id space is, the constraint must move this object only in y — and
 neither hypothesis does that. That is a sharper constraint on the answer than
 either failed attempt.
 
+**Correction (same round): the blocker is not the id space.** `targetId` 326
+resolves correctly through the per-artboard slot map to object 2419
+(`LayoutComponent`, 25 x 110). With rive's formula
+`target.world * translate(w*originX, h*originY)` and origin `(1.0, 0.5)`, the
+offset is `(25, 55)`, so the reference's constrained position `(156.2857,
+113.1582)` requires the target's world to be **`(131.29, 58.16)`**.
+
+Our `effectiveWorld` puts that target at **`(101.0, 0.5)`** — off by
+`(30.29, 57.66)`. That is a *layout position* error on one LayoutComponent, not an
+identity error: the constraint resolves its target fine, and applies the right
+origin offset, but the target itself sits in the wrong place.
+
+So constraints are gated on **layout**, and the numbers above say exactly how
+much: 30.29 in x, 57.66 in y, on a 25 x 110 box. That is a far better starting
+point than the id hypotheses (both now rejected) — and it corrects the earlier
+claim that constraints were blocked on ids.
+
 That is worth knowing before anyone starts the constraints work: it looks like a
 self-contained feature (100 instances, rive-cpp's math is 20 lines) and is
 actually gated on the reference's id space.
