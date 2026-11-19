@@ -952,6 +952,30 @@ implemented, and constraints are far smaller than Yoga. The plan is to implement
 `TransformConstraint` (and check `TranslationConstraint`/`RotationConstraint`
 counts the same way) before touching layout.
 
+## TransformConstraint: attempted, and blocked on target ids (2026-11-18)
+
+Implemented type-83 constraints on the emission path (`effectiveWorld` only
+handled FollowPathConstraint, type 165 — `hasConstraintChild` does not know 83).
+First version resolved the target with `findBySlot` and produced:
+
+    shape 2068: was (156.3, 56.5) -> became (101.0, 0.5)
+    reference:                       (156.28, 113.16)
+
+Wrong in a revealing way: **x was already correct before the constraint** and the
+constraint broke it, which means the target was resolved to the wrong object.
+`TargetedConstraint.targetId` is a **component id**, not a per-artboard slot;
+`findBySlot` cannot resolve it, and neither can anything else in our decoder —
+object ids are the same missing thing that blocks keyframe-group matching
+(G_Meter) and draw ordering.
+
+So constraints are **not** independent of the identity blocker: implementing them
+correctly needs the object-id space, the same gap already recorded three times.
+Reverted; decoder is byte-identical to HEAD again (Circles 44 draws).
+
+That is worth knowing before anyone starts the constraints work: it looks like a
+self-contained feature (100 instances, rive-cpp's math is 20 lines) and is
+actually gated on the reference's id space.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
