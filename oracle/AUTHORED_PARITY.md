@@ -1132,6 +1132,23 @@ currently fills the frame. The image, its provenance (driver `meshrender_clfp.k`
 this commit) and the note are all corrected, so the declared gap now states its
 measured size instead of a stale claim from an earlier build.
 
+**The triangle trace was lying, and fixing it named the culprit.** `tris n=… bbox=…`
+computed its bounds with only `ctm[1]*vy + ctm[5]`, ignoring the rotation and
+scale terms, so every triangle printed as a degenerate line (`(161,364)-(339,364)`
+— zero height). With the full affine transform, the first draw is:
+
+    tris n=2 ctmdepth=1 bbox=(0,0)-(500,500)
+
+a **full-frame quad**. Our op stream starts with a `ff313131` fill covering the
+whole artboard; its colour equals the gate's backdrop `(49,49,49)`, so the frame
+looks empty while its anti-aliased edge reaches all four corners — which is
+exactly why `ink-bbox` reported `(0,0,499,499)` while the dominant colour in our
+render is still the backdrop.
+
+Two separate facts, worth not conflating: that fill is one draw and the fixture is
+short of many — ours emits **29** draws for this artboard against the reference's
+**57**, so the mesh gate is failing on two axes at once.
+
 **First diagnosis: not the clips.** `meshops` emits `mclip` rects derived from
 the op stream; a full-frame clip painted as ink would explain the fill, so clip
 emission was gated off and the render repeated — **byte-identical ink coverage**
