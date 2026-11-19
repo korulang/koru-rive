@@ -361,6 +361,7 @@ def ours_digest(path, ab, frame, koruc, root, timeout):
             me = re.search(r"eo=(\d+)", line)
             d["rules"].append(int(me.group(1)) if me else 0)
             d["keys"].append((mat, d["colors"][-1], d["styles"][-1]))
+            d.setdefault("objs", []).append(len(d["keys"]) - 1)
             d["draws"].append(list(buf))
             buf = []
     d["bboxes"] = [_bbox(p) for p in d["draws"]]

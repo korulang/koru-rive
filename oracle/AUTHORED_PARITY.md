@@ -800,6 +800,33 @@ Every pair overlaps on ColorGuide, so order changes what is painted over what â€
 it cannot be dismissed as cosmetic, and the identity work stays justified rather
 than optional.
 
+## Ordering has structure after all (2026-11-18)
+
+Identity matching (composed CTM + colour + style) lets us recover the *permutation*
+the reference applies to our draw order. ColorGuide, our positions in reference
+order:
+
+    31, 37, 28, 26, 30, 27, 29, 36, 23, 21, 25, 22, 24, 35,
+    18, 16, 20, 17, 19, 34, ...
+
+That is not random, and not a simple reverse. It is **groups of five, drawn
+last-group-first, with an interloper after each group**:
+
+    28 26 30 27 29 | 36
+    23 21 25 22 24 | 35
+    18 16 20 17 19 | 34
+
+The five within a group follow offsets `+2, 0, +4, +1, +3` from the group base,
+and the interloper counts down (36, 35, 34) across groups. So the reference is
+walking the artboard's tree in some z/stack order: each group's items are
+permuted by a fixed rule and one element is painted after the group rather than
+with it.
+
+That is a decodable rule, and it is the first real structure found in ordering
+after four candidates failed. The next step is to extend this to all 38 draws and
+map positions back to object indices (roots, paints, groups) so the rule can be
+expressed as a traversal rather than a permutation.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
