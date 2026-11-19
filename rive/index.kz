@@ -2307,10 +2307,10 @@ fn smInputEventFrame(r: *const Riv, name: []const u8, frame: i64) i64 {
 }
 
 // ---- pointer input channel (INPUT_STACK.md slice 1) ----
-// Scheduled positional events, per-Riv. Same latest-event-at-or-before
-// semantics as g_smInputs, but keyed by the loaded Riv pointer so two
-// files can carry independent schedules. No eval consumer yet — slice 2
-// adds listener dispatch.
+// Scheduled positional events. Same latest-event-at-or-before semantics as the
+// SM input schedule on Riv.inputs, but kept in a pointer-keyed map rather than
+// on the handle — that is itself an R1 violation waiting for the same migration.
+// No eval consumer yet — slice 2 adds listener dispatch.
 const PtrEvent = struct { ab: i64, x: f64, y: f64, frame: i64, id: i64 };
 const PtrLog = struct { events: std.ArrayList(PtrEvent), seeded: bool };
 var g_ptrLogs = std.AutoHashMap(usize, *PtrLog).init(std.heap.page_allocator);
