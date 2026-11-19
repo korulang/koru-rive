@@ -1492,6 +1492,33 @@ So the golden's rows are unbound-default, while we resolve a bound colour. That 
 the opposite direction from every earlier "we miss data" finding: here we apply
 data the reference render did not.
 
+## FLD layout boxes were painted opaque black (2026-11-18)
+
+Diffing data_viz Main's colour multiset against its golden named two concrete
+problems, and the first is unambiguous:
+
+    missing: 66ffffff x6,  00000000 x24
+    extra:   ffffffff x9,  ff000000 x4, 99ff9502 x2, ...
+
+`ForegroundLayoutDrawable` (513) hard-coded `fd.color = 0xFF000000` — every layout
+box was opaque black regardless of its paint. It now takes the colour of its own
+paint (sibling Fill/Stroke), with the gradient rule applied (a gradient paint
+records `00000000`).
+
+Effect, measured on the multiset:
+
+| | before | after |
+|---|---:|---:|
+| extra `ff000000` | 28 | **4** |
+| missing `00000000` | 36 | **24** |
+
+Draw counts are unchanged (196 vs 199) — this was a colour defect, not a count one.
+Gates unchanged (32 PASS, 1 KNOWN, 0 FAIL) and joystick still op-identical.
+
+What remains of the colour divergence is an **alpha** problem: the reference records
+`66ffffff` where we record `ffffffff`, and we emit `99ff9502`-style colours the
+reference does not. That is the next thread, and it is separate from placement.
+
 ## The dumper does not materialise data-bound list rows (2026-11-18)
 
 Chasing why the reference draws no rows, the goldens were checked against the

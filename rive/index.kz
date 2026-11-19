@@ -6333,11 +6333,12 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             // No paint source, nothing to draw: the FLD's fill is a *sibling*
             // Fill under the same LayoutComponent. LineBars' six FLDs have none
             // and the reference draws none of them (that was the +6 overshoot).
-            var fpaint = false;
-            for (r.objects) |*fpb| {
+            var fpi: i64 = -1;
+            for (r.objects, 0..) |*fpb, fbi| {
                 if (fpb.parent_obj != fo.parent_obj) continue;
-                if (fpb.type_key == 20 or fpb.type_key == 24) { fpaint = true; break; }
+                if (fpb.type_key == 20 or fpb.type_key == 24) { fpi = @intCast(fbi); break; }
             }
+            const fpaint = fpi >= 0;
             if (!fpaint) {
                 if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP fld={d} why=no_paint\n", .{fi});
                 continue;
@@ -6350,8 +6351,20 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var f3 = op0(2); f3.x1 = 0; f3.y1 = @floatCast(fh); out.append(alloc, f3) catch {};
             out.append(alloc, op0(5)) catch {};
             var fm = op0(6); fm.a = fwm[0]; fm.b = fwm[1]; fm.c = fwm[2]; fm.d = fwm[3]; fm.e = fwm[4]; fm.g = fwm[5]; out.append(alloc, fm) catch {};
-            if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("FLD obj={d}\n", .{fi});
-            var fd = op0(8); fd.style = 1; fd.color = 0xFF000000; fd.join = -1; fd.cap = -1; fd.eo = 0; out.append(alloc, fd) catch {};
+            // The FLD paints with ITS paint's colour. Hard-coding 0xFF000000 made
+            // every layout box opaque black where the reference records the paint
+            // (data_viz Main: 28 extra ff000000 and 36 missing 00000000).
+            var fcolor: u32 = 0xFF747474;
+            for (r.objects) |*fg| {
+                if (fg.type_key == 18 and fg.parent_obj == fpi) fcolor = propColorAnimOr(r, fg, 37, frame, 0xFF747474);
+            }
+            var fgrad = false;
+            for (r.objects) |*fgg| {
+                if (fgg.parent_obj == fpi and (fgg.type_key == 17 or fgg.type_key == 22)) fgrad = true;
+            }
+            if (fgrad) fcolor = 0x00000000;
+            if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("FLD obj={d} color={x}\n", .{ fi, fcolor });
+            var fd = op0(8); fd.style = 1; fd.color = fcolor; fd.join = -1; fd.cap = -1; fd.eo = 0; out.append(alloc, fd) catch {};
             out.append(alloc, op0(7)) catch {};
         }
 
