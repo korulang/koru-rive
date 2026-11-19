@@ -827,6 +827,35 @@ after four candidates failed. The next step is to extend this to all 38 draws an
 map positions back to object indices (roots, paints, groups) so the rule can be
 expressed as a traversal rather than a permutation.
 
+## The permutation in object terms (2026-11-18)
+
+Mapping ColorGuide's 38 draws back to object ids (via `RIVE_TRACE_DRAW`, which
+prints them in emission order):
+
+    ref: 876 868 | 856 844 856 850 856 | 831 | 821 809 821 815 821 | 795 |
+         783 771 783 777 783 | 759 | 747 747 747 | 735 741 | 724 |
+         712 700 712 706 712 | 687 | 660 672 666 672 672 672
+
+The structure is now concrete:
+
+- **interlopers are single draws** and are *different kinds*: `876` is a Shape
+  parented directly to the artboard (`x=83.5`), `868`/`831` are Texts under
+  LayoutComponents, `687`/`660` are Shapes;
+- **groups are siblings under one parent**: `844, 850, 856` share parent `843`
+  (a Node), `809, 815, 821` share `808`, `771, 777, 783` share `770`-ish;
+- **one member is interleaved, not clustered**: the reference draws
+  `856, 844, 856, 850, 856` where we draw `856, 856, 856, 844, 850`.
+
+So the reference is not reordering shapes: it is walking the tree and painting
+each node's *repeated* child between its siblings, one pass per sibling. That is
+a traversal shape, not a sort — which is why stream, reverse, DFS and row-major
+orders all failed while the permutation itself looks regular.
+
+**Next:** dump the reference transforms for those five draws. If the three `856`
+draws carry different CTMs, the interleaving is per-sibling-instance and the rule
+is a nested walk; if they carry the same CTM, then `856` is being painted once
+per sibling deliberately (a stroke/shadow pass) and the rule is per-paint.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
