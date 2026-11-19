@@ -6503,6 +6503,7 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
         if (owningArtboard(r, li) != abIdx) continue;
         const items = listRowItems(r, li, alloc);
         defer alloc.free(items);
+        if (std.posix.getenv("RIVE_TRACE_ROWS") != null) std.debug.print("ROWS li={d} owner={d} n={d}\n", .{ li, owningArtboard(r, li), items.len });
         // Scroll clip: nearest LayoutComponent(409) ancestor with
         // clip=true (prop 196) bounds the rows — cl1 ScrollView
         // 460x300 at origin clips rows 6-8 below y=300.

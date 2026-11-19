@@ -1269,6 +1269,34 @@ That makes the fix rule-shaped rather than layout-shaped: a component list with 
 bound data should emit **no rows**, and the ten we emit are invented rather than
 misplaced.
 
+#### Correction: that discriminator was a mis-parse
+
+Re-reading the raw inspector output for the follow-path file:
+
+    obj[21] DataBindContext slot=-1 parentId=-1% props=3
+        DataBind.propertyKey (key 586, f0) = 800
+        DataBind.converterId (key 660, f0) = 1
+        DataBindContext.sourcePathIds (key 588, f1) = <2B>
+
+It **has** a source path, identical in shape to `component_list_1`'s. My earlier
+statement that it "carries no properties at all" came from a parser that dropped
+those lines. So `sourcePathIds` is not the discriminator and must not be used as
+one.
+
+What actually differs is the sibling: the follow-path list has a
+**`ListFollowPathConstraint`** (`targetId=10`, and `targetId=7` for the second
+list), which positions rows *along a path*. Trace confirms rows exist in both:
+
+    ROWS li=20 owner=18 n=10
+    ROWS li=24 owner=18 n=6
+
+Ten and six rows are real; we then place them all at `t=0.0,0.0` because we do not
+evaluate the list's follow-path constraint. Rive places them along the path, where
+they fall outside the artboard and are clipped — which is why it draws none.
+
+So the gap is **list-row placement via `ListFollowPathConstraint`**, not row
+existence.
+
 ### The discriminator: a DataBindContext with a source path
 
 Comparing the file that renders rows against the one that must not:
