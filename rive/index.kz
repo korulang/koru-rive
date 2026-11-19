@@ -1159,7 +1159,16 @@ const PropValue = union(enum) {
 
 const Prop = struct { key: u16, name: [:0]const u8, field: i8, value: PropValue };
 const RivObj = struct { type_key: u64, type_name: ?[:0]const u8, parent: i64, parent_obj: i64, style_obj: i64, slot: i64, props: []Prop };
-const Riv = struct { bytes: []u8, objects: []RivObj };
+const Riv = struct {
+    bytes: []u8,
+    objects: []RivObj,
+    // Per-handle leaf state (LEAF_CONTRACT R1: nothing about a leaf's state may
+    // live in process-global storage). vm.bind used to write module globals, so
+    // two open handles could not hold different bindings.
+    vm_bound: bool = false,
+    vm_vmid: i64 = -1,
+    vm_inst: i64 = -1,
+};
 
 fn readValue(b: []const u8, pos: *usize, field: i8) ?PropValue {
     switch (field) {
@@ -1758,9 +1767,9 @@ fn boundStaticProp(r: *const Riv, targetIdx: usize, propKey: u16, frame: i64) ?f
                     var wantOrd: i64 = -1;
                     if (g_rowInstOrd >= 0) {
                         if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                    } else if (g_vm_bound) {
-                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                        wantOrd = g_vm_inst;
+                    } else if (r.vm_bound) {
+                        if (r.vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = r.vm_inst;
                     } else return null;
                     break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
                 };
@@ -1833,9 +1842,9 @@ fn boundColorProp(r: *const Riv, targetIdx: usize, propKey: u16) ?u32 {
                     var wantOrd: i64 = -1;
                     if (g_rowInstOrd >= 0) {
                         if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                    } else if (g_vm_bound) {
-                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                        wantOrd = g_vm_inst;
+                    } else if (r.vm_bound) {
+                        if (r.vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = r.vm_inst;
                     } else return null;
                     break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
                 };
@@ -2620,9 +2629,9 @@ fn boundKfValue(r: *const Riv, kfIdx: usize) ?f32 {
                     var wantOrd: i64 = -1;
                     if (g_rowInstOrd >= 0) {
                         if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                    } else if (g_vm_bound) {
-                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                        wantOrd = g_vm_inst;
+                    } else if (r.vm_bound) {
+                        if (r.vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = r.vm_inst;
                     } else return null;
                     break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
                 };
@@ -2686,9 +2695,9 @@ fn boundScriptArtboardId(r: *const Riv, siaIdx: usize) ?i64 {
                     var wantOrd: i64 = -1;
                     if (g_rowInstOrd >= 0) {
                         if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                    } else if (g_vm_bound) {
-                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                        wantOrd = g_vm_inst;
+                    } else if (r.vm_bound) {
+                        if (r.vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = r.vm_inst;
                     } else return null;
                     break :blk findVmInstance(r, @intCast(vmId), wantOrd) orelse return null;
                 };
@@ -4352,9 +4361,7 @@ var g_instObj: i64 = -1;
 // browser's behavior for a standalone artboard with no bound instance.
 // The old fallback to "first instance of this ViewModel" was wrong for
 // cl1_item (template "text" rendered as the first row's "THREE").
-var g_vm_bound: bool = false;
-var g_vm_vmid: i64 = -1;
-var g_vm_inst: i64 = -1;
+
 // Color keyframes keep animating inside row artboards even though their
 // transforms render at base pose (frame=-1): cl2's item fill 0xffcccccc
 // keyframes to black while geometry stays put. cf = frame>=0 ? frame :
@@ -4477,9 +4484,9 @@ fn boundRunText(r: *const Riv, targetIdx: usize, alloc: std.mem.Allocator) ?[]co
                     var wantOrd: i64 = -1;
                     if (g_rowInstOrd >= 0) {
                         if (g_rowVmid == @as(i64, @intCast(vmId))) wantOrd = g_rowInstOrd;
-                    } else if (g_vm_bound) {
-                        if (g_vm_vmid != @as(i64, @intCast(vmId))) return null;
-                        wantOrd = g_vm_inst;
+                    } else if (r.vm_bound) {
+                        if (r.vm_vmid != @as(i64, @intCast(vmId))) return null;
+                        wantOrd = r.vm_inst;
                     } else {
                         // No row scope, no explicit binding: the run keeps the
                         // template text (cl1_item's reference "text").
@@ -5082,19 +5089,16 @@ fn dumpGraph(r: *Riv) void {
 | failed string
 
 ~proc open|zig {
-    g_vm_bound = false;
-    g_vm_vmid = -1;
-    g_vm_inst = -1;
+    // (a fresh Riv starts unbound; the fields default)
     const r = decodeImpl(path) orelse return .{ .failed = "not a .riv or truncated" };
     return .{ .loaded = r };
 }
 
 ~pub tor vm.bind { r: *Riv<loaded>, vm: i64, inst: i64 }
 ~proc vm.bind|zig {
-    _ = r;
-    g_vm_bound = true;
-    g_vm_vmid = vm;
-    g_vm_inst = inst;
+    r.vm_bound = true;
+    r.vm_vmid = vm;
+    r.vm_inst = inst;
 }
 
 // ---- leaf control verbs (LEAF_CONTRACT §4) ----

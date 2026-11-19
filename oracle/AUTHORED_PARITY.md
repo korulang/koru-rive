@@ -1037,6 +1037,32 @@ world transform matches the reference's draw transforms — before any layout wo
 That is the same discipline that found the alpha bug: check the object, not the
 story around it.
 
+## vm.bind was a stub and the facade violated R1 (2026-11-18)
+
+The leaf contract's R1 says *nothing about a leaf's state may live in
+process-global storage*. The facade did exactly that:
+
+    ~proc vm.bind|zig { _ = r; g_vm_bound = true; g_vm_vmid = vm; g_vm_inst = inst; }
+
+`_ = r` — the handle was ignored, and the binding went into three module globals,
+so two open handles could not hold different bindings and the last call won.
+
+Fixed: `vm_bound` / `vm_vmid` / `vm_inst` are fields on `Riv`, all five read
+sites (`boundStaticProp`, `boundColorProp`, `boundKfValue`,
+`boundScriptArtboardId`, `boundRunText`) read them from the handle, `vm.bind`
+writes the handle, and the globals are gone. joystick stays op-identical and the
+data_viz counts are unchanged, so the refactor is behaviour-preserving.
+
+Independence is now structural rather than tested: two handles own their own
+fields. A runtime two-handle test needs a probe that threads two handles through
+Koru's `|>` chain; that is worth writing when the facade grows its next verb.
+
+**Remaining R1 violations, for the record:** `g_activeAnim`, `g_blendFrom/T`,
+`g_smInputs` (the input schedule), `g_cframe`, `g_rowVmid/g_instVmid/g_rowInstOrd`
+are still module-global. They are the same class of problem and the same fix —
+move them onto `Riv` — but each needs its call sites audited, so they are named
+here rather than half-done.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
