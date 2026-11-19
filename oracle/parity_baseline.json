@@ -1,25 +1,25 @@
 {
   "car_widgets_v01.riv": {
     "COMPASS (idx 6171)": {
-      "clips_ours": 6,
+      "clips_ours": 182,
       "clips_ref": 12,
       "ours": 417,
       "ref": 413
     },
     "G_Meter (idx 10881)": {
-      "clips_ours": 1,
+      "clips_ours": 25,
       "clips_ref": 7,
       "ours": 66,
       "ref": 69
     },
     "Main_Artboard (idx 90)": {
-      "clips_ours": 7,
+      "clips_ours": 276,
       "clips_ref": 25,
       "ours": 628,
       "ref": 612
     },
     "TIRE PRESSURE (idx 1259)": {
-      "clips_ours": 0,
+      "clips_ours": 38,
       "clips_ref": 5,
       "ours": 73,
       "ref": 68
@@ -27,7 +27,7 @@
   },
   "data_viz_demo.riv": {
     "Circles (idx 2066)": {
-      "clips_ours": 1,
+      "clips_ours": 0,
       "clips_ref": 8,
       "ours": 44,
       "ref": 44
@@ -57,7 +57,7 @@
       "ref": 20
     },
     "Main (idx 315)": {
-      "clips_ours": 3,
+      "clips_ours": 2,
       "clips_ref": 38,
       "ours": 196,
       "ref": 199
@@ -77,13 +77,13 @@
   },
   "jellyfish_test.riv": {
     "Jellyfish (idx 47)": {
-      "clips_ours": 1,
+      "clips_ours": 0,
       "clips_ref": 1,
       "ours": 1,
       "ref": 2
     },
     "New Artboard (idx 3844)": {
-      "clips_ours": 1,
+      "clips_ours": 0,
       "clips_ref": 1,
       "ours": 0,
       "ref": 1

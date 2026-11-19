@@ -1492,6 +1492,28 @@ So the golden's rows are unbound-default, while we resolve a bound colour. That 
 the opposite direction from every earlier "we miss data" finding: here we apply
 data the reference render did not.
 
+## The committed baseline was stale; we over-clip car_widgets by 11x (2026-11-19)
+
+Regenerating `parity_baseline.json` (with `--all-artboards`, or it saves only each
+file's first artboard) exposed a divergence the old baseline had been hiding:
+
+| car_widgets artboard | ref clips | ours (baseline) | ours (now) |
+|---|---:|---:|---:|
+| Main_Artboard | 25 | 7 | **276** |
+| COMPASS | 12 | 6 | **182** |
+| TIRE PRESSURE | 5 | 0 | **38** |
+| G_Meter | 7 | 1 | **25** |
+
+The committed numbers were many rounds old, so drift reporting was comparing
+against a state that no longer existed. But the current 276 is not caused by the
+root-artboard clip change: reverting that gate (`if (clipOn)` unconditionally) leaves
+the count at **276**, so the over-clipping predates it and came in with an earlier
+clip-emitting change.
+
+This is a real, separate divergence: we emit ~11x the reference's clips on
+car_widgets. Every clip is a draw-stack push/pop, so it is cheap to measure and
+worth chasing next.
+
 ## FLD layout boxes were painted opaque black (2026-11-18)
 
 Diffing data_viz Main's colour multiset against its golden named two concrete
