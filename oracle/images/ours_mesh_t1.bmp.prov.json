@@ -1,6 +1,5 @@
 {
- "commit": "062030fdca5b7a850a2b5ba672fb204ce15edabb",
- "ts": 1794946561.0,
- "backfilled": true,
- "note": "commit = artifact's last-touch commit; driver unknown, shared deps only"
+ "driver": "meshrender_clfp.k",
+ "commit": "b9307e4c858520b8aa422e3f5477eb40c63d36ea",
+ "ts": 1795049315.747682
 }

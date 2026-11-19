@@ -1109,6 +1109,32 @@ it compares no images):
     independent  data_viz_demo.riv
     leaf self-test: PASS (per-handle input, pointer and vm state)
 
+### The mesh gate's justification was stale and false (2026-11-18)
+
+With categories in place, the one KNOWN gate was worth reading rather than
+trusting. Its manifest note said:
+
+    mesh path — placement exact, AA verified pixel no-op
+
+The artifact was marked STALE (backfilled provenance, driver unknown), so the note
+described a render nobody had regenerated. Rebuilding `meshrender_clfp.k` and
+evaluating it against the same reference:
+
+| check | measurement |
+|---|---|
+| ink-bbox | ours `(0,0,499,499)` vs ref `(24,89,471,452)` — we ink the **whole frame** |
+| ink-mass | 2397 vs 1206 (ratio **1.99**) |
+| coverage-gap | **64%** unmatched within 1px (max 5%) |
+| frame-diff | 1.70% of frame differs (max 0.10%) |
+
+So the recorded "pixel no-op" is the opposite of the truth: our mesh fixture
+currently fills the frame. The image, its provenance (driver `meshrender_clfp.k`,
+this commit) and the note are all corrected, so the declared gap now states its
+measured size instead of a stale claim from an earlier build.
+
+This is the failure mode the category work exposed: a KNOWN gate with an
+unregenerated artifact will happily keep asserting last month's conclusion.
+
 ### Gate verdicts are category-aware (2026-11-18)
 
 The runner counted a manifest-declared gap as a suite failure: `mesh` carries

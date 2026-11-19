@@ -538,6 +538,6 @@
   ],
   "bg_source": "reference backdrop",
   "hand_label": "NOTE",
-  "note": "mesh path \u2014 placement exact, AA verified pixel no-op"
+  "note": "mesh path \u2014 NOT placement-exact since the alpha/gradient work: fresh render inks the whole 500x500 frame, ref bbox (24,89,471,452), ink-mass 2.0x, coverage gap 64% (was recorded as 'AA verified pixel no-op')"
  }
 ]
