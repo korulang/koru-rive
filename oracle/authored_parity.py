@@ -75,8 +75,13 @@ GEOMETRY_KINDS = {1, 2, 3, 4}
 
 
 def short_color(h):
-    """Both sides print hex; normalise to the low 6 digits (alpha dropped)."""
-    return (h or "0")[-6:].rjust(6, "0").lower()
+    """Normalise a printed colour to 8 hex digits, ALPHA INCLUDED.
+
+    Dropping alpha (the previous behaviour) hid a real defect for many rounds:
+    we recorded gradients as opaque black (FF000000) where the reference records
+    transparent (00000000), and a 6-digit comparison could not see it.
+    """
+    return (h or "0")[-8:].rjust(8, "0").lower()
 
 
 def run(cmd, timeout, env=None):

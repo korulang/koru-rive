@@ -3450,9 +3450,15 @@ fn emitArtboardPaints(r: *const Riv, abIdx: usize, scoped: bool) void {
             for (r.objects) |*g| {
                 if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = if (propByKey(g.props, 37)) |_| propColor(g.props, 37) else 0xFF747474; // SolidColorBase default m_ColorValue
             }
-            // Alpha-0 paint: draw.path would rasterize invisible pixels —
-            // skip the op stream entirely (same pixels, fewer ops).
-            if (((color >> 24) & 0xFF) == 0) continue;
+            // Alpha-0 paint: invisible pixels — BUT a gradient paint records
+            // colour 0 while still painting its gradient (rive's shouldDraw()
+            // keeps those: the gradient is visible). Skipping them halved our
+            // draw counts against the reference (ColorGuide 19 vs 38).
+            var hasGradChild = false;
+            for (r.objects) |*gg| {
+                if (gg.parent_obj == @as(i64, @intCast(pi)) and (gg.type_key == 17 or gg.type_key == 22)) hasGradChild = true;
+            }
+            if (((color >> 24) & 0xFF) == 0 and !hasGradChild) continue;
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
             const thick = if (isStroke) propF(c.props, 47, 1) else 0;
@@ -4038,9 +4044,15 @@ fn emitOps(r: *Riv, frame: i64, abIdx: usize, scoped: bool, rows: bool, scaffold
             for (r.objects) |*g| {
                 if (g.parent_obj == @as(i64, @intCast(pi)) and g.type_key == 18) color = if (frame >= 0 and hasKeyframed(r, g.slot, 37)) frameColor(r, g.slot, 37, frame, propColor(g.props, 37)) else if (propByKey(g.props, 37)) |_| propColor(g.props, 37) else 0xFF747474; // SolidColorBase default m_ColorValue
             }
-            // Alpha-0 paint: draw.path would rasterize invisible pixels —
-            // skip the op stream entirely (same pixels, fewer ops).
-            if (((color >> 24) & 0xFF) == 0) continue;
+            // Alpha-0 paint: invisible pixels — BUT a gradient paint records
+            // colour 0 while still painting its gradient (rive's shouldDraw()
+            // keeps those: the gradient is visible). Skipping them halved our
+            // draw counts against the reference (ColorGuide 19 vs 38).
+            var hasGradChild = false;
+            for (r.objects) |*gg| {
+                if (gg.parent_obj == @as(i64, @intCast(pi)) and (gg.type_key == 17 or gg.type_key == 22)) hasGradChild = true;
+            }
+            if (((color >> 24) & 0xFF) == 0 and !hasGradChild) continue;
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
             const thick = if (isStroke) propF(c.props, 47, 1) else 0;
@@ -5651,9 +5663,15 @@ fn collectDraws(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []D
             if (((color >> 24) & 0xFF) == 0) {
                 if (std.posix.getenv("RIVE_TRACE_SKIP") != null) std.debug.print("SKIP obj={d} paint={d} why=alpha0 t={d:.1},{d:.1}\n", .{ si, pi, w[4], w[5] });
             }
-            // Alpha-0 paint: draw.path would rasterize invisible pixels —
-            // skip the op stream entirely (same pixels, fewer ops).
-            if (((color >> 24) & 0xFF) == 0) continue;
+            // Alpha-0 paint: invisible pixels — BUT a gradient paint records
+            // colour 0 while still painting its gradient (rive's shouldDraw()
+            // keeps those: the gradient is visible). Skipping them halved our
+            // draw counts against the reference (ColorGuide 19 vs 38).
+            var hasGradChild = false;
+            for (r.objects) |*gg| {
+                if (gg.parent_obj == @as(i64, @intCast(pi)) and (gg.type_key == 17 or gg.type_key == 22)) hasGradChild = true;
+            }
+            if (((color >> 24) & 0xFF) == 0 and !hasGradChild) continue;
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
             const thick = if (isStroke) propF(c.props, 47, 1) else 0;
@@ -6251,7 +6269,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                     if (gg.parent_obj != @as(i64, @intCast(pi))) continue;
                     if (gg.type_key == 17 or gg.type_key == 22) { hasGrad = true; break; }
                 }
-                if (hasGrad and propByKey(c.props, 41) == null) color = 0xFF000000;
+                if (hasGrad and propByKey(c.props, 41) == null) color = 0x00000000;
             }
             }
             // WorldTransformComponent.opacity(18) keyframes scale alpha;
@@ -6283,9 +6301,15 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             }
             const oa: u32 = @intFromFloat(@min(255, @as(f32, @floatFromInt((color >> 24) & 0xFF)) * op));
             color = (color & 0x00FFFFFF) | (oa << 24);
-            // Alpha-0 paint: draw.path would rasterize invisible pixels —
-            // skip the op stream entirely (same pixels, fewer ops).
-            if (((color >> 24) & 0xFF) == 0) continue;
+            // Alpha-0 paint: invisible pixels — BUT a gradient paint records
+            // colour 0 while still painting its gradient (rive's shouldDraw()
+            // keeps those: the gradient is visible). Skipping them halved our
+            // draw counts against the reference (ColorGuide 19 vs 38).
+            var hasGradChild = false;
+            for (r.objects) |*gg| {
+                if (gg.parent_obj == @as(i64, @intCast(pi)) and (gg.type_key == 17 or gg.type_key == 22)) hasGradChild = true;
+            }
+            if (((color >> 24) & 0xFF) == 0 and !hasGradChild) continue;
             if (tracing()) std.debug.print("  paint si={d} obj={d} type={d} color={x} frame={d}\n", .{ si, pi, c.type_key, color, frame });
             const isStroke = c.type_key == 24;
             const style: i64 = if (isStroke) 0 else 1;
