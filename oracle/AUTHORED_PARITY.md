@@ -1343,6 +1343,32 @@ op-identical joystick as incomplete), and it only fires when the reference is le
 than half the golden, so a genuine regression that *reduces* our draws cannot hide
 behind the label.
 
+### The frame-spanning ink is a 496-pixel triangle seam
+
+Sampling the pixels the gate calls ink:
+
+    (0,0)     -> (49,49,49)      backdrop
+    (499,0)   -> (152,25,152)    magenta
+    (0,499)   -> (152,25,152)    magenta
+
+Magenta is the probe's clear colour (`offscreen.clear.color(r:1,g:0,b:1)`), so the
+frame is not covered. Counting it:
+
+| render | magenta pixels | locations |
+|---|---:|---|
+| ours | **496** | `(499,0) (498,1) (497,2) (496,3) …` |
+| reference | **0** | — |
+
+That is the **anti-diagonal of the artboard quad**: the quad is tessellated into two
+triangles, and the shared edge leaves a one-pixel seam where the clear colour shows
+through. One magenta pixel at each corner is enough to stretch `ink-bbox` to
+`(0,0)-(499,499)` — which is the entire "frame-spanning ink" this gate has been
+reporting for six rounds.
+
+So the mesh gate's headline failure is a **rasterisation seam in the mesh path**,
+not our path data, not list rows, and not a paint difference. The remaining
+colour/coverage disagreements are separate.
+
 ## Correction: the mesh gate's frame-fill is not the list rows (2026-11-18)
 
 Round 57 concluded that the mesh render's frame-spanning ink came from the extra
