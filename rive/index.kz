@@ -6417,6 +6417,16 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         g_activeAnim = smActiveAnimIdx(r, @intCast(target), frame);
         const hostVmid = g_instVmid;
         const hostInst = g_instObj;
+        // Restore on EVERY exit path. These are the per-leaf SM evaluation
+        // values; a future early return between save and restore would leak one
+        // artboard's SM state into the next, so the restore is a defer.
+        defer {
+            g_activeAnim = hostAnim;
+            g_blendFrom = hostFrom;
+            g_blendT = hostT;
+            g_instVmid = hostVmid;
+            g_instObj = hostInst;
+        }
         g_instVmid = -1;
         g_instObj = -1;
         for (r.objects, 0..) |io, ii| {
@@ -6431,11 +6441,6 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         collectArtboardOps(r, @intCast(target), frame, alloc, out);
         g_abStackLen -%= 1;
         g_abDepth -= 1;
-        g_activeAnim = hostAnim;
-        g_blendFrom = hostFrom;
-        g_blendT = hostT;
-        g_instVmid = hostVmid;
-        g_instObj = hostInst;
         out.append(alloc, op0(7)) catch {};
     }
     g_scrubOverrides.items.len = scrubBase;

@@ -1078,6 +1078,17 @@ a process-wide singleton keyed by address. `Riv.ptr_log` now owns them;
 All three state-holding verbs are now per-handle: `vm.bind`, `input.fire`,
 `pointer.move`. joystick op-identical, data_viz counts unchanged.
 
+**The SM evaluation state now restores on every exit path.** The nested-artboard
+expansion saved `g_activeAnim` / `g_blendFrom` / `g_blendT` / `g_instVmid` /
+`g_instObj` by hand and restored them five lines later. Nothing returns in
+between today, so there is no live leak — but these are per-leaf values, and one
+future early return would carry a nested artboard's SM state into the next
+drawable. The restore is a `defer` now, so it cannot be skipped.
+
+They are still globals (moving them onto `Riv` needs the eval path to take a
+mutable handle, a wide ripple); what changed is that they can no longer be left
+dirty. car_widgets 628/612 unchanged, joystick op-identical.
+
 **Remaining R1 violations, for the record:** `g_activeAnim`, `g_blendFrom/T`,
 `g_smInputs` (the input schedule), `g_cframe`, `g_rowVmid/g_instVmid/g_rowInstOrd`
 are still module-global. They are the same class of problem and the same fix —
