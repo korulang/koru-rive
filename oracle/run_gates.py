@@ -85,6 +85,18 @@ def main():
                     print("    [%s] %-14s %s" % ("PASS" if c["pass"] else "FAIL", c["check"], c["detail"]))
         n = sum(r["verdict"] == "PASS" for r in rows)
         print("\n%d gates: %d PASS, %d FAIL" % (len(rows), n, len(rows) - n))
+
+    # Non-image gate: per-handle independence (LEAF_CONTRACT R1). It cannot be a
+    # manifest entry because it compares no images, so it runs here instead and
+    # contributes to the exit status.
+    if not a.only:
+        import leaf_selftest
+        rc = leaf_selftest.main(["leaf_selftest"])
+        if rc != 0:
+            print("\nleaf self-test: FAIL (per-handle state leaked; see above)")
+            sys.exit(1)
+        print("leaf self-test: PASS (per-handle input, pointer and vm state)")
+
     sys.exit(0 if all(r["verdict"] == "PASS" for r in rows) else 1)
 
 

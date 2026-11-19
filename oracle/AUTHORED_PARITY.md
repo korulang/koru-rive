@@ -1099,6 +1099,20 @@ The earlier rounds could only argue independence structurally ("the fields are o
 the handle"). This makes it checkable — a regression that reintroduces a global
 would fail here rather than being discovered by a caller with two leaves.
 
+**And it runs with the gates.** `oracle/leaf_selftest.py` builds the probe and
+checks the verdict on three fixtures; `run_gates.py` invokes it after the image
+gates and folds its result into the exit status (it cannot be a manifest entry —
+it compares no images):
+
+    independent  joystick_databound_keyframe_test.riv
+    independent  car_widgets_v01.riv
+    independent  data_viz_demo.riv
+    leaf self-test: PASS (per-handle input, pointer and vm state)
+
+Current suite: 33 image gates, 32 PASS and the known `mesh` FAIL (labelled NOTE,
+marked STALE — mesh is not implemented, and it is not a regression from these
+changes).
+
 **Remaining R1 violations, for the record:** `g_activeAnim`, `g_blendFrom/T`,
 `g_smInputs` (the input schedule), `g_cframe`, `g_rowVmid/g_instVmid/g_rowInstOrd`
 are still module-global. They are the same class of problem and the same fix —
