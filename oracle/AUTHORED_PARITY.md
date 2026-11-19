@@ -1343,6 +1343,26 @@ op-identical joystick as incomplete), and it only fires when the reference is le
 than half the golden, so a genuine regression that *reduces* our draws cannot hide
 behind the label.
 
+## Correction: the mesh gate's frame-fill is not the list rows (2026-11-18)
+
+Round 57 concluded that the mesh render's frame-spanning ink came from the extra
+layout paints (list rows). That was testable and is wrong: after rows were moved
+onto their follow-path positions, the mesh render is **byte-identical**:
+
+    md5 /tmp/ours_mesh_t1.bmp oracle/images/ours_mesh_t1.bmp   ->  same hash
+
+Same ink-bbox `(0,0)-(499,499)`, same ink-mass 2397, same 64% coverage gap. If the
+row rects were the ink, moving them would have changed the image; it did not.
+
+What that leaves: the frame fill is something the mesh path draws independently of
+the row content — most likely the artboard background quad, whose colour equals the
+backdrop and whose anti-aliased edge reaches the corners. That is drawn by the
+reference too, so the gate's disagreement must be in how our mesh path interprets
+it (or in what it draws *besides* the fill), not in list rows.
+
+Also verified this round: the gate suite is unchanged by the row-placement work —
+33 gates, 32 PASS, 1 KNOWN (mesh), 0 FAIL, plus the leaf self-test PASS.
+
 ## The dumper does not materialise data-bound list rows (2026-11-18)
 
 Chasing why the reference draws no rows, the goldens were checked against the
