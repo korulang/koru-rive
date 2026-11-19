@@ -1172,6 +1172,10 @@ const Riv = struct {
     // different input timelines; this used to be one process-global list.
     inputs: std.ArrayList(SmInputEvent) = .empty,
     inputs_seeded: bool = false,
+    // Positional pointer events, per handle (R1). These lived in a
+    // pointer-keyed global map, which leaked on free and made the channel a
+    // process-wide singleton keyed by address.
+    ptr_log: PtrLog = .{ .events = std.ArrayList(PtrEvent).empty, .seeded = false },
 };
 
 fn readValue(b: []const u8, pos: *usize, field: i8) ?PropValue {
@@ -2313,17 +2317,6 @@ fn smInputEventFrame(r: *const Riv, name: []const u8, frame: i64) i64 {
 // No eval consumer yet — slice 2 adds listener dispatch.
 const PtrEvent = struct { ab: i64, x: f64, y: f64, frame: i64, id: i64 };
 const PtrLog = struct { events: std.ArrayList(PtrEvent), seeded: bool };
-var g_ptrLogs = std.AutoHashMap(usize, *PtrLog).init(std.heap.page_allocator);
-
-fn ptrLogFor(r: *const Riv) ?*PtrLog {
-    const key = @intFromPtr(r);
-    if (g_ptrLogs.get(key)) |pl| return pl;
-    const pl = std.heap.page_allocator.create(PtrLog) catch return null;
-    pl.* = .{ .events = std.ArrayList(PtrEvent).empty, .seeded = false };
-    g_ptrLogs.put(key, pl) catch {};
-    return pl;
-}
-
 // RIVE_POINTERS="x,y@frame;x,y@frame" — probe seed; ab=-1 wildcard,
 // resolved against the queried artboard at dispatch time.
 fn ensurePtrSeed(pl: *PtrLog) void {
@@ -2346,10 +2339,8 @@ fn ensurePtrSeed(pl: *PtrLog) void {
 // Latest pointer-move event at-or-before frame for (artboard,id);
 // ab<0 events match any artboard.
 fn ptrMoveAt(r: *const Riv, ab: i64, id: i64, frame: i64) ?PtrEvent {
-    const pl = ptrLogFor(r) orelse return null;
-    ensurePtrSeed(pl);
     var best: ?PtrEvent = null;
-    for (pl.events.items) |ev| {
+    for (r.ptr_log.events.items) |ev| {
         if (ev.frame > frame or ev.id != id) continue;
         if (ev.ab >= 0 and ev.ab != ab) continue;
         if (best == null or ev.frame >= best.?.frame) best = ev;
@@ -5092,6 +5083,7 @@ fn dumpGraph(r: *Riv) void {
     // both from here on (R1).
     const r = decodeImpl(path) orelse return .{ .failed = "not a .riv or truncated" };
     ensureSmInputs(r);
+    ensurePtrSeed(&r.ptr_log);
     return .{ .loaded = r };
 }
 
@@ -5170,16 +5162,12 @@ fn dumpGraph(r: *Riv) void {
 ~pub tor pointer.move { r: *Riv<loaded>, ab: i64, x: f64, y: f64, frame: i64, id: i64 }
 
 ~proc pointer.move|zig {
-    const pl = ptrLogFor(r) orelse {
+    ensurePtrSeed(&r.ptr_log);
+    r.ptr_log.events.append(std.heap.page_allocator, .{ .ab = ab, .x = x, .y = y, .frame = frame, .id = id }) catch {
         std.debug.print("pointer.move: oom\n", .{});
         return;
     };
-    ensurePtrSeed(pl);
-    pl.events.append(std.heap.page_allocator, .{ .ab = ab, .x = x, .y = y, .frame = frame, .id = id }) catch {
-        std.debug.print("pointer.move: oom\n", .{});
-        return;
-    };
-    if (std.posix.getenv("RIVE_TRACE_PTR") != null) std.debug.print("pmove ab={d} id={d} x={d:.1} y={d:.1} frame={d} n={d}\n", .{ ab, id, x, y, frame, pl.events.items.len });
+    if (std.posix.getenv("RIVE_TRACE_PTR") != null) std.debug.print("pmove ab={d} id={d} x={d:.1} y={d:.1} frame={d} n={d}\n", .{ ab, id, x, y, frame, r.ptr_log.events.items.len });
 }
 
 ~pub tor inspect { r: *Riv<loaded> }
@@ -5198,10 +5186,7 @@ fn dumpGraph(r: *Riv) void {
     }
     std.heap.page_allocator.free(rr.objects);
     std.heap.page_allocator.free(rr.bytes);
-    if (g_ptrLogs.fetchRemove(@intFromPtr(rr))) |kv| {
-        kv.value.events.deinit(std.heap.page_allocator);
-        std.heap.page_allocator.destroy(kv.value);
-    }
+    rr.ptr_log.events.deinit(std.heap.page_allocator);
     std.heap.page_allocator.destroy(rr);
 }
 

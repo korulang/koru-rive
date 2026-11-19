@@ -1068,6 +1068,16 @@ This is not an invention: `LEAF_CONTRACT.md` already specified
 its own contract, which is worth noting — the ruling existed and the verb ignored
 it. joystick op-identical, data_viz counts unchanged.
 
+**The pointer channel is per-handle too.** Positional events lived in
+`g_ptrLogs`, an `AutoHashMap(usize, *PtrLog)` keyed by the handle's address —
+per-Riv only by convention, leaked on `free` unless the map entry was removed, and
+a process-wide singleton keyed by address. `Riv.ptr_log` now owns them;
+`ptrLogFor` and the map are gone, `free` deinits the handle's list, and the
+`RIVE_POINTERS` seed runs at `open` so readers can stay `const`.
+
+All three state-holding verbs are now per-handle: `vm.bind`, `input.fire`,
+`pointer.move`. joystick op-identical, data_viz counts unchanged.
+
 **Remaining R1 violations, for the record:** `g_activeAnim`, `g_blendFrom/T`,
 `g_smInputs` (the input schedule), `g_cframe`, `g_rowVmid/g_instVmid/g_rowInstOrd`
 are still module-global. They are the same class of problem and the same fix —
