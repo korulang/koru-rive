@@ -6555,7 +6555,37 @@ fn collectOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocator) []OpR
                     // list, while passing the host frame through drew 150x40.
                     // Static (-1) reproduces the observed 100x40 exactly.
                     // Colors still animate via g_cframe (cl2 item fill).
-                    const slot = listRowSlot(r, li, ai2, rowIdx, rowCountOf(items), frame);
+                    var slot = listRowSlot(r, li, ai2, rowIdx, rowCountOf(items), frame);
+                    // ListFollowPathConstraint (625): rive spaces rows between
+                    // distance and distanceEnd along the target's path
+                    // (list_follow_path_constraint.cpp constrainList). Without it
+                    // every row sits at the list origin; the follow-path fixture
+                    // draws ten rows where rive draws none (theirs land off the
+                    // artboard and are clipped).
+                    for (r.objects) |*lc2| {
+                        if (lc2.type_key != 625) continue;
+                        if (lc2.parent_obj != @as(i64, @intCast(li))) continue;
+                        const tgtSlot2 = propU(lc2.props, 173, -1);
+                        if (tgtSlot2 < 0) continue;
+                        const tgtIdx2 = findBySlot(r, li, tgtSlot2) orelse continue;
+                        const dist = if (frame >= 0) keyframedValue(r, lc2.slot, 363, frame) else propF(lc2.props, 363, 0);
+                        const distEnd = propF(lc2.props, 888, 1.0); // base default m_DistanceEnd = 1.0
+                        const distOff = propF(lc2.props, 889, 0);
+                        const nrows = items.len;
+                        const startOff = distOff + dist;
+                        const span = distEnd - dist;
+                        const step: f32 = if (nrows <= 1) 0 else span / @as(f32, @floatFromInt(nrows - 1));
+                        const d = startOff + step * @as(f32, @floatFromInt(rowIdx));
+                        const streams2 = pathStreamsFor(r, tgtIdx2, alloc) orelse continue;
+                        const tgtWorld2 = shapeWorld(r, tgtIdx2);
+                        var wpts2 = std.ArrayList(V2).empty;
+                        defer wpts2.deinit(alloc);
+                        for (streams2.pts) |pp3| wpts2.append(alloc, matApply(tgtWorld2, pp3)) catch {};
+                        const pm2 = pathMeasureAt(streams2.verbs, wpts2.items, d);
+                        slot[4] = @floatCast(pm2.pos.x);
+                        slot[5] = @floatCast(pm2.pos.y);
+                        if (std.posix.getenv("RIVE_TRACE_ROWS") != null) std.debug.print("ROWPATH li={d} row={d} d={d:.1} -> {d:.1},{d:.1}\n", .{ li, rowIdx, d, slot[4], slot[5] });
+                    }
                     if (std.posix.getenv("RIVE_TRACE_BIGE") != null and (slot[4] > 1500 or slot[5] > 1500 or slot[4] < -1500 or slot[5] < -1500)) std.debug.print("bige ROW li={d} row={d} e={d:.1} g={d:.1}\n", .{ li, rowIdx, slot[4], slot[5] });
                     var so = op0(6); so.a = slot[0]; so.b = slot[1]; so.c = slot[2]; so.d = slot[3]; so.e = slot[4]; so.g = slot[5];
                     out.append(alloc, so) catch {};

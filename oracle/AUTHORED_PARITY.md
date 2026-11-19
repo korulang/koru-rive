@@ -1316,6 +1316,34 @@ So the rule to implement and test: a component list whose `DataBindContext`
 carries no `sourcePathIds` emits **no rows**. `component_list_1` has the source
 path and its rows render; this file has none.
 
+## The dumper does not materialise data-bound list rows (2026-11-18)
+
+Chasing why the reference draws no rows, the goldens were checked against the
+dumper for the same file:
+
+| source | `drawPath` lines |
+|---|---|
+| `oracle/goldens/corpus/component_list_1.txt` (real rive render) | **589** |
+| `oracle/dump` on `component_list_1.riv`, all blocks | **6** |
+
+The dumper binds no data, so a data-bound component list resolves to zero rows in
+the reference stream, while the real renderer draws them all. **Authored-parity
+comparisons on data-bound lists are therefore measuring our output against an
+unbound reference** — "ref 1, ours 17" is not evidence of over-draw.
+
+What this changes:
+
+- the "ten rows the reference never draws" result above is a property of the
+  *instrument*, not of rive;
+- the goldens, not `oracle/dump`, are the correct reference for these files (and
+  our component_list goldens pass);
+- the mesh gate compares against a rendered image, so it is unaffected — but its
+  fixture does render no rows, which needs its own explanation.
+
+This is the fourth instrument defect found this session, and the most consequential:
+three earlier findings about list rows were reasoning against a reference that
+could not produce rows at all.
+
 ## The reference never draws list rows — at any frame
 
 Before blaming layout, the obvious alternative was timing: our SM may simply start
