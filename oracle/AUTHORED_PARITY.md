@@ -922,6 +922,36 @@ records at that transform.
 
 The `y` difference (113.16 vs 56) remains the placement question and is separate.
 
+## The placement bucket is largely CONSTRAINTS, not layout (2026-11-18)
+
+Chasing Circles' y offset (113.16 vs 56) led to the object itself:
+
+    shape 2068 (Shape): Ellipse 3x3, Fill 2516 (colorValue 0x80ffffff),
+                        TransformConstraint 2071 (targetId 326, originX 1.0, originY 0.5)
+
+`TransformConstraint` is type key **83**, and there are **100** of them in
+data_viz alone. Our decoder parses its properties (originX 372, originY 373, …)
+but **never applies it** — there is no `type_key == 83` anywhere in the emission
+path. So constrained objects are drawn at their unconstrained Node position, which
+is exactly the kind of constant offset measured on Circles (y 56 vs 113) and
+LineBars (bar placement).
+
+rive-cpp's semantics (`src/constraints/transform_constraint.cpp`):
+
+    targetTransform = target.worldTransform
+                    * translate(bounds.left + bounds.width  * originX,
+                                bounds.top  + bounds.height * originY)
+    constrainWorld(component.worldTransform, targetTransform, strength, ...)
+
+with optional local/global space handling. That is implementable: we already have
+world transforms and can resolve `targetId`.
+
+**This reframes the remaining work.** "Layout solver" was the label for the
+placement bucket; a large part of it is a constraints feature we simply never
+implemented, and constraints are far smaller than Yoga. The plan is to implement
+`TransformConstraint` (and check `TranslationConstraint`/`RotationConstraint`
+counts the same way) before touching layout.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
