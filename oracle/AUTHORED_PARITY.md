@@ -1191,6 +1191,37 @@ are still module-global. They are the same class of problem and the same fix —
 move them onto `Riv` — but each needs its call sites audited, so they are named
 here rather than half-done.
 
+## component_list_follow_path: we inline a 10-item list rive does not draw
+
+`--all-artboards` on the file behind the mesh gate:
+
+| artboard | ref | ours | status |
+|---|---:|---:|---|
+| Main (idx 18) | **3** | **29** | +26 |
+| Item (idx 74) | 2 | 2 | op-identical |
+| Artboard (idx 114) | 1 | 1 | op-identical |
+
+The reference's three Main draws are specific: the `ff313131` artboard
+background, then two white `ffffffff` strokes (`thick=1`, transforms at
+`(25, 154.5)` scale 0.95 and `(250, 363.5)`).
+
+Our 29 are **8 shape + 10 text + 1 artboard paint + 10 layout paints**. The nested
+artboards match exactly, so this is not an expansion-count error at the instance
+level: we are drawing a **ten-item list inline on Main** (ten texts, ten layout
+paints) that the reference does not draw there at frame 0.
+
+That is the same class as the earlier FLD work: the list's rows exist in our
+stream because we emit them from the object tree, while rive draws none of them —
+they are laid out only when the layout pass runs. It also explains the mesh gate's
+frame-spanning ink: our extra layout paints are what reach the corners, not the
+artboard background (which the reference draws too, at the same colour as the
+backdrop).
+
+A correction to the previous round's note: my "ref 57" came from calling
+`oracle/dump <file> 18 0.0083` — the CLI takes `<frames> <dt>`, so `18` meant
+eighteen frames, not artboard 18. The harness was right all along; the manual
+invocation was wrong.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
