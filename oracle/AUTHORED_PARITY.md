@@ -1132,6 +1132,13 @@ currently fills the frame. The image, its provenance (driver `meshrender_clfp.k`
 this commit) and the note are all corrected, so the declared gap now states its
 measured size instead of a stale claim from an earlier build.
 
+**First diagnosis: not the clips.** `meshops` emits `mclip` rects derived from
+the op stream; a full-frame clip painted as ink would explain the fill, so clip
+emission was gated off and the render repeated — **byte-identical ink coverage**
+(`ours=(0,0,499,499)` both ways). The triangles themselves cover the frame, so the
+next place to look is the tessellation input: a degenerate or uninitialised vertex
+in the path being tessellated, not the clip stack.
+
 This is the failure mode the category work exposed: a KNOWN gate with an
 unregenerated artifact will happily keep asserting last month's conclusion.
 
