@@ -74,6 +74,10 @@ held-component state *inside* the loop so it reset every iteration. The correcte
 form was not finished: declare `activeCs` before the shape loop, pop when it changes,
 pop once after the loop. Expect ~15 clips.
 
+(Commit `61e9037`'s message says the matched component "alternates per shape" —
+that was concluded before the matches were traced properly, and the run data above
+supersedes it. The code in that commit was reverted either way.)
+
 ### 2. Layout placement — the largest
 
 FLD rects, constraint targets and text clip rects sit at uncomputed positions.
