@@ -1492,6 +1492,31 @@ So the golden's rows are unbound-default, while we resolve a bound colour. That 
 the opposite direction from every earlier "we miss data" finding: here we apply
 data the reference render did not.
 
+**The grouping data, measured.** Tracing each `ClippingShape` against the shapes it
+clips:
+
+| component | shapes clipped |
+|---|---:|
+| 8309 | **176** |
+| 946 | 31 |
+| 11753 | 24 |
+| 3791 / 3717 / 3643 | 9 each |
+| … | |
+| total | **276** |
+
+So a handful of components account for almost all the pushes, and shapes sharing a
+component are consecutive in stream order. A run-based emission — hold the clip open
+while the component stays the same, pop only when it changes — is therefore sound and
+should produce tens of clips rather than hundreds.
+
+**Attempted and reverted.** The run-based change was written: compute each shape's
+clipping component, compare with the active one, pop/push on change, and hold the
+clip across shapes instead of popping per shape. It failed to compile because the
+state declaration landed in `collectOps`' shape loop while the clipping block lives
+in `collectArtboardOps`' loop — the same duplicate-loop trap that has bitten several
+edits in this file. Reverted cleanly; car_widgets is back to 628 draws / 276 clips and
+the decoder matches HEAD.
+
 **Size of the mismatch, and what it implies.** car_widgets contains **17**
 `ClippingShape` components. The reference's per-artboard clips are 25 for Main, and
 its nested artboards account for 24 (5 + 12 + 7) — i.e. rive pushes **one clip per
