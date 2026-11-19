@@ -688,6 +688,11 @@ auto-sized text, since the clip equals the content bounds):
 | `sizing`(284) != 0 | 21 | 43 |
 | `overflow`(287) != 0 | 3 | 43 |
 
+A fourth gate was tried on measured overflow — the box is stored (285/286) and
+the run's width is our own glyph extent, so `box_w > 0 and glyph_width > box_w`
+needs no solver. Result: **3 clips** (reference 43), because these texts are
+auto-sized and store `width = 0`. The clip rect genuinely comes from layout.
+
 All three bracket the reference without matching it, so the gate is not a stored
 flag — it is almost certainly "does this run overflow its computed layout box",
 which needs the layout bounds again. Reverted.
