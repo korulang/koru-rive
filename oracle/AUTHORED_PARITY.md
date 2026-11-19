@@ -1269,6 +1269,25 @@ That makes the fix rule-shaped rather than layout-shaped: a component list with 
 bound data should emit **no rows**, and the ten we emit are invented rather than
 misplaced.
 
+### The discriminator: a DataBindContext with a source path
+
+Comparing the file that renders rows against the one that must not:
+
+| file | DataBindContext |
+|---|---|
+| `component_list_1.riv` (rows drawn) | `DataBind.propertyKey=800`, `DataBindContext.sourcePathIds=<2B>` |
+| `component_list_follow_path.riv` (rows must not be) | **no properties at all** |
+
+Also checked and excluded as the explanation: the count is not keyframed. The VM
+numbers in the follow-path file are static (`propertyValue` 6.0 and 10.0), and no
+`KeyedProperty` targets key 575, so barring a binding difference rive would compute
+ten rows too — it computes none, which points at the missing source path rather
+than at the number.
+
+So the rule to implement and test: a component list whose `DataBindContext`
+carries no `sourcePathIds` emits **no rows**. `component_list_1` has the source
+path and its rows render; this file has none.
+
 ## The reference never draws list rows — at any frame
 
 Before blaming layout, the obvious alternative was timing: our SM may simply start
