@@ -1,22 +1,45 @@
-# Authored-file parity — first named layers (snapshot 2026-11-18)
+# Authored-file parity
 
 `oracle/authored_parity.py` runs the reference recording renderer and our
 `kr/rive:opsdump` on the same authored file, digests both, and names the first
-layer that differs. This is the snapshot of the first full run; regenerate with
+layer that differs:
 
-    python3 oracle/authored_parity.py            # demo set, human output
-    python3 oracle/authored_parity.py --json      # machine use
+    python3 oracle/authored_parity.py                     # demo set
+    python3 oracle/authored_parity.py --all-artboards F   # every artboard
+    python3 oracle/authored_parity.py --attribute AB F    # per-class draws + skips
 
-| file | artboard | first divergent layer | ref draws | ours draws | ref clips | ours clips |
-|---|---|---|---:|---:|---:|---:|
-| joystick_databound_keyframe_test | Main (11) | drawable-count | 2 | 1 | 0 | 0 |
-| car_widgets_v01 | Main_Artboard (90) | drawable-count | 69 | 71 | 7 | 0 |
-| jellyfish_test | Jellyfish (47) | paint (313131 vs 747474) | 1 | 1 | 1 | 1 |
-| data_viz_demo | Main (315) | drawable-count | 44 | 3 | 8 | 1 |
-| inventory_demo_test_v2 | — | **ref-unavailable** (rive-cpp asset importer assert) | — | — | — | — |
+## Current status (2026-11-18, after the alpha fix)
 
-Every tuned fixture is 30/30. Every authored file diverges at the *structure*
-layer, before state machines, inputs, or time are involved.
+| file | artboard | draws ref/ours | remaining |
+|---|---|---:|---|
+| joystick_databound_keyframe_test | Main | 2/2 | **op-identical** |
+| car_widgets_v01 | Main_Artboard | 612/628 | +16 (layout-driven over-draw) |
+| | TIRE PRESSURE | 68/73 | +5 |
+| | COMPASS | 413/417 | +4 |
+| | G_Meter | 69/66 | −3 (keyframe slot match) |
+| data_viz_demo | Main | 199/196 | −3 |
+| | HorizontalBars | 40/34 | −6 (text runs) |
+| | ColorGuide | 38/38 | order only (38/38 identity) |
+| | VerticalBars | 31/33 | +2 |
+| | LineBars | 20/20 | placement |
+| | Data | 45/46 | +1 |
+| | Pie Chart | 16/16 | placement |
+| | Circles | 44/44 | placement |
+| jellyfish_test | Jellyfish | 2/1, 1/0 | mesh |
+| inventory_demo_test_v2 | — | — | ref-unavailable (importer assert) |
+
+Everything still open reduces to **placement** (layout solver: FLD/text-clip
+placement, Circles/LineBars/Pie offsets), **drawable identity** in the reference
+stream (ordering; blocked on the dumper's undocumented link recipe), or **mesh**.
+
+## History: the first snapshot (superseded)
+
+The original run recorded joystick 2/1, car_widgets 69/71, data_viz 44/3 and
+concluded "every authored file diverges at the structure layer". That conclusion
+was right at the time and is now obsolete: the structural layers were fixed one
+at a time, and the numbers above are the current ones. Kept so the original
+claim is not silently rewritten.
+
 
 ## Three systematic gaps, not four unrelated bugs
 

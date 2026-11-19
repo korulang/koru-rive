@@ -6028,7 +6028,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 out.append(alloc, op0(5)) catch {};
                 var bpm = op0(6); bpm.a = 1; bpm.b = 0; bpm.c = 0; bpm.d = 1; bpm.e = @floatCast(lx); bpm.g = @floatCast(ly); out.append(alloc, bpm) catch {};
                 const isStroke = c.type_key == 24;
-                if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("LAYPAINT obj={d} color={x}\n", .{ pi, lcolor });
+                if (std.posix.getenv("RIVE_TRACE_DRAW") != null) std.debug.print("LAYPAINT obj={d} color={x} t={d:.1},{d:.1} wh={d:.1},{d:.1}\n", .{ pi, lcolor, lx, ly, lw, lh });
                 var bdr = op0(8); bdr.style = if (isStroke) @as(i64, 0) else @as(i64, 1); bdr.color = lcolor; bdr.thick = if (isStroke) propF(c.props, 47, 1) else 0; bdr.join = if (isStroke) propU(c.props, 49, 999) else @as(i64, -1); bdr.cap = if (isStroke) propU(c.props, 48, 999) else @as(i64, -1);
                 if (isStroke) { const dd = dashOf(r, pi); if (dd.len > 0) { bdr.dash = dd.len; bdr.dashOff = dd.off; } }
                 out.append(alloc, bdr) catch {};
