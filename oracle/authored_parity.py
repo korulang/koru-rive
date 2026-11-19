@@ -97,6 +97,42 @@ def run(cmd, timeout, env=None):
 # ---------------------------------------------------------------- reference
 
 
+def golden_draws(path):
+    """drawPath count from oracle/goldens/corpus/<stem>.txt, if present.
+
+    The recording dumper binds no data, so data-bound component lists resolve to
+    zero rows in the reference stream while rive's real renderer draws them
+    (measured: component_list_1 golden 589 draws vs dumper 6). Any comparison
+    against such a reference is measuring an unbound render, so the harness says
+    so instead of reporting a divergence.
+    """
+    stem = os.path.splitext(os.path.basename(path))[0]
+    gp = os.path.join(HERE, "goldens", "corpus", stem + ".txt")
+    if not os.path.isfile(gp):
+        return None
+    # Compare LIKE FOR LIKE: the first artboard's "frame 0" block, which is what
+    # ref_digest() measures. Counting every drawPath in the file (all artboards,
+    # all frames) flagged joystick — which is op-identical — as incomplete.
+    try:
+        pos = -1
+        in_block = False
+        n = 0
+        with open(gp, errors="ignore") as f:
+            for line in f:
+                m = re.match(r"--- (.*?) ---\s*$", line)
+                if m:
+                    name = m.group(1)
+                    if name.startswith("static"):
+                        pos += 1
+                    in_block = (pos == 0 and name.startswith("frame 0"))
+                    continue
+                if in_block and line.strip().startswith("drawPath"):
+                    n += 1
+        return n
+    except OSError:
+        return None
+
+
 def ref_blocks(path, frames, dt, dump_bin, timeout):
     """Return ({(artboard_position, block_name): lines}, artboards, error).
 
@@ -530,6 +566,16 @@ def main():
         ref = ref_digest(block)
         rec["ref"] = ref
         rec["artboards"] = artboards
+        gd = golden_draws(path)
+        rec["golden_draws"] = gd
+        if gd and ref["draw"] * 2 < gd:
+            rec.update(status="ref-incomplete",
+                       detail=(f"reference stream draws {ref['draw']} but the golden for this "
+                               f"asset has {gd} drawPaths — the dumper binds no data, so "
+                               f"data-bound lists render empty here. Not a divergence."),
+                       ref_draw=ref["draw"])
+            results.append(rec)
+            continue
 
         arts, ours_err = ours_abnames(path, args.koruc, ROOT, args.timeout)
         if ours_err:

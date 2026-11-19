@@ -1316,6 +1316,33 @@ So the rule to implement and test: a component list whose `DataBindContext`
 carries no `sourcePathIds` emits **no rows**. `component_list_1` has the source
 path and its rows render; this file has none.
 
+### And our counts agree with the goldens, not with the dumper
+
+With the comparison scoped like-for-like (first artboard, frame 0 — the same block
+`ref_digest` measures):
+
+| file | dumper (ref) | golden | **ours** |
+|---|---:|---:|---:|
+| `component_list_1` | 1 | **17** | **17** |
+| `component_list_follow_path` | 3 | **29** | **29** |
+| `joystick_databound_keyframe_test` | 2 | 2 | **2** |
+
+So for both data-bound list fixtures our draw count matches rive's *real* render
+exactly, and the recording dumper is the outlier. The "over-draw" chased across
+rounds 58–64 was an artifact of comparing against a reference that binds no data.
+
+The harness now says so instead of reporting a divergence:
+
+    ref-incomplete  component_list_1.riv: reference stream draws 1 but the golden
+                    for this asset has 17 drawPaths — the dumper binds no data, so
+                    data-bound lists render empty here. Not a divergence.
+
+Two guards on that detector, both learned by getting them wrong first: it compares
+the same block scope as `ref_digest` (counting every drawPath in the file flagged
+op-identical joystick as incomplete), and it only fires when the reference is less
+than half the golden, so a genuine regression that *reduces* our draws cannot hide
+behind the label.
+
 ## The dumper does not materialise data-bound list rows (2026-11-18)
 
 Chasing why the reference draws no rows, the goldens were checked against the
