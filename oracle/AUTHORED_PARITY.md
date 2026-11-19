@@ -1406,6 +1406,26 @@ it (or in what it draws *besides* the fill), not in list rows.
 Also verified this round: the gate suite is unchanged by the row-placement work —
 33 gates, 32 PASS, 1 KNOWN (mesh), 0 FAIL, plus the leaf self-test PASS.
 
+#### And it is not PairPos either
+
+GPOS was implemented too: feature list → `kern` feature → lookup list, unwrapping
+extension lookups (type 9) into PairPos, coverage formats 1 and 2, ValueFormat
+`xAdvance`. The probe confirms the table is reachable and correctly shaped:
+
+    GPOS at 6060, features 3: cpsp, kern, mark
+    kern lookup type=9 extType=2 extOff=18492 posFormat=1
+
+Tracing the actual glyph pairs of that text, every adjustment is zero:
+
+    PAIR 320->299 adj=0.00   PAIR 299->95 adj=0.00
+    PAIR 409->456 adj=0.00   PAIR 456->320 adj=0.00
+    PAIR 409->161 adj=0.00   PAIR 161->382 adj=0.00
+
+So these glyphs are simply not pair-kerned, and the 0.73 units are neither `kern`
+nor PairPos. Two mechanisms were implemented and both measure zero here; the
+difference must be in single positioning, fractional advance handling, or the
+metric source itself. Recorded so the next step is not another kerning attempt.
+
 ### The text advance difference is GPOS, not `kern` (2026-11-18)
 
 With the clip fixed, the first remaining difference on `component_list_1` is text

@@ -4321,6 +4321,151 @@ fn glyfGlyph(b: []const u8, gid: u32, ends: *std.ArrayList(u32), alloc: std.mem.
 // Without it every text run is too wide — measured on component_list_1 drawable 4,
 // where the golden bbox is 45.1669 and ours 45.9 (about 0.7 units over ~4 glyphs).
 var g_kernProbe = false;
+
+// ---- GPOS pair positioning (advance only) -------------------------------
+// The component_list fonts carry no `kern` table; their pair adjustment lives in
+// GPOS PairPos. Only ValueFormat xAdvance is applied — placement/rotation belong
+// to glyph rendering, not to pen advance.
+fn gposCovIndex(b: []const u8, cov: usize, gid: u32) ?usize {
+    if (cov + 4 > b.len) return null;
+    const fmt = be16(b, cov);
+    if (fmt == 1) {
+        const n = be16(b, cov + 2);
+        var lo: usize = 0;
+        var hi: usize = n;
+        while (lo < hi) {
+            const mid = lo + (hi - lo) / 2;
+            const o = cov + 4 + mid * 2;
+            if (o + 2 > b.len) return null;
+            const g = be16(b, o);
+            if (g == gid) return mid;
+            if (g < gid) lo = mid + 1 else hi = mid;
+        }
+        return null;
+    }
+    if (fmt == 2) {
+        const n = be16(b, cov + 2);
+        var i: usize = 0;
+        while (i < n) : (i += 1) {
+            const ro = cov + 4 + i * 6;
+            if (ro + 6 > b.len) return null;
+            const start = be16(b, ro);
+            const end = be16(b, ro + 2);
+            const baseIdx = be16(b, ro + 4);
+            if (gid >= start and gid <= end) return @intCast(@as(i64, @intCast(baseIdx)) + @as(i64, @intCast(gid)) - @as(i64, @intCast(start)));
+        }
+        return null;
+    }
+    return null;
+}
+
+fn gposValueXAdvance(b: []const u8, v: usize, fmt: u32) f32 {
+    // Field order per OpenType: xPlacement, yPlacement, xAdvance, yAdvance.
+    if ((fmt & 4) == 0) return 0;
+    var o = v;
+    if ((fmt & 1) != 0) o += 2;
+    if ((fmt & 2) != 0) o += 2;
+    if (o + 2 > b.len) return 0;
+    return @floatFromInt(beS16(b, o));
+}
+
+fn gposPairSub(b: []const u8, sub: usize, left: u32, right: u32) f32 {
+    if (sub + 10 > b.len) return 0;
+    if (be16(b, sub) != 1) return 0; // PairPos format 1
+    const covOff = be16(b, sub + 2);
+    const vf1 = be16(b, sub + 4);
+    const vf2 = be16(b, sub + 6);
+    const psCount = be16(b, sub + 8);
+    const idx = gposCovIndex(b, sub + covOff, left) orelse return 0;
+    if (idx >= psCount) return 0;
+    const psOff = be16(b, sub + 10 + idx * 2);
+    const ps = sub + psOff;
+    if (ps + 2 > b.len) return 0;
+    const npair = be16(b, ps);
+    const recSize: usize = 2 + 2 * @as(usize, @popCount(vf1)) + 2 * @as(usize, @popCount(vf2));
+    var i: usize = 0;
+    while (i < npair) : (i += 1) {
+        const rec = ps + 2 + i * recSize;
+        if (rec + recSize > b.len) return 0;
+        if (be16(b, rec) == right) return gposValueXAdvance(b, rec + 2, vf1);
+    }
+    return 0;
+}
+
+fn gposPairLookup(b: []const u8, lookList: usize, lookupIdx: u32, left: u32, right: u32) f32 {
+    const ll = lookList;
+    const n = be16(b, ll);
+    if (lookupIdx >= n) return 0;
+    const lo = ll + be16(b, ll + 2 + lookupIdx * 2);
+    if (lo + 6 > b.len) return 0;
+    const ltype = be16(b, lo);
+    const nsub = be16(b, lo + 4);
+    var s: usize = 0;
+    while (s < nsub) : (s += 1) {
+        const sub = lo + be16(b, lo + 6 + s * 2);
+        if (ltype == 2) {
+            const v = gposPairSub(b, sub, left, right);
+            if (v != 0) return v;
+        } else if (ltype == 9) {
+            // Extension: format(2) extensionLookupType(2) extensionOffset(4)
+            if (sub + 8 > b.len) continue;
+            if (be16(b, sub + 2) == 2) {
+                const v = gposPairSub(b, sub + be32(b, sub + 4), left, right);
+                if (v != 0) return v;
+            }
+        }
+    }
+    return 0;
+}
+
+var g_gposProbe = false;
+var g_gposPairs: u32 = 0;
+fn gposPairAdvance(b: []const u8, left: u32, right: u32) f32 {
+    const gp = sfntFind(b, tag4("GPOS")) orelse return 0;
+    const base: usize = @intCast(gp.off);
+    if (base + 10 > b.len) return 0;
+    const featOff = be16(b, base + 6);
+    const lookOff = be16(b, base + 8);
+    const fl = base + featOff;
+    if (fl + 2 > b.len) return 0;
+    const nfeat = be16(b, fl);
+    if (!g_gposProbe and std.posix.getenv("RIVE_TRACE_GPOS") != null) {
+        g_gposProbe = true;
+        std.debug.print("GPOS at {d}, features {d}\n", .{ gp.off, nfeat });
+        var di: usize = 0;
+        while (di < nfeat and di < 8) : (di += 1) {
+            const ro = fl + 2 + di * 6;
+            if (ro + 6 > b.len) break;
+            std.debug.print("  feat tag={x} off={d}\n", .{ be32(b, ro), be16(b, ro + 4) });
+        }
+    }
+    const want = tag4("kern");
+    var i: usize = 0;
+    while (i < nfeat) : (i += 1) {
+        const ro = fl + 2 + i * 6;
+        if (ro + 6 > b.len) return 0;
+        if (be32(b, ro) != want) continue;
+        const ft = fl + be16(b, ro + 4);
+        if (ft + 4 > b.len) continue;
+        const nidx = be16(b, ft + 2);
+        var k: usize = 0;
+        while (k < nidx) : (k += 1) {
+            const idx = be16(b, ft + 4 + k * 2);
+            if (std.posix.getenv("RIVE_TRACE_GPOS") != null and i == 1 and k == 0) {
+                const ll = base + lookOff;
+                const lo2 = ll + be16(b, ll + 2 + idx * 2);
+                const ltp = be16(b, lo2);
+                _ = be16(b, lo2 + 4);
+                const sub0 = lo2 + be16(b, lo2 + 6);
+                std.debug.print("  kern lookup type={d} sub0format={d} extType={d} extOff={d} posFormat={d}\n", .{ ltp, be16(b, sub0), be16(b, sub0 + 2), be32(b, sub0 + 4), be16(b, sub0 + be32(b, sub0 + 4)) });
+            }
+            const v = gposPairLookup(b, base + lookOff, idx, left, right);
+            if (v != 0) return v;
+        }
+    }
+    return 0;
+}
+
 fn kernAt(b: []const u8, left: u32, right: u32) f32 {
     const kt = sfntFind(b, tag4("kern")) orelse {
         if (!g_kernProbe and std.posix.getenv("RIVE_TRACE_KERN") != null) {
@@ -4928,7 +5073,14 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
         if (cl != curLine) { curLine = cl; pen = 0; prevGid = null; baseY = asc + @as(f64, @floatFromInt(cl)) * lineHeight; }
         if (ch < 0x20) continue;
         const gid = cmapGlyph(font, ch);
-        if (prevGid) |pg| pen += @as(f64, kernAt(font, pg, gid)) * scale;
+        if (prevGid) |pg| {
+            const adj = gposPairAdvance(font, pg, gid);
+            if (std.posix.getenv("RIVE_TRACE_GPOS") != null and g_gposPairs < 6) {
+                g_gposPairs += 1;
+                std.debug.print("PAIR {d}->{d} adj={d:.2} scale={d:.5}\n", .{ pg, gid, adj, scale });
+            }
+            pen += @as(f64, (kernAt(font, pg, gid) + adj)) * scale;
+        }
         prevGid = gid;
         var ends = std.ArrayList(u32).empty; defer ends.deinit(alloc);
         const gp = glyfGlyph(font, gid, &ends, alloc);
