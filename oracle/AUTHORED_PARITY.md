@@ -784,6 +784,22 @@ produces the shader headers, or the exact command), then re-apply:
     // record.hpp, drawPath format string: "drawPath shape=%s style=%d ..."
     // and pass (g_rive_shape_name ? g_rive_shape_name : "") first
 
+## Ordering is material, not cosmetic (2026-11-18)
+
+Before writing off draw order, the question "does it matter?" was measured from
+the reference geometry (bbox overlap per artboard, frame 0):
+
+| artboard | draws | overlapping pairs |
+|---|---:|---:|
+| ColorGuide | 38 | **703 / 703** |
+| Circles | 44 | 748 / 946 |
+| LineBars | 20 | 95 / 190 |
+| Pie Chart | 15 | 81 / 105 |
+
+Every pair overlaps on ColorGuide, so order changes what is painted over what —
+it cannot be dismissed as cosmetic, and the identity work stays justified rather
+than optional.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
