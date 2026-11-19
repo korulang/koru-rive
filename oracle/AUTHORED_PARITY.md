@@ -1007,6 +1007,31 @@ That is worth knowing before anyone starts the constraints work: it looks like a
 self-contained feature (100 instances, rive-cpp's math is 20 lines) and is
 actually gated on the reference's id space.
 
+## The constraint target's chain does not explain the drawing (2026-11-18)
+
+Resolving the target properly (slot 326 -> LayoutComponent 2419) and walking its
+chain gives flex parameters that *cannot* produce the reference layout:
+
+    2419  25 x 110   sibling of 5 more 25 x 110 boxes
+    2418  144 x 117  style: paddingLeft = 100, alignmentType = 7
+    2417  257 x 187  style: flexDirection = 0, alignmentType = 4
+    2415  21 x 124.281
+
+The reference draws six white circles at x = 156.29, 212.57, 268.86, ... —
+spacing 56.29, total span ~281. Six children of 25 in a 144-wide box with
+248 of padding cannot give that, and `2415` being 21 wide cannot contain `2417`
+at 257 wide.
+
+So the drawn circles are **not** these layout components; the constraint chain I
+traced belongs to something else in the tree. My mapping "constraint target =
+the circle's container" was wrong, and building a flex solver against it would
+have produced a wrong model with a plausible story attached.
+
+**Next:** identify the actual drawables at those positions — the shapes whose
+world transform matches the reference's draw transforms — before any layout work.
+That is the same discipline that found the alpha bug: check the object, not the
+story around it.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
