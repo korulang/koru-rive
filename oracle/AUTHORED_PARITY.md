@@ -747,6 +747,43 @@ the existing binary stays untouched until the new one works.
 That is a deliberate maintenance task, not a round-sized edit — recorded with the
 commands so it can be run when the oracle can be offline for ~20 minutes.
 
+## Isolated rebuild: the library builds, the dumper does not relink (2026-11-18)
+
+The plan was executed in a copy, so the working oracle never moved:
+
+    rsync -a --exclude out --exclude .git rive-cpp/ /tmp/rive-build/   # 533MB, 5s
+    # patched Shape::draw:  const char* g_rive_shape_name = "";
+    #                      g_rive_shape_name = name().c_str();
+    cd /tmp/rive-build && ./build/build_rive.sh                        # EXIT=0
+
+The library builds with the hook. **Relinking the dumper does not**, and the
+reason is a missing recipe rather than a code problem:
+
+    undefined symbol: typeinfo for rive::Renderer
+    nm -g /tmp/rive-build/out/debug/librive.a | grep _ZTIN5rive8RendererE -> 0
+    ls /tmp/rive-build/out/debug/*.a   # no renderer archive
+
+Compiling `renderer/src/*.cpp` to supply it fails on
+`generated/shaders/tessellate.glsl.exports.h` (shader headers produced during a
+build target we are not invoking), and `-fno-rtti` breaks other symbols
+(`RiveRenderPaint::getIsOpaque`). So `oracle/dump` was originally linked with a
+configuration that is not recorded in the repo — that is the missing piece.
+
+Both source patches were reverted: `record.hpp` referencing a symbol the shipped
+`librive.a` does not define would be a footgun for anyone relinking.
+
+**To finish this:** recover the dumper's link recipe (the build target that
+produces the shader headers, or the exact command), then re-apply:
+
+    // shape.cpp (after includes)
+    const char* g_rive_shape_name = "";
+    // shape.cpp, first line of Shape::draw
+    g_rive_shape_name = name().c_str();
+    // record.hpp
+    extern const char* g_rive_shape_name;
+    // record.hpp, drawPath format string: "drawPath shape=%s style=%d ..."
+    // and pass (g_rive_shape_name ? g_rive_shape_name : "") first
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
