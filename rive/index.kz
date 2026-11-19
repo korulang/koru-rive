@@ -5237,6 +5237,45 @@ fn dumpGraph(r: *Riv) void {
     return "hello";
 }
 
+// Per-handle independence, checkable rather than asserted (LEAF_CONTRACT R1).
+// Opens the same file twice, mutates only the first handle's input schedule and
+// pointer log, and fails if the second sees any of it.
+~pub tor selftest.handles { path: string }
+~proc selftest.handles|zig {
+    const a = decodeImpl(path) orelse { std.debug.print("selftest.handles: open a failed\n", .{}); return; };
+    const b = decodeImpl(path) orelse { std.debug.print("selftest.handles: open b failed\n", .{}); return; };
+    ensureSmInputs(a);
+    ensureSmInputs(b);
+    ensurePtrSeed(&a.ptr_log);
+    ensurePtrSeed(&b.ptr_log);
+    const a_in = a.inputs.items.len;
+    const b_in = b.inputs.items.len;
+    a.inputs.append(std.heap.page_allocator, .{ .name = "__selftest__", .val = true, .frame = 0 }) catch {};
+    a.ptr_log.events.append(std.heap.page_allocator, .{ .ab = -1, .x = 0, .y = 0, .frame = 0, .id = 0 }) catch {};
+    var leaks_input = b.inputs.items.len != b_in;
+    var leaks_ptr = b.ptr_log.events.items.len != 0;
+    for (b.inputs.items) |ev| {
+        if (std.mem.eql(u8, ev.name, "__selftest__")) leaks_input = true;
+    }
+    for (b.ptr_log.events.items) |_| leaks_ptr = true;
+    const vm_leak = blk: {
+        a.vm_bound = true;
+        a.vm_vmid = 7;
+        a.vm_inst = 3;
+        break :blk b.vm_bound or b.vm_vmid != -1 or b.vm_inst != -1;
+    };
+    const ok = !leaks_input and !leaks_ptr and !vm_leak and ((a_in > 0) == (b_in > 0));
+    std.heap.page_allocator.free(a.bytes);
+    std.heap.page_allocator.free(a.objects);
+    std.heap.page_allocator.free(b.bytes);
+    std.heap.page_allocator.free(b.objects);
+    if (!ok) {
+        std.debug.print("selftest.handles: FAIL input_leak={} ptr_leak={} vm_leak={}\n", .{ leaks_input, leaks_ptr, vm_leak });
+        return;
+    }
+    std.debug.print("selftest.handles: ok (input, pointer and vm bindings are per-handle)\n", .{});
+}
+
 ~pub tor opsdump { r: *Riv<loaded>, ab: i64, frame: i64 }
 ~proc opsdump|zig {
     if (frame < 0) {

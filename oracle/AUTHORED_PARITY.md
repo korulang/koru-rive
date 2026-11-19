@@ -1089,6 +1089,16 @@ They are still globals (moving them onto `Riv` needs the eval path to take a
 mutable handle, a wide ripple); what changed is that they can no longer be left
 dirty. car_widgets 628/612 unchanged, joystick op-identical.
 
+**R1 is now tested, not just asserted.** `selftest.handles { path }` opens the
+same file twice, mutates only the first handle's input schedule, pointer log and
+VM binding, and fails if the second handle can see any of it:
+
+    selftest.handles: ok (input, pointer and vm bindings are per-handle)
+
+The earlier rounds could only argue independence structurally ("the fields are on
+the handle"). This makes it checkable — a regression that reintroduces a global
+would fail here rather than being discovered by a caller with two leaves.
+
 **Remaining R1 violations, for the record:** `g_activeAnim`, `g_blendFrom/T`,
 `g_smInputs` (the input schedule), `g_cframe`, `g_rowVmid/g_instVmid/g_rowInstOrd`
 are still module-global. They are the same class of problem and the same fix —
