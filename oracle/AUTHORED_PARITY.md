@@ -1406,6 +1406,27 @@ it (or in what it draws *besides* the fill), not in list rows.
 Also verified this round: the gate suite is unchanged by the row-placement work —
 33 gates, 32 PASS, 1 KNOWN (mesh), 0 FAIL, plus the leaf self-test PASS.
 
+### The text advance difference is GPOS, not `kern` (2026-11-18)
+
+With the clip fixed, the first remaining difference on `component_list_1` is text
+geometry: golden drawable 4 spans `(0.9659, 4.6307)-(45.1669, 19.5739)`, ours
+`(1.0, 4.6)-(45.9, 19.6)` — about 0.73 units wider over four glyphs. That is the
+signature of missing pair adjustment, so `kern` was implemented: format-0
+horizontal pairs from the font's `kern` table, binary-searched and applied between
+adjacent glyphs (the code stays, and is a correctness fix for fonts that carry one).
+
+It changed nothing, and a one-shot probe says why:
+
+    KERN: no `kern` table in 805528-byte font
+
+The embedded font has **no `kern` table** — its pair positioning lives in **GPOS**
+(PairPos). So the remaining 0.73 needs GPOS parsing, not `kern`. Recorded rather
+than guessed at: the next step is PairPos format 1/2 lookup, which is a real
+feature rather than a rounding tweak.
+
+Gates unchanged by the `kern` work: 32 PASS, 1 KNOWN, 0 FAIL; joystick
+op-identical.
+
 **First fix from golden comparison: the root artboard is not clipped.** Our code
 emitted an artboard-bounds clip unconditionally (`clipOn` defaults true), giving
 `component_list_1` two clips where the golden has one. Reading the golden makes the

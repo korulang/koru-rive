@@ -4316,6 +4316,58 @@ fn glyfGlyph(b: []const u8, gid: u32, ends: *std.ArrayList(u32), alloc: std.mem.
 }
 
 
+
+// Kerning: horizontal format-0 pairs from the font's `kern` table, in font units.
+// Without it every text run is too wide — measured on component_list_1 drawable 4,
+// where the golden bbox is 45.1669 and ours 45.9 (about 0.7 units over ~4 glyphs).
+var g_kernProbe = false;
+fn kernAt(b: []const u8, left: u32, right: u32) f32 {
+    const kt = sfntFind(b, tag4("kern")) orelse {
+        if (!g_kernProbe and std.posix.getenv("RIVE_TRACE_KERN") != null) {
+            g_kernProbe = true;
+            std.debug.print("KERN: no `kern` table in {d}-byte font\n", .{b.len});
+        }
+        return 0;
+    };
+    if (!g_kernProbe and std.posix.getenv("RIVE_TRACE_KERN") != null) {
+        g_kernProbe = true;
+        std.debug.print("KERN: table at off={d} len={d}\n", .{ kt.off, b.len });
+    }
+    const base: usize = @intCast(kt.off);
+    if (base + 4 > b.len) return 0;
+    if (be16(b, base) != 0) return 0; // version 0 only (Apple/OT)
+    const ntab = be16(b, base + 2);
+    var p: usize = base + 4;
+    var t: usize = 0;
+    while (t < ntab and p + 14 <= b.len) : (t += 1) {
+        const length = be16(b, p + 2);
+        const coverage = be16(b, p + 4);
+        const format = coverage >> 8;
+        const horizontal = (coverage & 1) != 0;
+        if (length == 0) break;
+        if (format == 0 and horizontal) {
+            const npairs = be16(b, p + 6);
+            const q0 = p + 14;
+            var lo: usize = 0;
+            var hi: usize = npairs;
+            while (lo < hi) {
+                const mid = lo + (hi - lo) / 2;
+                const e = q0 + mid * 6;
+                if (e + 6 > b.len) break;
+                const l = be16(b, e);
+                const r = be16(b, e + 2);
+                if (l == left and r == right) {
+                    const raw: u16 = @intCast(be16(b, e + 4));
+                    return @floatFromInt(@as(i16, @bitCast(raw)));
+                }
+                if (l < left or (l == left and r < right)) lo = mid + 1 else hi = mid;
+            }
+        }
+        p += length;
+    }
+    return 0;
+}
+
 fn hmtxAdvance(b: []const u8, gid: u32) f32 {
     const hm = sfntFind(b, tag4("hmtx")) orelse return 0;
     const hh = sfntFind(b, tag4("hhea")) orelse return 0;
@@ -4823,6 +4875,7 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
     const t_valign = propU(tobj.props, 685, 0);
     _ = frame;
     var pen: f64 = 0;
+    var prevGid: ?u32 = null;
 
     // Fixed box layout (text.cpp): wrap at box width, cap lines by box
     // height, overflow=ellipsis(287==3) substitutes U+2026 for the tail.
@@ -4872,9 +4925,11 @@ fn textDrawPath(r: *const Riv, textIdx: usize, frame: i64, alloc: std.mem.Alloca
     var curLine: i64 = -1;
     var baseY: f64 = asc;
     for (cps.items, cpsLine.items) |ch, cl| {
-        if (cl != curLine) { curLine = cl; pen = 0; baseY = asc + @as(f64, @floatFromInt(cl)) * lineHeight; }
+        if (cl != curLine) { curLine = cl; pen = 0; prevGid = null; baseY = asc + @as(f64, @floatFromInt(cl)) * lineHeight; }
         if (ch < 0x20) continue;
         const gid = cmapGlyph(font, ch);
+        if (prevGid) |pg| pen += @as(f64, kernAt(font, pg, gid)) * scale;
+        prevGid = gid;
         var ends = std.ArrayList(u32).empty; defer ends.deinit(alloc);
         const gp = glyfGlyph(font, gid, &ends, alloc);
         var on_cnt: usize = 0;
