@@ -1492,6 +1492,22 @@ So the golden's rows are unbound-default, while we resolve a bound colour. That 
 the opposite direction from every earlier "we miss data" finding: here we apply
 data the reference render did not.
 
+**Size of the mismatch, and what it implies.** car_widgets contains **17**
+`ClippingShape` components. The reference's per-artboard clips are 25 for Main, and
+its nested artboards account for 24 (5 + 12 + 7) — i.e. rive pushes **one clip per
+ClippingShape component**, wrapping that component's subtree.
+
+We push **one clip per clipped shape**: 276 shapes sit under some `ClippingShape`
+ancestor, and each pushes its own copy of the same clip. Deduplicating per shape
+(`if (clipPushed) continue;`) changed nothing, which confirms the pushes are
+one-per-shape rather than one-per-shape-with-several-matches.
+
+So this is structural: the clip belongs around a *group* of draws, not around each
+draw. Emitting it correctly means tracking the active clipping-shape stack while
+walking draws in stream order — push when a shape's ancestor chain gains a CS, pop
+when it loses one. That is a change to the shape loop's structure, not a predicate,
+so it is recorded here rather than attempted at the end of a round.
+
 ### Every one of those clips comes from the ClippingShape path
 
 Gating the `ClippingShape` push off entirely (and leaving the artboard and
