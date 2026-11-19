@@ -1057,6 +1057,17 @@ Independence is now structural rather than tested: two handles own their own
 fields. A runtime two-handle test needs a probe that threads two handles through
 Koru's `|>` chain; that is worth writing when the facade grows its next verb.
 
+**The input schedule is per-handle now.** `input.fire` had no handle parameter
+at all (`{ name, value, frame }`) and appended to one process-global list, so two
+leaves shared one input timeline. It is `{ r, name, value, frame }` and appends to
+`Riv.inputs`; `RIVE_INPUTS` seeds the handle at `open` instead of lazily into the
+global. `smInputBoolAt`/`smInputEventFrame` read the handle.
+
+This is not an invention: `LEAF_CONTRACT.md` already specified
+`leaf.input.fire { leaf, name, value, at_frame? }`. The implementation was behind
+its own contract, which is worth noting — the ruling existed and the verb ignored
+it. joystick op-identical, data_viz counts unchanged.
+
 **Remaining R1 violations, for the record:** `g_activeAnim`, `g_blendFrom/T`,
 `g_smInputs` (the input schedule), `g_cframe`, `g_rowVmid/g_instVmid/g_rowInstOrd`
 are still module-global. They are the same class of problem and the same fix —

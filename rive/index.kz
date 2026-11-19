@@ -1168,6 +1168,10 @@ const Riv = struct {
     vm_bound: bool = false,
     vm_vmid: i64 = -1,
     vm_inst: i64 = -1,
+    // SM input schedule, per handle (R1). Two leaves must be able to hold
+    // different input timelines; this used to be one process-global list.
+    inputs: std.ArrayList(SmInputEvent) = .empty,
+    inputs_seeded: bool = false,
 };
 
 fn readValue(b: []const u8, pos: *usize, field: i8) ?PropValue {
@@ -2267,12 +2271,9 @@ fn kfOwnerOk(r: *const Riv, keyedObjIdx: i64) bool {
 // input holds its latest value at-or-before the render frame (default
 // false), mirroring render_browser.mjs's schedule.
 const SmInputEvent = struct { name: []const u8, val: bool, frame: i64 };
-var g_smInputsInit = false;
-var g_smInputs = std.ArrayList(SmInputEvent).empty;
-
-fn ensureSmInputs() void {
-    if (g_smInputsInit) return;
-    g_smInputsInit = true;
+fn ensureSmInputs(r: *Riv) void {
+    if (r.inputs_seeded) return;
+    r.inputs_seeded = true;
     const s = std.posix.getenv("RIVE_INPUTS") orelse return;
     var it = std.mem.splitScalar(u8, s, ';');
     while (it.next()) |ent| {
@@ -2284,24 +2285,22 @@ fn ensureSmInputs() void {
         const valStr = e[colon.? + 1 .. at.?];
         const fr = std.fmt.parseInt(i64, e[at.? + 1 ..], 10) catch 0;
         const val = std.mem.eql(u8, valStr, "true") or std.mem.eql(u8, valStr, "1");
-        g_smInputs.append(std.heap.page_allocator, .{ .name = e[0..colon.?], .val = val, .frame = fr }) catch {};
+        r.inputs.append(std.heap.page_allocator, .{ .name = e[0..colon.?], .val = val, .frame = fr }) catch {};
     }
 }
 
-fn smInputBoolAt(name: []const u8, frame: i64) bool {
-    ensureSmInputs();
+fn smInputBoolAt(r: *const Riv, name: []const u8, frame: i64) bool {
     var v = false;
-    for (g_smInputs.items) |ev| {
+    for (r.inputs.items) |ev| {
         if (ev.frame <= frame and std.mem.eql(u8, ev.name, name)) v = ev.val;
     }
     return v;
 }
 
 // Frame at which the input's current value was set (latest event<=frame).
-fn smInputEventFrame(name: []const u8, frame: i64) i64 {
-    ensureSmInputs();
+fn smInputEventFrame(r: *const Riv, name: []const u8, frame: i64) i64 {
     var f: i64 = -1;
-    for (g_smInputs.items) |ev| {
+    for (r.inputs.items) |ev| {
         if (ev.frame <= frame and std.mem.eql(u8, ev.name, name)) f = ev.frame;
     }
     return f;
@@ -2480,9 +2479,9 @@ fn smActiveAnimIdx(r: *const Riv, abIdx: usize, frame: i64) i64 {
                 var pass = false;
                 if (iid >= 0 and iid < @as(i64, @intCast(inputNames.items.len))) {
                     const nm = inputNames.items[@intCast(iid)];
-                    const val = smInputBoolAt(nm, frame);
+                    const val = smInputBoolAt(r, nm, frame);
                     pass = if (op == 0) val else !val;
-                    if (pass and curTrig < 0) curTrig = smInputEventFrame(nm, frame);
+                    if (pass and curTrig < 0) curTrig = smInputEventFrame(r, nm, frame);
                 }
                 if (!pass) curOk = false;
             }
@@ -5089,8 +5088,10 @@ fn dumpGraph(r: *Riv) void {
 | failed string
 
 ~proc open|zig {
-    // (a fresh Riv starts unbound; the fields default)
+    // A fresh Riv starts unbound with an empty input schedule; the handle owns
+    // both from here on (R1).
     const r = decodeImpl(path) orelse return .{ .failed = "not a .riv or truncated" };
+    ensureSmInputs(r);
     return .{ .loaded = r };
 }
 
@@ -5149,15 +5150,15 @@ fn dumpGraph(r: *Riv) void {
 // latest-event-at-or-before-frame semantics as the RIVE_INPUTS env
 // schedule. val: 0/1 (bool inputs only; number/trigger inputs are a
 // named gap until eval grows those readers).
-~pub tor input.fire { name: string, val: i64, frame: i64 }
+~pub tor input.fire { r: *Riv<loaded>, name: string, val: i64, frame: i64 }
 
 ~proc input.fire|zig {
-    ensureSmInputs();
+    ensureSmInputs(r);
     const nm = std.heap.page_allocator.dupe(u8, name) catch {
         std.debug.print("input.fire: oom\n", .{});
         return;
     };
-    g_smInputs.append(std.heap.page_allocator, .{ .name = nm, .val = val != 0, .frame = frame }) catch {
+    r.inputs.append(std.heap.page_allocator, .{ .name = nm, .val = val != 0, .frame = frame }) catch {
         std.debug.print("input.fire: oom\n", .{});
         return;
     };
