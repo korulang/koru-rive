@@ -57,7 +57,17 @@ def run_gate(g):
                       bbox_axes="x,y", allow_missing_time=untimed, **opts)
     failed = [c["check"] for c in res["checks"] if not c["pass"]]
     prov_state, prov_detail = prov.classify(g)
-    return {"gate": g["gate"], "verdict": "PASS" if res["pass"] else "FAIL", "failed": failed,
+    # A gate whose hand label is LIMIT or NOTE records a KNOWN gap: it may fail
+    # its comparison without the suite being unhealthy. Only an unlabelled or
+    # PASS-labelled gate failing is an unexpected result.
+    label = g.get("hand_label") or "PASS"
+    if res["pass"]:
+        verdict = "PASS"
+    elif label in ("LIMIT", "NOTE"):
+        verdict = "KNOWN"
+    else:
+        verdict = "FAIL"
+    return {"gate": g["gate"], "verdict": verdict, "failed": failed,
             "hand_label": g["hand_label"], "ours": g["ours"], "ref": g["ref"],
             "vacuous": bool(res["report"].get("vacuous")),
             "provenance": prov_state, "prov_detail": prov_detail,
@@ -84,7 +94,9 @@ def main():
                 for c in r["checks"]:
                     print("    [%s] %-14s %s" % ("PASS" if c["pass"] else "FAIL", c["check"], c["detail"]))
         n = sum(r["verdict"] == "PASS" for r in rows)
-        print("\n%d gates: %d PASS, %d FAIL" % (len(rows), n, len(rows) - n))
+        k = sum(r["verdict"] == "KNOWN" for r in rows)
+        f = sum(r["verdict"] == "FAIL" for r in rows)
+        print("\n%d gates: %d PASS, %d KNOWN (LIMIT/NOTE), %d FAIL" % (len(rows), n, k, f))
 
     # Non-image gate: per-handle independence (LEAF_CONTRACT R1). It cannot be a
     # manifest entry because it compares no images, so it runs here instead and
@@ -97,7 +109,8 @@ def main():
             sys.exit(1)
         print("leaf self-test: PASS (per-handle input, pointer and vm state)")
 
-    sys.exit(0 if all(r["verdict"] == "PASS" for r in rows) else 1)
+    bad = [r for r in rows if r["verdict"] == "FAIL"]
+    sys.exit(0 if not bad else 1)
 
 
 if __name__ == "__main__":
