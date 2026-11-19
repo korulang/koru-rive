@@ -892,3 +892,17 @@ Per-file mechanism feeding unresolved colorValue:
 Fix surface for eval leg: (1) KeyFrameColor sampling, (2) VM-color bind
 resolution, (3) SolidColor default when colorValue absent. kfdouble
 tracks are probably red herrings for color (opacity/transform).
+
+## component_stateful_vm_instance_2 — text-metrics class (t4j, coord t47)
+
+- Golden `Component` ev2 drawPath: `verbs=129 pts=304` — glyph-outline path
+  data, i.e. a TEXT draw, not a shape. Embedded TTF (876KB blob: GDEF/GPOS/
+  glyf/hmtx tables) drives real font metrics.
+- Our divergence: consistent small vertex offsets (dx~0.127 standalone,
+  dx~0.049 nested) = advance/position metric differences, same frontier as
+  t47's kerned-advance work (k~1.047).
+- VM machinery on this file is CORRECT: `boundColorProp` lands ff00ff12
+  (SolidColor.colorValue pk=37 bind, propId=554=1 identity confirmed);
+  zero boundStaticProp hits, fully static output — offsets are purely
+  text-layout, not binds/keyframes/order.
+- Fixture status: honest text-rendering residual; joins t47's class.

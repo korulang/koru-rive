@@ -35,6 +35,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -79,6 +139,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.9783 0.2071 -0.2071 0.9783 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.9783 0.2071 -0.2071 0.9783 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.9783 0.2071 -0.2071 0.9783 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -88,7 +208,7 @@ save
     V 5
   restore
 restore
---- frame 1 t=0.0667 ---
+--- frame 1 t=0.0666 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -122,6 +242,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.8104 0.5859 -0.5859 0.8104 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.8104 0.5859 -0.5859 0.8104 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.8104 0.5859 -0.5859 0.8104 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -131,7 +311,7 @@ save
     V 5
   restore
 restore
---- frame 2 t=0.1000 ---
+--- frame 2 t=0.0999 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -165,6 +345,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.5034 0.8640 -0.8640 0.5034 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.5034 0.8640 -0.8640 0.5034 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.5034 0.8640 -0.8640 0.5034 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -174,7 +414,7 @@ save
     V 5
   restore
 restore
---- frame 3 t=0.1333 ---
+--- frame 3 t=0.1332 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -208,6 +448,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.1100 0.9939 -0.9939 0.1100 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.1100 0.9939 -0.9939 0.1100 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.1100 0.9939 -0.9939 0.1100 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -217,7 +517,7 @@ save
     V 5
   restore
 restore
---- frame 4 t=0.1667 ---
+--- frame 4 t=0.1665 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -251,6 +551,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.3022 0.9532 -0.9532 -0.3022 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.3022 0.9532 -0.9532 -0.3022 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.3022 0.9532 -0.9532 -0.3022 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -260,7 +620,7 @@ save
     V 5
   restore
 restore
---- frame 5 t=0.2000 ---
+--- frame 5 t=0.1998 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -294,6 +654,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.6626 0.7489 -0.7489 -0.6626 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.6626 0.7489 -0.7489 -0.6626 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.6626 0.7489 -0.7489 -0.6626 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -303,7 +723,7 @@ save
     V 5
   restore
 restore
---- frame 6 t=0.2333 ---
+--- frame 6 t=0.2331 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -337,6 +757,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.9093 0.4161 -0.4161 -0.9093 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.9093 0.4161 -0.4161 -0.9093 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.9093 0.4161 -0.4161 -0.9093 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -346,7 +826,7 @@ save
     V 5
   restore
 restore
---- frame 7 t=0.2667 ---
+--- frame 7 t=0.2664 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -380,6 +860,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.9999 0.0119 -0.0119 -0.9999 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.9999 0.0119 -0.0119 -0.9999 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.9999 0.0119 -0.0119 -0.9999 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -389,7 +929,7 @@ save
     V 5
   restore
 restore
---- frame 8 t=0.3000 ---
+--- frame 8 t=0.2997 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -423,6 +963,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.9189 -0.3944 0.3944 -0.9189 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.9189 -0.3944 0.3944 -0.9189 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.9189 -0.3944 0.3944 -0.9189 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -432,7 +1032,7 @@ save
     V 5
   restore
 restore
---- frame 9 t=0.3333 ---
+--- frame 9 t=0.3330 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -466,6 +1066,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.6802 -0.7330 0.7330 -0.6802 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.6802 -0.7330 0.7330 -0.6802 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.6802 -0.7330 0.7330 -0.6802 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -475,7 +1135,7 @@ save
     V 5
   restore
 restore
---- frame 10 t=0.3667 ---
+--- frame 10 t=0.3663 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -509,6 +1169,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.3248 -0.9458 0.9458 -0.3248 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.3248 -0.9458 0.9458 -0.3248 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.3248 -0.9458 0.9458 -0.3248 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -518,7 +1238,7 @@ save
     V 5
   restore
 restore
---- frame 11 t=0.4000 ---
+--- frame 11 t=0.3996 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -552,6 +1272,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.0864 -0.9963 0.9963 0.0864 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.0864 -0.9963 0.9963 0.0864 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.0864 -0.9963 0.9963 0.0864 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -561,7 +1341,7 @@ save
     V 5
   restore
 restore
---- frame 12 t=0.4333 ---
+--- frame 12 t=0.4329 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -595,6 +1375,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.4828 -0.8757 0.8757 0.4828 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.4828 -0.8757 0.8757 0.4828 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.4828 -0.8757 0.8757 0.4828 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -604,7 +1444,7 @@ save
     V 5
   restore
 restore
---- frame 13 t=0.4667 ---
+--- frame 13 t=0.4662 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -638,6 +1478,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.7963 -0.6049 0.6049 0.7963 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.7963 -0.6049 0.6049 0.7963 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.7963 -0.6049 0.6049 0.7963 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -647,7 +1547,7 @@ save
     V 5
   restore
 restore
---- frame 14 t=0.5000 ---
+--- frame 14 t=0.4995 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -681,6 +1581,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.9731 -0.2303 0.2303 0.9731 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.9731 -0.2303 0.2303 0.9731 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.9731 -0.2303 0.2303 0.9731 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -690,7 +1650,7 @@ save
     V 5
   restore
 restore
---- frame 15 t=0.5333 ---
+--- frame 15 t=0.5328 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -724,6 +1684,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.9796 0.2010 -0.2010 0.9796 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.9796 0.2010 -0.2010 0.9796 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.9796 0.2010 -0.2010 0.9796 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -733,7 +1753,7 @@ save
     V 5
   restore
 restore
---- frame 16 t=0.5667 ---
+--- frame 16 t=0.5661 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -767,6 +1787,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.8141 0.5808 -0.5808 0.8141 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.8141 0.5808 -0.5808 0.8141 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.8141 0.5808 -0.5808 0.8141 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -776,7 +1856,7 @@ save
     V 5
   restore
 restore
---- frame 17 t=0.6000 ---
+--- frame 17 t=0.5994 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -810,6 +1890,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.5088 0.8609 -0.8609 0.5088 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.5088 0.8609 -0.8609 0.5088 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.5088 0.8609 -0.8609 0.5088 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -819,7 +1959,7 @@ save
     V 5
   restore
 restore
---- frame 18 t=0.6333 ---
+--- frame 18 t=0.6327 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -853,6 +1993,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.1163 0.9932 -0.9932 0.1163 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.1163 0.9932 -0.9932 0.1163 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.1163 0.9932 -0.9932 0.1163 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -862,7 +2062,7 @@ save
     V 5
   restore
 restore
---- frame 19 t=0.6667 ---
+--- frame 19 t=0.6660 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -896,6 +2096,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.2963 0.9551 -0.9551 -0.2963 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.2963 0.9551 -0.9551 -0.2963 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.2963 0.9551 -0.9551 -0.2963 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -905,7 +2165,7 @@ save
     V 5
   restore
 restore
---- frame 20 t=0.7000 ---
+--- frame 20 t=0.6993 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -939,6 +2199,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.6579 0.7531 -0.7531 -0.6579 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.6579 0.7531 -0.7531 -0.6579 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.6579 0.7531 -0.7531 -0.6579 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -948,7 +2268,7 @@ save
     V 5
   restore
 restore
---- frame 21 t=0.7333 ---
+--- frame 21 t=0.7326 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -982,6 +2302,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.9067 0.4218 -0.4218 -0.9067 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.9067 0.4218 -0.4218 -0.9067 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.9067 0.4218 -0.4218 -0.9067 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -991,7 +2371,7 @@ save
     V 5
   restore
 restore
---- frame 22 t=0.7667 ---
+--- frame 22 t=0.7659 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1025,6 +2405,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.9998 0.0181 -0.0181 -0.9998 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.9998 0.0181 -0.0181 -0.9998 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.9998 0.0181 -0.0181 -0.9998 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1034,7 +2474,7 @@ save
     V 5
   restore
 restore
---- frame 23 t=0.8000 ---
+--- frame 23 t=0.7992 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1068,6 +2508,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.9214 -0.3887 0.3887 -0.9214 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.9214 -0.3887 0.3887 -0.9214 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.9214 -0.3887 0.3887 -0.9214 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1077,7 +2577,7 @@ save
     V 5
   restore
 restore
---- frame 24 t=0.8333 ---
+--- frame 24 t=0.8325 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1111,6 +2611,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.6848 -0.7287 0.7287 -0.6848 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.6848 -0.7287 0.7287 -0.6848 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.6848 -0.7287 0.7287 -0.6848 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1120,7 +2680,7 @@ save
     V 5
   restore
 restore
---- frame 25 t=0.8667 ---
+--- frame 25 t=0.8658 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1154,6 +2714,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform -0.3307 -0.9437 0.9437 -0.3307 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform -0.3307 -0.9437 0.9437 -0.3307 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform -0.3307 -0.9437 0.9437 -0.3307 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1163,7 +2783,7 @@ save
     V 5
   restore
 restore
---- frame 26 t=0.9000 ---
+--- frame 26 t=0.8991 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1197,6 +2817,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.0802 -0.9968 0.9968 0.0802 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.0802 -0.9968 0.9968 0.0802 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.0802 -0.9968 0.9968 0.0802 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1206,7 +2886,7 @@ save
     V 5
   restore
 restore
---- frame 27 t=0.9333 ---
+--- frame 27 t=0.9324 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1240,6 +2920,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.4773 -0.8787 0.8787 0.4773 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.4773 -0.8787 0.8787 0.4773 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.4773 -0.8787 0.8787 0.4773 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1249,7 +2989,7 @@ save
     V 5
   restore
 restore
---- frame 28 t=0.9667 ---
+--- frame 28 t=0.9657 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1283,6 +3023,66 @@ save
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.7925 -0.6099 0.6099 0.7925 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.7925 -0.6099 0.6099 0.7925 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.7925 -0.6099 0.6099 0.7925 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
     drawPath style=1 color=ffff0000 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=6 pts=12
     V 0 0.0000 -5.0000
     V 4 2.7614 -5.0000 5.0000 -2.7614 5.0000 0.0000
@@ -1292,7 +3092,7 @@ save
     V 5
   restore
 restore
---- frame 29 t=1.0000 ---
+--- frame 29 t=0.9990 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
   save
@@ -1323,6 +3123,66 @@ save
     V 4 -2.7614 5.0000 -5.0000 2.7614 -5.0000 0.0000
     V 4 -5.0000 -2.7614 -2.7614 -5.0000
     V 5
+  restore
+  save
+    transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 0.0000 0.0000
+      save
+        transform 0.9717 -0.2364 0.2364 0.9717 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 50.0000 0.0000
+      save
+        transform 0.9717 -0.2364 0.2364 0.9717 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
+    save
+      transform 1.0000 0.0000 0.0000 1.0000 100.0000 0.0000
+      save
+        transform 0.9717 -0.2364 0.2364 0.9717 0.0000 0.0000
+        drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
+        V 0 -0.0000 -19.0000
+        V 1 5.5840 -7.6857
+        V 1 18.0701 -5.8713
+        V 1 9.0350 2.9357
+        V 1 11.1679 15.3713
+        V 1 -0.0000 9.5000
+        V 1 -11.1679 15.3713
+        V 1 -9.0350 2.9357
+        V 1 -18.0701 -5.8713
+        V 1 -5.5840 -7.6857
+        V 1
+        V 5
+      restore
+    restore
   restore
   save
     transform 1.0000 0.0000 0.0000 1.0000 300.0000 300.0000
@@ -1376,11 +3236,11 @@ save
     V 5
   restore
 restore
---- frame 1 t=0.0667 ---
+--- frame 1 t=0.0666 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.9783 0.2073 -0.2073 0.9783 0.0000 0.0000
+    transform 0.9783 0.2071 -0.2071 0.9783 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1396,11 +3256,11 @@ save
     V 5
   restore
 restore
---- frame 2 t=0.1000 ---
+--- frame 2 t=0.0999 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.9140 0.4057 -0.4057 0.9140 0.0000 0.0000
+    transform 0.9142 0.4053 -0.4053 0.9142 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1416,11 +3276,11 @@ save
     V 5
   restore
 restore
---- frame 3 t=0.1333 ---
+--- frame 3 t=0.1332 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.8100 0.5864 -0.5864 0.8100 0.0000 0.0000
+    transform 0.8104 0.5859 -0.5859 0.8104 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1436,11 +3296,11 @@ save
     V 5
   restore
 restore
---- frame 4 t=0.1667 ---
+--- frame 4 t=0.1665 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.6709 0.7416 -0.7416 0.6709 0.0000 0.0000
+    transform 0.6715 0.7410 -0.7410 0.6715 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1456,11 +3316,11 @@ save
     V 5
   restore
 restore
---- frame 5 t=0.2000 ---
+--- frame 5 t=0.1998 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.5025 0.8646 -0.8646 0.5025 0.0000 0.0000
+    transform 0.5034 0.8640 -0.8640 0.5034 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1476,11 +3336,11 @@ save
     V 5
   restore
 restore
---- frame 6 t=0.2333 ---
+--- frame 6 t=0.2331 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.3123 0.9500 -0.9500 0.3123 0.0000 0.0000
+    transform 0.3135 0.9496 -0.9496 0.3135 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1496,11 +3356,11 @@ save
     V 5
   restore
 restore
---- frame 7 t=0.2667 ---
+--- frame 7 t=0.2664 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.1086 0.9941 -0.9941 0.1086 0.0000 0.0000
+    transform 0.1100 0.9939 -0.9939 0.1100 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1516,11 +3376,11 @@ save
     V 5
   restore
 restore
---- frame 8 t=0.3000 ---
+--- frame 8 t=0.2997 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.0999 0.9950 -0.9950 -0.0999 0.0000 0.0000
+    transform -0.0982 0.9952 -0.9952 -0.0982 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1536,11 +3396,11 @@ save
     V 5
   restore
 restore
---- frame 9 t=0.3333 ---
+--- frame 9 t=0.3330 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.3040 0.9527 -0.9527 -0.3040 0.0000 0.0000
+    transform -0.3022 0.9532 -0.9532 -0.3022 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1556,11 +3416,11 @@ save
     V 5
   restore
 restore
---- frame 10 t=0.3667 ---
+--- frame 10 t=0.3663 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.4950 0.8689 -0.8689 -0.4950 0.0000 0.0000
+    transform -0.4931 0.8700 -0.8700 -0.4931 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1576,11 +3436,11 @@ save
     V 5
   restore
 restore
---- frame 11 t=0.4000 ---
+--- frame 11 t=0.3996 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.6644 0.7474 -0.7474 -0.6644 0.0000 0.0000
+    transform -0.6626 0.7489 -0.7489 -0.6626 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1596,11 +3456,11 @@ save
     V 5
   restore
 restore
---- frame 12 t=0.4333 ---
+--- frame 12 t=0.4329 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.8049 0.5934 -0.5934 -0.8049 0.0000 0.0000
+    transform -0.8034 0.5954 -0.5954 -0.8034 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1616,11 +3476,11 @@ save
     V 5
   restore
 restore
---- frame 13 t=0.4667 ---
+--- frame 13 t=0.4662 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.9104 0.4136 -0.4136 -0.9104 0.0000 0.0000
+    transform -0.9093 0.4161 -0.4161 -0.9093 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1636,11 +3496,11 @@ save
     V 5
   restore
 restore
---- frame 14 t=0.5000 ---
+--- frame 14 t=0.4995 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.9764 0.2159 -0.2159 -0.9764 0.0000 0.0000
+    transform -0.9758 0.2187 -0.2187 -0.9758 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1656,11 +3516,11 @@ save
     V 5
   restore
 restore
---- frame 15 t=0.5333 ---
+--- frame 15 t=0.5328 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -1.0000 0.0087 -0.0087 -1.0000 0.0000 0.0000
+    transform -0.9999 0.0119 -0.0119 -0.9999 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1676,11 +3536,11 @@ save
     V 5
   restore
 restore
---- frame 16 t=0.5667 ---
+--- frame 16 t=0.5661 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.9800 -0.1988 0.1988 -0.9800 0.0000 0.0000
+    transform -0.9807 -0.1955 0.1955 -0.9807 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1696,11 +3556,11 @@ save
     V 5
   restore
 restore
---- frame 17 t=0.6000 ---
+--- frame 17 t=0.5994 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.9175 -0.3977 0.3977 -0.9175 0.0000 0.0000
+    transform -0.9189 -0.3944 0.3944 -0.9189 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1716,11 +3576,11 @@ save
     V 5
   restore
 restore
---- frame 18 t=0.6333 ---
+--- frame 18 t=0.6327 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.8151 -0.5793 0.5793 -0.8151 0.0000 0.0000
+    transform -0.8173 -0.5762 0.5762 -0.8173 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1736,11 +3596,11 @@ save
     V 5
   restore
 restore
---- frame 19 t=0.6667 ---
+--- frame 19 t=0.6660 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.6773 -0.7357 0.7357 -0.6773 0.0000 0.0000
+    transform -0.6802 -0.7330 0.7330 -0.6802 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1756,11 +3616,11 @@ save
     V 5
   restore
 restore
---- frame 20 t=0.7000 ---
+--- frame 20 t=0.6993 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.5100 -0.8601 0.8601 -0.5100 0.0000 0.0000
+    transform -0.5136 -0.8580 0.8580 -0.5136 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1776,11 +3636,11 @@ save
     V 5
   restore
 restore
---- frame 21 t=0.7333 ---
+--- frame 21 t=0.7326 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.3206 -0.9472 0.9472 -0.3206 0.0000 0.0000
+    transform -0.3248 -0.9458 0.9458 -0.3248 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1796,11 +3656,11 @@ save
     V 5
   restore
 restore
---- frame 22 t=0.7667 ---
+--- frame 22 t=0.7659 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform -0.1172 -0.9931 0.9931 -0.1172 0.0000 0.0000
+    transform -0.1218 -0.9926 0.9926 -0.1218 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1816,11 +3676,11 @@ save
     V 5
   restore
 restore
---- frame 23 t=0.8000 ---
+--- frame 23 t=0.7992 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.0912 -0.9958 0.9958 0.0912 0.0000 0.0000
+    transform 0.0864 -0.9963 0.9963 0.0864 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1836,11 +3696,11 @@ save
     V 5
   restore
 restore
---- frame 24 t=0.8333 ---
+--- frame 24 t=0.8325 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.2957 -0.9553 0.9553 0.2957 0.0000 0.0000
+    transform 0.2909 -0.9567 0.9567 0.2909 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1856,11 +3716,11 @@ save
     V 5
   restore
 restore
---- frame 25 t=0.8667 ---
+--- frame 25 t=0.8658 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.4874 -0.8732 0.8732 0.4874 0.0000 0.0000
+    transform 0.4828 -0.8757 0.8757 0.4828 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1876,11 +3736,11 @@ save
     V 5
   restore
 restore
---- frame 26 t=0.9000 ---
+--- frame 26 t=0.8991 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.6578 -0.7532 0.7532 0.6578 0.0000 0.0000
+    transform 0.6537 -0.7567 0.7567 0.6537 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1896,11 +3756,11 @@ save
     V 5
   restore
 restore
---- frame 27 t=0.9333 ---
+--- frame 27 t=0.9324 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.7997 -0.6004 0.6004 0.7997 0.0000 0.0000
+    transform 0.7963 -0.6049 0.6049 0.7963 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1916,11 +3776,11 @@ save
     V 5
   restore
 restore
---- frame 28 t=0.9667 ---
+--- frame 28 t=0.9657 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.9068 -0.4216 0.4216 0.9068 0.0000 0.0000
+    transform 0.9043 -0.4269 0.4269 0.9043 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857
@@ -1936,11 +3796,11 @@ save
     V 5
   restore
 restore
---- frame 29 t=1.0000 ---
+--- frame 29 t=0.9990 ---
 save
   transform 1.0000 0.0000 0.0000 1.0000 25.0000 25.0000
   save
-    transform 0.9745 -0.2244 0.2244 0.9745 0.0000 0.0000
+    transform 0.9731 -0.2303 0.2303 0.9731 0.0000 0.0000
     drawPath style=1 color=ff747474 thick=0.000 join=-1 cap=-1 blend=3 shader=0() fillRule=0 verbs=12 pts=10
     V 0 -0.0000 -19.0000
     V 1 5.5840 -7.6857

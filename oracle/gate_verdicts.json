@@ -7,8 +7,8 @@
   "ours": "ours_hw_t1.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "691ddfb4ea3aa4d5",
   "ref_sha": "433097812796da83",
   "checks": [
@@ -117,8 +117,8 @@
   "ours": "ours_cdo_child_r2_t1.bmp",
   "ref": "ref_cdo_child_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "cd2d154e984b868d",
   "ref_sha": "7723f743a21ed3c2",
   "checks": [
@@ -230,8 +230,8 @@
   "ours": "ours_dsm_c_t1.bmp",
   "ref": "ref_dsm_c_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "2ed095eaae542e67",
   "ref_sha": "b13b46266cb9ccdb",
   "checks": [
@@ -342,8 +342,8 @@
   "ours": "ours_dsm_row_bind.bmp",
   "ref": "ref_dsm_row_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "be3a091736805483",
   "ref_sha": "d62abee1d307efae",
   "checks": [
@@ -454,8 +454,8 @@
   "ours": "ours_clfp_c_t1.bmp",
   "ref": "ref_clfp_c_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "724318ccbb2ce9ea",
   "ref_sha": "927ad568bf6e1353",
   "checks": [
@@ -564,8 +564,8 @@
   "ours": "ours_clfp_item_t1.bmp",
   "ref": "ref_clfp_item_vm_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "5029f52bfbfdce57",
   "ref_sha": "366c1d4833691c7f",
   "checks": [
@@ -677,8 +677,8 @@
   "ours": "ours_cl1_item.bmp",
   "ref": "ref_cl1_item_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "daf43e79fcc9bbe6",
   "ref_sha": "eb32819a7d63f3b6",
   "checks": [
@@ -790,8 +790,8 @@
   "ours": "ours_cl1_main_t1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "166fe0e820f83470",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
@@ -903,8 +903,8 @@
   "ours": "ours_clv_t1.bmp",
   "ref": "ref_clv_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "3ff8bb2d9b5ad491",
   "ref_sha": "5f9f37023731a916",
   "checks": [
@@ -1015,8 +1015,8 @@
   "ours": "ours_cl2_t1.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "8a1e1d5d0a1c34a1",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -1128,8 +1128,8 @@
   "ours": "ours_cl2_t10.bmp",
   "ref": "ref_cl2_t10.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "60d966bd29e5795f",
   "ref_sha": "44928ffc0c79377b",
   "checks": [
@@ -1246,8 +1246,8 @@
   "ours": "ours_clfp_item_hover.bmp",
   "ref": "ref_clfp_item_hover.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "fbe8d9522ba0eb5f",
   "ref_sha": "94e232dfad314e91",
   "checks": [
@@ -1359,8 +1359,8 @@
   "ours": "ours_kn_sm_hover.bmp",
   "ref": "ref_clfp_item_hover.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "fbe8d9522ba0eb5f",
   "ref_sha": "94e232dfad314e91",
   "checks": [
@@ -1472,8 +1472,8 @@
   "ours": "ours_kn_clfp_item.bmp",
   "ref": "ref_clfp_item_vm_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "5029f52bfbfdce57",
   "ref_sha": "366c1d4833691c7f",
   "checks": [
@@ -1585,8 +1585,8 @@
   "ours": "ours_kn_cl2_t10.bmp",
   "ref": "ref_cl2_t10.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "60d966bd29e5795f",
   "ref_sha": "44928ffc0c79377b",
   "checks": [
@@ -1703,8 +1703,8 @@
   "ours": "ours_clip_t1.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "fb664ed67faa6b0a",
   "ref_sha": "43feb82ccb774397",
   "checks": [
@@ -1816,8 +1816,8 @@
   "ours": "ours_cin_t1.bmp",
   "ref": "ref_cin_t1.png",
   "vacuous": true,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "b7849aa2b6d5c629",
   "ref_sha": "2e4406cd083c9257",
   "checks": [
@@ -1921,8 +1921,8 @@
   "ours": "ours_iba_t1.bmp",
   "ref": "ref_iba_t1.png",
   "vacuous": true,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
@@ -2029,8 +2029,8 @@
   "ours": "ours_lwti_t1.bmp",
   "ref": "ref_lwti_t1.png",
   "vacuous": true,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
@@ -2132,8 +2132,8 @@
   "ours": "ours_deam_t1.bmp",
   "ref": "ref_deam_t1.png",
   "vacuous": true,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "994eae776f7d43ba",
   "ref_sha": "cf81c4e60c19cd3d",
   "checks": [
@@ -2240,8 +2240,8 @@
   "ours": "ours_hff_t1.bmp",
   "ref": "ref_hff_t1.png",
   "vacuous": true,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "979ae9ec67c3796a",
   "ref_sha": "2749a582b7e6066f",
   "checks": [
@@ -2348,8 +2348,8 @@
   "ours": "ours_dcpo_t1.bmp",
   "ref": "ref_dcpo_t1.png",
   "vacuous": true,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "dbc7c8c657016d39",
   "ref_sha": "d9b0b4cf71062eed",
   "checks": [
@@ -2451,8 +2451,8 @@
   "ours": "kn_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "c2efb1a03ed4453a",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -2564,8 +2564,8 @@
   "ours": "kn_hw.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "29380a36d0448125",
   "ref_sha": "433097812796da83",
   "checks": [
@@ -2674,8 +2674,8 @@
   "ours": "kn_cl1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "9054a7b8deaff126",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
@@ -2787,8 +2787,8 @@
   "ours": "kn_clv.bmp",
   "ref": "ref_clv_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "6271d611b35ae3bd",
   "ref_sha": "5f9f37023731a916",
   "checks": [
@@ -2899,8 +2899,8 @@
   "ours": "kn_clip.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "e3ac52f4e5e13861",
   "ref_sha": "43feb82ccb774397",
   "checks": [
@@ -3012,8 +3012,8 @@
   "ours": "knm_cl2.bmp",
   "ref": "ref_cl2_t1.png",
   "vacuous": false,
-  "provenance": "fresh",
-  "prov_detail": "commit 0cf28036 driver render_knm_cl2.k",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "fc01d841d4257498",
   "ref_sha": "18a409b9fc4965d8",
   "checks": [
@@ -3125,8 +3125,8 @@
   "ours": "knm_cl1.bmp",
   "ref": "ref_cl1_main_t1.png",
   "vacuous": false,
-  "provenance": "fresh",
-  "prov_detail": "commit 0cf28036 driver render_knm_cl1.k",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "c9e70a7cc376e68b",
   "ref_sha": "b4dbc2f02a4bd90c",
   "checks": [
@@ -3238,8 +3238,8 @@
   "ours": "knm_clv.bmp",
   "ref": "ref_clv_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "6271d611b35ae3bd",
   "ref_sha": "5f9f37023731a916",
   "checks": [
@@ -3350,8 +3350,8 @@
   "ours": "knm_clip.bmp",
   "ref": "ref_clip_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "e3ac52f4e5e13861",
   "ref_sha": "43feb82ccb774397",
   "checks": [
@@ -3463,8 +3463,8 @@
   "ours": "knm_hw.bmp",
   "ref": "ref_hw_c_t1.png",
   "vacuous": false,
-  "provenance": "fresh",
-  "prov_detail": "commit 0cf28036 driver render_knm_hw.k",
+  "provenance": "stale",
+  "prov_detail": "dep ../oshun/canvas/tests/.zig-cache/h/timestamp newer than render",
   "ours_sha": "9f293790e1b0f2ad",
   "ref_sha": "433097812796da83",
   "checks": [
@@ -3567,20 +3567,23 @@
  },
  {
   "gate": "mesh",
-  "verdict": "FAIL",
+  "verdict": "KNOWN",
   "failed": [
+   "ink-bbox",
    "ink-mass",
    "coverage-gap",
    "ink-coverage",
-   "anti-aliasing"
+   "ink-colour",
+   "frame-diff",
+   "local-fidelity"
   ],
   "hand_label": "NOTE",
   "ours": "ours_mesh_t1.bmp",
   "ref": "ref_clfp_c_t1.png",
   "vacuous": false,
-  "provenance": "unprovenanced",
-  "prov_detail": "no .prov.json sidecar",
-  "ours_sha": "47e01846b3cf8533",
+  "provenance": "fresh",
+  "prov_detail": "commit b9307e4c driver meshrender_clfp.k",
+  "ours_sha": "84e5a5592c77de48",
   "ref_sha": "927ad568bf6e1353",
   "checks": [
    {
@@ -3601,82 +3604,82 @@
    {
     "check": "backdrop",
     "pass": true,
-    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (99.7% of frame)"
+    "detail": "ours=(49, 49, 49) expected=(49, 49, 49) dist=0 tol=8 (98.0% of frame)"
    },
    {
     "check": "ink-bbox",
-    "pass": true,
-    "detail": "ref=(24, 89, 471, 452) ours=(23, 89, 470, 452) asserted=x,y deltas={'xmin': 1, 'xmax': 1, 'ymin': 0, 'ymax': 0} tol=6"
+    "pass": false,
+    "detail": "ref=(24, 89, 471, 452) ours=(0, 0, 499, 499) asserted=x,y deltas={'xmin': 24, 'xmax': 28, 'ymin': 89, 'ymax': 47} tol=6"
    },
    {
     "check": "ink-mass",
     "pass": false,
-    "detail": "ref=1206 ours=853 ratio=0.71 (need 0.85..1.15)"
+    "detail": "ref=1206 ours=2397 ratio=1.99 (need 0.85..1.15)"
    },
    {
     "check": "coverage-gap",
     "pass": false,
-    "detail": "11.36% of coverage unmatched either way within 1px (max 5.0%)"
+    "detail": "64.09% of coverage unmatched either way within 1px (max 5.0%)"
    },
    {
     "check": "ink-coverage",
     "pass": false,
-    "detail": "65.66% of 2062 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
+    "detail": "64.11% of 2062 ref-signal px inside shared ink zone are backdrop on ours (max 4.0%)"
    },
    {
     "check": "backdrop-px",
     "pass": true,
-    "detail": "0.00% of 241466 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
+    "detail": "0.00% of 232111 backdrop px differ by >2 levels (max 0.50%); mean 0.00, worst 0"
    },
    {
     "check": "ink-colour",
-    "pass": true,
-    "detail": "hue delta 0.0000 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
+    "pass": false,
+    "detail": "hue delta 0.2279 (max 0.008); flat ink 0 px < 64 -- thin ink, per-pixel colour vacuous"
    },
    {
     "check": "registration",
     "pass": true,
-    "detail": "ours best aligns to ref when displaced dx=-0.50 dy=+0.00 px (max 0.75 per axis)"
+    "detail": "ours best aligns to ref when displaced dx=-0.25 dy=+0.00 px (max 0.75 per axis)"
    },
    {
     "check": "frame-diff",
-    "pass": true,
-    "detail": "0.030% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 0.806%, excused edge band 2.66% of frame"
+    "pass": false,
+    "detail": "1.698% of frame differs by >16 levels off shared colour edges (max 0.10%); total disagreeing 2.489%, excused edge band 2.65% of frame"
    },
    {
     "check": "anti-aliasing",
-    "pass": false,
-    "detail": "blended edge px ours=0 ref=1447 ratio 0.00 (min 0.50)"
+    "pass": true,
+    "detail": "blended edge px ours=817 ref=1447 ratio 0.56 (min 0.50)"
    },
    {
     "check": "local-fidelity",
-    "pass": true,
-    "detail": "worst 33px-window mean signed delta 6.2 levels at x=188 y=147 (max 10.0)"
+    "pass": false,
+    "detail": "worst 33px-window mean signed delta 73.8 levels at x=218 y=78 (max 10.0)"
    }
   ],
   "report": {
-   "ref_ink_within_1px": 87.1,
-   "our_ink_within_1px": 100.0,
-   "ref_ink_within_2px": 96.4,
-   "our_ink_within_2px": 100.0,
-   "ref_ink_within_3px": 98.4,
-   "our_ink_within_3px": 100.0,
-   "ink_mass_ratio": 0.707,
+   "ref_ink_within_1px": 87.8,
+   "our_ink_within_1px": 18.6,
+   "ref_ink_within_2px": 96.8,
+   "our_ink_within_2px": 19.9,
+   "ref_ink_within_3px": 98.7,
+   "our_ink_within_3px": 21.3,
+   "ink_mass_ratio": 1.988,
    "vacuous": 0,
-   "ink_coverage_notch_pct": 65.664,
+   "ink_coverage_notch_pct": 64.113,
    "backdrop_px_pct_over_tol": 0.0,
    "backdrop_px_mean": 0.0,
    "backdrop_px_max": 0,
-   "ink_hue_delta": 0.0,
-   "registration_dx": -0.5,
+   "ink_hue_delta": 0.2279,
+   "registration_dx": -0.25,
    "registration_dy": 0.0,
-   "frame_disagree_pct": 0.806,
-   "frame_unexplained_pct": 0.03,
+   "frame_disagree_pct": 2.489,
+   "frame_unexplained_pct": 1.698,
    "aa_px_ref": 1447,
-   "aa_px_ours": 0,
-   "aa_ratio": 0.0,
-   "local_max": 6.25,
-   "rmse_ink_union": 116.11,
+   "aa_px_ours": 817,
+   "aa_ratio": 0.565,
+   "local_max": 73.85,
+   "rmse_ink_union": 83.08,
    "rmse_backdrop": 0.0
   }
  }
