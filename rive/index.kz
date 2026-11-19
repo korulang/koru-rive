@@ -6368,6 +6368,11 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             out.append(alloc, op0(7)) catch {};
         }
 
+    // ClippingShape clip stack, held open across the shape pass — the
+    // reference pushes one clip per component wrapping its subtree, so
+    // consecutive shapes under the same CS ancestors share the push.
+    var clipStack = std.ArrayList(usize).empty;
+    defer clipStack.deinit(alloc);
     for (r.objects, 0..) |so, si| {
         if (so.type_key != 3) continue;
         if (owningArtboard(r, si) != abIdx) continue;
@@ -6400,11 +6405,13 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
         buildPath(pathVs.items, closed, &verbs, &pts, alloc);
         if (verbs.items.len == 0) continue;
         const w = effectiveWorld(r, si, frame);
-        // ClippingShape (type 42) child -> clip this shape's draws to the
-        // SOURCE shape's geometry (sourceId = source shape's slot).
-        // clip_tests: Shape47 rect clipped by Shape43 ellipse.
-        var clipPushed = false;
-        var clipDepth: usize = 0;
+        // ClippingShape (type 42): the reference pushes ONE clip per
+        // component wrapping its drawable subtree — consecutive shapes
+        // under the same CS ancestors share the push. Detect this
+        // shape's wanted CS set, then diff against the held stack and
+        // emit only transitions (pops for lost entries, pushes for new).
+        var wantCs = std.ArrayList(usize).empty;
+        defer wantCs.deinit(alloc);
         for (r.objects, 0..) |*cc, ci| {
             if (cc.type_key != 42) continue;
             // ClippingShape clips every Drawable descendant-or-self of
@@ -6428,6 +6435,20 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
                 if (so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
             }
             if (std.posix.getenv("RIVE_TRACE_CS") != null) std.debug.print("cs src cc found={} srcIdx={d}\n", .{ srcIdx != r.objects.len, srcIdx });
+            if (srcIdx == r.objects.len) continue;
+            wantCs.append(alloc, ci) catch {};
+        }
+        var csCommon: usize = 0;
+        while (csCommon < clipStack.items.len and csCommon < wantCs.items.len and clipStack.items[csCommon] == wantCs.items[csCommon]) csCommon += 1;
+        for (0..(clipStack.items.len - csCommon)) |_| out.append(alloc, op0(10)) catch {};
+        clipStack.items.len = csCommon;
+        for (wantCs.items[csCommon..]) |wci| {
+            const cc = &r.objects[wci];
+            const srcId = propU(cc.props, 92, -1);
+            var srcIdx: usize = r.objects.len;
+            for (r.objects, 0..) |*so2, sj| {
+                if (so2.slot == srcId and owningArtboard(r, sj) == abIdx) { srcIdx = sj; break; }
+            }
             if (srcIdx == r.objects.len) continue;
             var sVerbs = std.ArrayList(u8).empty;
             var sPts = std.ArrayList(V2).empty;
@@ -6495,8 +6516,7 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             var scm = op0(6); scm.a = sw[0]; scm.b = sw[1]; scm.c = sw[2]; scm.d = sw[3]; scm.e = sw[4]; scm.g = sw[5]; out.append(alloc, scm) catch {};
             var cp = op0(9); cp.eo = 0; out.append(alloc, cp) catch {};
             out.append(alloc, op0(7)) catch {};
-            clipPushed = true;
-            clipDepth += 1;
+            clipStack.append(alloc, wci) catch {};
         }
         for (r.objects, 0..) |*c, pi| {
             if (c.parent_obj != @as(i64, @intCast(si))) continue;
@@ -6607,8 +6627,11 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             out.append(alloc, dr) catch {};
             out.append(alloc, op0(7)) catch {};
         }
-        for (0..clipDepth) |_| out.append(alloc, op0(10)) catch {};
     }
+    // Close any ClippingShape clips still held at the end of the shape
+    // pass — text objects and nested artboards emit outside them, so the
+    // clip scope stays exactly the shapes it covered before.
+    for (clipStack.items) |_| out.append(alloc, op0(10)) catch {};
     // Text objects: glyph outlines via textDrawPath (same gather as emitOps).
     for (r.objects, 0..) |to, ti| {
         if (to.type_key != 134) continue;
