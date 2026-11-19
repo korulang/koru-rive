@@ -972,6 +972,20 @@ So constraints are **not** independent of the identity blocker: implementing the
 correctly needs the object-id space, the same gap already recorded three times.
 Reverted; decoder is byte-identical to HEAD again (Circles 44 draws).
 
+**Both id hypotheses tested.** Before settling, the two cheap resolutions were
+measured on shape 2068 (reference `(156.28, 113.16)`):
+
+| resolution | result |
+|---|---|
+| `findBySlot(targetId)` | `(101.0, 0.5)` |
+| `targetId` as object index | `(268.6, 493.2)` |
+| unconstrained (current) | `(156.3, 56.5)` |
+
+Neither matches. Note the third row: **x is already correct unconstrained**, so
+whatever the id space is, the constraint must move this object only in y — and
+neither hypothesis does that. That is a sharper constraint on the answer than
+either failed attempt.
+
 That is worth knowing before anyone starts the constraints work: it looks like a
 self-contained feature (100 instances, rive-cpp's math is 20 lines) and is
 actually gated on the reference's id space.
