@@ -57,26 +57,17 @@ LIMIT/NOTE; only an unlabelled or PASS-labelled failure fails the suite.
 Each item carries the measurement that identifies it and the step that follows.
 None is a missing predicate; all four are structural or blocked.
 
-### 1. Clip grouping — smallest, best understood
+### 1. Clip grouping — LANDED (936e97a)
 
-car_widgets Main_Artboard emits **276 clips against the reference's 25**. Every one
-comes from the `ClippingShape` (type 42) site: disabling that push drops the count
-to 0.
-
-The file has **17** `ClippingShape` components, and rive pushes one clip per
-component, wrapping its subtree. Measured matches per component form **contiguous
-runs** in stream order — 15 runs total, the largest covering 176 shapes.
-
-**Next:** hold the clip open while the matched component is unchanged. The attempt
-was made twice: the first landed in the wrong shape loop (this file has two
-near-identical ones — anchor on the clipping block itself), the second declared the
-held-component state *inside* the loop so it reset every iteration. The corrected
-form was not finished: declare `activeCs` before the shape loop, pop when it changes,
-pop once after the loop. Expect ~15 clips.
-
-(Commit `61e9037`'s message says the matched component "alternates per shape" —
-that was concluded before the matches were traced properly, and the run data above
-supersedes it. The code in that commit was reverted either way.)
+car_widgets Main_Artboard emitted **276 clips against the reference's 25**; every
+one came from the `ClippingShape` (type 42) site pushing per shape. The fix holds
+a clip stack open across the shape pass: each shape's wanted CS set is diffed
+against the stack (common-prefix pop/push), so one clip wraps each contiguous run.
+Result: **15 clips** — at the low end of the ~15 expected; ref's 25 means we now
+under-clip by 10 (CS components whose subtrees carry no type-3 shapes we emit, or
+unresolved srcId matches — named residual, not yet chased). Verdict layer moved
+to the pre-existing drawable-count +16 over-draw. No regressions on
+animated_clipping / clip_tests / nested_artboard_opacity.
 
 ### 2. Layout placement — the largest
 
