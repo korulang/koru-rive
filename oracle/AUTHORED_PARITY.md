@@ -1222,6 +1222,25 @@ A correction to the previous round's note: my "ref 57" came from calling
 eighteen frames, not artboard 18. The harness was right all along; the manual
 invocation was wrong.
 
+### Correction: those ten pairs are component-list rows, not duplicated draws
+
+The previous note read the trace as a duplication bug ("the same object drawn ten
+times"). That is wrong. `component_list_follow_path`'s Main artboard contains
+`ArtboardComponentList` (type 559) objects, and the rows are *instances of the
+Item artboard's objects*: `obj=77` (Text) and `obj=88` (Fill) live in artboard 74
+(`Item`) and a component list re-emits them once per row. Emitting the same source
+objects per row is the mechanism working as designed — there is no duplication
+defect.
+
+What is wrong is the **row count and their placement**: we emit ten rows, all at
+`t=0.0,0.0` with only the width varying, while the reference draws none of them.
+`RIVE_NO_NESTED` does not change the count because row emission is not the nested
+loop.
+
+So the question is not "what duplicates the draw" but "why ten rows at one
+origin, where rive draws zero" — i.e. the component-list layout/virtualisation
+question, which is the same layout dependency as before.
+
 ## The ten extra rows are the same two objects redrawn at one origin
 
 With `RIVE_TRACE_DRAW` on Main:
