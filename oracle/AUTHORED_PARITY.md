@@ -1241,6 +1241,34 @@ So the question is not "what duplicates the draw" but "why ten rows at one
 origin, where rive draws zero" — i.e. the component-list layout/virtualisation
 question, which is the same layout dependency as before.
 
+### Where the ten rows actually come from
+
+The rows are emitted by the component-list path in `collectOps`, which for each
+row calls `collectArtboardOps(rowArtboard, -1)` — that is why Main's stream
+contains artboard 74's `obj=77`/`obj=88`. The extended `LAYPAINT` trace shows it
+directly:
+
+    LAYPAINT obj=88 lc=75 owner=74 color=ff12a100 t=0.0,0.0 wh=28.6,40.2
+
+(two objects, ten emissions — one per row, exactly as a list should).
+
+The objects behind the list are:
+
+| object | type |
+|---|---|
+| 19 | Node |
+| 20 | **ArtboardComponentList** |
+| 21 | **DataBindContext** — no properties at all |
+| 22 | ListFollowPathConstraint |
+
+So the list has **no data source**: its `DataBindContext` carries nothing, which is
+why rive renders zero rows at every frame. Our row count is derived (ten rows with
+*computed* widths 28.6, 24.1, 28.2, 28.4, 28.9 …), not read from bound data.
+
+That makes the fix rule-shaped rather than layout-shaped: a component list with no
+bound data should emit **no rows**, and the ten we emit are invented rather than
+misplaced.
+
 ## The reference never draws list rows — at any frame
 
 Before blaming layout, the obvious alternative was timing: our SM may simply start
