@@ -97,6 +97,34 @@ def run(cmd, timeout, env=None):
 # ---------------------------------------------------------------- reference
 
 
+def golden_block(path):
+    """Lines of the golden's first-artboard frame-0 block, or None.
+
+    The corpus goldens are rive's real render in the dumper's own format, so the
+    same digest can parse them. This is the valid reference for data-bound content,
+    where oracle/dump binds nothing and reports empty lists.
+    """
+    stem = os.path.splitext(os.path.basename(path))[0]
+    gp = os.path.join(HERE, "goldens", "corpus", stem + ".txt")
+    if not os.path.isfile(gp):
+        return None
+    pos = -1
+    lines = []
+    take = False
+    with open(gp, errors="ignore") as f:
+        for line in f:
+            m = re.match(r"--- (.*?) ---\s*$", line)
+            if m:
+                name = m.group(1)
+                if name.startswith("static"):
+                    pos += 1
+                take = (pos == 0 and name.startswith("frame 0"))
+                continue
+            if take:
+                lines.append(line.rstrip("\n"))
+    return lines or None
+
+
 def golden_draws(path):
     """drawPath count from oracle/goldens/corpus/<stem>.txt, if present.
 
@@ -520,6 +548,9 @@ def main():
     ap.add_argument("--koruc", default=os.path.expanduser("~/src/koru/zig-out/bin/koruc"))
     ap.add_argument("--dump", default=os.path.join(HERE, "dump"))
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument("--golden", action="store_true",
+                    help="compare against oracle/goldens/corpus rather than the dumper "
+                         "(the valid reference for data-bound content)")
     ap.add_argument("--attribute", metavar="ARTBOARD",
                     help="per-class draw accounting + skips for one artboard")
     ap.add_argument("--save-baseline", action="store_true",
@@ -553,7 +584,17 @@ def main():
         name = os.path.basename(path)
         rec = {"file": name, "path": path}
 
-        blocks, artboards, ref_err = ref_blocks(path, args.frames, args.dt, args.dump, args.timeout)
+        if args.golden:
+            gb = golden_block(path)
+            if gb is None:
+                rec.update(status="ref-unavailable", detail="no golden for this asset")
+                results.append(rec)
+                continue
+            blocks = {(0, "frame 0"): gb}
+            artboards = [None]
+            ref_err = None
+        else:
+            blocks, artboards, ref_err = ref_blocks(path, args.frames, args.dt, args.dump, args.timeout)
         if ref_err:
             rec.update(status="ref-unavailable", detail=ref_err)
             results.append(rec)
@@ -587,7 +628,10 @@ def main():
         if args.all_artboards:
             targets = [(pos, nm) for pos, nm in enumerate(artboards)]
         else:
-            targets = [(0, artboards[0] if artboards else None)]
+            # In golden mode the golden names no artboards; use ours, since the
+            # golden's first block IS artboard 0 of the same file.
+            want0 = artboards[0] if artboards and artboards[0] is not None else (arts[0][1] if arts else None)
+            targets = [(0, want0)]
 
         per_ab = []
         for pos, want in targets:

@@ -1406,6 +1406,26 @@ it (or in what it draws *besides* the fill), not in list rows.
 Also verified this round: the gate suite is unchanged by the row-placement work —
 33 gates, 32 PASS, 1 KNOWN (mesh), 0 FAIL, plus the leaf self-test PASS.
 
+### `--golden`: compare against rive's real render
+
+The goldens are in the dumper's own stream format, so the same digest can parse
+them. `python3 oracle/authored_parity.py --golden FILE` now judges against
+`oracle/goldens/corpus/<stem>.txt` instead of the dumper — the valid reference for
+data-bound content.
+
+First results, and they are far better than the dumper made things look:
+
+| file | draws (golden/ours) | clips | first divergence |
+|---|---:|---|---|
+| `component_list_1` | **17 / 17** | 1 / 2 | **clip** — one extra clip on our side; the 17 draws and their colours match |
+| `component_list_follow_path` | **29 / 29** | 0 / 0 | draw-order, with colour match 17/29 |
+
+Detail worth acting on: on the follow-path fixture our rows paint `ff12a100`
+(green) where the golden has **`ff747474`** — which is `SolidColorBase`'s default.
+So the golden's rows are unbound-default, while we resolve a bound colour. That is
+the opposite direction from every earlier "we miss data" finding: here we apply
+data the reference render did not.
+
 ## The dumper does not materialise data-bound list rows (2026-11-18)
 
 Chasing why the reference draws no rows, the goldens were checked against the
