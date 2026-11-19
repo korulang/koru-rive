@@ -1492,6 +1492,21 @@ So the golden's rows are unbound-default, while we resolve a bound colour. That 
 the opposite direction from every earlier "we miss data" finding: here we apply
 data the reference render did not.
 
+### Every one of those clips comes from the ClippingShape path
+
+Gating the `ClippingShape` push off entirely (and leaving the artboard and
+layout-clip sites alone) drops car_widgets Main_Artboard from **276 clips to 0**:
+
+    with cs=276   without cs=0
+
+So the artboard clip contributes none (root artboard, as intended) and the layout
+clip contributes none here; the whole over-clip is the `ClippingShape` (type 42)
+path emitting one push per source-contour group it finds, ~11x more often than the
+reference does.
+
+That is the next concrete defect, and it is narrow: a single site emitting a clip
+per shape where rive emits one per clipping group.
+
 ## The committed baseline was stale; we over-clip car_widgets by 11x (2026-11-19)
 
 Regenerating `parity_baseline.json` (with `--all-artboards`, or it saves only each
