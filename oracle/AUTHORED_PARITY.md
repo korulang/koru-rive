@@ -898,6 +898,30 @@ separately, so the idea is principled — but removing the baking changed no
 measurement, and our op stream has no separate opacity channel, so it would have
 made translucent draws render opaque. Left as-is.
 
+## Circles' white circles: alpha and y (2026-11-18)
+
+Reference Circles, first draws:
+
+    ffffff (tx 437.71, ty 113.158)   ... 6 white circles stepping -56.29 in x
+    ours: 80ffffff (tx 437/381/325..., ty 56)
+
+Three facts, each checked rather than assumed:
+
+1. **x matches exactly** (156.29, 212.57, ... ) — the transform chain is right in x;
+2. **`80ffffff` is the file's own colour** (`SolidColor.colorValue = 0x80ffffff`,
+   6 occurrences in the artboard), so it is not our opacity baking — verified by
+   gating the bake off, which produced byte-identical op streams;
+3. the reference records **`ffffff`** for those six draws, i.e. opaque white,
+   where the file declares 50% alpha.
+
+So either the reference's six white draws are a *different paint* of the same
+shapes (a stroke where we emit the fill), or rive ignores that alpha somewhere.
+That is checkable from the shape's paint list: it should have both a white
+`Stroke` and an `80ffffff` `Fill`, and the question is which one the reference
+records at that transform.
+
+The `y` difference (113.16 vs 56) remains the placement question and is separate.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
