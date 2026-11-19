@@ -1241,6 +1241,28 @@ So the question is not "what duplicates the draw" but "why ten rows at one
 origin, where rive draws zero" — i.e. the component-list layout/virtualisation
 question, which is the same layout dependency as before.
 
+## The reference never draws list rows — at any frame
+
+Before blaming layout, the obvious alternative was timing: our SM may simply start
+earlier. It does not. Across thirty reference frames the draw counts are constant:
+
+| artboard | frames 0..29 |
+|---|---|
+| Main | **3** every frame |
+| Item | **2** every frame |
+| Artboard | **1** every frame |
+
+So rive renders no component-list rows in this fixture at all, while we render ten
+of them (at one origin). The divergence is therefore in **row resolution**, not in
+when we start or where the rows land: `listRowItems` reads a data-bind path
+(`pk=800`) and returns ten items, and rive — with no VM data bound — resolves the
+same path to nothing.
+
+Next step: compare what our path parse yields against an unbound VM in rive. If the
+file carries default item data that rive ignores when nothing is bound, the rule is
+"rows exist only when the data source supplies them", and our parse is inventing
+them.
+
 ## The ten extra rows are the same two objects redrawn at one origin
 
 With `RIVE_TRACE_DRAW` on Main:
