@@ -1343,6 +1343,23 @@ op-identical joystick as incomplete), and it only fires when the reference is le
 than half the golden, so a genuine regression that *reduces* our draws cannot hide
 behind the label.
 
+**Where the seam is, and is not.** Two isolation attempts:
+
+- a simple fixture rendered through the same pipeline came out fully magenta —
+  that probe selected an artboard with nothing to draw, so it proves nothing;
+- the same file's 91x52 `Item` artboard leaves 247,982 of 250,000 pixels magenta,
+  which is just the uncovered frame around a small artboard.
+
+So the seam is only *visible* because the artboard quad is exactly the frame size:
+two triangles tile the 500x500 square, and 496 pixels along their shared diagonal
+keep the clear colour. The triangles come from our tessellation of the rect path
+and are filled by the canvas backend, so the defect is in the **mesh render path**
+(tessellation → canvas fill), not in the op stream: the reference draws the same
+`ff313131` artboard fill, and our ops for it are correct.
+
+That means it is not fixable in the decoder, and it should not be read as a
+renderer parity failure of the decoded data.
+
 ### The frame-spanning ink is a 496-pixel triangle seam
 
 Sampling the pixels the gate calls ink:
