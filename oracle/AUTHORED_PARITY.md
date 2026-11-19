@@ -1222,6 +1222,32 @@ A correction to the previous round's note: my "ref 57" came from calling
 eighteen frames, not artboard 18. The harness was right all along; the manual
 invocation was wrong.
 
+## The ten extra rows are the same two objects redrawn at one origin
+
+With `RIVE_TRACE_DRAW` on Main:
+
+    LAYPAINT obj=88 color=ff12a100 t=0.0,0.0 wh=28.6,40.2
+    TXT      obj=77 color=ffffffff
+    LAYPAINT obj=88 color=ff12a100 t=0.0,0.0 wh=24.1,40.2
+    TXT      obj=77 color=ffffffff
+    ... (ten pairs)
+
+Two things are wrong at once, and they are separable:
+
+1. **the same object is drawn ten times** — `obj=77` and `obj=88`, not ten distinct
+   rows;
+2. **every one of them is at the origin** (`t=0.0,0.0`) with only the *width*
+   varying (28.6, 24.1, 28.2, 28.4), so any layout pass that ran computed sizes
+   and never produced positions.
+
+And `RIVE_NO_NESTED=1` leaves the count at 29, so this is not nested-instance
+expansion: the loop lives in this artboard's own emission.
+
+The reference draws none of them — its three draws are the artboard background and
+two white strokes. So "the list is not drawn at frame 0" and "we draw it ten times
+in one place" are both true, and the duplication is a defect independent of the
+layout question.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
