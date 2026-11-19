@@ -856,6 +856,25 @@ draws carry different CTMs, the interleaving is per-sibling-instance and the rul
 is a nested walk; if they carry the same CTM, then `856` is being painted once
 per sibling deliberately (a stroke/shadow pass) and the rule is per-paint.
 
+## After the alpha fix, Circles' residual is placement (2026-11-18)
+
+With alpha compared honestly (8 digits), Circles drops to 7/44 positional
+colours and 14/44 identity-set. Diffing the sets:
+
+    ref-only:  ffffffff (1,0,0,1, 438,113) (381,113) (325,113) (269,113)
+    ours-only: 80ffffff (1,0,0,1, 213, 56) (269, 56) (325, 56) ...
+
+The alpha (80 vs ff) is incidental — the transforms differ, so these are
+different drawables. The real signal is the **y coordinate**: 113 in the
+reference, 56 in ours, the same class of constant placement offset already
+measured on LineBars.
+
+Tested and reverted: not baking `WorldTransformComponent.opacity` into the
+colour's alpha. The recording renderer keeps the raw colour and carries opacity
+separately, so the idea is principled — but removing the baking changed no
+measurement, and our op stream has no separate opacity channel, so it would have
+made translucent draws render opaque. Left as-is.
+
 ## Remaining deltas
 
 - Main +16 and TIRE PRESSURE +5: the leftover is `747474` default-colour
