@@ -1492,6 +1492,25 @@ So the golden's rows are unbound-default, while we resolve a bound colour. That 
 the opposite direction from every earlier "we miss data" finding: here we apply
 data the reference render did not.
 
+**Run-based emission does not work, and the reason is informative.** The change was
+implemented twice (the first attempt was anchored to the wrong shape loop and did not
+compile; the second is anchored to the clipping block itself) and it builds — but the
+count is unchanged:
+
+    draws=628  clips=276  pops=276
+
+Pops equal clips, which means the matched component changes on *every* shape: the
+matched component index alternates rather than forming long runs. The earlier
+"176 shapes for component 8309" figure counted *candidates* (printed before the
+ancestry test decides), not matches — so the contiguity assumption I based the fix on
+was wrong.
+
+That rules out holding a clip open across a linear walk. Rive's structure is a clip
+that wraps a *subtree*, which needs a real group boundary (enter/exit of a node in the
+draw tree), not a diff against the previous shape.
+
+Reverted; decoder matches HEAD, car_widgets back to 628 draws / 276 clips.
+
 **The grouping data, measured.** Tracing each `ClippingShape` against the shapes it
 clips:
 
