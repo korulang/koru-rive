@@ -5892,7 +5892,10 @@ fn collectArtboardOps(r: *Riv, abIdx: usize, frame: i64, alloc: std.mem.Allocato
             _ = lci;
         }
     }
-    if (clipOn) {
+    // Root artboards are not clipped: the golden for component_list_1 draws the
+    // artboard background and then ONE clipPath — the layout/scroll clip — never
+    // an artboard-bounds clip. Nested instances still clip to their box.
+    if (clipOn and g_abDepth > 0) {
         out.append(alloc, op0(0)) catch {};
         var c0 = op0(1); c0.x1 = 0; c0.y1 = 0; out.append(alloc, c0) catch {};
         var c1 = op0(2); c1.x1 = @floatCast(aw0); c1.y1 = 0; out.append(alloc, c1) catch {};

@@ -1406,6 +1406,31 @@ it (or in what it draws *besides* the fill), not in list rows.
 Also verified this round: the gate suite is unchanged by the row-placement work —
 33 gates, 32 PASS, 1 KNOWN (mesh), 0 FAIL, plus the leaf self-test PASS.
 
+**First fix from golden comparison: the root artboard is not clipped.** Our code
+emitted an artboard-bounds clip unconditionally (`clipOn` defaults true), giving
+`component_list_1` two clips where the golden has one. Reading the golden makes the
+sequence explicit:
+
+    4  drawPath color=ff313131 …     <- artboard background
+    10 restore
+    12 clipPath verbs=6 pts=4        <- the ONLY clip, before the rows
+    19 drawPath color=ff18b900 …     <- first row
+
+No artboard-bounds clip appears at all. Rive clips **nested instances** to their
+box, not root artboards. Restricting the artboard clip to `g_abDepth > 0`:
+
+| | before | after | golden |
+|---|---:|---:|---:|
+| `component_list_1` draws | 17 | 17 | 17 |
+| clips | 2 | **1** | **1** |
+
+The first divergence then moves to **geometry**: drawable 4 has golden bbox
+`(0.9659, 4.6307, 45.1669, 19.5739)` against ours `(1.0, 4.6, 45.9, 19.6)` — a text
+advance difference of ~0.7 units, previously hidden behind the clip divergence.
+
+Gates after the change: 33 gates, 32 PASS, 1 KNOWN, 0 FAIL; joystick still
+op-identical; data_viz draws unchanged (199/196).
+
 ### `--golden`: compare against rive's real render
 
 The goldens are in the dumper's own stream format, so the same digest can parse
